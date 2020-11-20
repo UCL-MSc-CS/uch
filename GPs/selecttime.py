@@ -11,13 +11,13 @@ globalvar = []
 
 class App(tk.Frame):
 
-    def __init__(self, parent,avdate,filetitle):
+    def __init__(self, parent,date,filetitle):
         super().__init__(parent)
 
-        globalvar.append(avdate)
+        globalvar.append(date)
         globalvar.append(filetitle)
 
-        self.Maindesc = tk.Label(self, text="Please select your availability for "+ datetime.strftime(avdate,"%d/%b/%Y") + " (max 9.5 hours/day): ",
+        self.Maindesc = tk.Label(self, text="Please select your unavailability for "+ datetime.strftime(date,"%d/%b/%Y"),
                                  font=Font(family='Calibri', weight='bold'))
         self.Maindesc.grid(row=0, column=0)
 
@@ -83,11 +83,6 @@ class App(tk.Frame):
         if end_time > start_time:
             ValidLabel = tk.Label(submittedpage, text="Chose Valid times!")
             ValidLabel.grid(row=1, column=0)
-            legal_break_limit = timedelta(hours=6)
-            if (end_time - start_time) >= legal_break_limit:
-                LunchLabel = tk.Label(submittedpage,
-                                      text="You are working 6 hours straight or more, make sure to have a break!")
-                LunchLabel.grid(row=2, column=0)
             filetitle = globalvar[1]
             with open(filetitle, "w+") as file:
                 if file_is_empty(filetitle):
