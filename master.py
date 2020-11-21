@@ -7,19 +7,17 @@ class Menus:
        print("choose [2] for Patient")
        print("choose [3] for GP")
 
-
-
    def adminmenu(self):
        print("Welcome admin")
        print("choose [1] to add a new GP/Physician")
        print("choose [2] to deactivate or delete a profile")
        print("choose [3] to confirm patient registration")
-       print("choose [4] to check patient in")
+       print("choose [4] to check patient details")
        print("choose [0] when finished navigating menu")
    # add more options yadayada you get the point
 def addGP():
    print("registering new physician")
-   create = input("first time registering physician: Y or N ")
+   create = int(input("choose [1] to input physician or [2] to exit: "))
 
    a = input("first name ")
    b = input("last name ")
@@ -44,13 +42,14 @@ def addGP():
                 "specialty": [f], "insurance": [g]}
            df = pd.DataFrame.from_dict(x)
            print(df)
-           if create == "Y":
-               # this adds first new physician and creates excel file
-               writer = pd.ExcelWriter("add_doctor.xlsx", engine="xlsxwriter")
-               df.to_excel(writer, sheet_name="Sheet1")
-               writer.save()
-           elif create == "N":
-               pass  # this will add new physician to existing excel file
+           if create == 1:
+               # appends to 'add_doctor.xlsx' file
+               existing_df = pd.read_excel('add_doctor.xlsx')
+               frame = [existing_df, df]
+               result = pd.concat(frame)
+               result.to_excel("add_doctor.xlsx", sheet_name="sheet_1", index=False)
+           elif create == 2:
+               pass  #add code to abort registration
            else:
                print("did not enter Y or N")
                raise NameError
