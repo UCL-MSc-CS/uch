@@ -1,5 +1,6 @@
 import pandas as pd
-import xlsxwriter
+import sqlite3 as sql
+
 class Menus:
    def MasterMenu(self):
        print("Welcome, please login")
@@ -16,46 +17,45 @@ class Menus:
        print("choose [0] when finished navigating menu")
    # add more options yadayada you get the point
 def addGP():
-   print("registering new physician")
-   create = int(input("choose [1] to input physician or [2] to exit: "))
-
-   a = input("first name ")
-   b = input("last name ")
-   c = input("email ")
-   d = int(input("enter date of birth as ddmmyy "))
-   f = input("specialty ")
-   g = input("insurance accepted ")
+    print("registering new physician")
+    create = int(input("choose [1] to input physician or [2] to exit: "))
+    if create == 1:
+        a = input("first name ")
+        b = input("last name ")
+        c = input("email ")
+        d = int(input("enter date of birth as ddmmyy "))
+        f = input("specialty ")
+        gp = physician(a, b, c, d, f)
+        gp.add_physician()
+    elif create == 2:
+        pass  # add code to abort registration
+    else:
+        print("did not enter Y or N")
+        raise NameError
 
 #yadayada add more functions for selections
 
-   class physician():
-       def __init__(self, first, last, email, date_birth, specialty, insurance):
-           self.first = first
-           self.last = last
-           self.email = email
-           self.date_birth = date_birth
-           self.specialty = specialty
-           self.insurance = insurance
+class physician():
+    def __init__(self, first, last, email, date_birth, specialty):
+        self.first = first
+        self.last = last
+        self.email = email
+        self.date_birth = date_birth
+        self.specialty = specialty
 
-       def add_physician(self):
-           x = {"first name": [a], "last name": [b], "email": [c], "date of birth": [d],
-                "specialty": [f], "insurance": [g]}
-           df = pd.DataFrame.from_dict(x)
-           print(df)
-           if create == 1:
-               # appends to 'add_doctor.xlsx' file
-               existing_df = pd.read_excel('add_doctor.xlsx')
-               frame = [existing_df, df]
-               result = pd.concat(frame)
-               result.to_excel("add_doctor.xlsx", sheet_name="sheet_1", index=False)
-           elif create == 2:
-               pass  #add code to abort registration
-           else:
-               print("did not enter Y or N")
-               raise NameError
-
-   gp = physician(a, b, c, d, f, g)
-   gp.add_physician()
+    def add_physician(self):
+        connection = sql.connect('UCH.db')
+        c = connection.cursor()
+        input = [self.email, self.first, self.last, self.date_birth, self.specialty]
+        c.execute("""INSERT INTO doctors VALUES(?, ?, ?, ?, ?)""", input)
+        connection.commit()
+        # The following allows you to check the doctors table: 
+        # c.execute("SELECT * FROM doctors")
+        # items = c.fetchall()
+        # for i in items:
+        #     print(i)
+        # connection.commit()
+        
 
 masterlogin = Menus()
 masterlogin.MasterMenu()
@@ -73,9 +73,6 @@ while selection1 != 0:
        # add code for...
        pass
    # yadayada add more elif statements
-
-
-
 
        username = input('Username: ')
        password = input('Password: ')
