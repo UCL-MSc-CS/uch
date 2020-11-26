@@ -53,10 +53,12 @@ class adminFunctions():
         In = int(input("Type in appointment id: "))
         self.c.execute("""UPDATE Appointment SET checkin = (fill in time stamp) WHERE appointment_ID = ? """, (In,))
         #add exceptions
+
     def cout(self):
         Out = int(input("Type in appointment id: "))
         self.c.execute("""UPDATE Appointment SET checkout = (fill in time stamp") WHERE appointment_ID = ? """, (Out))
         #add exceptions
+        
     def commit_and_close(self):
         self.connection.commit()
         self.connection.close()
