@@ -29,7 +29,7 @@ class Appointment:
         options = int(input("Choose [1] to select a time or [2] to select another date or [3] to exit: "))
         if options == 1:
             time = input("Please choose a time from the available appointments: ")
-            # add in error handling
+            # add in error handling, also need to add patient name to database
             chosen = [time, date]
             self.c.execute("UPDATE Appointment SET bookedStatus = 'Booked' WHERE time =? and date=?", chosen)
             self.connection.commit()
@@ -40,13 +40,29 @@ class Appointment:
             self.bookAppointment()
 
         if options == 3:
+            # will bring patient back to main menu
             pass
 
     def cancelAppointment(self):
+
+        print("These are your booked appointments: ")
+        self.c.execute("SELECT appointmentID, date, time, bookedStatus FROM Appointment WHERE patientName =?", [name])
+        appointments = self.c.fetchall()
+        for app in appointments:
+            print(app[0] + "\t\t" + app[1] + "\t\t" + app[2] + "\t\t" + app[3])
+
+        cancel = input("Please enter the appointment ID you would like to cancel: ")
+        self.c.execute("UPDATE Appointment SET bookedStatus = 'Available' WHERE appointmentID =?", [cancel])
+        self.connection.commit()
+        self.connection.close()
+        print("You have cancelled your appointment")
+
+        # This function doesn't work yet as needs patient name details
         pass
 
 
 
 ari = Appointment()
 ari.bookAppointment()
+# ari.cancelAppointment()
 
