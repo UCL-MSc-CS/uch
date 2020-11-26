@@ -2,17 +2,6 @@ import pandas as pd
 import Admins
 import sqlite3 as sql
 
-
-connection = sql.connect('UCH.db')
-c = connection.cursor()
-c.execute("""SELECT * FROM PatientDetail""")
-items = c.fetchall()
-for i in items:
-    print(i)
-connection.commit()
-print(" ")
-connection.close()
-
 class Menus():
     def MasterMenu(self):
         print("Welcome, please login")
