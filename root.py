@@ -1,10 +1,17 @@
 import pandas as pd
-import class_example
 import Admins
+import sqlite3 as sql
 
-cl = class_example.printstuff()
-cl.printhello()
 
+connection = sql.connect('UCH.db')
+c = connection.cursor()
+c.execute("""SELECT * FROM PatientDetail""")
+items = c.fetchall()
+for i in items:
+    print(i)
+connection.commit()
+print(" ")
+connection.close()
 
 class Menus():
     def MasterMenu(self):
