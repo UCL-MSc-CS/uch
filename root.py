@@ -26,6 +26,11 @@ class Menus():
         print("choose [2] to delete a profile")
         print("choose [0] when finished navigating menu")
 
+    def admin_submenuCheckIO(self):
+        print("choose [1] to check patient in")
+        print("choose [2] to check patient out")
+        print("choose [0] to go back")
+
 
 """ This is the main loop"""
 masterlogin = Menus()
@@ -76,8 +81,15 @@ while selection1 != 0:
                     elif selection == 3:
                         ad.confirm_registrations()
 
-                    else:
-                        print("not a valid selection")
+                    elif selection == 5:
+                        AdminM.admin_submenuCheckIO()
+                        CheckOpt = int(input("choice: "))
+                        if CheckOpt == 1:
+                            ad.cin()
+                            pass
+                        elif CheckOpt == 2:
+                            ad.cout()
+                            pass
 
                         AdminM.adminmenu()
                         selection = int(input("please select an option: "))
