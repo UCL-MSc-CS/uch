@@ -2,9 +2,24 @@ import sqlite3 as sql
 
 class adminFunctions():
 
-    def __init__(self):                              # whenever you close the connection, you will have to
+    def __init__(self):      
+        print("connection initialized")              # whenever you close the connection, you will have to
         self.connection = sql.connect('UCH.db')      # create a new adminFunctions() object to re-open
         self.c = self.connection.cursor()            # the connection, so that __init__ is called.
+        
+
+    def admin_login(self):
+        username = input('Username: (press 0 to go back) ')
+        if username == '0':
+            return False
+        password = input('Password: ')
+        self.c.execute("SELECT * FROM Admin WHERE username=? AND password =?", (username,password))
+        items = self.c.fetchall()
+        if len(items) == 0:
+            return 1
+        else:
+            print("Logged in")
+            return True
 
     def add_doctor(self):
         print("registering new physician")
@@ -19,7 +34,7 @@ class adminFunctions():
             i = input("gender: ")
             j = "Y"
             gp = [a, b, c, d, f, g, i ,j]
-            self.c.execute("""INSERT INTO doctors VALUES(?, ?, ?, ?, ?, ?, ?, ?)""", gp)
+            self.c.execute("""INSERT INTO Doctor VALUES(?, ?, ?, ?, ?, ?, ?, ?)""", gp)
 
         elif create == 2:
             pass  # add code to abort registration
@@ -28,13 +43,13 @@ class adminFunctions():
             raise NameError
 
     def check_registrations(self):
-        self.c.execute("""SELECT COUNT(patientID) FROM patient_details WHERE registrationConfirm = 'N' """)
+        self.c.execute("""SELECT COUNT(patientID) FROM PatientDetail WHERE registrationConfirm = 'N' """)
         items = self.c.fetchall()
         count = items[0][0]
         print("You have %d patient registrations to confirm" % count)
 
     def confirm_registrations(self):
-        self.c.execute("""SELECT * FROM patient_details WHERE registrationConfirm = 'N'""")
+        self.c.execute("""SELECT * FROM PatientDetail WHERE registrationConfirm = 'N'""")
         items = self.c.fetchall()
         for i in items:
             print(i)
@@ -46,7 +61,7 @@ class adminFunctions():
 
     def deactivate_doctor(self):
         key = input("Type in the practitioner's email: ")
-        self.c.execute("""UPDATE doctors SET active = 'N' WHERE email = ?""",(key,))
+        self.c.execute("""UPDATE Doctor SET active = 'N' WHERE email = ?""",(key,))
         # add in exception handling here
 
     def commit_and_close(self):

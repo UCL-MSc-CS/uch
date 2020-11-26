@@ -119,6 +119,13 @@ for i in items:
 connection.commit()
 print(" ")
 
+c.execute("""SELECT * FROM Admin""")
+items = c.fetchall()
+for i in items:
+    print(i)
+connection.commit()
+print(" ")
+
 c.execute("""SELECT * FROM PatientDetail""")
 items = c.fetchall()
 for i in items:
@@ -131,6 +138,17 @@ items = c.fetchall() # items will be a list with a tuple with a single element i
 count = items[0][0]  # this line gets n out of the tuple in the items list
 print("You have %d patient registrations to confirm" % count)
 connection.commit()
+
+username = 'jacob'
+password = '1234'
+
+c.execute("SELECT * FROM Admin WHERE username=? AND password =?", (username,password))
+items = c.fetchall()
+print(items)
+if len(items) == 0:
+    print('yes')
+# print(items[0][0])
+# print(items[0][1])
 
 connection.close()
 
