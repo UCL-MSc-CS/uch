@@ -1,5 +1,10 @@
 import sqlite3
 
+""" This will function as our main database script. Rather than making large changes to this file, 
+set up your own database script to make test changes to, and implement them here when they are 
+finalised. If you want to test out queries and test out features with dummy data, do this in your
+own scripts too for the time being. """
+
 connection = sqlite3.connect('UCH.db')
 # parts of sqlite queries are often case sensistive, be mindful of this. 
 # sqlite keeps things simple and only has 5 datatypes you can choose from:
@@ -20,14 +25,7 @@ c.execute("""CREATE TABLE IF NOT EXISTS Doctor(
                     active text)
                     """)
 connection.commit()
-#
-# c.execute("""ALTER TABLE doctors
-#              ADD COLUMN telephoneNumber integer;""")
-# # c.execute("""ALTER TABLE doctors
-#              ADD COLUMN gender text;""")
-# c.execute("""ALTER TABLE doctors
-#              ADD COLUMN active text;""")
-# connection.commit()
+
 
 c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
                     patientID integer PRIMARY KEY,
@@ -44,89 +42,15 @@ c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
                     registrationConfirm text)""")
 connection.commit()
 
-# c.execute("""INSERT INTO patient_details VALUES (
-#                     50,
-#                     'Matthew',
-#                     'Shorvon',
-#                     16071998,
-#                     22,
-#                     'male',
-#                     '10 downing street',
-#                     'London',
-#                     'idk',
-#                     07758221088,
-#                     'm.shorvon@gmail.com',
-#                     'N')""")
-# connection.commit()
-#
-# c.execute("""INSERT INTO patient_details VALUES (
-#                     2,
-#                     'Matthew',
-#                     'Shorvon the 2nd',
-#                     16071998,
-#                     22,
-#                     'male',
-#                     '10 downing street',
-#                     'London',
-#                     'idk',
-#                     07758221088,
-#                     'm.shorvon@gmail.com',
-#                     'Y')""")
-# connection.commit()
-#
-# c.execute("""INSERT INTO patient_details VALUES (
-#                     3,
-#                     'Matthew',
-#                     'Shorvon the 3rd',
-#                     16071998,
-#                     22,
-#                     'male',
-#                     '10 downing street',
-#                     'London',
-#                     'idk',
-#                     07758221088,
-#                     'm.shorvon@gmail.com',
-#                     'N')""")
-# connection.commit()
-#
-# c.execute("""INSERT INTO patient_details VALUES (
-#                     4,
-#                     'Matthew',
-#                     'Shorvon the 4th',
-#                     16071998,
-#                     22,
-#                     'male',
-#                     '10 downing street',
-#                     'London',
-#                     'idk',
-#                     07758221088,
-#                     'm.shorvon@gmail.com',
-#                     'Y')""")
-# connection.commit()
 
-c.execute("""SELECT * FROM doctors""")
+c.execute("""SELECT * FROM Doctor""")
 items = c.fetchall()
 for i in items:
     print(i)
 connection.commit()
 print(" ")
 
-c.execute("""SELECT * FROM patient_details""")
-items = c.fetchall()
-for i in items:
-    print(i)
-connection.commit()
-print(" ")
-
-c.execute("""SELECT COUNT(patientID) FROM patient_details WHERE registrationConfirm = 'N' """)
-items = c.fetchall() # items will be a list with a tuple with a single element in it, [(n,)]
-count = items[0][0]  # this line gets n out of the tuple in the items list
-print("You have %d patient registrations to confirm" % count)
-connection.commit()
-
-c.execute("""SELECT *
-             FROM patient_details
-             WHERE registrationConfirm = 'N'""")
+c.execute("""SELECT * FROM PatientDetail""")
 items = c.fetchall()
 for i in items:
     print(i)
@@ -135,12 +59,14 @@ print(" ")
 
 connection.close()
 
-# Some example queries:
+# ---- Some example queries: ----
+# Creating a table: 
 # c.execute(""" CREATE TABLE customers(
 #                 first_name text,
 #                 last_name text,
 #                 email text)""")
 
+# Inserting many values into a table: 
 # many_customers = [
 #                 ('matt1','sh','m.shorvon@gmail.com'),
 #                 ('matt2','sh','m.shorvon@gmail.com'),
@@ -148,6 +74,8 @@ connection.close()
 #                 ]
 #
 # c.executemany("INSERT INTO customers VALUES (?,?,?)", many_customers)
+
+# Viewing a table with fetchall and each row printed on a separate line: 
 # c.execute("SELECT rowID, * FROM customers")
 # items = c.fetchall()
 # for i in items:
