@@ -37,9 +37,10 @@ while selection1 != 0:
         #call code for GP
         pass
 
-    elif selection1 == 1:
+    while selection1 == 1:
         ad = Admins.adminFunctions()
         logged_in = ad.admin_login()
+        print(logged_in)
         # username = input('Username: ')
         # password = input('Password: ')
 
@@ -58,21 +59,24 @@ while selection1 != 0:
             AdminM.adminmenu()
 
             selection = int(input("please select an option: "))
+            if selection == 0:
+                logged_in = "restart"
 
             while selection != 0:
                 if selection == 1:
-                    ad.add_doctor()
+                    selection = ad.add_doctor()
                 elif selection == 2:
                     AdminM.admin_submenu2()
                     ipt = int(input("please select an option: "))
                     if ipt == 1:
                         ad.deactivate_doctor()
                     if ipt == 2:
-                        pass
+                        ad.delete_doctor()
                     if ipt == 0:
                         selection = 0
                 elif selection == 3:
                     ad.confirm_registrations()
+                    selection = 0
 
                 else:
                     print("not a valid selection")
@@ -81,12 +85,10 @@ while selection1 != 0:
                     selection = int(input("please select an option: "))
 
             print("exiting menu")
-            ad.commit_and_close()
-            logged_in = False
-            # selection1 = int(input("please select an option: "))
-        while logged_in == 1:
+        while logged_in == False:
             print("incorrect username/password")
-            logged_in = ad.admin_login()
-        if logged_in == False:
+            logged_in = "entering details"
+        if logged_in == "restart":
+            ad.commit_and_close()
             masterlogin.MasterMenu()
             selection1 = int(input("please select an option: "))

@@ -112,6 +112,21 @@ connection.commit()
 #                     'Y')""")
 # connection.commit()
 
+c.execute("""INSERT INTO PatientDetail VALUES (
+                    25,
+                    'Boris',
+                    'Johnson',
+                    16071998,
+                    22,
+                    'male',
+                    '10 downing street',
+                    'London',
+                    'idk',
+                    07758221088,
+                    'BoJo@pm.gov',
+                    'N')""")
+connection.commit()
+
 c.execute("""SELECT * FROM Doctor""")
 items = c.fetchall()
 for i in items:
