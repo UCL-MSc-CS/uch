@@ -5,16 +5,6 @@ from patient import Patient
 connection = sql.connect('patient.db')
 c = connection.cursor()
 
-def emailCheck(email):
-    c.execute("SELECT * FROM PatientDetail WHERE email =?", [email])
-    emails = c.fetchall()
-    if emails != []:
-        print("I'm sorry, that email is already in use. Please use another email.")
-        email=input("Please enter your email. ")
-        emailCheck(email)
-    else:
-        email = email
-
 def task():
     print("Welcome!")
     print("Choose [1] to register for a new account")
@@ -24,7 +14,14 @@ def task():
         firstName=input("Please enter your first name. ")
         lastName=input("Please enter your last name. ")
         email=input("Please enter your email. ")
-        emailCheck(email)
+        c.execute("SELECT * FROM PatientDetail WHERE email =?", [email])
+        emails = c.fetchall()
+        if email != []:
+            while emails != []:
+                print("I'm sorry, that email is already in use. Please use another email.")
+                email=input("Please enter your email. ")
+                c.execute("SELECT * FROM PatientDetail WHERE email =?", [email])
+                emails = c.fetchall()
         password=getpass("Please enter your password. ")
         x=Patient(firstName, lastName, email, password)
         x.registrationSummary()
