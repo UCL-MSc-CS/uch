@@ -1,4 +1,5 @@
 import sqlite3 as sql
+from datetime import datetime as dt
 
 class adminFunctions():
 
@@ -102,13 +103,13 @@ class adminFunctions():
         self.connection.commit()
 
     def cin(self):
-        intime = datetime.now()
+        intime = dt.now()
         In = str(input("Type in appointment id: "))
         self.c.execute("""UPDATE Appointment SET checkin = ? WHERE appointment_ID = ? """, ((intime), (In)))
         #add exceptions
 
     def cout(self):
-        outtime = datetime.now()
+        outtime = dt.now()
         Out = str(input("Type in appointment id: "))
         self.c.execute("""UPDATE Appointment SET checkout = ? WHERE appointment_ID = ? """,((outtime), (Out)))
         #add exceptions
