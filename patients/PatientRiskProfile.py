@@ -1,19 +1,34 @@
+import sqlite3 as sql
+
+
 class PatientMedical:
     def __init__(self,):
-        self.vaccination_history = {"DTap": "", "HepC": "", "HepB": "",
-                                    "Measles": "", "Mumps": "", "Rubella": "", "Varicella": ""}
+        self.connection = sql.connect('medicalHistory.db')
+        self.a = self.connection.cursor()
+        self.vaccination_history = ["DTap", "HepC", "HepB",
+                                    "Measles", "Mumps", "Rubella", "Varicella"]
         self.cancer_history = {}
 
     def vaccination(self):
         print('Please enter your answers to the following questions with Yes/No')
-        for index in self.vaccination_history:
-            vaccine = input('Have you had the {} vaccination: '.format(index)).lower()
-            self.vaccination_history[index] = vaccine
-            if self.vaccination_history[index] == "no":
+        count = 0
+        answers_to_vac = []
+        for name in self.vaccination_history:
+            vaccine = input('Have you had the {} vac cination: '.format(name)).lower()
+            answers_to_vac.append(vaccine)
+            if vaccine == "no":
                 print("Please book an appointment with your GP to receive your {} vaccination "
-                      "as soon as possible.".format(index))
+                      "as soon as possible.".format(name))
             else:
                 print("Wonderful!")
+            count += 1
+        query = """INSERT INTO medicalHistory (DTap, HepC, HepB,
+                                    Measles, Mumps, Rubella, Varicella)
+                                    VALUES (?, ?, ?, ?, ?, ?, ?) """
+        self.a.execute(query, answers_to_vac)
+        self.a.execute("SELECT * FROM medicalHistory")
+        show = self.a.fetchall()
+        print(show)
 
     def cancer(self):
         print("Thank you! The following questions are concerned with the medical history of your family.")
@@ -30,7 +45,10 @@ class PatientMedical:
             print("Wonderful! That means you do not likely have any genetic risk in any specific cancer that we know "
                   "so far based on your family medical history")
 
+        self.connection.commit()
+        self.connection.close()
+
 
 Erin = PatientMedical()
 Erin.vaccination()
-Erin.cancer()
+# Erin.cancer()
