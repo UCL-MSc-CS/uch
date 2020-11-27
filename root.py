@@ -1,7 +1,7 @@
 import pandas as pd
 import Admins
 import sqlite3 as sql
-from datetime import datetime
+from datetime import datetime as dt
 
 class Menus():
     def MasterMenu(self):
@@ -16,7 +16,7 @@ class Menus():
         print("choose [2] to deactivate or delete a profile")
         print("choose [3] to confirm patient registration")
         print("choose [4] to check patient details")
-        print("choose [5] to check append patient check in/out")
+        print("choose [5] to append patient check in/out")
         print("choose [0] when finished navigating menu")
 
     def admin_submenu2(self):
