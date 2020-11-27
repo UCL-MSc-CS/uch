@@ -1,10 +1,6 @@
 import pandas as pd
-import class_example
 import Admins
-
-cl = class_example.printstuff()
-cl.printhello()
-
+import sqlite3 as sql
 
 class Menus():
     def MasterMenu(self):
@@ -41,48 +37,58 @@ while selection1 != 0:
         #call code for GP
         pass
 
-    elif selection1 == 1:
-        username = input('Username: ')
-        password = input('Password: ')
+    while selection1 == 1:
+        ad = Admins.adminFunctions()
+        logged_in = ad.admin_login()
+        print(logged_in)
+        # username = input('Username: ')
+        # password = input('Password: ')
 
-        admin_df = pd.read_excel("Admins Data.xlsx", index_col= 0)
-        user_series = pd.Series([password], index = [username])
-        system_series = admin_df.loc[username]
+        # admin_df = pd.read_excel("Admins Data.xlsx", index_col= 0)
+        # user_series = pd.Series([password], index = [username])
+        # system_series = admin_df.loc[username]
 
-        if str(system_series['Password']) == user_series[username]:
-            logged_in = True
-            print('logged in')
-            while logged_in == True:
-                ad = Admins.adminFunctions()
-                ad.check_registrations()
+        # if str(system_series['Password']) == user_series[username]:
+        #     logged_in = True
+        #     print('logged in')
 
-                AdminM = Menus()
-                AdminM.adminmenu()
+        while logged_in == True:
+            ad.check_registrations()
 
-                selection = int(input("please select an option: "))
+            AdminM = Menus()
+            AdminM.adminmenu()
 
-                while selection != 0:
-                    if selection == 1:
-                        ad.add_doctor()
-                    elif selection == 2:
-                        AdminM.admin_submenu2()
-                        ipt = int(input("choice: "))
-                        if ipt == 1:
-                            ad.deactivate_doctor()
-                        if ipt == 2:
-                            pass
-                        if ipt == 0:
-                            selection = 0
-                    elif selection == 3:
-                        ad.confirm_registrations()
+            selection = int(input("please select an option: "))
+            if selection == 0:
+                logged_in = "restart"
 
-                    else:
-                        print("not a valid selection")
+            while selection != 0:
+                if selection == 1:
+                    selection = ad.add_doctor()
+                elif selection == 2:
+                    AdminM.admin_submenu2()
+                    ipt = int(input("please select an option: "))
+                    if ipt == 1:
+                        ad.deactivate_doctor()
+                    if ipt == 2:
+                        ad.delete_doctor()
+                    if ipt == 0:
+                        selection = 0
+                elif selection == 3:
+                    ad.confirm_registrations()
+                    selection = 0
 
-                        AdminM.adminmenu()
-                        selection = int(input("please select an option: "))
+                else:
+                    print("not a valid selection")
 
-                print("exiting menu")
-                ad.commit_and_close()
-            else:
-                print("not a valid selection")
+                    AdminM.adminmenu()
+                    selection = int(input("please select an option: "))
+
+            print("exiting menu")
+        while logged_in == False:
+            print("incorrect username/password")
+            logged_in = "entering details"
+        if logged_in == "restart":
+            ad.commit_and_close()
+            masterlogin.MasterMenu()
+            selection1 = int(input("please select an option: "))
