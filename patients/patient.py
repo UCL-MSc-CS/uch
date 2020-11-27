@@ -1,4 +1,6 @@
+import sqlite3 as sql
 from getpass import getpass
+
 
 class Patient:
 
@@ -7,13 +9,19 @@ class Patient:
         self.lastName = lastName
         self.email = email
         self.password = password
-        self.loggedIn = 0
+        self.loggedIn = 1
+        self.connection = sql.connect('patient.db')
+        self.c = self.connection.cursor()
         self.update()
 
     def update(self):
-        # c.execute("INSERT INTO patient VALUES (null,?,?,?,?,?)", (self.firstName, self.lastName, self.email, self.password, self.loggedIn))
-        pass
-    
+        self.c.execute("INSERT INTO PatientDetail VALUES (null,?,?,?,?,?)",
+                       (self.firstName, self.lastName, self.email, self.password, self.loggedIn))
+        self.c.execute("SELECT * FROM PatientDetail WHERE firstName =? AND lastName =? AND email =?", [self.firstName, self.lastName, self.email])
+        patientDetail = self.c.fetchall()
+        for i in patientDetail:
+            print(i)
+
     def login(self):
         email = input("Please enter your email. ")
         password = getpass("Please enter your password. ")
@@ -40,15 +48,13 @@ class Patient:
             self.login()
 
     def options(self):
-        if self.loggedIn == True:
-            action = input(
-                "What would you like to do next? Enter 1 for book an appointment, 2 for cancel an appointment, or 3 for check your prescriptions.")
-        else:
-            print("Please login.")
-            self.login()
+        print("What would you like to do next?")
+        print("Choose [1] to book an appointment")
+        print("Choose [2] to cancel an appointment")
+        action=int(input("Choice: "))
 
     def patientSummary(self):
-        hash = ""
+        hash=""
         for i in self.password:
             hash += "*"
         print("First Name: " + self.firstName)
@@ -59,19 +65,22 @@ class Patient:
         print("Appointments: " + str(self.appointments))
         print("Prescriptions: " + str(self.prescriptions))
 
+
 def task():
-    action = input("Would you like to register for a new account or login? ")
-    action = action.lower()
-    if action == "register":
-        firstName = input("Please enter your first name. ")
-        lastName = input("Please enter your last name. ")
-        email = input("Please enter your email. ")
-        password = getpass("Please enter your password. ")
-        x = Patient(firstName, lastName, email, password)
+    print("Welcome!")
+    print("Choose [1] to register for a new account")
+    print("Choose [2] to login")
+    action=int(input("Choice: "))
+    if action == 1:
+        firstName=input("Please enter your first name. ")
+        lastName=input("Please enter your last name. ")
+        email=input("Please enter your email. ")
+        password=getpass("Please enter your password. ")
+        x=Patient(firstName, lastName, email, password)
         x.registrationSummary()
-    elif action == "login":
-        email = input("Please enter your email. ")
-        password = getpass("Please enter your password. ")
+    elif action == 2:
+        email=input("Please enter your email. ")
+        password=getpass("Please enter your password. ")
     else:
         print("I'm sorry, that is an invalid option. Please type 'Register' or 'Login'. ")
         task()
