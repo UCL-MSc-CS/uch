@@ -100,6 +100,18 @@ class adminFunctions():
             print(i)
         self.connection.commit()
 
+    def cin(self):
+        intime = datetime.now()
+        In = int(input("Type in appointment id: "))
+        self.c.execute("""UPDATE Appointment SET checkin = ? WHERE appointment_ID = ? """, (intime,), (In,))
+        #add exceptions
+
+    def cout(self):
+        outtime = datetime.now()
+        Out = int(input("Type in appointment id: "))
+        self.c.execute("""UPDATE Appointment SET checkout = ? WHERE appointment_ID = ? """,(outtime,), (Out,))
+        #add exceptions
+
     def commit_and_close(self):
         self.connection.commit()
         self.connection.close()
