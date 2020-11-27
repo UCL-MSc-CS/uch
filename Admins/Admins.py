@@ -1,4 +1,5 @@
 import sqlite3 as sql
+from datetime import datetime
 
 class adminFunctions():
 
@@ -50,15 +51,17 @@ class adminFunctions():
         # add in exception handling here
 
     def cin(self):
+        intime = datetime.now()
         In = int(input("Type in appointment id: "))
-        self.c.execute("""UPDATE Appointment SET checkin = (fill in time stamp) WHERE appointment_ID = ? """, (In,))
+        self.c.execute("""UPDATE Appointment SET checkin = ? WHERE appointment_ID = ? """, (intime,), (In,))
         #add exceptions
 
     def cout(self):
+        outtime = datetime.now()
         Out = int(input("Type in appointment id: "))
-        self.c.execute("""UPDATE Appointment SET checkout = (fill in time stamp") WHERE appointment_ID = ? """, (Out))
+        self.c.execute("""UPDATE Appointment SET checkout = ? WHERE appointment_ID = ? """,(outtime,), (Out,))
         #add exceptions
-        
+
     def commit_and_close(self):
         self.connection.commit()
         self.connection.close()
