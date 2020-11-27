@@ -1,10 +1,12 @@
 import sqlite3 as sql
+from datetime import datetime as dt
 
 class adminFunctions():
 
     def __init__(self):      
         print("connection initialized")              # whenever you close the connection, you will have to
-        self.connection = sql.connect('UCH.db')      # create a new adminFunctions() object to re-open
+        self.connection = sql.connect('UCH.db')
+        self.connection = sql.connect('AppCalendar.db') # create a new adminFunctions() object to re-open
         self.c = self.connection.cursor()            # the connection, so that __init__ is called.
         
 
@@ -101,15 +103,15 @@ class adminFunctions():
         self.connection.commit()
 
     def cin(self):
-        intime = datetime.now()
-        In = int(input("Type in appointment id: "))
-        self.c.execute("""UPDATE Appointment SET checkin = ? WHERE appointment_ID = ? """, (intime,), (In,))
+        intime = dt.now()
+        In = str(input("Type in appointment id: "))
+        self.c.execute("""UPDATE Appointment SET checkin = ? WHERE appointment_ID = ? """, ((intime), (In)))
         #add exceptions
 
     def cout(self):
-        outtime = datetime.now()
-        Out = int(input("Type in appointment id: "))
-        self.c.execute("""UPDATE Appointment SET checkout = ? WHERE appointment_ID = ? """,(outtime,), (Out,))
+        outtime = dt.now()
+        Out = str(input("Type in appointment id: "))
+        self.c.execute("""UPDATE Appointment SET checkout = ? WHERE appointment_ID = ? """,((outtime), (Out)))
         #add exceptions
 
     def commit_and_close(self):

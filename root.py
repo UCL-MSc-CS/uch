@@ -1,7 +1,7 @@
 import pandas as pd
 import Admins
 import sqlite3 as sql
-from datetime import datetime  
+from datetime import datetime as dt
 
 class Menus():
     def MasterMenu(self):
