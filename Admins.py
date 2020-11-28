@@ -1,21 +1,21 @@
 import sqlite3 as sql
 from datetime import datetime as dt
 
+
 class adminFunctions():
 
-    def __init__(self):      
-        print("connection initialized")              # whenever you close the connection, you will have to
+    def __init__(self):
+        print("connection initialized")  # whenever you close the connection, you will have to
         self.connection = sql.connect('UCH.db')
-        self.connection = sql.connect('AppCalendar.db') # create a new adminFunctions() object to re-open
-        self.c = self.connection.cursor()            # the connection, so that __init__ is called.
-        
+        # create a new adminFunctions() object to re-open
+        self.c = self.connection.cursor()  # the connection, so that __init__ is called.
 
     def admin_login(self):
         username = input('Username: (press 0 to go back) ')
         if username == '0':
             return "restart"
         password = input('Password: ')
-        self.c.execute("SELECT * FROM Admin WHERE username=? AND password =?", (username,password))
+        self.c.execute("SELECT * FROM Admin WHERE username=? AND password =?", (username, password))
         items = self.c.fetchall()
         if len(items) == 0:
             return False
@@ -35,7 +35,7 @@ class adminFunctions():
             g = int(input("telephone number: "))
             i = input("gender: ")
             j = "Y"
-            gp = [a, b, c, d, f, g, i ,j]
+            gp = [a, b, c, d, f, g, i, j]
             self.c.execute("""INSERT INTO Doctor VALUES(?, ?, ?, ?, ?, ?, ?, ?)""", gp)
             self.c.execute("SELECT * FROM Doctor")
             items = self.c.fetchall()
@@ -62,20 +62,21 @@ class adminFunctions():
             print("no patient registrations to confirm")
         else:
             for i in items:
-                print("first name: {}" .format(i[1]))
-                print("last name: {}" .format(i[2]))
-                print("date of birth: {}" .format(i[3]))
-                print("age: {}" .format(i[4]))
-                print("gender: {}" .format(i[5]))
-                print("address line 1: {}" .format(i[6]))
-                print("addresss line 2: {}" .format(i[7]))
-                print("postcode: {}" .format(i[8]))
-                print("telephone number: {}" .format(i[9]))
+                print("first name: {}".format(i[1]))
+                print("last name: {}".format(i[2]))
+                print("date of birth: {}".format(i[3]))
+                print("age: {}".format(i[4]))
+                print("gender: {}".format(i[5]))
+                print("address line 1: {}".format(i[6]))
+                print("addresss line 2: {}".format(i[7]))
+                print("postcode: {}".format(i[8]))
+                print("telephone number: {}".format(i[9]))
                 print("email: {}".format(i[10]))
                 change = input("Do you want to confirm this registration?: (Y/N) ")
                 while change != 'Y' and change != 'N':
                     if change == 'Y':
-                        self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 'Y' WHERE email = ? """, (i[10],))
+                        self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 'Y' WHERE email = ? """,
+                                       (i[10],))
                     elif change == 'N':
                         print("registration not confirmed")
                     else:
@@ -85,14 +86,14 @@ class adminFunctions():
 
     def deactivate_doctor(self):
         email = input("Type in the practitioner's email: ")
-        self.c.execute("""UPDATE Doctor SET active = 'N' WHERE email = ?""",(email,))
+        self.c.execute("""UPDATE Doctor SET active = 'N' WHERE email = ?""", (email,))
         self.c.execute("SELECT * FROM Doctor")
         items = self.c.fetchall()
         for i in items:
             print(i)
         self.connection.commit()
         # add in exception handling here
-    
+
     def delete_doctor(self):
         email = input("Type in the practitioner's email: ")
         self.c.execute("DELETE FROM Doctor WHERE email = ?", (email,))
@@ -104,23 +105,24 @@ class adminFunctions():
 
     def cin(self):
         intime = dt.now()
-        In = str(input("Type in appointment id: "))
-        self.c.execute("""UPDATE Appointment SET checkin = ? WHERE appointment_ID = ? """, ((intime), (In)))
-        #add exceptions
+        In = str((input("Type in appointment id: ")))
+        self.c.execute("""UPDATE Appointment SET checkin = datetime('now') WHERE appointmentID = ? """, In)
+        self.connection.commit()
+        # add exceptions
 
     def cout(self):
         outtime = dt.now()
         Out = str(input("Type in appointment id: "))
-        self.c.execute("""UPDATE Appointment SET checkout = ? WHERE appointment_ID = ? """,((outtime), (Out)))
-        #add exceptions
+        self.c.execute("""UPDATE Appointment SET checkout = datetime('now') WHERE appointmentID = ? """, Out)
+        self.connection.commit()
+        # add exceptions
 
     def commit_and_close(self):
         self.connection.commit()
         self.connection.close()
 
 
-
-#yadayada add more functions for selections
+# yadayada add more functions for selections
 
 
 """old code under here"""
