@@ -16,7 +16,8 @@ class Menus():
         print("choose [2] to deactivate or delete a profile")
         print("choose [3] to confirm patient registration")
         print("choose [4] to check patient details")
-        print("choose [5] to check append patient check in/out")
+        print("choose [5] to append patient check in/out")
+        print("choose [6] to change patient details")
         print("choose [0] when finished navigating menu")
 
     def admin_submenu2(self):
@@ -28,6 +29,16 @@ class Menus():
         print("choose [1] to check patient in")
         print("choose [2] to check patient out")
         print("choose [0] to go back")
+
+    def managedetails(self):
+        print("choose an option")
+        print("choose [1] to change patient record")
+        print("choose [2] to delete patient record")
+
+    def managedetails2(self):
+        print("choose [1] to change entire patient record")
+        print("choose [2] to change part of patient record")
+
 
 
 """ This is the main loop"""
@@ -93,6 +104,21 @@ while selection1 != 0:
                     elif CheckOpt == 2:
                         ad.cout()
                         pass
+                    else:
+                        print("not a valid option")
+                elif selection == 6:
+                    AdminM.managedetails()
+                    detchoice = int(input("choice: "))
+                    if detchoice == 1:
+                        AdminM.managedetails2()
+                        detchoice2 = int(input("choice: "))
+                        if detchoice2 == 1:
+                            ad.managedet()
+                    elif detchoice == 2:
+                        ad.delpatdet()
+                        pass
+
+
 
                 else:
                     print("not a valid selection")
