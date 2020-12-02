@@ -1,3 +1,4 @@
+
 import sqlite3 as sql
 from datetime import datetime as dt
 
@@ -116,6 +117,32 @@ class adminFunctions():
         self.c.execute("""UPDATE Appointment SET checkout = datetime('now') WHERE appointmentID = ? """, Out)
         self.connection.commit()
         # add exceptions
+
+    def managedet(self):
+        patID = int(input("enter patient ID: "))
+        firstn = input("first name: ")
+        lastnm = input("last name: ")
+        dateob= input("date of birth as dd/mm/yyyy: ")
+        age = int(input("age: "))
+        gender = input("gender: ")
+        addl1 = input("address line 1: ")
+        addl2 = input("address line 2: ")
+        postcode = int(input("postcode: "))
+        tel = int(input("telephone number: "))
+        email = input("email: ")
+        regcon = input("Registration confirmation: Y or N")
+
+        self.c.execute("""UPDATE PatientDetail SET firstName = ?, lastName = ?, dateOfBirth = ?,
+        age = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
+        telephoneNumber = ?, email = ?, registrationConfirm = ? WHERE patientID = ?""",
+        (firstn) (lastnm) (dateob) (age) (gender) (addl1) (addl2) (postcode) (tel) (email) (regcon), (patID))
+        self.connection.commit()
+
+    def delpatdet(self):
+        patID = int(input("enter patient ID: "))
+
+        self.c.execute("""DELETE FROM PatientDetail WHERE patientID = ?""", (patID,))
+        self.connection.commit()
 
     def commit_and_close(self):
         self.connection.commit()
