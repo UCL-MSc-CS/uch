@@ -113,9 +113,9 @@ connection.commit()
 # connection.commit()
 
 c.execute("""INSERT INTO PatientDetail VALUES (
-                    25,
+                    26,
                     'Boris',
-                    'Johnson',
+                    'Jhn',
                     16071998,
                     22,
                     'male',
@@ -123,7 +123,7 @@ c.execute("""INSERT INTO PatientDetail VALUES (
                     'London',
                     'idk',
                     07758221088,
-                    'BoJo@pm.gov',
+                    'BoJo@gmail.gov',
                     'N')""")
 connection.commit()
 

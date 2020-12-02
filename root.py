@@ -1,6 +1,7 @@
 import pandas as pd
 import Admins
 import sqlite3 as sql
+from datetime import datetime as dt
 
 class Menus():
     def MasterMenu(self):
@@ -15,12 +16,18 @@ class Menus():
         print("choose [2] to deactivate or delete a profile")
         print("choose [3] to confirm patient registration")
         print("choose [4] to check patient details")
+        print("choose [5] to check append patient check in/out")
         print("choose [0] when finished navigating menu")
 
     def admin_submenu2(self):
         print("choose [1] to deactivate a profile")
         print("choose [2] to delete a profile")
         print("choose [0] when finished navigating menu")
+
+    def admin_submenuCheckIO(self):
+        print("choose [1] to check patient in")
+        print("choose [2] to check patient out")
+        print("choose [0] to go back")
 
 
 """ This is the main loop"""
@@ -77,6 +84,15 @@ while selection1 != 0:
                 elif selection == 3:
                     ad.confirm_registrations()
                     selection = 0
+                elif selection == 5:
+                    AdminM.admin_submenuCheckIO()
+                    CheckOpt = int(input("choice: "))
+                    if CheckOpt == 1:
+                        ad.cin()
+                        pass
+                    elif CheckOpt == 2:
+                        ad.cout()
+                        pass
 
                 else:
                     print("not a valid selection")
