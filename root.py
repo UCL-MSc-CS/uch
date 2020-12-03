@@ -75,10 +75,10 @@ while selection1 != 0:
                 elif selection == 2:
                     AdminM.admin_submenu2()
                     ipt = int(input("please select an option: "))
-                    if ipt == 1:
-                        ad.deactivate_doctor()
-                    if ipt == 2:
-                        ad.delete_doctor()
+                    while ipt == 1:
+                        ipt = ad.deactivate_doctor()
+                    while ipt == 2:
+                        ipt = ad.delete_doctor()
                     if ipt == 0:
                         selection = 0
                 elif selection == 3:
@@ -87,13 +87,12 @@ while selection1 != 0:
                 elif selection == 5:
                     AdminM.admin_submenuCheckIO()
                     CheckOpt = int(input("choice: "))
-                    if CheckOpt == 1:
-                        ad.cin()
-                        pass
-                    elif CheckOpt == 2:
-                        ad.cout()
-                        pass
-
+                    while CheckOpt == 1:
+                        CheckOpt = ad.cin()
+                    while CheckOpt == 2:
+                        CheckOpt = ad.cout()
+                    if CheckOpt == 0:
+                        selection = 0
                 else:
                     print("not a valid selection")
 
