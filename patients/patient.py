@@ -6,9 +6,7 @@ import random
 
 class Patient:
 
-    def __init__(self, patientID, firstName, lastName, email, password):
-        # added patientID
-        self.patientID = patientID
+    def __init__(self, firstName, lastName, email, password):
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
@@ -85,8 +83,8 @@ class Patient:
         if options == 1:
             time = input("Please choose a time from the available appointments: ")
             # add in error handling
-            chosen = [self.patientID, time, date, gpLastName]
-            self.c.execute("""UPDATE Appointment SET bookedStatus = 'Booked', patientID =?
+            chosen = [self.patientEmail, time, date, gpLastName]
+            self.c.execute("""UPDATE Appointment SET bookedStatus = 'Booked', patientEmail =?
                             WHERE time =? and date=? and gpLastName =?""", chosen)
             self.connection.commit()
             print("You have requested to book an appointment on {} at {}, "
@@ -180,8 +178,8 @@ class Patient:
     def cancelAppointment(self):
         print("**********"
               "\nThese are your booked appointments: ")
-        self.c.execute("SELECT appointmentID, date, time, gpLastName FROM Appointment WHERE patientID =?",
-                       [self.patientID])
+        self.c.execute("SELECT appointmentID, date, time, gpLastName FROM Appointment WHERE patientEmail =?",
+                       [self.patientEmail])
         appointments = self.c.fetchall()
         for app in appointments:
             print("Appointment ID: " + str(app[0]) + "\t" + "date: " + app[1] + "\t"
@@ -196,7 +194,7 @@ class Patient:
         print()
         if options == 1:
             cancel = input("Please enter the appointment ID you would like to cancel: ")
-            self.c.execute("UPDATE Appointment SET bookedStatus = 'Available', patientID = '' "
+            self.c.execute("UPDATE Appointment SET bookedStatus = 'Available', patientEmail = '' "
                            "WHERE appointmentID =?", [cancel])
             self.connection.commit()
             print("You have cancelled your appointment")
@@ -208,8 +206,8 @@ class Patient:
     def viewAppConfirmations(self):
         print("**********"
               "\nThese are your booked appointments: ")
-        self.c.execute("SELECT appointmentID, date, time, gpLastName FROM Appointment WHERE patientID =?",
-                       [self.patientID])
+        self.c.execute("SELECT appointmentID, date, time, gpLastName FROM Appointment WHERE patientEmail =?",
+                       [self.patientEmail])
         appointments = self.c.fetchall()
         for app in appointments:
             print("Appointment ID: " + str(app[0]) + "\t" + "date: " + app[1] + "\t"
@@ -226,14 +224,14 @@ class Patient:
 
 
 
-ari = Patient(1, "Arianna", "Bourke", "ariannabourke@hotmail.com", "1234")
-ari.bookAppointment()
+# ari = Patient(1, "Arianna", "Bourke", "ariannabourke@hotmail.com", "1234")
+# ari.bookAppointment()
 # ari.cancelAppointment()
 # ari.viewAppConfirmations()
 # ari.checkDrAvailable()
 
 # conn = sql.connect('patient.db')
 # c = conn.cursor()
-# c.execute("SELECT * FROM Appointment WHERE patientID = '1'")
+# c.execute("SELECT * FROM Appointment WHERE patientEmail = '1'")
 # print(c.fetchall())
 

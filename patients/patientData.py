@@ -56,7 +56,7 @@ c.execute("INSERT INTO GP VALUES ('Bailey@dr.com', 'Bailey', 'F' )")
 
 c.execute(""" CREATE TABLE IF NOT EXISTS Appointment (
                 appointmentID INTEGER PRIMARY KEY,
-                patientID INTEGER,
+                patientEmail DATATYPE text,
                 date DATATYPE text,
                 time DATATYPE text,
                 gpLastName DATATYPE text,
@@ -81,14 +81,14 @@ dates = ['01/01/2021', '02/01/2021', '03/01/2021', '04/01/2021', '05/01/2021', '
 
 gp_list = ['Shepherd', 'Grey', 'Bailey']
 
-patientID = ''
+patientEmail = ''
 bookedStatus = 'Available'
 gpAvailability = 'Available'
 
 for date in dates:
     for time in times:
         for gpLastName in gp_list:
-            c.execute("INSERT INTO Appointment VALUES (null, ?, ?, ?, ?, ?, ?, null, null)", (patientID, date, time,
+            c.execute("INSERT INTO Appointment VALUES (null, ?, ?, ?, ?, ?, ?, null, null)", (patientEmail, date, time,
                                                                                             gpLastName, bookedStatus,
                                                                                            gpAvailability))
 

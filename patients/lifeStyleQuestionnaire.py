@@ -180,18 +180,3 @@ class RiskProfile:
         self.a.execute("SELECT * FROM questionnaireTable")
         result = self.a.fetchall()
         print(result)
-
-
-print("Please fill out the following risk profile")
-arianna = RiskProfile()
-arianna.questions()
-arianna.BMI_calculator()
-arianna.diet()
-arianna.smoking()
-arianna.drugs()
-arianna.alcohol()
-arianna.insert_to_table()
-
-
-# Bob = RiskProfile()
-# Bob.BMI_calculator()

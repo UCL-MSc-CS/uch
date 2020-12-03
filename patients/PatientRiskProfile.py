@@ -78,7 +78,3 @@ class PatientMedical:
         self.connection.commit()
         self.connection.close()
 
-
-Erin = PatientMedical()
-# Erin.vaccination()
-Erin.cancer()
