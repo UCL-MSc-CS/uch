@@ -23,7 +23,7 @@ class Menus():
     def admin_submenu2(self):
         print("choose [1] to deactivate a profile")
         print("choose [2] to delete a profile")
-        print("choose [0] when finished navigating menu")
+        print("choose [0] when finished navigating menu.")
 
     def admin_submenuCheckIO(self):
         print("choose [1] to check patient in")
