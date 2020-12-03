@@ -135,7 +135,7 @@ class adminFunctions():
         self.c.execute("""UPDATE PatientDetail SET firstName = ?, lastName = ?, dateOfBirth = ?,
         age = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
         telephoneNumber = ?, email = ?, registrationConfirm = ? WHERE patientID = ?""",
-        (firstn) (lastnm) (dateob) (age) (gender) (addl1) (addl2) (postcode) (tel) (email) (regcon), (patID))
+        (firstn, lastnm, dateob, age, gender, addl1, addl2, postcode, tel, email, regcon, patID))
         self.connection.commit()
 
     def delpatdet(self):
