@@ -59,9 +59,6 @@ for date in dates:
             c.execute("INSERT INTO Appointment VALUES (null, ?, ?, ?, ?, ?, ?, null, null)", (patientID, date, time,
                                                                                             gpLastName, bookedStatus,
                                                                                            gpAvailability))
-                    
-c.execute("SELECT * FROM PatientDetail")
-print(c.fetchall())
 
 conn.commit()
 conn.close()
