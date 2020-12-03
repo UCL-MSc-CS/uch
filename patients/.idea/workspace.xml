@@ -19,10 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="07b3a6f6-cffc-4c7a-b530-347b86190bb7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppCalendar.db" beforeDir="false" afterPath="$PROJECT_DIR$/AppCalendar.db" afterDir="false" />
-    </list>
+    <list default="true" id="07b3a6f6-cffc-4c7a-b530-347b86190bb7" name="Default Changelist" comment="update" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,7 +46,7 @@
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Patients2" />
   </component>
   <component name="RunManager" selected="Python.appointment">
     <configuration name="AppointmentCalendar (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -132,6 +129,14 @@
       <option name="presentableId" value="Default" />
       <updated>1606165798819</updated>
     </task>
+    <task id="LOCAL-00001" summary="update">
+      <created>1606497548042</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1606497548043</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -146,6 +151,10 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update" />
+    <option name="LAST_COMMIT_MESSAGE" value="update" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="282" y="92" width="1086" height="712" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606415645903">
       <screen x="0" y="0" width="1368" height="872" />
@@ -155,21 +164,29 @@
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state x="415" y="183" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1368.872@0.0.1368.872" timestamp="1606397596633" />
-    <state width="1348" height="386" key="GridCell.Tab.0.bottom" timestamp="1606491856697">
+    <state x="465" y="191" key="FileChooserDialogImpl" timestamp="1606759588383">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1348" height="386" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1606491856697" />
-    <state width="1348" height="386" key="GridCell.Tab.0.center" timestamp="1606491856697">
+    <state x="465" y="191" key="FileChooserDialogImpl/0.0.1368.872@0.0.1368.872" timestamp="1606759588383" />
+    <state width="1348" height="191" key="GridCell.Tab.0.bottom" timestamp="1606511313101">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1348" height="386" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1606491856697" />
-    <state width="1348" height="386" key="GridCell.Tab.0.left" timestamp="1606491856697">
+    <state width="1348" height="191" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1606511313101" />
+    <state width="1348" height="191" key="GridCell.Tab.0.center" timestamp="1606511313101">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1348" height="386" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1606491856697" />
-    <state width="1348" height="386" key="GridCell.Tab.0.right" timestamp="1606491856697">
+    <state width="1348" height="191" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1606511313101" />
+    <state width="1348" height="191" key="GridCell.Tab.0.left" timestamp="1606511313101">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1348" height="386" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1606491856697" />
+    <state width="1348" height="191" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1606511313101" />
+    <state width="1348" height="191" key="GridCell.Tab.0.right" timestamp="1606511313101">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1348" height="191" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1606511313101" />
+    <state x="277" y="169" key="Vcs.Push.Dialog.v2" timestamp="1606497614162">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="277" y="169" key="Vcs.Push.Dialog.v2/0.0.1368.872@0.0.1368.872" timestamp="1606497614162" />
   </component>
 </project>
