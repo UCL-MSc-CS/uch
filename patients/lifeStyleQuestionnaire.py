@@ -177,6 +177,7 @@ class RiskProfile:
         alcoholUnit, meat, diet, caffeine)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         self.a.execute(question_query, self.answers)
+        self.connection.commit()
         self.a.execute("SELECT * FROM questionnaireTable")
         result = self.a.fetchall()
         print(result)
