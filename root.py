@@ -31,13 +31,15 @@ class Menus():
         print("choose [0] to go back")
 
     def managedetails(self):
-        print("choose an option")
+        print("Select from options below:")
         print("choose [1] to change patient record")
         print("choose [2] to delete patient record")
+        print("choose [0] to go back")
 
     def managedetails2(self):
         print("choose [1] to change entire patient record")
         print("choose [2] to change part of patient record")
+        print("choose [0] to go back")
 
 
 
@@ -109,6 +111,7 @@ while selection1 != 0:
                 elif selection == 6:
                     AdminM.managedetails()
                     detchoice = int(input("choice: "))
+
                     if detchoice == 1:
                         AdminM.managedetails2()
                         detchoice2 = int(input("choice: "))
@@ -116,7 +119,8 @@ while selection1 != 0:
                             ad.managedet()
                     elif detchoice == 2:
                         ad.delpatdet()
-                        pass
+                    elif detchoice == 0:
+                        selection = 0
 
 
 
