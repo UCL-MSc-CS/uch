@@ -117,11 +117,14 @@ while selection1 != 0:
                         detchoice2 = int(input("choice: "))
                         if detchoice2 == 1:
                             ad.managedet()
+                        elif detchoice2 == 2:
+                            pass
+                        elif detchoice2 == 0:
+                            selection = 6
                     elif detchoice == 2:
                         ad.delpatdet()
                     elif detchoice == 0:
                         selection = 0
-
 
 
                 else:
