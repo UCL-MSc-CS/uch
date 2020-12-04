@@ -88,10 +88,10 @@ while selection1 != 0:
                 elif selection == 2:
                     AdminM.admin_submenu2()
                     ipt = int(input("please select an option: "))
-                    if ipt == 1:
-                        ad.deactivate_doctor()
-                    if ipt == 2:
-                        ad.delete_doctor()
+                    while ipt == 1:
+                        ipt = ad.deactivate_doctor()
+                    while ipt == 2:
+                        ipt = ad.delete_doctor()
                     if ipt == 0:
                         selection = 0
                 elif selection == 3:
