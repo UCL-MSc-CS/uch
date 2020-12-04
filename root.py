@@ -2,6 +2,9 @@ import pandas as pd
 import Admins
 import sqlite3 as sql
 from datetime import datetime as dt
+import time
+
+
 
 class Menus():
     def MasterMenu(self):
@@ -31,13 +34,15 @@ class Menus():
         print("choose [0] to go back")
 
     def managedetails(self):
-        print("choose an option")
+        print("Select from options below:")
         print("choose [1] to change patient record")
         print("choose [2] to delete patient record")
+        print("choose [0] to go back")
 
     def managedetails2(self):
         print("choose [1] to change entire patient record")
         print("choose [2] to change part of patient record")
+        print("choose [0] to go back")
 
 
 
@@ -52,8 +57,32 @@ while selection1 != 0:
         #call code for patient
         pass
     elif selection1 == 3:
-        #call code for GP
-        pass
+        email = input("Please enter your email address: ")
+        password = input("Please enter your password: ")
+
+        with sql.connect("GPs.db") as db:
+            c = db.cursor()
+
+        find_doctor = ("SELECT * FROM Doctors WHERE email =? AND password =?")
+
+        # avoid using %s as this is vulnerable to injection attacks.
+        c.execute(find_doctor, [(email), (password)])
+        results = c.fetchall()
+
+        if results:
+            for i in results:
+                print("Welcome " + i[2])
+            selection1 = 0
+
+        else:
+            print("Email and password not recognised")
+            again = input("Do you want to try again?(y/n)")
+            if again.lower() == "n":
+                print("Goodbye")
+                time.sleep(1)
+                selection1 = 0
+
+
 
     while selection1 == 1:
         ad = Admins.adminFunctions()
@@ -109,6 +138,7 @@ while selection1 != 0:
                 elif selection == 6:
                     AdminM.managedetails()
                     detchoice = int(input("choice: "))
+
                     if detchoice == 1:
                         AdminM.managedetails2()
                         detchoice2 = int(input("choice: "))
@@ -116,7 +146,8 @@ while selection1 != 0:
                             ad.managedet()
                     elif detchoice == 2:
                         ad.delpatdet()
-                        pass
+                    elif detchoice == 0:
+                        selection = 0
 
 
 
