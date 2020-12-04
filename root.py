@@ -106,6 +106,8 @@ while selection1 != 0:
                     elif CheckOpt == 2:
                         ad.cout()
                         pass
+                    elif CheckOpt == 0:
+                        selection = 0
                     else:
                         print("not a valid option")
                 elif selection == 6:
