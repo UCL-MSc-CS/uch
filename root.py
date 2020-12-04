@@ -3,6 +3,7 @@ import Admins
 import sqlite3 as sql
 from datetime import datetime as dt
 import time
+from GPFunctions import gpsFunctions as gp
 
 
 
@@ -57,10 +58,11 @@ while selection1 != 0:
         #call code for patient
         pass
     elif selection1 == 3:
+        # todo replace hard code with function call.
         email = input("Please enter your email address: ")
         password = input("Please enter your password: ")
 
-        with sql.connect("GPs.db") as db:
+        with sql.connect("UCH.db") as db:
             c = db.cursor()
 
         find_doctor = ("SELECT * FROM Doctors WHERE email =? AND password =?")
