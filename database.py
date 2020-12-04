@@ -14,22 +14,19 @@ connection = sqlite3.connect('UCH.db')
 # first letter of each word capitalised e.g. Doctor, PatientDetail.
 
 c = connection.cursor()
-#create GP table
-c.execute("""CREATE TABLE IF NOT EXISTS GP (
-                    gpEmail text UNIQUE,
-                    password text,
+c.execute("""CREATE TABLE IF NOT EXISTS Doctor(
+                    email text PRIMARY KEY,
                     firstName text,
                     lastName text,
-                    gender text,
                     dateOfBirth integer,
-                    addressLine1 text,
-                    addressLine2 text,
-                    telephoneNumber text,
-                    department text,
-                    active text)""")
+                    speciality text,
+                    telephoneNumber integer,
+                    gender text,
+                    active text)
+                    """)
 connection.commit()
 
-#create patients table
+
 c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
                     patientID integer PRIMARY KEY,
                     firstName text,
@@ -45,26 +42,8 @@ c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
                     registrationConfirm text)""")
 connection.commit()
 
-#create the appointments table
-c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
-                    appointmentId integer primary key,
-                    gpEmail text,
-                    patientEmail text,
-                    start integer,
-                    end integer,
-                    reason text,
-                    appointmentStatus text,
-                    dateRequested integer,
-                    patientComplaints text,
-                    doctorFindings text,
-                    diagnosis text,
-                    furtherInspections text,
-                    doctorAdvice text,
-                    checkin integer NULL,
-                    checkout integer NULL)""")
-connection.commit()
 
-c.execute("""SELECT * FROM GP""")
+c.execute("""SELECT * FROM Doctor""")
 items = c.fetchall()
 for i in items:
     print(i)
