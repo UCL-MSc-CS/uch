@@ -91,16 +91,19 @@ class PatientMedical:
                 self.a.execute("""INSERT INTO cancer(cancerFamily)
                                                 VALUES (?)""", cancer)
 
-        self.a.execute("SELECT * FROM cancer")
-        show2 = self.a.fetchall()
-        print(show2)
-        self.a.execute("SELECT * FROM medicalHistory")
-        show3 = self.a.fetchall()
-        print(show3)
+    def show_profile(self):
+        count = 0
+        child_name = input("Please enter your child's name: ")
+        self.a.execute("SELECT DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella FROM medicalHistory WHERE status = ?", [child_name])
+        child_query = self.a.fetchall()
+        for vac in child_query:
+            print(self.vaccination_history[count], ":", vac[count])
+            count += 1
         self.connection.commit()
         self.connection.close()
 #
 Erin = PatientMedical()
-Erin.vaccination()
-Erin.cancer()
+# Erin.vaccination()
+# Erin.cancer()
+Erin.show_profile()
 

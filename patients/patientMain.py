@@ -40,7 +40,9 @@ def options():
                 x.insert_to_table()
             elif qaction == 4:
                 x = PatientMedical()
+                x.medicalHistory()
                 x.cancer()
+
 
 def task():
     print("Choose [1] to register for a new account")
