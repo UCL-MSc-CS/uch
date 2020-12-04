@@ -60,8 +60,8 @@ c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
                     diagnosis text,
                     furtherInspections text,
                     doctorAdvice text,
-                    checkin integer NULL,
-                    checkout integer NULL)""")
+                    checkIn integer NULL,
+                    checkOut integer NULL)""")
 connection.commit()
 
 c.execute("""SELECT * FROM GP""")
