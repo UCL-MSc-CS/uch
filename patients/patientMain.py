@@ -7,6 +7,7 @@ from lifeStyleQuestionnaire import RiskProfile
 connection = sql.connect('patient.db')
 c = connection.cursor()
 
+
 def options():
         print("What would you like to do next?")
         print("Choose [1] to book an appointment")
