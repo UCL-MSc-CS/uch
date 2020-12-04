@@ -16,18 +16,31 @@ class Menus():
         print("choose [2] to deactivate or delete a profile")
         print("choose [3] to confirm patient registration")
         print("choose [4] to check patient details")
-        print("choose [5] to check append patient check in/out")
+        print("choose [5] to append patient check in/out")
+        print("choose [6] to change patient details")
         print("choose [0] when finished navigating menu")
 
     def admin_submenu2(self):
         print("choose [1] to deactivate a profile")
         print("choose [2] to delete a profile")
-        print("choose [0] when finished navigating menu")
+        print("choose [0] when finished navigating menu.")
 
     def admin_submenuCheckIO(self):
         print("choose [1] to check patient in")
         print("choose [2] to check patient out")
         print("choose [0] to go back")
+
+    def managedetails(self):
+        print("Select from options below:")
+        print("choose [1] to change patient record")
+        print("choose [2] to delete patient record")
+        print("choose [0] to go back")
+
+    def managedetails2(self):
+        print("choose [1] to alter entire patient record")
+        print("choose [2] to alter part of patient record")
+        print("choose [0] to go back")
+
 
 
 """ This is the main loop"""
@@ -87,12 +100,35 @@ while selection1 != 0:
                 elif selection == 5:
                     AdminM.admin_submenuCheckIO()
                     CheckOpt = int(input("choice: "))
-                    while CheckOpt == 1:
-                        CheckOpt = ad.cin()
-                    while CheckOpt == 2:
-                        CheckOpt = ad.cout()
-                    if CheckOpt == 0:
+                    if CheckOpt == 1:
+                        ad.cin()
+                        pass
+                    elif CheckOpt == 2:
+                        ad.cout()
+                        pass
+                    elif CheckOpt == 0:
                         selection = 0
+                    else:
+                        print("not a valid option")
+                elif selection == 6:
+                    AdminM.managedetails()
+                    detchoice = int(input("choice: "))
+
+                    if detchoice == 1:
+                        AdminM.managedetails2()
+                        detchoice2 = int(input("choice: "))
+                        if detchoice2 == 1:
+                            ad.managedet()
+                        elif detchoice2 == 2:
+                            pass
+                        elif detchoice2 == 0:
+                            selection = 6
+                    elif detchoice == 2:
+                        ad.delpatdet()
+                    elif detchoice == 0:
+                        selection = 0
+
+
                 else:
                     print("not a valid selection")
 
