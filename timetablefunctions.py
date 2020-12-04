@@ -199,7 +199,7 @@ def declineappointment(appointmentId):
 
     closeconn(conn["connection"])
 
-# book_appointment("2020-12-05", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
-# book_appointment("2020-12-05", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
-# book_appointment("2020-12-05", "15:00", "16:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
+#book_appointment("2020-12-03", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
+#book_appointment("2020-12-03", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
+#book_appointment("2020-12-03", "15:00", "16:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
 # print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
