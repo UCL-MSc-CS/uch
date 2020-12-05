@@ -149,9 +149,10 @@ def timetableblock(gpemail, date):
 
 def timeTableTodayAppointments(gpemail):
     conn = connecttodb()
-    date = datetime.today().date().datetime()
-    start = uf.tounixtime(date) 128932839829
-    end = uf.tounixtime(date + timedelta(1))
+    now = datetime.today()
+    today = datetime(now.year, now.month, now.day)
+    start = uf.tounixtime(today)
+    end = uf.tounixtime(today + timedelta(1))
 
     sql = """
 
@@ -160,7 +161,7 @@ def timeTableTodayAppointments(gpemail):
             gpEmail = ? AND
             start >= ? AND 
             end <= ? AND
-            appointmentStatus not in ('Pending','Unavailable')
+            appointmentStatus = 'Available'
         ORDER BY start asc
     """
     values = (gpemail, start, end)
@@ -240,3 +241,4 @@ def declineappointment(appointmentId):
 #book_appointment("2020-12-03", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
 #book_appointment("2020-12-03", "15:00", "16:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
 # print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
+
