@@ -97,6 +97,8 @@ while selection1 != 0:
                 elif selection == 3:
                     ad.confirm_registrations()
                     selection = 0
+                #checking patient in or out
+
                 elif selection == 5:
                     AdminM.admin_submenuCheckIO()
                     CheckOpt = int(input("choice: "))
@@ -110,6 +112,8 @@ while selection1 != 0:
                         selection = 0
                     else:
                         print("not a valid option")
+
+                #updating/deleting patient details
                 elif selection == 6:
                     AdminM.managedetails()
                     detchoice = int(input("choice: "))
