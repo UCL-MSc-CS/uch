@@ -69,7 +69,7 @@ while selection1 != 0:
         with sql.connect("UCH.db") as db:
             c = db.cursor()
 
-        find_doctor = ("SELECT * FROM Doctors WHERE email =? AND password =?")
+        find_doctor = ("SELECT * FROM GP WHERE gpEmail =? AND password =?")
 
         # avoid using %s as this is vulnerable to injection attacks.
         c.execute(find_doctor, [(email), (password)])

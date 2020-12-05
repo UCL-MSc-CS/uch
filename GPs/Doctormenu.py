@@ -1,8 +1,8 @@
-from uch.GPs.clearhours import clearhours
-from uch.GPs.printtimetable import printtimetable
-from uch.GPs.addnonpatienttime import addnonpatienttime
-from uch.GPs.confirmappointments import confirmappointments
-from uch.GPs.openAppointment import openappointment
+from GPs.clearhours import clearhours
+from GPs.printtimetable import printtimetable
+from GPs.addnonpatienttime import addnonpatienttime
+from GPs.confirmappointments import confirmappointments
+from GPs.openAppointment import openappointment
 
 def continueorexit():
     repeat = True
@@ -22,7 +22,7 @@ def mainmenu(drdemail):
     continueloop = [True]
 
     #Todo get doctor details from query for the below print statement
-    print("Welcome Doctor " + doctoremail)
+
     while continueloop[0]:
         print("choose [1] to open appointment")
         print("choose [2] to confirm appointments")

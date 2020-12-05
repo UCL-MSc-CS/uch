@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime, timedelta
-import uch.usefulfunctions as uf
+import usefulfunctions as uf
 from pathlib import Path
 
 datetimeformat = "%Y-%m-%d %H:%M"
@@ -8,7 +8,7 @@ datetimeformat = "%Y-%m-%d %H:%M"
 
 # connect to your database
 def connecttodb():
-    path = "UCH.db"
+    path = "../UCH.db"
     connection = sqlite3.connect(path)  # DO NOT add this file to Git!!!
     cursor = connection.cursor()
     conncursordict = {"connection": connection, "cursor": cursor}

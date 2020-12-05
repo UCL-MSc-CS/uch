@@ -1,6 +1,6 @@
 from datetime import datetime
-import uch.usefulfunctions as uf
-import uch.timetablefunctions as db
+import usefulfunctions as uf
+import timetablefunctions as db
 
 dateformatstring = "%Y-%m-%d"
 timeformatstring = "%H:%M"
