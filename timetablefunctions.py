@@ -67,12 +67,12 @@ def book_time(date, startTime, endTime, reason, patientEmail, gpEmailArray):
 
     for gpEmail in gpEmailArray:
         values = (
-            None, gpEmail, patientEmail, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
+            None, gpEmail, 'Ratwatte', patientEmail, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
             None)
         conn["cursor"].execute(
             """
             INSERT INTO Appointment
-            Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """, values
         )
 
@@ -148,7 +148,7 @@ def timetableblock(gpemail, date):
     return results
 
 # this is used to open today's appointments that have been confirmed.
-def timeTableTodayAppointments(gpemail):
+def TodayAppointments(gpemail):
     conn = connecttodb()
     now = datetime.today()
     today = datetime(now.year, now.month, now.day)
@@ -238,8 +238,8 @@ def declineappointment(appointmentId):
 
     closeconn(conn["connection"])
 
-#book_appointment("2020-12-03", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-03", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-03", "15:00", "16:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
+# book_appointment("2020-12-05", "15:00", "16:30", "cooldude@gmail.com", ["test@gmail.com"])
+# book_appointment("2020-12-05", "14:00", "15:00", "iamsick@gmail.com", ["test@gmail.com"])
+# book_appointment("2020-12-05", "17:30", "18:30", "whyunotreatme@gmail.com", ["test@gmail.com"])
 # print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
 
