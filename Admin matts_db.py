@@ -112,20 +112,31 @@ connection.commit()
 #                     'Y')""")
 # connection.commit()
 
-c.execute("""INSERT INTO PatientDetail VALUES (
-                    26,
-                    'Boris',
-                    'Jhn',
-                    16071998,
-                    22,
-                    'male',
-                    '10 downing street',
-                    'London',
-                    'idk',
-                    07758221088,
-                    'BoJo@gmail.gov',
-                    'N')""")
-connection.commit()
+# c.execute("""INSERT INTO PatientDetail VALUES (
+#                     26,
+#                     'Boris',
+#                     'Jhn',
+#                     16071998,
+#                     22,
+#                     'male',
+#                     '10 downing street',
+#                     'London',
+#                     'idk',
+#                     07758221088,
+#                     'BoJo@gmail.gov',
+#                     'N')""")
+# connection.commit()
+
+# c.execute("""INSERT INTO Doctor VALUES(
+#             'matthew.shorvon@ucl.ac.uk',
+#             'Matthew',
+#             'Shorvon',
+#             '160798',
+#             'Plastic Surgery',
+#             '07758221088',
+#             'Male',
+#             'Y')""")
+# connection.commit()
 
 c.execute("""SELECT * FROM Doctor""")
 items = c.fetchall()
@@ -133,6 +144,13 @@ for i in items:
     print(i)
 connection.commit()
 print(" ")
+
+email = "m.shorvon@ucl.ac.uk"
+c.execute("SELECT * FROM Doctor WHERE email = ?", (email,))
+items = c.fetchall()
+print(items)
+if len(items) == 0:
+    print('yes')
 
 c.execute("""SELECT * FROM Admin""")
 items = c.fetchall()

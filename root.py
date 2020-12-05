@@ -3,9 +3,6 @@ import Admins
 import sqlite3 as sql
 from datetime import datetime as dt
 import time
-from GPFunctions import gpsFunctions as gp
-
-
 
 class Menus():
     def MasterMenu(self):
@@ -27,7 +24,7 @@ class Menus():
     def admin_submenu2(self):
         print("choose [1] to deactivate a profile")
         print("choose [2] to delete a profile")
-        print("choose [0] when finished navigating menu")
+        print("choose [0] when finished navigating menu.")
 
     def admin_submenuCheckIO(self):
         print("choose [1] to check patient in")
@@ -41,11 +38,17 @@ class Menus():
         print("choose [0] to go back")
 
     def managedetails2(self):
-        print("choose [1] to change entire patient record")
-        print("choose [2] to change part of patient record")
+        print("choose [1] to alter entire patient record")
+        print("choose [2] to alter part of patient record")
         print("choose [0] to go back")
 
 # push to github desktop
+
+
+    def admin_submenuCheckIO(self):
+        print("choose [1] to check patient in")
+        print("choose [2] to check patient out")
+        print("choose [0] to go back")
 
 
 """ This is the main loop"""
@@ -118,10 +121,10 @@ while selection1 != 0:
                 elif selection == 2:
                     AdminM.admin_submenu2()
                     ipt = int(input("please select an option: "))
-                    if ipt == 1:
-                        ad.deactivate_doctor()
-                    if ipt == 2:
-                        ad.delete_doctor()
+                    while ipt == 1:
+                        ipt = ad.deactivate_doctor()
+                    while ipt == 2:
+                        ipt = ad.delete_doctor()
                     if ipt == 0:
                         selection = 0
                 elif selection == 3:
@@ -136,6 +139,8 @@ while selection1 != 0:
                     elif CheckOpt == 2:
                         ad.cout()
                         pass
+                    elif CheckOpt == 0:
+                        selection = 0
                     else:
                         print("not a valid option")
                 elif selection == 6:
@@ -147,6 +152,10 @@ while selection1 != 0:
                         detchoice2 = int(input("choice: "))
                         if detchoice2 == 1:
                             ad.managedet()
+                        elif detchoice2 == 2:
+                            pass
+                        elif detchoice2 == 0:
+                            selection = 6
                     elif detchoice == 2:
                         ad.delpatdet()
                     elif detchoice == 0:
