@@ -8,7 +8,8 @@ datetimeformat = "%Y-%m-%d %H:%M"
 
 # connect to your database
 def connecttodb():
-    path = "../UCH.db"
+
+    path = str(Path(__file__).parent.absolute())
     connection = sqlite3.connect(path)  # DO NOT add this file to Git!!!
     cursor = connection.cursor()
     conncursordict = {"connection": connection, "cursor": cursor}
@@ -150,7 +151,7 @@ def timetableblock(gpemail, date):
 def timeTableTodayAppointments(gpemail):
     conn = connecttodb()
     date = datetime.today().date().datetime()
-    start = uf.tounixtime(date) 128932839829
+    start = uf.tounixtime(date)
     end = uf.tounixtime(date + timedelta(1))
 
     sql = """
@@ -239,4 +240,4 @@ def declineappointment(appointmentId):
 #book_appointment("2020-12-03", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
 #book_appointment("2020-12-03", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
 #book_appointment("2020-12-03", "15:00", "16:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
-# print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
+#print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
