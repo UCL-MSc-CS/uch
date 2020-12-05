@@ -8,7 +8,8 @@ datetimeformat = "%Y-%m-%d %H:%M"
 
 # connect to your database
 def connecttodb():
-    path = "../UCH.db"
+
+    path = str(Path(__file__).parent.absolute())
     connection = sqlite3.connect(path)  # DO NOT add this file to Git!!!
     cursor = connection.cursor()
     conncursordict = {"connection": connection, "cursor": cursor}
@@ -146,7 +147,7 @@ def timetableblock(gpemail, date):
     closeconn(conn["connection"])
     return results
 
-# this is used to open today's appointments
+# this is used to open today's appointments that have been confirmed.
 def timeTableTodayAppointments(gpemail):
     conn = connecttodb()
     now = datetime.today()
