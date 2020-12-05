@@ -9,7 +9,7 @@ datetimeformat = "%Y-%m-%d %H:%M"
 # connect to your database
 def connecttodb():
 
-    path = str(Path(__file__).parent.absolute())
+    path = str(Path(__file__).parent.absolute()) + "/UCH.db"
     connection = sqlite3.connect(path)  # DO NOT add this file to Git!!!
     cursor = connection.cursor()
     conncursordict = {"connection": connection, "cursor": cursor}
