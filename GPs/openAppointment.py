@@ -8,28 +8,17 @@ import usefulfunctions as uf
 dateformatstring = "%Y-%m-%d"
 timeformatstring = "%H:%M"
 datetimeformat = dateformatstring + " " + timeformatstring
-continueloop = [True]
 
-def continueorexit():
-    repeat = True
-    while repeat:
-        val = input("Continue the appointment (Y/N) ?:")
-        if val in ("Y","y"):
-            repeat = False
-            continueloop[0] = True
-        elif val in ("N","n"):
-            repeat = False
-            continueloop[0] = False
-        else:
-            print("Please enter a valid response")
 
 def openappointment(doctoremail):
     #ToDO query for all today's confirmed apointments, display them to the doctor and allow to select one from the id
-    printtodayappointments(doctoremail)
+    appointmentid = printtodayappointments(doctoremail)
+    continueloop = True
     while continueloop:
         print("choose [1] for Appointment notes")
         print("choose [2] for Patient history")
         print("choose [3] for editing Patient prescription")
+        print("choose [4] for selecting a different appointment")
         option = input(":")
         if option == "1":
             appointmentnotes(doctoremail,appointmentid)
@@ -37,9 +26,21 @@ def openappointment(doctoremail):
             patienthistory(doctoremail,appointmentid)
         elif option == "3":
             prescription(doctoremail,appointmentid)
+        elif option == "4":
+            openappointment(doctoremail)
+            break
         else:
             print("Invalid option chosen. Try again")
-        continueorexit()
+
+        while True:
+            val = input("Would you like to stay within the appointment (Y/N) ?:")
+            if val in ("Y", "y"):
+                break
+            elif val in ("N", "n"):
+                continueloop = False
+                break
+            else:
+                print("Please enter a valid response")
         print("------------------------------------------------------------------------------------------------------")
 
 
@@ -65,8 +66,9 @@ def printtodayappointments(doctoremail):
         try:
             idNum = int(id)
             if idNum in appointmentids:
-                print("Opening appointment id: " + id + " ...")
+                print("Opening appointment id: " + id)
                 # todo connect current appointment options
+                return idNum
             else:
                 print("You entered an invalid id number!")
         except:
@@ -81,5 +83,16 @@ def printtodayappointments(doctoremail):
             print("Invalid option chosen, exiting today's appointments....")
             continueSelecting = False
 
-
+def continueorexit():
+    repeat = True
+    while repeat:
+        val = input("Continue the appointment (Y/N) ?:")
+        if val in ("Y","y"):
+            repeat = False
+            continueloop[0] = True
+        elif val in ("N","n"):
+            repeat = False
+            continueloop[0] = False
+        else:
+            print("Please enter a valid response")
 

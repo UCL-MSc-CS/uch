@@ -7,7 +7,7 @@ from openAppointment import openappointment
 def continueorexit():
     repeat = True
     while repeat:
-        val = input("Do you want to continue (Y/N) ?:")
+        val = input("Do you want to remain logged in (Y/N) ?:")
         if val in ("Y","y"):
             repeat = False
             continueloop[0] = True
