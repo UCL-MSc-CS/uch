@@ -39,6 +39,18 @@ def functionname(args):
 
 """
 
+# gets the doctor's last name given an email address.
+def getdoclastname(docemail):
+    conn = connecttodb()
+
+    sql = """SELECT lastName FROM GP WHERE gpEmail = ?"""
+    values = (docemail,)
+    conn['cursor'].execute(sql,values)
+    results = conn['cursor'].fetchall()
+    lastname = results[0][0]
+
+    closeconn(conn["connection"])
+    return lastname
 
 # allows one to book time into the system's calendar
 # the gpEmailArray is a list with all the GPs you wish to create an appointment for
@@ -50,7 +62,7 @@ def book_time(date, startTime, endTime, reason, patientEmail, gpEmailArray):
     dateRequested = uf.tounixtime(datetime.today())
     appointmentStatus = ''
     if reason == 'Appointment':
-        appointmentStatus = 'pending'
+        appointmentStatus = 'Pending'
 
     for gpEmail in gpEmailArray:
         values = (
@@ -86,7 +98,7 @@ def checkslotavailable(date, startTime, endTime, gpemailarray):
                 (start < ? AND end >= ?) OR
                 (start > ? AND end < ?)
             ) AND
-            appointmentStatus not in ('pending','declined')
+            appointmentStatus not in ('Pending','Unavailable')
     """
     values = (startunix,startunix,endunix,endunix,startunix,endunix)
 
@@ -118,12 +130,12 @@ def timetableblock(gpemail, date):
 
     sql= """
     
-        SELECT reason,start,end,patientEmail,appointmentId FROM Appointment 
+        SELECT reason,start,end,patientEmail,appointmentID FROM Appointment 
         WHERE 
             gpEmail = ? AND
             start >= ? AND 
             end <= ? AND
-            appointmentStatus not in ('pending','declined')
+            appointmentStatus not in ('Pending','Unavailable')
         ORDER BY start asc
     """
     values = (gpemail,start,end)
@@ -140,7 +152,7 @@ def deleteappointment(appointmentId):
     conn = connecttodb()
     conn['cursor'].execute("""
         DELETE FROM Appointment
-        WHERE appointmentId = ?
+        WHERE appointmentID = ?
     """, (appointmentId,))
     closeconn(conn["connection"])
 
@@ -154,10 +166,10 @@ def getallpendingappointments(gpemail, date):
 
     conn['cursor'].execute(
         """
-     SELECT reason,start,end,patientEmail,appointmentId 
+     SELECT reason,start,end,patientEmail,appointmentID 
      FROM Appointment 
      WHERE
-        appointmentStatus = 'pending' AND
+        appointmentStatus = 'Pending' AND
         (start >= ? AND end <= ?) AND
         gpEmail = ?
      """
@@ -176,9 +188,9 @@ def acceptappointment(appointmentId):
     UPDATE 
         Appointment
     SET
-       appointmentStatus = 'accepted'
+       appointmentStatus = 'Available'
     WHERE
-        appointmentId = ? 
+        appointmentID = ? 
     """, (appointmentId,))
 
     closeconn(conn["connection"])
@@ -192,9 +204,9 @@ def declineappointment(appointmentId):
     UPDATE 
         Appointment
     SET
-       appointmentStatus = 'declined'
+       appointmentStatus = 'Unavailable'
     WHERE
-        appointmentId = ? 
+        appointmentID = ? 
     """, (appointmentId,))
 
     closeconn(conn["connection"])
