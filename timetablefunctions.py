@@ -67,12 +67,12 @@ def book_time(date, startTime, endTime, reason, patientEmail, gpEmailArray):
 
     for gpEmail in gpEmailArray:
         values = (
-            None, gpEmail, patientEmail, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
+            None, gpEmail, 'Ratwatte', patientEmail, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
             None)
         conn["cursor"].execute(
             """
             INSERT INTO Appointment
-            Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """, values
         )
 
@@ -147,12 +147,13 @@ def timetableblock(gpemail, date):
     closeconn(conn["connection"])
     return results
 
-
-def timeTableTodayAppointments(gpemail):
+# this is used to open today's appointments that have been confirmed.
+def TodayAppointments(gpemail):
     conn = connecttodb()
-    date = datetime.today().date().datetime()
-    start = uf.tounixtime(date)
-    end = uf.tounixtime(date + timedelta(1))
+    now = datetime.today()
+    today = datetime(now.year, now.month, now.day)
+    start = uf.tounixtime(today)
+    end = uf.tounixtime(today + timedelta(1))
 
     sql = """
 
@@ -161,7 +162,7 @@ def timeTableTodayAppointments(gpemail):
             gpEmail = ? AND
             start >= ? AND 
             end <= ? AND
-            appointmentStatus not in ('Pending','Unavailable')
+            appointmentStatus = 'Available'
         ORDER BY start asc
     """
     values = (gpemail, start, end)
@@ -237,7 +238,8 @@ def declineappointment(appointmentId):
 
     closeconn(conn["connection"])
 
-#book_appointment("2020-12-03", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-03", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-03", "15:00", "16:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
-#print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
+# book_appointment("2020-12-05", "15:00", "16:30", "cooldude@gmail.com", ["test@gmail.com"])
+# book_appointment("2020-12-05", "14:00", "15:00", "iamsick@gmail.com", ["test@gmail.com"])
+# book_appointment("2020-12-05", "17:30", "18:30", "whyunotreatme@gmail.com", ["test@gmail.com"])
+# print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
+
