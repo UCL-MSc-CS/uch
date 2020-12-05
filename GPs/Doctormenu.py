@@ -1,8 +1,8 @@
-from GPs.clearhours import clearhours
-from GPs.printtimetable import printtimetable
-from GPs.addnonpatienttime import addnonpatienttime
-from GPs.confirmappointments import confirmappointments
-from GPs.openAppointment import openappointment
+from clearhours import clearhours
+from printtimetable import printtimetable
+from addnonpatienttime import addnonpatienttime
+from confirmappointments import confirmappointments
+from openAppointment import openappointment
 
 def continueorexit():
     repeat = True

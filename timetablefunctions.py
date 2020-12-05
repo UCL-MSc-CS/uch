@@ -147,6 +147,31 @@ def timetableblock(gpemail, date):
     return results
 
 
+def timeTableTodayAppointments(gpemail):
+    conn = connecttodb()
+    date = datetime.today().date().datetime()
+    start = uf.tounixtime(date) 128932839829
+    end = uf.tounixtime(date + timedelta(1))
+
+    sql = """
+
+        SELECT reason,start,end,patientEmail,appointmentID FROM Appointment 
+        WHERE 
+            gpEmail = ? AND
+            start >= ? AND 
+            end <= ? AND
+            appointmentStatus not in ('Pending','Unavailable')
+        ORDER BY start asc
+    """
+    values = (gpemail, start, end)
+
+    conn['cursor'].execute(sql, values)
+    results = conn['cursor'].fetchall()
+
+    closeconn(conn["connection"])
+    return results
+
+
 # call this when you'd like to cancel an appointment
 def deleteappointment(appointmentId):
     conn = connecttodb()
