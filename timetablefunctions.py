@@ -146,7 +146,7 @@ def timetableblock(gpemail, date):
     closeconn(conn["connection"])
     return results
 
-
+# this is used to open today's appointments
 def timeTableTodayAppointments(gpemail):
     conn = connecttodb()
     now = datetime.today()
