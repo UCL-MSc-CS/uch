@@ -17,9 +17,10 @@ def continueorexit():
         else:
             print("Please enter a valid response")
 
+continueloop = [True]
+
 def mainmenu(drdemail):
     doctoremail = drdemail
-    continueloop = [True]
 
     #Todo get doctor details from query for the below print statement
 
