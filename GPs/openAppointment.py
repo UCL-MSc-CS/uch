@@ -82,5 +82,3 @@ def printtodayappointments(doctoremail):
         else:
             print("Invalid option chosen, exiting today's appointments....")
             continueSelecting = False
-
-
