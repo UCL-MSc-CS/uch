@@ -27,7 +27,8 @@ def options():
             if qaction == 1:
                 pass
             elif qaction == 2:
-                pass
+                name = RiskProfile
+                name.show_profile()
             elif qaction == 3:
                 print("Please fill out the following risk profile")
                 x = RiskProfile()

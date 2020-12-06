@@ -92,13 +92,30 @@ class PatientMedical:
                                                 VALUES (?)""", cancer)
 
     def show_profile(self):
+        print("Which profile would you like to see? "
+              "\n [1]: Your own risk profile"
+              "\n [2]: Your children's risk profiles")
+        profile = input("Please choose from the menu: ")
         count = 0
-        child_name = input("Please enter your child's name: ")
-        self.a.execute("SELECT DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella FROM medicalHistory WHERE status = ?", [child_name])
-        child_query = self.a.fetchall()
-        for vac in child_query:
-            print(self.vaccination_history[count], ":", vac[count])
-            count += 1
+        if profile == "1":
+            self.status = "own"
+            your_name = input("Please enter your name: ")
+            self.a.execute("SELECT DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella FROM medicalHistory WHERE status = ? AND ", [self.status])
+            your_query = self.a.fetchall()
+            print("Your medical record: ")
+            for vac in your_query:
+                for answers in vac:
+                    print(self.vaccination_history[count], ":", answers)
+                    count += 1
+        elif profile == "2":
+            child_name = input("Please enter your child's name: ")
+            self.a.execute("SELECT DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella FROM medicalHistory WHERE status = ?", [child_name])
+            child_query = self.a.fetchall()
+            print("{}'s medical record: ".format(child_name))
+            for vac in child_query:
+                for answers in vac:
+                    print(self.vaccination_history[count], ":", answers)
+                    count += 1
         self.connection.commit()
         self.connection.close()
 #
