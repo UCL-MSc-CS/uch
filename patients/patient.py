@@ -2,7 +2,7 @@ import sqlite3 as sql
 from getpass import getpass
 import calendar
 import random
-from datetime import datetime, timedelta
+from datetime import time as x, date as xyz, datetime
 import time
 
 
@@ -148,7 +148,7 @@ class Patient:
         print("\nThe female doctor you have been assigned is Dr {}".format(gpLastName))
         return gpLastName
 
-    def chooseDate(self, gpLastName):
+    def chooseDate(self):
         print("**********"
               "\n [1] January     \t[2] February      \t[3] March"
               "\n [4] April     \t\t[5] May           \t[6] June"
@@ -162,12 +162,37 @@ class Patient:
         date = "2021-{}-{}".format(mm, day)
         return date
 
-    # def displayAvailable(self, gpLastName, date):
-    #     print("\nThis is the current availability for Dr {} on your chosen date: ".format(gpLastName))
-        # self.c.execute("SELECT time, bookedStatus FROM Appointment WHERE date =? and gpLastName =?", [date, gpLastName])
-        # appointments = self.c.fetchall()
-        # times = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
-        #          "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"]
+    def toregulartime(self, unixtimestamp):
+        return datetime.utcfromtimestamp(int(unixtimestamp))
+
+    def tounixtime(self, dt):
+        result = int(time.mktime(dt.timetuple()))
+        return result
+
+    def displayAvailable(self, date):
+
+        dt_string = date
+
+        dt_object = datetime.strptime(dt_string, '%Y-%m-%d')
+        print(dt_object)
+        start = self.tounixtime(dt_object)
+        print(start)
+
+        year, month, day = map(int, dt_string.split('-'))
+        dt_str_obj = xyz(year, month, day)
+        dt_time = x(23, 59, 59)
+        dt_end = datetime.combine(dt_str_obj, dt_time)
+        end = self.tounixtime(dt_end)
+        print(end)
+
+        print("\nThis is the current availability for Dr {} on your chosen date: ")
+
+        self.c.execute("SELECT start, appointmentStatus FROM Appointment WHERE start >=? and end <?", [start, end])
+        appointments = self.c.fetchall()
+
+        print(appointments)
+        times = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+                 "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"]
         # array = []
         # for time in times:
         #     array.append(time)
@@ -180,7 +205,7 @@ class Patient:
         #             print(time + " available")
 
 
-    def chooseTime(self, gpLastName, date):
+    def chooseTime(self):
         print("**********"
               "\n[1] to select a time"
               "\n[2] to select another date"
@@ -189,19 +214,22 @@ class Patient:
                             "\nPlease choose from the options above: "))
         if options == 1:
             time = input("Please choose a time from the available appointments: ")
-
-            day_str = date + ' ' + time
-            date_time_obj = datetime.strptime(day_str, '%Y-%m-%d %H:%M')
-            start = self.tounixtime(date_time_obj)
+            #
+            # day_str = date + ' ' + time
+            # date_time_obj = datetime.strptime(day_str, '%Y-%m-%d %H:%M')
+            # start = self.tounixtime(date_time_obj)
+            start = 1609459200
             end = start + (30 * 60)
+            #
+            # # add in error handling
+            #
+            # self.c.execute("SELECT gpEmail FROM GP WHERE gpLastName =?",
+            #                [gpLastName])
+            # gpEmails = self.c.fetchall()
+            # gpEmail = gpEmails[0][0]
 
-            # add in error handling
-
-            self.c.execute("SELECT gpEmail FROM GP WHERE gpLastName =?",
-                           [gpLastName])
-            gpEmails = self.c.fetchall()
-            gpEmail = gpEmails[0][0]
-
+            gpEmail = 'email@email.com'
+            gpLastName = 'Grey'
             reason = 'Appointment'
             appointmentStatus = 'Pending'
             dateRequested = ''
@@ -218,10 +246,10 @@ class Patient:
                              dateRequested, patientComplaints, doctorFindings, diagnosis, furtherInspections,
                              doctorAdvice, checkIn, checkOut]))
             self.connection.commit()
-            print("You have requested to book an appointment on {} at {}, "
-                  "\nyou will receive confirmation of your appointment shortly,".format(date, time))
-            if input("Type yes to return to the appointment menu: ").lower() == 'yes':
-                self.bookAppointment()
+            # print("You have requested to book an appointment on {} at {}, "
+            #       "\nyou will receive confirmation of your appointment shortly,".format(date, time))
+            # if input("Type yes to return to the appointment menu: ").lower() == 'yes':
+            #     self.bookAppointment()
 
         if options == 2:
             self.chooseDate()
@@ -278,7 +306,30 @@ class Patient:
         if input("Type yes to return to the appointment menu: ").lower() == 'yes':
             self.bookAppointment()
 
-ari = Patient("Arianna", "Bourke", "ariannabourke@hotmail.com", "1234")
-ari.bookAppointment()
+ari = Patient("ariannabourke@hotmail.com", "Arianna", "Bourke", "27/04/1988", 10, "male",
+              "123 Happy", "street", "12343", "389753957", "1234")
+# # ari.bookAppointment()
+# ari.chooseTime()
+y = ari.chooseDate()
 
+ari.displayAvailable(y)
+
+
+# def toregulartime(unixtimestamp):
+#     return datetime.utcfromtimestamp(int(unixtimestamp))
+# date = 1609459200
+# print(toregulartime(date))
+
+
+
+# print(dt01)
+# newdto = tounixtime(dt01)
+# print(newdto)
+# print(toregulartime(newdto))
+
+#
+# from datetime import time, datetime
+#
+# dt_time = time(23, 0, 0)
+# print(dt_time)
 
