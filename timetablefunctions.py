@@ -248,19 +248,19 @@ def getDoctorNotes(appointmentId):
             diagnosis,
             furtherInspections,
             doctorAdvice,
+            appointmentID
         FROM
             Appointment
         WHERE
             appointmentID = ? 
         """, (appointmentId,))
 
-    results = conn['cursor'].fetchone()
-    appointment = results[0]
-
+    results = list(conn['cursor'].fetchone())
     closeconn(conn["connection"])
+    return results
 
 # This saves/updates the doctor's notes
-def saveDoctorNotes(patientComplaints, doctorFindings, diagnosis, furtherInspections, doctorAdvice, appointmentId):
+def saveDoctorNotes(doctorsnotes):
     conn = connecttodb()
     # patientComplaints = tuple[0]
     # doctorFindings = tuple[1]
@@ -268,18 +268,20 @@ def saveDoctorNotes(patientComplaints, doctorFindings, diagnosis, furtherInspect
     # furtherInspections = tuple[3]
     # doctorAdvice = tuple[4]
 
+    doctorsnotestuple = tuple(doctorsnotes)
+
     conn['cursor'].execute("""
         UPDATE
             Appointment
         SET
             patientComplaints = ?,
-            :doctorFindings = ?,
-            :diagnosis = ?,
-            :furtherInspections = ?,
-            :doctorAdvice = ?
+            doctorFindings = ?,
+            diagnosis = ?,
+            furtherInspections = ?,
+            doctorAdvice = ?
         WHERE
             appointmentID = ? 
-        """, (appointmentId,))
+        """, doctorsnotestuple)
 
     closeconn(conn["connection"])
 
