@@ -50,20 +50,27 @@ c.execute(""" CREATE TABLE IF NOT EXISTS GP (
                 gpGender DATATYPE text
                 )""")
 
-c.execute("INSERT INTO GP VALUES ('Shepherd@dr.com', 'Shepherd', 'M')")
-c.execute("INSERT INTO GP VALUES ('Grey@dr.com', 'Grey', 'F' )")
+c.execute("INSERT INTO GP VALUES ('Shep@erd.com', 'Shepherd', 'M')")
+c.execute("INSERT INTO GP VALUES ('Meridith@grey.com', 'Grey', 'F' )")
 c.execute("INSERT INTO GP VALUES ('Bailey@dr.com', 'Bailey', 'F' )")
 
-c.execute(""" CREATE TABLE IF NOT EXISTS Appointment (
-                appointmentID INTEGER PRIMARY KEY,
-                patientEmail DATATYPE text,
-                date DATATYPE text,
-                time DATATYPE text,
-                gpLastName DATATYPE text,
-                bookedStatus DATATYPE text,
-                checkIn DATATYPE text DEFAULT NULL,
-                checkOut DATATYPE text DEFAULT NULL
-                )""")
+c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
+                    appointmentId integer primary key,
+                    gpEmail text,
+                    gpLastName text,
+                    patientEmail text,
+                    start integer,
+                    end integer,
+                    reason text,
+                    appointmentStatus text,
+                    dateRequested integer,
+                    patientComplaints text,
+                    doctorFindings text,
+                    diagnosis text,
+                    furtherInspections text,
+                    doctorAdvice text,
+                    checkIn integer NULL,
+                    checkOut integer NULL)""")
 
 conn.commit()
 conn.close()
