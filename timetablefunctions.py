@@ -238,6 +238,52 @@ def declineappointment(appointmentId):
 
     closeconn(conn["connection"])
 
+def getDoctorNotes(appointmentId):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+        SELECT 
+            patientComplaints,
+            doctorFindings,
+            diagnosis,
+            furtherInspections,
+            doctorAdvice,
+        FROM
+            Appointment
+        WHERE
+            appointmentID = ? 
+        """, (appointmentId,))
+
+    results = conn['cursor'].fetchone()
+    appointment = results[0]
+
+    closeconn(conn["connection"])
+
+def saveDoctorNotes(patientComplaints, doctorFindings, diagnosis, furtherInspections, doctorAdvice, appointmentId):
+    conn = connecttodb()
+    # patientComplaints = tuple[0]
+    # doctorFindings = tuple[1]
+    # diagnosis = tuple[2]
+    # furtherInspections = tuple[3]
+    # doctorAdvice = tuple[4]
+
+    conn['cursor'].execute("""
+        UPDATE
+            Appointment
+        SET
+            patientComplaints = ?,
+            :doctorFindings = ?,
+            :diagnosis = ?,
+            :furtherInspections = ?,
+            :doctorAdvice = ?
+        WHERE
+            appointmentID = ? 
+        """, (appointmentId,))
+
+    closeconn(conn["connection"])
+
+
+
 # book_appointment("2020-12-05", "15:00", "16:30", "cooldude@gmail.com", ["test@gmail.com"])
 # book_appointment("2020-12-05", "14:00", "15:00", "iamsick@gmail.com", ["test@gmail.com"])
 # book_appointment("2020-12-05", "17:30", "18:30", "whyunotreatme@gmail.com", ["test@gmail.com"])

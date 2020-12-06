@@ -19,6 +19,7 @@ def login(gpEmail):
             for i in results:
                 print("Welcome Doctor " + i[2] + " " + i[3])
                 gpEmail.append(email)
+            db.close()
             return("exit")
 
         else:
@@ -27,5 +28,6 @@ def login(gpEmail):
             if again.lower() == "n":
                 print("Goodbye")
                 time.sleep(1)
+                db.close()
                 return("exit")
 
