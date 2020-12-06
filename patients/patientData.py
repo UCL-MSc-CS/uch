@@ -48,7 +48,8 @@ c.execute("""CREATE TABLE IF NOT EXISTS medicalHistory(
             Measles DATATYPE text,
             Mumps DATATYPE text,
             Rubella DATATYPE text,
-            Varicella DATATYPE text
+            Varicella DATATYPE text,
+            Status DATATYPE text
             )""")
 
 c.execute(""" CREATE TABLE IF NOT EXISTS GP (

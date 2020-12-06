@@ -8,23 +8,43 @@ class PatientMedical:
         self.vaccination_history = ["DTap", "HepC", "HepB",
                                     "Measles", "Mumps", "Rubella", "Varicella"]
         self.cancer_history = []
+        self.status = ""
 
     def vaccination(self):
         print('Please enter your answers to the following questions with Yes/No')
-        count = 0
         answers_to_vac = []
-        for name in self.vaccination_history:
-            vaccine = input('Have you had the {} vaccination: '.format(name)).lower()
-            answers_to_vac.append(vaccine)
-            if vaccine == "no":
-                print("Please book an appointment with your GP to receive your {} vaccination "
-                      "as soon as possible.".format(name))
-            else:
-                print("Wonderful!")
-            count += 1
-        query = """INSERT INTO medicalHistory (DTap, HepC, HepB,
-                                    Measles, Mumps, Rubella, Varicella)
-                                    VALUES (?, ?, ?, ?, ?, ?, ?) """
+        print("[1]: provide your own vaccination history."
+              "\n[2]: provide vaccination history for your child.")
+        menu_selection = input("Please select based on menu: ")
+        if menu_selection == "1":
+            self.status = "own"
+            self.a.execute("""INSERT INTO medicalHistory(Status)
+                                            VALUES (?)""", [self.status])
+            for name in self.vaccination_history:
+                vaccine = input('Have you had the {} vaccination: '.format(name)).lower()
+                answers_to_vac.append(vaccine)
+                if vaccine == "no":
+                    print("Please book an appointment with your GP to receive your {} vaccination "
+                          "as soon as possible.".format(name))
+                else:
+                    print("Wonderful!")
+            self.a.execute("""INSERT INTO medicalHistory (DTap, HepC, HepB,
+                                        Measles, Mumps, Rubella, Varicella)
+                                        VALUES (?, ?, ?, ?, ?, ?, ?) """, answers_to_vac)
+        elif menu_selection == "2":
+            self.status = input("Please enter the full name of your child: ")
+            for name in self.vaccination_history:
+                vaccine = input('Has your child had the {} vaccination: '.format(name)).lower()
+                answers_to_vac.append(vaccine)
+                if vaccine == "no":
+                    print("Please book an appointment with a GP to receive your child's {} vaccination "
+                          "as soon as possible.".format(name))
+                else:
+                    print("Wonderful!")
+            answers_to_vac.append(self.status)
+            self.a.execute("""INSERT INTO medicalHistory (DTap, HepC, HepB,
+                                        Measles, Mumps, Rubella, Varicella, Status)
+                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?) """, answers_to_vac)
 
     def cancer(self):
         self.a.execute("""CREATE TABLE IF NOT EXISTS cancer(
@@ -50,7 +70,6 @@ class PatientMedical:
                     cancer_age = input('How old was the person diagnosed with {}: '.format(cancer_name))
                     row_record = [cancer, cancer_name, cancer_age]
                     self.cancer_history.append(tuple(row_record))
-                print(self.cancer_history)
                 self.a.executemany("""INSERT INTO cancer (cancerFamily, cancerTypeFamily, cancerAgeFamily) 
                 VALUES (?, ?, ?)""", self.cancer_history)
             else:
@@ -66,15 +85,42 @@ class PatientMedical:
                     cancer_age = input('How old were you when you were diagnosed with {}: '.format(cancer_name))
                     row_record2 = [cancer, cancer_name, cancer_age]
                     self.cancer_history.append(tuple(row_record2))
-                print(self.cancer_history)
-                self.a.executemany("""INSERT INTO cancer (cancerFamily, cancerTypeFamily, cancerAgeFamily) 
+                self.a.executemany("""INSERT INTO cancer (cancer, cancerType, cancerAge) 
                 VALUES (?, ?, ?)""", self.cancer_history)
             else:
                 self.a.execute("""INSERT INTO cancer(cancerFamily)
                                                 VALUES (?)""", cancer)
-        self.a.execute("SELECT * FROM cancer")
-        show2 = self.a.fetchall()
-        print(show2)
+
+    def show_profile(self):
+        print("Which profile would you like to see? "
+              "\n [1]: Your own risk profile"
+              "\n [2]: Your children's risk profiles")
+        profile = input("Please choose from the menu: ")
+        count = 0
+        if profile == "1":
+            self.status = "own"
+            your_name = input("Please enter your name: ")
+            self.a.execute("SELECT DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella FROM medicalHistory WHERE status = ? AND ", [self.status])
+            your_query = self.a.fetchall()
+            print("Your medical record: ")
+            for vac in your_query:
+                for answers in vac:
+                    print(self.vaccination_history[count], ":", answers)
+                    count += 1
+        elif profile == "2":
+            child_name = input("Please enter your child's name: ")
+            self.a.execute("SELECT DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella FROM medicalHistory WHERE status = ?", [child_name])
+            child_query = self.a.fetchall()
+            print("{}'s medical record: ".format(child_name))
+            for vac in child_query:
+                for answers in vac:
+                    print(self.vaccination_history[count], ":", answers)
+                    count += 1
         self.connection.commit()
         self.connection.close()
+#
+Erin = PatientMedical()
+# Erin.vaccination()
+# Erin.cancer()
+Erin.show_profile()
 

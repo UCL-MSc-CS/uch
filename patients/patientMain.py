@@ -9,9 +9,11 @@ from lifeStyleQuestionnaire import RiskProfile
 connection = sql.connect('patient.db')
 c = connection.cursor()
 
+
 def options(patientEmail):
     # if registration is not confirmed where patientEmail = patientEmail, try again later, end program
     # else, run program below:
+
         print("What would you like to do next?")
         print("Choose [1] to book an appointment")
         print("Choose [2] to cancel an appointment")
@@ -30,7 +32,8 @@ def options(patientEmail):
             if qaction == 1:
                 pass
             elif qaction == 2:
-                pass
+                name = RiskProfile
+                name.show_profile()
             elif qaction == 3:
                 print("Please fill out the following risk profile")
                 x = RiskProfile()
@@ -43,7 +46,9 @@ def options(patientEmail):
                 x.insert_to_table()
             elif qaction == 4:
                 x = PatientMedical()
+                x.medicalHistory()
                 x.cancer()
+
 
 def task():
     print("Choose [1] to register for a new account")
