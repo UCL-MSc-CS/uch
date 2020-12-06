@@ -259,6 +259,7 @@ def getDoctorNotes(appointmentId):
 
     closeconn(conn["connection"])
 
+# This saves/updates the doctor's notes
 def saveDoctorNotes(patientComplaints, doctorFindings, diagnosis, furtherInspections, doctorAdvice, appointmentId):
     conn = connecttodb()
     # patientComplaints = tuple[0]
