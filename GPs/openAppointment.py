@@ -82,17 +82,3 @@ def printtodayappointments(doctoremail):
         else:
             print("Invalid option chosen, exiting today's appointments....")
             continueSelecting = False
-
-def continueorexit():
-    repeat = True
-    while repeat:
-        val = input("Continue the appointment (Y/N) ?:")
-        if val in ("Y","y"):
-            repeat = False
-            continueloop[0] = True
-        elif val in ("N","n"):
-            repeat = False
-            continueloop[0] = False
-        else:
-            print("Please enter a valid response")
-
