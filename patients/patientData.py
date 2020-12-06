@@ -5,12 +5,19 @@ conn = sql.connect('patient.db')
 c = conn.cursor()
 
 c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
-                    patientID integer PRIMARY KEY,
-                    firstName text,
-                    lastName text,
-                    email text,
-                    password text,
-                    loggedIn text)""")
+                    patientEmail DATATYPE TEXT,
+                    firstName DATATYPE TEXT,
+                    lastName DATATYPE TEXT,
+                    dateOfBirth DATATYPE TEXT,
+                    age DATATYPE INTEGER,
+                    gender DATATYPE TEXT,
+                    addressLine1 DATATYPE TEXT,
+                    addressLine2 DATATYPE TEXT,
+                    postcode DATATYPE TEXT,
+                    telephoneNumber DATATYPE TEXT,
+                    password DATATYPE TEXT,
+                    loggedIn DATATYPE INTEGER,
+                    registrationConfirm DATATYPE INTEGER)""")
 
 c.execute('DROP TABLE IF EXISTS questionnaireTable')
 c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
