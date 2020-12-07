@@ -54,13 +54,15 @@ c.execute("""CREATE TABLE IF NOT EXISTS medicalHistory(
 
 c.execute(""" CREATE TABLE IF NOT EXISTS GP (
                 gpEmail text PRIMARY KEY,
+                gpFirstName DATATYPE text,
                 gpLastName DATATYPE text,
                 gpGender DATATYPE text
                 )""")
 
-c.execute("INSERT INTO GP VALUES ('Shep@erd.com', 'Shepherd', 'M')")
-c.execute("INSERT INTO GP VALUES ('Meridith@grey.com', 'Grey', 'F' )")
-c.execute("INSERT INTO GP VALUES ('Bailey@dr.com', 'Bailey', 'F' )")
+c.execute("INSERT INTO GP VALUES ('Shepherd@dr.com', 'Derek', 'Shepherd', 'M')")
+c.execute("INSERT INTO GP VALUES ('Meredith@dr.com', 'Meredith', 'Grey', 'F' )")
+c.execute("INSERT INTO GP VALUES ('Bailey@dr.com', 'Miranda', 'Bailey', 'F' )")
+c.execute("INSERT INTO GP VALUES ('Julia@dr.com', 'Julia', 'Bailey', 'F' )")
 
 c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
                     appointmentId integer primary key,
