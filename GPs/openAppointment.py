@@ -11,7 +11,7 @@ datetimeformat = dateformatstring + " " + timeformatstring
 
 
 def openappointment(doctoremail):
-    #ToDO query for all today's confirmed apointments, display them to the doctor and allow to select one from the id
+
     appointmentid = printtodayappointments(doctoremail)
     continueloop = True
     while continueloop:
@@ -45,6 +45,7 @@ def openappointment(doctoremail):
 
 
 def printtodayappointments(doctoremail):
+    # Todo disallow user to 'stay within appointment' if they have entered wrong invalid id
     day = datetime.today()
 
     print("\n--------------------\n" + datetime.strftime(day, "%A %d %b %Y") + "\n--------------------")
