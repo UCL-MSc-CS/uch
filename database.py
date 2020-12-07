@@ -14,54 +14,135 @@ connection = sqlite3.connect('UCH.db')
 # first letter of each word capitalised e.g. Doctor, PatientDetail.
 
 c = connection.cursor()
-#create GP table
-c.execute("""CREATE TABLE IF NOT EXISTS GP (
-                    gpEmail text UNIQUE,
-                    password text,
-                    firstName text,
-                    lastName text,
-                    gender text,
-                    dateOfBirth integer,
-                    addressLine1 text,
-                    addressLine2 text,
-                    telephoneNumber text,
-                    department text,
-                    active text)""")
+#create Appointment table
+c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
+                    appointmentID integer PRIMARY KEY,
+                    patientEmail text,
+                    gpEmail text,
+                    checkIn text,
+                    checkOut text,
+                    date text,
+                    time text,
+                    room text,
+                    bookedStatus text,
+                    patientComplaints text,
+                    doctorFindings text, 
+                    diagnosis text,
+                    furtherInspections text,
+                    reason text,
+                    dateRequested text, 
+                    appointmentStatus text, 
+                    start text, 
+                    end text, 
+                    gpLastName text, 
+                    doctorAdvice text, 
+                    appointmentConfirmed text, 
+                    prescriptionID integer)""")
 connection.commit()
 
-#create patients table
 c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
-                    patientID integer PRIMARY KEY,
+                    patientEmail text PRIMARY KEY ,
                     firstName text,
                     lastName text,
                     dateOfBirth text,
-                    age integer,
+                    age integer, 
                     gender text,
                     addressLine1 text,
                     addressLine2 text,
                     postcode text,
                     telephoneNumber integer,
-                    email text,
-                    registrationConfirm text)""")
+                    password text,
+                    registrationConfirm text,
+                    loggedIn text
+)""")
 connection.commit()
 
-#create the appointments table
-c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
-                    appointmentId integer primary key,
-                    gpEmail text,
-                    patientEmail text,
-                    start integer,
-                    end integer,
-                    reason text,
-                    appointmentStatus text,
-                    dateRequested integer,
-                    patientComplaints text,
-                    doctorFindings text,
-                    diagnosis text,
-                    furtherInspections text,
-                    doctorAdvice text,
-                    checkIn integer NULL,
-                    checkOut integer NULL)""")
+c.execute("""CREATE TABLE IF NOT EXISTS MedicalHistory (
+                    gpEmail text PRIMARY KEY ,
+                    password text,
+                    firstName text,
+                    lastName text,
+                    gender text,
+                    dateOfBirth text,
+                    addressLine1 text,
+                    addressLine2 text,
+                    telephoneNumber integer,
+                    department text,
+                    active text
+)""")
+connection.commit()
+
+c.execute("""CREATE TABLE IF NOT EXISTS PatientQuestionaire (
+                    questionnaireID integer PRIMARY KEY ,
+                    height integer,
+                    weight integer,
+                    bmi text,
+                    smoking text,
+                    alcohol text,
+                    diet text,
+                    drugs text,
+                    exercise text,
+                    exerciseType text,
+                    exerciseFrequency text,
+                    exerciseDuration text,
+                    goal text
+)""")
+connection.commit()
+
+
+c.execute("""CREATE TABLE IF NOT EXISTS FamilyMedicalHistory(
+                    familyMedHistoryID integer PRIMARY KEY,
+                    medHistoryID integer,
+                    dTap text,
+                    hepC text,
+                    hepB text,
+                    measles text,
+                    mumps text,
+                    rubella text,
+                    varicella text
+)""")
+
+c.execute("""CREATE TABLE IF NOT EXISTS Cancer(
+                    patientEmail text PRIMARY KEY ,
+                    cancer text,
+                    cancerType text,
+                    cancerAge integer,
+                    cancerFamily text,
+                    cancerTypeFamily text,
+                    cancerAgeFamily text
+)""")
+
+c.execute("""CREATE TABLE IF NOT EXISTS GP(
+                    gpEmail text PRIMARY KEY ,
+                    password text,
+                    firstName text,
+                    lastName text,
+                    gender text,
+                    dateOfBirth text,
+                    addressLine1 text,
+                    addressLine2 text,
+                    telephoneNumber integer,
+                    department text,
+                    active text
+)""")
+connection.commit()
+
+c.execute("""CREATE TABLE IF NOT EXISTS Medecine(
+                    medicineID integer PRIMARY KEY,
+                    medicineName text,
+                    medicineCompany text,
+                    drug text,
+                    medicineType text
+)""")
+connection.commit()
+
+c.execute("""CREATE TABLE IF NOT EXISTS Prescription(
+                    AppointmentID integer PRIMARY KEY,
+                    medicineID integer,
+                    dosage text,
+                    frequency text,
+                    duration text
+)""")
 connection.commit()
 
 c.execute("""SELECT * FROM GP""")
