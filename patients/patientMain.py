@@ -20,7 +20,6 @@ def options(patientEmail):
         print("Choose [3] to see your profile")
         action = int(input("Choice: "))
         if action == 1:
-            x.
             pass
         elif action == 2:
             pass
