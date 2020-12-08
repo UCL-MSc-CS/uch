@@ -31,7 +31,6 @@ class Menus():
         print("choose [0] to go back")
 
     def managedetails(self):
-        print("Select from options below:")
         print("choose [1] to change patient record")
         print("choose [2] to delete patient record")
         print("choose [0] to go back")

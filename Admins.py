@@ -1,4 +1,3 @@
-from datetime import datetime as dt
 import sqlite3 as sql
 from datetime import datetime as dt
 
@@ -127,7 +126,7 @@ class adminFunctions():
                 d = int(input("enter date of birth as ddmmyy: "))
                 if not d:
                     raise FieldEmpty()
-                input_list = [int(i) for i in str(d)]  
+                input_list = [int(i) for i in str(d)]
                 if len(input_list) != 6:
                     correct_length = 6
                     raise IncorrectInputLength(6)
@@ -137,7 +136,7 @@ class adminFunctions():
                 g = (input("telephone number: "))
                 if not g:
                     raise FieldEmpty()
-                input_list = [i for i in g]  
+                input_list = [i for i in g]
                 if len(input_list) != 11:
                     correct_length = 11
                     raise IncorrectInputLength(correct_length)
@@ -359,7 +358,7 @@ class adminFunctions():
                 raise EmailNotExists
 
             firstn = input("first name: ")
-            if not firstnm:
+            if not firstn:
                 raise FieldEmpty
 
             lastnm = input("last name: ")
@@ -369,15 +368,15 @@ class adminFunctions():
             dateob= int(input("date of birth as dd/mm/yyyy: "))
             if not dateob:
                 raise FieldEmpty()
-            input_list2 = [int(i) for i in str(d)]
-            if len(input_list2) != 6:
-                correct_length = 6
-                raise IncorrectInputLength(6)
+            input_list2 = [int(i) for i in str(dateob)]
+            if len(input_list2) != 8:
+                correct_length = 8
+                raise IncorrectInputLength(8)
 
             age = int(input("age: "))
             currdate = dt.now().year
-            dobyear = int(dateob[:4])
-            if age != currdate - dobyear or age != currdate - dobyear - 1:
+            dobyear = dateob % 10000
+            if age != currdate - dobyear and age != currdate - dobyear - 1:
                 raise InvalidAgeRange
             elif not age:
                 raise FieldEmpty()
@@ -385,31 +384,32 @@ class adminFunctions():
             gender = input("gender (enter male/female/non-binary/prefer not to say): ")
             if not gender:
                 raise FieldEmpty()
-            if gender != "male" or gender != "female" or gender != "non-binary" or gender != "prefer not to say":
+            if gender != "male" and gender != "female" and gender != "non-binary" and gender != "prefer not to say":
                 raise GenderError()
 
             addl1 = input("address line 1: ")
             if not addl1:
                 raise FieldEmpty()
             elif any(chr.isdigit() for chr in addl1) == False:
-                raise InvalidAddr
+                raise InvalidAdd
 
             addl2 = input("address line 2: ")
-            if not add2:
+            if not addl2:
                 raise FieldEmpty()
             elif any(chr.isdigit() for chr in addl1) == False:
-                raise InvalidAddr
+                raise InvalidAdd
 
             postcode = int(input("postcode: "))
             if not postcode:
                 raise FieldEmpty()
 
-            tel = int(input("telephone number: "))
+            tel = (input("telephone number: "))
             if not tel:
                 raise FieldEmpty()
-            elif len(tel) <= 10 or len >= 12:
-                raise IncorrectInputLength
-                #ask matthew about this exception
+            input_list = [i for i in tel]
+            if len(input_list) != 11:
+                correct_length = 11
+                raise IncorrectInputLength(correct_length)
 
             regcon = input("Registration confirmation: Y or N")
             #fill in Y later
