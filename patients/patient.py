@@ -4,6 +4,7 @@ import calendar
 import random
 from datetime import time as x, date as xyz, datetime, timedelta
 import time
+import patientFunctions as pf
 
 
 class Patient:
@@ -74,6 +75,7 @@ class Patient:
                 self.chooseTime(x, y)
             if a == 4:
                 self.returnToAppMenu()
+
         if options == 2:
             self.viewAppConfirmations()
         if options == 3:
@@ -95,35 +97,24 @@ class Patient:
     def chooseSpecificDr(self):
         print("**********"
               "\nThe doctors currently available at the practice are: ")
-        self.c.execute("SELECT gpFirstName, gpLastName, gpEmail FROM GP")
+        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
         dr_names = self.c.fetchall()
-        gp_list = []
-        count = 1
-        for dr in dr_names:
-            print("Choose [" + str(count) + "] Dr", dr[0] + ' ' + dr[1])
-            count += 1
-            gp_list.append(dr)
-
-        dr_option1 = int(input("**********"
-                           "\nPlease choose the doctor you would "
-                           "like to book an appointment with: "))
-        gp_chosen_email = gp_list[dr_option1 - 1][2]
-        gp_chosen_name = gp_list[dr_option1 - 1][1]
-
-        # if dr_option1 not in gp_list:
-        #     print("This is not a valid choice of doctor, please try again")
-        return [gp_chosen_email, gp_chosen_name]
+        gpDetails = pf.chooseDr(dr_names)
+        return gpDetails
 
     def chooseAnyDr(self):
-        self.c.execute("SELECT DISTINCT(gpLastName) FROM GP")
+        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
         dr_names = self.c.fetchall()
         gp_list = []
         for dr in dr_names:
-            gp_list.append(dr[0])
+            gp_list.append(dr)
+        gpchoice = random.choice(gp_list)
+        gp_chosen_email = gpchoice[2]
+        gp_chosen_name = gpchoice[1]
+        gpDetails = [gp_chosen_email, gp_chosen_name]
 
-        gpLastName = random.choice(gp_list)
-        print("The doctor you have been assigned is Dr {}".format(gpLastName))
-        return gpLastName
+        print("The doctor you have been assigned is Dr {}".format(gp_chosen_name))
+        return gpDetails
 
     def chooseDrGender(self):
         print("**********"
@@ -132,25 +123,15 @@ class Patient:
         gp_options = int(input("Please choose from the options above: "))
 
         if gp_options == 1:
-            self.c.execute("SELECT gpLastName FROM GP WHERE gpGender = 'M'")
+            self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'M'")
             dr_names = self.c.fetchall()
-            gp_list = []
-            for dr in dr_names:
-                gp_list.append(dr[0])
-            gpLastName = random.choice(gp_list)
-            print("\nThe male doctor you have been assigned is Dr {}".format(gpLastName))
-            return gpLastName
-
+            gpDetails = pf.chooseDr(dr_names)
+            return gpDetails
         if gp_options == 2:
-            self.c.execute("SELECT gpLastName FROM GP WHERE gpGender = 'F' ")
+            self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'F' ")
             dr_names = self.c.fetchall()
-            gp_list = []
-            for dr in dr_names:
-                gp_list.append(dr[0])
-            gpLastName = random.choice(gp_list)
-            print("\nThe female doctor you have been assigned is Dr {}".format(gpLastName))
-            return gpLastName
-
+            gpDetails = pf.chooseDr(dr_names)
+            return gpDetails
 
     def chooseDate(self):
         print("**********"
@@ -166,43 +147,15 @@ class Patient:
         date = "2021-{}-{}".format(mm, day)
         return date
 
-    def toregulartime(self, unixtimestamp):
-        return datetime.utcfromtimestamp(int(unixtimestamp))
 
-    def tounixtime(self, dt):
-        result = int(time.mktime(dt.timetuple()))
-        return result
-
-    def toDateTimeObj(self, string):
-        """ Converts date time string to datetime object"""
-        dt_object = datetime.strptime(string, '%Y-%m-%d %H:%m')
-        return dt_object
-
-    def toDateObjApp00(self, string):
-        """ Converts date string to date object with time as 00:00:00"""
-        dt_object = datetime.strptime(string, '%Y-%m-%d')
-        return dt_object
-
-    def displayAvailable(self, date, gpLastName):
-        start_obj = self.toDateObjApp00(date)
-        start = self.tounixtime(start_obj)
-
-        # dt_string = date
-        # dt_object = datetime.strptime(dt_string, '%Y-%m-%d')
-        # print(dt_object)
-        # print(start)
-
-        year, month, day = map(int, date.split('-'))
-        dt_str_obj = xyz(year, month, day)
-        dt_time = x(23, 59, 59)
-        dt_end = datetime.combine(dt_str_obj, dt_time)
-        end = self.tounixtime(dt_end)
-        # print(end)
-
-        print("\nThis is the current availability for Dr {} on your chosen date: ".format(gpLastName[1]))
+    def displayAvailable(self, date, gpDetails):
+        print("\nThis is the current availability for Dr {} on your chosen date: ".format(gpDetails[1]))
+        start_obj = pf.toDateObjApp00(date)
+        start = pf.tounixtime(start_obj)
+        end = pf.generateEndTime(date)
 
         self.c.execute("SELECT start, appointmentStatus FROM Appointment WHERE start >=? and end <? and gpEmail =?",
-                       [start, end, gpLastName[0]])
+                       [start, end, gpDetails[0]])
         appointments = self.c.fetchall()
         times = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
                  "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"]
@@ -212,7 +165,7 @@ class Patient:
         else:
             dict_time_status = {}
             for items in appointments:
-                ts = self.toregulartime(items[0])
+                ts = pf.toregulartime(items[0])
                 string_time = ts.strftime("%H:%M")
                 dict_time_status[string_time] = items[1]
             for time in times:
@@ -221,8 +174,7 @@ class Patient:
                 else:
                     print(time + ' available')
 
-
-    def chooseTime(self, date, gpLastName):
+    def chooseTime(self, date, gpDetails):
         print("**********"
               "\n[1] to select a time"
               "\n[2] to select another date"
@@ -230,26 +182,17 @@ class Patient:
         options = int(input("**********"
                             "\nPlease choose from the options above: "))
         if options == 1:
-            # # add in error handling, cannot choose time already booked
-
             time = input("Please choose a time from the available appointments: ")
             day_str = date + ' ' + time
-            date_time_obj = datetime.strptime(day_str, '%Y-%m-%d %H:%M')
-            start = self.tounixtime(date_time_obj)
+            dt_object = pf.toDateTimeObj(day_str)
+            start = pf.tounixtime(dt_object)
+
             end = start + (30 * 60)
-
-            self.c.execute("SELECT start FROM Appointment WHERE appointmentStatus = 'Pending' and gpEmail =?",
-                           [gpLastName[0]])
-            booked_times = self.c.fetchall()
-            # for i in booked_times:
-            #     if start == i[0]:
-            #         print("Appointment already booked, please try again: ")
-
-            gpLastName = gpLastName[1]
-            gpEmail = gpLastName[0]
+            gpLastName = gpDetails[1]
+            gpEmail = gpDetails[0]
             reason = 'Appointment'
             appointmentStatus = 'Pending'
-            dateRequested = self.tounixtime(datetime.today())
+            dateRequested = pf.tounixtime(datetime.today())
             patientComplaints = ''
             doctorFindings = ''
             diagnosis = ''
@@ -321,32 +264,11 @@ class Patient:
         if input("Type yes to return to the appointment menu: ").lower() == 'yes':
             self.bookAppointment()
 
-# ari = Patient("ariannabourke@hotmail.com", "Arianna", "Bourke", "27/04/1988", 10, "male",
-#               "123 Happy", "street", "12343", "389753957", "1234")
-# ari.register()
-# ari.bookAppointment()
-# ari.chooseTime()
-# y = ari.chooseDate()
-# z = ari.chooseAnyDr()
-#
-# ari.displayAvailable(y, z)
 
+ari = Patient("ariannabourke@hotmail.com", "Arianna", "Bourke", "27/04/1988", 10, "male",
+              "123 Happy", "street", "12343", "389753957", "1234")
+ari.bookAppointment()
 
-
-# def toregulartime(unixtimestamp):
-#     return datetime.utcfromtimestamp(int(unixtimestamp))
-#
-#
-# def tounixtime(dt):
-#     result = int(time.mktime(dt.timetuple()))
-#     return result
-#
-# start_str = '2021-01-01 12:30'
-# dt_object = datetime.strptime(start_str, '%Y-%m-%d %H:%M')
-# start = tounixtime(dt_object)
-#
-# end = start + (30 * 60)
-# print(toregulartime(end))
 
 
 

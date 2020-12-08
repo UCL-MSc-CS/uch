@@ -53,6 +53,20 @@ c.execute("""CREATE TABLE IF NOT EXISTS medicalHistory(
             PRIMARY KEY (patientEmail, Status)
             )""")
 
+c.execute("""CREATE TABLE IF NOT EXISTS GP(
+                    gpEmail text PRIMARY KEY ,
+                    password text,
+                    firstName text,
+                    lastName text,
+                    gender text,
+                    dateOfBirth text,
+                    addressLine1 text,
+                    addressLine2 text,
+                    telephoneNumber integer,
+                    department text,
+                    active text
+)""")
+
 c.execute("""CREATE TABLE IF NOT EXISTS cancer(
                     patientEmail DATATYPE text,
                     cancerRelation DATATYPE text,
@@ -61,17 +75,15 @@ c.execute("""CREATE TABLE IF NOT EXISTS cancer(
                     PRIMARY KEY (patientEmail, cancerRelation)
                     )""")
 
-c.execute(""" CREATE TABLE IF NOT EXISTS GP (
-                gpEmail text PRIMARY KEY,
-                gpFirstName DATATYPE text,
-                gpLastName DATATYPE text,
-                gpGender DATATYPE text
-                )""")
 
-c.execute("INSERT INTO GP VALUES ('Shepherd@dr.com', 'Derek', 'Shepherd', 'M')")
-c.execute("INSERT INTO GP VALUES ('Meredith@dr.com', 'Meredith', 'Grey', 'F' )")
-c.execute("INSERT INTO GP VALUES ('Bailey@dr.com', 'Miranda', 'Bailey', 'F' )")
-c.execute("INSERT INTO GP VALUES ('Julia@dr.com', 'Julia', 'Bailey', 'F' )")
+c.execute("INSERT INTO GP VALUES ('Shepherd@dr.com', '1234', 'Derek', 'Shepherd', 'M',"
+          " '01/01/01', '123', 'street', '023942', 'GP', 'y')")
+c.execute("INSERT INTO GP VALUES ('Meredith@dr.com', '1234', 'Meredith', 'Grey', 'F',"
+          "'01/01/01', '123', 'street', '023942', 'GP', 'y' )")
+c.execute("INSERT INTO GP VALUES ('Bailey@dr.com', '1234', 'Miranda', 'Bailey', 'F', "
+          "'01/01/01', '123', 'street', '023942', 'GP', 'y')")
+c.execute("INSERT INTO GP VALUES ('Julia@dr.com', '1234', 'Julia', 'Bailey', 'F',"
+          "'01/01/01', '123', 'street', '023942', 'GP', 'y' )")
 
 c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
                     appointmentId integer primary key,
