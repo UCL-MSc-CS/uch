@@ -56,7 +56,8 @@ class PatientMedical:
     def cancer(self, patient_email):
         # cancerRelation: self or the family relation (i.e sister, brother, daughter, mother etc.)
         # query set up in the future if needed: WHERE cancerRelation != "1" AND != "0" AND != "None" AND cancerAge <50
-        # patient has genetic risk in developing that type of cancer diagnosed.
+        # patient has genetic risk in developing that type of cancer diagnosed. (additional feature)
+        # add additional feature on traveling vaccine advice/ book appointment.
         print("Thank you! The following questions are concerned with your medical history and "
               "the medical history of your family.")
         print("[1]: provide your medical history"
@@ -66,7 +67,7 @@ class PatientMedical:
         if menu_choice == "1":
             cancer = input('Have you ever been diagnosed with cancer:').lower()
             if cancer == "y":
-                self.cancer_relation = "1"  # 1 means had cancer
+                self.cancer_relation = "1"  # 1 means the patient has had cancer before
                 cancer_type = input("Please tell us the type(s) of cancer that was diagnosed: ").split(",")
                 for cancer_name in cancer_type:
                     cancer_age = input('How old were you when you were diagnosed with {}: '.format(cancer_name))
@@ -76,7 +77,7 @@ class PatientMedical:
                             VALUES (?, ?, ?, ?)""", self.cancer_history)
                 self.connection.commit()
             else:
-                cancer_relation = "0"  # 0 means did not have cancer
+                cancer_relation = "0"  # 0 means the patient has not had not have cancer before
                 self.a.execute("""INSERT INTO cancer(patientEmail, cancerRelation)
                                                             VALUES (?, ?)""", [patient_email, cancer_relation])
                 self.connection.commit()
