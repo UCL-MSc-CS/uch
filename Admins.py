@@ -366,6 +366,7 @@ class adminFunctions():
                 raise FieldEmpty
 
             dateob= int(input("date of birth as dd/mm/yyyy: "))
+            strdateob = str(dateob)
             if not dateob:
                 raise FieldEmpty()
             input_list2 = [int(i) for i in str(dateob)]
@@ -399,19 +400,19 @@ class adminFunctions():
             elif any(chr.isdigit() for chr in addl1) == False:
                 raise InvalidAdd
 
-            postcode = int(input("postcode: "))
+            postcode = input("postcode: ")
             if not postcode:
                 raise FieldEmpty()
 
-            tel = (input("telephone number: "))
+            tel = int(input("telephone number: "))
             if not tel:
                 raise FieldEmpty()
-            input_list = [i for i in tel]
+            input_list = str(tel)
             if len(input_list) != 11:
                 correct_length = 11
                 raise IncorrectInputLength(correct_length)
 
-            regcon = input("Registration confirmation: Y or N")
+            regcon = input("Registration confirmation: Y or N ")
             #fill in Y later
 
         except EmailNotExists:
@@ -435,8 +436,8 @@ class adminFunctions():
         else:
             self.c.execute("""UPDATE PatientDetail SET firstName = ?, lastName = ?, dateOfBirth = ?,
             age = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
-            telephoneNumber1 = ?, registrationConfirm = ? WHERE patientEmail = ?""",
-            (firstn, lastnm, dateob, age, gender, addl1, addl2, postcode, tel, regcon, email))
+            telephoneNumber = ?, registrationConfirm = ? WHERE patientEmail = ?""",
+            (firstn, lastnm, strdateob, age, gender, addl1, addl2, postcode, tel, regcon, email))
             self.connection.commit()
 
     def delpatdet(self):
