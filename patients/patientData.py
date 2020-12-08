@@ -21,7 +21,7 @@ c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
 
 c.execute('DROP TABLE IF EXISTS questionnaireTable')
 c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
-            PatientID INTEGER PRIMARY KEY,
+            patientEmail text PRIMARY KEY,
             exercise DATATYPE text,
             exerciseType DATATYPE text,
             exerciseFrequency DATATYPE integer,
@@ -41,7 +41,8 @@ c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
             )""")
 
 c.execute("""CREATE TABLE IF NOT EXISTS medicalHistory(
-            PatientID INTEGER PRIMARY KEY,
+            patientEmail DATATYPE text,
+            Status DATATYPE text,
             DTap DATATYPE text,
             HepC DATATYPE text,
             HepB DATATYPE text,
@@ -49,7 +50,7 @@ c.execute("""CREATE TABLE IF NOT EXISTS medicalHistory(
             Mumps DATATYPE text,
             Rubella DATATYPE text,
             Varicella DATATYPE text,
-            Status DATATYPE text
+            PRIMARY KEY (patientEmail, Status)
             )""")
 
 c.execute("""CREATE TABLE IF NOT EXISTS GP(
@@ -65,6 +66,15 @@ c.execute("""CREATE TABLE IF NOT EXISTS GP(
                     department text,
                     active text
 )""")
+
+c.execute("""CREATE TABLE IF NOT EXISTS cancer(
+                    patientEmail DATATYPE text,
+                    cancerRelation DATATYPE text,
+                    cancerType DATATYPE text,
+                    cancerAge DATATYPE text,
+                    PRIMARY KEY (patientEmail, cancerRelation)
+                    )""")
+
 
 c.execute("INSERT INTO GP VALUES ('Shepherd@dr.com', '1234', 'Derek', 'Shepherd', 'M',"
           " '01/01/01', '123', 'street', '023942', 'GP', 'y')")

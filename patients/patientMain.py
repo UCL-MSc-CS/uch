@@ -25,18 +25,15 @@ def options(patientEmail):
             pass
         elif action == 3:
             print("Choose [1] to see your medical profile")
-            print("Choose [2] to see your child's medical profile")
-            print("Choose [3] to take the lifestyle questionnaire")
-            print("Choose [4] to take the patient risk questionnaire")
+            print("Choose [2] to take the lifestyle risk questionnaire")
+            print("Choose [3] to update your medical history")
             qaction = int(input("Choice: "))
             if qaction == 1:
-                pass
-            elif qaction == 2:
                 name = RiskProfile
                 name.show_profile()
-            elif qaction == 3:
+            elif qaction == 2:
                 print("Please fill out the following risk profile")
-                x = RiskProfile()
+                x = RiskProfile()  # need to pass patientEmail into the functions
                 x.questions()
                 x.BMI_calculator()
                 x.diet()
@@ -44,7 +41,7 @@ def options(patientEmail):
                 x.drugs()
                 x.alcohol()
                 x.insert_to_table()
-            elif qaction == 4:
+            elif qaction == 3:
                 x = PatientMedical()
                 x.medicalHistory()
                 x.cancer()
