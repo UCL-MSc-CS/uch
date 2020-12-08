@@ -31,6 +31,7 @@ class Patient:
                        (self.patientEmail, self.firstName, self.lastName, self.dateOfBirth, self.age, self.gender,
                         self.addressLine1, self.addressLine2, self.postcode, self.telephoneNumber, self.password,
                         self.loggedIn, self.registrationConfirm))
+        self.connection.commit()
 
     def registrationSummary(self):
         hash = ""
@@ -320,9 +321,10 @@ class Patient:
         if input("Type yes to return to the appointment menu: ").lower() == 'yes':
             self.bookAppointment()
 
-ari = Patient("ariannabourke@hotmail.com", "Arianna", "Bourke", "27/04/1988", 10, "male",
-              "123 Happy", "street", "12343", "389753957", "1234")
-ari.bookAppointment()
+# ari = Patient("ariannabourke@hotmail.com", "Arianna", "Bourke", "27/04/1988", 10, "male",
+#               "123 Happy", "street", "12343", "389753957", "1234")
+# ari.register()
+# ari.bookAppointment()
 # ari.chooseTime()
 # y = ari.chooseDate()
 # z = ari.chooseAnyDr()
