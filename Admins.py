@@ -129,7 +129,7 @@ class adminFunctions():
                 gender = input("gender (enter male/female/non-binary/prefer not to say): ")
                 if not gender:
                     raise FieldEmpty()
-                if gender != "male" or gender != "female" or gender != "non-binary" or gender != "prefer not to say":
+                if gender != 'male' and gender != 'female' and gender != 'non-binary' and gender != 'prefer not to say':
                     raise GenderError()
                 active = "Y"
                 addressL1 = input("Address Line 1: ")
