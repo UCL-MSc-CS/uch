@@ -103,10 +103,10 @@ while selection1 != 0:
                     CheckOpt = int(input("choice: "))
                     if CheckOpt == 1:
                         ad.cin()
-                        pass
+                        print("successfully checked patient in")
                     elif CheckOpt == 2:
                         ad.cout()
-                        pass
+                        print("successfully checked patient out")
                     elif CheckOpt == 0:
                         selection = 0
                     else:
@@ -122,12 +122,14 @@ while selection1 != 0:
                         detchoice2 = int(input("choice: "))
                         if detchoice2 == 1:
                             ad.managedet()
+                            print("successfully changed patient record")
                         elif detchoice2 == 2:
                             pass
                         elif detchoice2 == 0:
                             selection = 6
                     elif detchoice == 2:
                         ad.delpatdet()
+                        print("successfully deleted patient record")
                     elif detchoice == 0:
                         selection = 0
 
