@@ -171,13 +171,15 @@ class RiskProfile:
         self.answers.append(diet)
         self.answers.append(caffeine)
 
-    def insert_to_table(self):
-        question_query = """INSERT INTO questionnaireTable (exercise, exerciseType, exerciseFrequency,
+    def insert_to_table(self, patient_email):
+        self.answers.insert(0, patient_email)
+        question_query = """INSERT INTO questionnaireTable (patientEmail, exercise, exerciseType, exerciseFrequency,
         exerciseDuration, goal, height, weight, bmi, smoking, drugs, drugType, alcohol, 
         alcoholUnit, meat, diet, caffeine)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         self.a.execute(question_query, self.answers)
         self.connection.commit()
-        self.a.execute("SELECT * FROM questionnaireTable")
-        result = self.a.fetchall()
-        print(result)
+        self.connection.close()
+        # self.a.execute("SELECT * FROM questionnaireTable")
+        # result = self.a.fetchall()
+        # print(result)
