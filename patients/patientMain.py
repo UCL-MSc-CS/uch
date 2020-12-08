@@ -15,15 +15,12 @@ def options(patientEmail):
     # else, run program below:
 
         print("What would you like to do next?")
-        print("Choose [1] to book an appointment")
-        print("Choose [2] to cancel an appointment")
-        print("Choose [3] to see your profile")
+        print("Choose [1] to view appointment menu")
+        print("Choose [2] to see your profile")
         action = int(input("Choice: "))
         if action == 1:
-            pass
+            x.bookAppointment(patientEmail)
         elif action == 2:
-            pass
-        elif action == 3:
             print("Choose [1] to see your medical profile")
             print("Choose [2] to take the lifestyle risk questionnaire")
             print("Choose [3] to update your medical history")

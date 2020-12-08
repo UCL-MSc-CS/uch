@@ -49,7 +49,7 @@ class Patient:
             print("Password: " + hash)
             self.connection.commit()
 
-    def bookAppointment(self):
+    def bookAppointment(self, patientEmail):
         print("**********"
               "\n[1] to book an appointment"
               "\n[2] to view your confirmed appointments"
@@ -57,24 +57,24 @@ class Patient:
               "\n[4] to exit to the main menu: ")
         options = int(input("Please choose from the options above: "))
         if options == 1:
-            a = self.chooseDoctor()
+            a = self.chooseDoctor(patientEmail)
             if a == 1:
-                y = self.chooseSpecificDr()
-                x = self.chooseDate()
-                self.displayAvailable(x, y)
-                self.chooseTime(x, y)
+                y = self.chooseSpecificDr(patientEmail)
+                x = self.chooseDate(patientEmail)
+                self.displayAvailable(patientEmail, x, y)
+                self.chooseTime(patientEmail, x, y)
             if a == 2:
-                y = self.chooseAnyDr()
-                x = self.chooseDate()
-                self.displayAvailable(x, y)
-                self.chooseTime(x, y)
+                y = self.chooseAnyDr(patientEmail)
+                x = self.chooseDate(patientEmail)
+                self.displayAvailable(patientEmail, x, y)
+                self.chooseTime(patientEmail, x, y)
             if a == 3:
-                y = self.chooseDrGender()
-                x = self.chooseDate()
-                self.displayAvailable(x, y)
-                self.chooseTime(x, y)
+                y = self.chooseDrGender(patientEmail)
+                x = self.chooseDate(patientEmail)
+                self.displayAvailable(patientEmail, x, y)
+                self.chooseTime(patientEmail, x, y)
             if a == 4:
-                self.returnToAppMenu()
+                self.returnToAppMenu(patientEmail)
 
         if options == 2:
             self.viewAppConfirmations()
@@ -84,7 +84,7 @@ class Patient:
             # exit to main menu
             pass
 
-    def chooseDoctor(self):
+    def chooseDoctor(self, patientEmail):
         print("**********"
               "\n[1] To book an appointment with a specific doctor"
               "\n[2] To book an appointment with any doctor"
@@ -94,7 +94,7 @@ class Patient:
         dr_options = int(input("Please choose from the options above: "))
         return dr_options
 
-    def chooseSpecificDr(self):
+    def chooseSpecificDr(self, patientEmail):
         print("**********"
               "\nThe doctors currently available at the practice are: ")
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
@@ -102,7 +102,7 @@ class Patient:
         gpDetails = pf.chooseDr(dr_names)
         return gpDetails
 
-    def chooseAnyDr(self):
+    def chooseAnyDr(self, patientEmail):
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
         dr_names = self.c.fetchall()
         gp_list = []
@@ -116,7 +116,7 @@ class Patient:
         print("The doctor you have been assigned is Dr {}".format(gp_chosen_name))
         return gpDetails
 
-    def chooseDrGender(self):
+    def chooseDrGender(self, patientEmail):
         print("**********"
               "\n[1] To book an appointment with a male doctor"
               "\n[2] to book an appointment with a female doctor")
@@ -133,7 +133,7 @@ class Patient:
             gpDetails = pf.chooseDr(dr_names)
             return gpDetails
 
-    def chooseDate(self):
+    def chooseDate(self, patientEmail):
         print("**********"
               "\n [1] January     \t[2] February      \t[3] March"
               "\n [4] April     \t\t[5] May           \t[6] June"
@@ -148,7 +148,7 @@ class Patient:
         return date
 
 
-    def displayAvailable(self, date, gpDetails):
+    def displayAvailable(self, patientEmail, date, gpDetails):
         print("\nThis is the current availability for Dr {} on your chosen date: ".format(gpDetails[1]))
         start_obj = pf.toDateObjApp00(date)
         start = pf.tounixtime(start_obj)
@@ -174,7 +174,7 @@ class Patient:
                 else:
                     print(time + ' available')
 
-    def chooseTime(self, date, gpDetails):
+    def chooseTime(self, patientEmail, date, gpDetails):
         print("**********"
               "\n[1] to select a time"
               "\n[2] to select another date"
@@ -212,9 +212,9 @@ class Patient:
                 self.bookAppointment()
 
         if options == 2:
-            self.chooseDate()
+            self.chooseDate(patientEmail)
         if options == 3:
-            self.returnToAppMenu()
+            self.returnToAppMenu(patientEmail)
 
     def cancelAppointment(self):
         print("**********"
@@ -241,10 +241,10 @@ class Patient:
             self.c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
             self.connection.commit()
             print("You have cancelled your appointment")
-            self.returnToAppMenu()
+            self.returnToAppMenu(patientEmail)
 
         if options == 2:
-            self.returnToAppMenu()
+            self.returnToAppMenu(patientEmail)
 
     def viewAppConfirmations(self):
         print("**********"
@@ -258,16 +258,16 @@ class Patient:
             dt = app[1]
             dt = datetime.utcfromtimestamp(dt).strftime('%Y-%m-%d %H:%M')
             print("Appointment ID: " + str(app[0]) + "\t" + "date and time: " + dt + "\t\t" + "with: Dr " + app[2])
-        self.returnToAppMenu()
+        self.returnToAppMenu(patientEmail)
 
-    def returnToAppMenu(self):
+    def returnToAppMenu(self, patientEmail):
         if input("Type yes to return to the appointment menu: ").lower() == 'yes':
             self.bookAppointment()
 
 
-ari = Patient("ariannabourke@hotmail.com", "Arianna", "Bourke", "27/04/1988", 10, "male",
-              "123 Happy", "street", "12343", "389753957", "1234")
-ari.bookAppointment()
+# ari = Patient("ariannabourke@hotmail.com", "Arianna", "Bourke", "27/04/1988", 10, "male",
+#               "123 Happy", "street", "12343", "389753957", "1234")
+# ari.bookAppointment()
 
 
 
