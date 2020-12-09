@@ -14,7 +14,7 @@ def medsearchresultspage(medsearchstring, drugsearchstring, dtype, mtype, ctype)
     results = ms.search(medsearchstring, drugsearchstring, dtype, mtype, ctype)
 
     global search_results
-    search_results = Tk()
+    search_results = Toplevel()
     search_results.title("Here are your results")
     search_results.geometry("1000x750")
 
