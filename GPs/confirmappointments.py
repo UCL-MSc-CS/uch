@@ -1,11 +1,13 @@
 from datetime import datetime
-import uch.usefulfunctions as uf
-import uch.timetablefunctions as db
+import usefulfunctions as uf
+import timetablefunctions as db
 
 dateformatstring = "%Y-%m-%d"
 timeformatstring = "%H:%M"
 
 def confirmappointments(doctoremail):
+    # todo once doctor has accepted the appointment, all pending appointments for other doctors get auto-rejected
+    # todo make sure patient cannot have more than one pending appointment at a time (?)
     confirmdate = uf.validatedate("Please enter a date for confirming appointments")
     datestring = datetime.strftime(confirmdate,dateformatstring)
     continueconfirming = True
