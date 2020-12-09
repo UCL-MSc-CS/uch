@@ -2,6 +2,12 @@ import sqlite3 as sql
 from datetime import datetime as dt
 
 """exceptions under here"""
+# still need to come up with UK postcode validity check - make user input space separated post code,
+# splice the inputted string at the space to get the outcode and incode, check the outcode and incode,
+# based on the rules we found. 
+# change telephone number check (won't work with international numbers rn)
+# DoB not in future check. 
+
 class Error(Exception):
     """Base class for exceptions in this module."""
     pass
