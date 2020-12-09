@@ -16,13 +16,22 @@ def options(patientEmail):
     # else, run program below:
 
         print("What would you like to do next?")
-        print("Choose [1] to view appointment menu")
-        print("Choose [2] to see your medical profile")
+        print("Choose [1] to book an appointment")
+        print("Choose [2] to view your confirmed appointments")
+        print("Choose [3] to cancel an appointment")
+        print("Choose [4] to see your medical profile")
+        print("Choose [0] to exit")
         action = int(input("Choice: "))
         if action == 1:
             x = Appointment()
             x.bookAppointment(patientEmail)
         elif action == 2:
+            x = Appointment()
+            x.viewAppConfirmations(patientEmail)
+        elif action == 3:
+            x = Appointment()
+            x.cancelAppointment(patientEmail)
+        elif action == 4:
             print("Choose [1] to see your medical profile")
             print("Choose [2] to take the lifestyle risk questionnaire")
             print("Choose [3] to update your medical history")
@@ -44,6 +53,9 @@ def options(patientEmail):
                 x = PatientMedical()
                 x.medicalHistory()
                 x.cancer()
+        elif action == 0:
+            # exit to main menu
+            pass
 
 
 def task():
@@ -116,4 +128,4 @@ def task():
 # print("Welcome!")
 # task()
 
-# options("ariannabourke@hotmail.com")
+options("ariannabourke@hotmail.com")

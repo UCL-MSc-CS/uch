@@ -13,46 +13,33 @@ class Appointment:
         self.c = self.connection.cursor()
 
     def bookAppointment(self, patientEmail):
-        print("**********"
-              "\n[1] to book an appointment"
-              "\n[2] to view your confirmed appointments"
-              "\n[3] to cancel an appointment"
-              "\n[0] to exit to the main menu: ")
-        options = int(input("Please choose from the options above: "))
-        if options == 1:
-            a = self.chooseDoctor(patientEmail)
-            if a == 1:
-                y = self.chooseSpecificDr(patientEmail)
-                x = self.chooseDate(patientEmail)
-                self.displayAvailable(patientEmail, x, y)
-                self.chooseTime(patientEmail, x, y)
-            if a == 2:
-                y = self.chooseAnyDr(patientEmail)
-                x = self.chooseDate(patientEmail)
-                self.displayAvailable(patientEmail, x, y)
-                self.chooseTime(patientEmail, x, y)
-            if a == 3:
-                y = self.chooseDrGender(patientEmail)
-                x = self.chooseDate(patientEmail)
-                self.displayAvailable(patientEmail, x, y)
-                self.chooseTime(patientEmail, x, y)
-            if a == 0:
-                self.returnToAppMenu(patientEmail)
-
-        if options == 2:
-            self.viewAppConfirmations(patientEmail)
-        if options == 3:
-            self.cancelAppointment(patientEmail)
-        if options == 0:
-            # exit to main menu
+        a = self.chooseDoctor(patientEmail)
+        if a == 1:
+            y = self.chooseSpecificDr(patientEmail)
+            x = self.chooseDate(patientEmail)
+            self.displayAvailable(patientEmail, x, y)
+            self.chooseTime(patientEmail, x, y)
+        if a == 2:
+            y = self.chooseAnyDr(patientEmail)
+            x = self.chooseDate(patientEmail)
+            self.displayAvailable(patientEmail, x, y)
+            self.chooseTime(patientEmail, x, y)
+        if a == 3:
+            y = self.chooseDrGender(patientEmail)
+            x = self.chooseDate(patientEmail)
+            self.displayAvailable(patientEmail, x, y)
+            self.chooseTime(patientEmail, x, y)
+        if a == 0:
+            # return to options menu
             pass
+
 
     def chooseDoctor(self, patientEmail):
         print("**********"
               "\n[1] To book an appointment with a specific doctor"
               "\n[2] To book an appointment with any doctor"
               "\n[3] To book an appointment with a doctor of a specific gender"
-              "\n[0] To exit to the appointment menu"
+              "\n[0] To exit to the main menu"
               "\n**********")
         dr_options = int(input("Please choose from the options above: "))
         return dr_options
@@ -146,7 +133,7 @@ class Appointment:
         print("**********"
               "\n[1] to select a time"
               "\n[2] to select another date"
-              "\n[3] to exit to the main menu: ")
+              "\n[3] to exit to the main menu ")
         options = int(input("**********"
                             "\nPlease choose from the options above: "))
         if options == 1:
@@ -182,7 +169,8 @@ class Appointment:
         if options == 2:
             self.chooseDate(patientEmail)
         if options == 3:
-            self.returnToAppMenu(patientEmail)
+            # return to options menu
+            pass
 
     def cancelAppointment(self, patientEmail):
         print("**********"
@@ -200,7 +188,7 @@ class Appointment:
 
         print("**********"
               "\n[1] To cancel a booked or pending appointment request"
-              "\n[2] To exit to the appointment menu"
+              "\n[2] To exit to the main menu"
               "\n**********")
         options = int(input("Please choose from the options above: "))
 
@@ -209,10 +197,11 @@ class Appointment:
             self.c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
             self.connection.commit()
             print("You have cancelled your appointment")
-            self.returnToAppMenu(patientEmail)
+            # self.returnToAppMenu(patientEmail)
 
         if options == 2:
-            self.returnToAppMenu(patientEmail)
+            # return to options menu
+            pass
 
     def viewAppConfirmations(self, patientEmail):
         print("**********"
@@ -226,11 +215,11 @@ class Appointment:
             dt = app[1]
             dt = datetime.utcfromtimestamp(dt).strftime('%Y-%m-%d %H:%M')
             print("Appointment ID: " + str(app[0]) + "\t" + "date and time: " + dt + "\t\t" + "with: Dr " + app[2])
-        self.returnToAppMenu(patientEmail)
+        # self.returnToMainMenu(patientEmail)
 
-    def returnToAppMenu(self, patientEmail):
-        if input("Type yes to return to the appointment menu: ").lower() == 'yes':
-            self.bookAppointment(patientEmail)
+    def returnToMainMenu(self, patientEmail):
+        if input("Type yes to return to the main menu: ").lower() == 'yes':
+            self.options(patientEmail)
 
 
 # ari = Appointment()
