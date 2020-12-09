@@ -1,6 +1,5 @@
 from tkinter import *
 from timetablefunctions import getDoctorNotes, saveDoctorNotes
-import time
 from tkinter import messagebox, ttk
 
 
