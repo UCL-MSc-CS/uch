@@ -15,30 +15,7 @@ connection = sqlite3.connect('UCH.db')
 
 c = connection.cursor()
 #create Appointment table
-c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
-                    appointmentID integer PRIMARY KEY,
-                    patientEmail text,
-                    gpEmail text,
-                    checkIn text,
-                    checkOut text,
-                    date text,
-                    time text,
-                    room text,
-                    bookedStatus text,
-                    patientComplaints text,
-                    doctorFindings text, 
-                    diagnosis text,
-                    furtherInspections text,
-                    reason text,
-                    dateRequested text, 
-                    appointmentStatus text, 
-                    start text, 
-                    end text, 
-                    gpLastName text, 
-                    doctorAdvice text, 
-                    appointmentConfirmed text, 
-                    prescriptionID integer)""")
-connection.commit()
+
 
 c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
                     patientEmail text PRIMARY KEY ,
@@ -127,6 +104,26 @@ c.execute("""CREATE TABLE IF NOT EXISTS GP(
 )""")
 connection.commit()
 
+
+#create the appointments table
+c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
+                    appointmentID integer primary key,
+                    gpEmail text,
+                    gpLastName text,
+                    patientEmail text,
+                    start integer,
+                    end integer,
+                    reason text,
+                    appointmentStatus text,
+                    dateRequested integer,
+                    patientComplaints text,
+                    doctorFindings text,
+                    diagnosis text,
+                    furtherInspections text,
+                    doctorAdvice text,
+                    checkIn integer NULL,
+                    checkOut integer NULL)""")
+
 c.execute("""CREATE TABLE IF NOT EXISTS Medecine(
                     medicineID integer PRIMARY KEY,
                     medicineName text,
@@ -143,6 +140,7 @@ c.execute("""CREATE TABLE IF NOT EXISTS Prescription(
                     frequency text,
                     duration text
 )""")
+
 connection.commit()
 
 c.execute("""SELECT * FROM GP""")

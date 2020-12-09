@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime, timedelta
-import uch.usefulfunctions as uf
+import usefulfunctions as uf
 from pathlib import Path
 
 datetimeformat = "%Y-%m-%d %H:%M"
@@ -8,7 +8,8 @@ datetimeformat = "%Y-%m-%d %H:%M"
 
 # connect to your database
 def connecttodb():
-    path = "UCH.db"
+
+    path = str(Path(__file__).parent.absolute()) + "/UCH.db"
     connection = sqlite3.connect(path)  # DO NOT add this file to Git!!!
     cursor = connection.cursor()
     conncursordict = {"connection": connection, "cursor": cursor}
@@ -46,8 +47,8 @@ def getdoclastname(docemail):
     sql = """SELECT lastName FROM GP WHERE gpEmail = ?"""
     values = (docemail,)
     conn['cursor'].execute(sql,values)
-    results = conn['cursor'].fetchall()
-    lastname = results[0][0]
+    results = conn['cursor'].fetchone()
+    lastname = results[0]
 
     closeconn(conn["connection"])
     return lastname
@@ -61,17 +62,19 @@ def book_time(date, startTime, endTime, reason, patientEmail, gpEmailArray):
     end = uf.tounixtime(datetime.strptime(date + " " + endTime, datetimeformat))
     dateRequested = uf.tounixtime(datetime.today())
     appointmentStatus = ''
+
     if reason == 'Appointment':
         appointmentStatus = 'Pending'
 
     for gpEmail in gpEmailArray:
+        gpLastName = getdoclastname(gpEmail)
         values = (
-            None, gpEmail, patientEmail, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
+            None, gpEmail, gpLastName, patientEmail, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
             None)
         conn["cursor"].execute(
             """
             INSERT INTO Appointment
-            Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """, values
         )
 
@@ -146,6 +149,32 @@ def timetableblock(gpemail, date):
     closeconn(conn["connection"])
     return results
 
+# this is used to open today's appointments that have been confirmed.
+def TodayAppointments(gpemail):
+    conn = connecttodb()
+    now = datetime.today()
+    today = datetime(now.year, now.month, now.day)
+    start = uf.tounixtime(today)
+    end = uf.tounixtime(today + timedelta(1))
+
+    sql = """
+
+        SELECT reason,start,end,patientEmail,appointmentID FROM Appointment 
+        WHERE 
+            gpEmail = ? AND
+            start >= ? AND 
+            end <= ? AND
+            appointmentStatus = 'Available'
+        ORDER BY start asc
+    """
+    values = (gpemail, start, end)
+
+    conn['cursor'].execute(sql, values)
+    results = conn['cursor'].fetchall()
+
+    closeconn(conn["connection"])
+    return results
+
 
 # call this when you'd like to cancel an appointment
 def deleteappointment(appointmentId):
@@ -211,7 +240,57 @@ def declineappointment(appointmentId):
 
     closeconn(conn["connection"])
 
-#book_appointment("2020-12-03", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-03", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-03", "15:00", "16:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
+def getDoctorNotes(appointmentId):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+        SELECT 
+            patientComplaints,
+            doctorFindings,
+            diagnosis,
+            furtherInspections,
+            doctorAdvice,
+            appointmentID
+        FROM
+            Appointment
+        WHERE
+            appointmentID = ?
+        """, (appointmentId,))
+
+    results = list(conn['cursor'].fetchone())
+    closeconn(conn["connection"])
+    return results
+
+# This saves/updates the doctor's notes
+def saveDoctorNotes(doctorsnotes):
+    conn = connecttodb()
+    # patientComplaints = tuple[0]
+    # doctorFindings = tuple[1]
+    # diagnosis = tuple[2]
+    # furtherInspections = tuple[3]
+    # doctorAdvice = tuple[4]
+
+    doctorsnotestuple = tuple(doctorsnotes)
+
+    conn['cursor'].execute("""
+        UPDATE
+            Appointment
+        SET
+            patientComplaints = ?,
+            doctorFindings = ?,
+            diagnosis = ?,
+            furtherInspections = ?,
+            doctorAdvice = ?
+        WHERE
+            appointmentID = ? 
+        """, doctorsnotestuple)
+
+    closeconn(conn["connection"])
+
+
+
+# book_appointment("2020-12-05", "15:00", "16:30", "cooldude@gmail.com", ["test@gmail.com"])
+# book_appointment("2020-12-05", "14:00", "15:00", "iamsick@gmail.com", ["test@gmail.com"])
+# book_appointment("2020-12-09", "17:30", "18:30", "whyunotreatme@gmail.com", ["test@gmail.com"])
 # print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
+

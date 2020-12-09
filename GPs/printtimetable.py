@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-import uch.usefulfunctions as uf
-from uch.GPs.printday import printday
+import usefulfunctions as uf
+from GPs.printday import printday
 
 
 def printdays(date, doctoremail):
