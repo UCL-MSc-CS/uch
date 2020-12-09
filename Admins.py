@@ -413,10 +413,10 @@ class adminFunctions():
             if not postcode:
                 raise FieldEmpty()
 
-            tel = int(input("telephone number: "))
+            tel = input("telephone number: ")
             if not tel:
                 raise FieldEmpty()
-            input_list = str(tel)
+            input_list = [i for i in tel]
             if len(input_list) != 11:
                 correct_length = 11
                 raise IncorrectInputLength(correct_length)

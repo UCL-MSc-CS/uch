@@ -154,20 +154,6 @@ c.execute("""CREATE TABLE IF NOT EXISTS Prescription(
 )""")
 connection.commit()
 
-c.execute("""SELECT * FROM GP""")
-items = c.fetchall()
-for i in items:
-    print(i)
-connection.commit()
-print(" ")
-
-c.execute("""SELECT * FROM PatientDetail""")
-items = c.fetchall()
-for i in items:
-    print(i)
-connection.commit()
-print(" ")
-
 c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
                     'm.shorvon@gmail.com',
                     'Matthew',
@@ -262,21 +248,21 @@ c.execute("""INSERT OR IGNORE INTO GP VALUES(
             'Y')""")
 connection.commit()
 
-c.execute("""SELECT * FROM GP""")
+c.execute("""SELECT rowid,* FROM GP""")
 items = c.fetchall()
 for i in items:
     print(i)
 connection.commit()
 print(" ")
 
-c.execute("""SELECT * FROM Admin""")
+c.execute("""SELECT rowid,* FROM Admin""")
 items = c.fetchall()
 for i in items:
     print(i)
 connection.commit()
 print(" ")
 
-c.execute("""SELECT * FROM PatientDetail""")
+c.execute("""SELECT rowid,* FROM PatientDetail""")
 items = c.fetchall()
 for i in items:
     print(i)
