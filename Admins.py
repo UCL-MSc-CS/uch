@@ -1,4 +1,3 @@
-
 import sqlite3 as sql
 from datetime import datetime as dt
 
@@ -41,6 +40,12 @@ class EmailInvalid(Error):
         self.message = message
         super().__init__(self.message)
 
+class EmailNotExists(Error):
+    """Exception raised when email does not exist in list"""
+    def __init__(self, message = "email does not exists"):
+        self.message = message
+        super().__init__(self.message)
+
 class IncorrectInputLength(Error):
     """
     Exception raised when the input length is incorrect
@@ -60,6 +65,18 @@ class GenderError(Error):
     :param: message - explanation of the error to the user
     """
     def __init__(self, message = "please enter one of the options shown"):
+        self.message = message
+        super().__init__(self.message)
+
+class InvalidAgeRange(Error):
+    """Exception raised when age is not supported by date of birth"""
+    def __init__(self, message = "please input correct age"):
+        self.message = message
+        super().__init__(self.message)
+
+class InvalidAdd(Error):
+    """exception raised when address is not valid"""
+    def __init__(self, message = "please input address containing number and street"):
         self.message = message
         super().__init__(self.message)
 
@@ -109,7 +126,7 @@ class adminFunctions():
                 d = int(input("enter date of birth as ddmmyy: "))
                 if not d:
                     raise FieldEmpty()
-                input_list = [int(i) for i in str(d)]  
+                input_list = [int(i) for i in str(d)]
                 if len(input_list) != 6:
                     correct_length = 6
                     raise IncorrectInputLength(6)
@@ -119,7 +136,7 @@ class adminFunctions():
                 g = (input("telephone number: "))
                 if not g:
                     raise FieldEmpty()
-                input_list = [i for i in g]  
+                input_list = [i for i in g]
                 if len(input_list) != 11:
                     correct_length = 11
                     raise IncorrectInputLength(correct_length)
@@ -331,30 +348,117 @@ class adminFunctions():
                 return 0
 
     def managedet(self):
-        patID = int(input("enter patient ID: "))
-        firstn = input("first name: ")
-        lastnm = input("last name: ")
-        dateob= input("date of birth as dd/mm/yyyy: ")
-        age = int(input("age: "))
-        gender = input("gender: ")
-        addl1 = input("address line 1: ")
-        addl2 = input("address line 2: ")
-        postcode = int(input("postcode: "))
-        tel = int(input("telephone number: "))
-        email = input("email: ")
-        regcon = input("Registration confirmation: Y or N")
+        try:
+            email = input("enter patient email: ")
+            self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (email,))
+            emailq = self.c.fetchall()
+            if not email:
+                raise FieldEmpty
+            elif len(emailq) < 1:
+                raise EmailNotExists
 
-        self.c.execute("""UPDATE PatientDetail SET firstName = ?, lastName = ?, dateOfBirth = ?,
-        age = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
-        telephoneNumber = ?, email = ?, registrationConfirm = ? WHERE patientID = ?""",
-        (firstn, lastnm, dateob, age, gender, addl1, addl2, postcode, tel, email, regcon, patID))
-        self.connection.commit()
+            firstn = input("first name: ")
+            if not firstn:
+                raise FieldEmpty
+
+            lastnm = input("last name: ")
+            if not lastnm:
+                raise FieldEmpty
+
+            dateob= int(input("date of birth as dd/mm/yyyy: "))
+            strdateob = str(dateob)
+            if not dateob:
+                raise FieldEmpty()
+            input_list2 = [int(i) for i in str(dateob)]
+            if len(input_list2) != 8:
+                correct_length = 8
+                raise IncorrectInputLength(8)
+
+            age = int(input("age: "))
+            currdate = dt.now().year
+            dobyear = dateob % 10000
+            if age != currdate - dobyear and age != currdate - dobyear - 1:
+                raise InvalidAgeRange
+            elif not age:
+                raise FieldEmpty()
+
+            gender = input("gender (enter male/female/non-binary/prefer not to say): ")
+            if not gender:
+                raise FieldEmpty()
+            if gender != "male" and gender != "female" and gender != "non-binary" and gender != "prefer not to say":
+                raise GenderError()
+
+            addl1 = input("address line 1: ")
+            if not addl1:
+                raise FieldEmpty()
+            elif any(chr.isdigit() for chr in addl1) == False:
+                raise InvalidAdd
+
+            addl2 = input("address line 2: ")
+            if not addl2:
+                raise FieldEmpty()
+            elif any(chr.isdigit() for chr in addl1) == False:
+                raise InvalidAdd
+
+            postcode = input("postcode: ")
+            if not postcode:
+                raise FieldEmpty()
+
+            tel = int(input("telephone number: "))
+            if not tel:
+                raise FieldEmpty()
+            input_list = str(tel)
+            if len(input_list) != 11:
+                correct_length = 11
+                raise IncorrectInputLength(correct_length)
+
+            regcon = input("Registration confirmation: Y or N ")
+            #fill in Y later
+
+        except EmailNotExists:
+            error = EmailNotExists()
+            print(error)
+        except FieldEmpty:
+            error = FieldEmpty()
+            print(error)
+        except IncorrectInputLength:
+            error = IncorrectInputLength(correct_length)
+            print(error)
+        except InvalidAgeRange:
+            error = InvalidAgeRange()
+            print(error)
+        except GenderError:
+            error = GenderError()
+            print(error)
+        except InvalidAdd:
+            error = InvalidAdd()
+            print(error)
+        else:
+            self.c.execute("""UPDATE PatientDetail SET firstName = ?, lastName = ?, dateOfBirth = ?,
+            age = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
+            telephoneNumber = ?, registrationConfirm = ? WHERE patientEmail = ?""",
+            (firstn, lastnm, strdateob, age, gender, addl1, addl2, postcode, tel, regcon, email))
+            self.connection.commit()
 
     def delpatdet(self):
-        patID = int(input("enter patient ID: "))
+        try:
+            email = input("enter patient email: ")
+            self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (email,))
+            emailq = self.c.fetchall()
+            if not email:
+                raise FieldEmpty
+            elif len(emailq) < 1:
+                raise EmailNotExists
+        except EmailNotExists:
+            error = EmailNotExists()
+            print(error)
+        except FieldEmpty:
+            error = FieldEmpty()
+            print(error)
 
-        self.c.execute("""DELETE FROM PatientDetail WHERE patientID = ?""", (patID,))
-        self.connection.commit()
+        else:
+            self.c.execute("""DELETE FROM PatientDetail WHERE patientEmail = ?""", (email,))
+            self.connection.commit()
 
     def commit_and_close(self):
         self.connection.commit()
