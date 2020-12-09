@@ -42,13 +42,6 @@ class Menus():
         print("choose [0] to go back")
 
 
-
-    def admin_submenuCheckIO(self):
-        print("choose [1] to check patient in")
-        print("choose [2] to check patient out")
-        print("choose [0] to go back")
-
-
 """ This is the main loop"""
 masterlogin = Menus()
 masterlogin.MasterMenu()
