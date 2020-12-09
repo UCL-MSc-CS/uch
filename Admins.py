@@ -113,39 +113,48 @@ class adminFunctions():
                     raise FieldEmpty()
                 if "@" not in a or (".co" not in a and ".ac" not in a and ".org" not in a and ".gov" not in a):
                     raise EmailInvalid(a)
-                self.c.execute("SELECT * FROM Doctor WHERE email = ?", (a,))
+                self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (a,))
                 items = self.c.fetchall()
                 if len(items) != 0:
                     raise EmailInUse(a)
+                pw = input("password: ")
+                if not pw:
+                    raise FieldEmpty()
                 b = input("first name: ")
                 if not b:
                     raise FieldEmpty()
                 c = input("last name: ")
                 if not c:
                     raise FieldEmpty()
-                d = int(input("enter date of birth as ddmmyy: "))
-                if not d:
+                dateOfBirth = int(input("enter date of birth as ddmmyy: "))
+                if not dateOfBirth:
                     raise FieldEmpty()
-                input_list = [int(i) for i in str(d)]
+                input_list = [int(i) for i in str(dateOfBirth)]  
                 if len(input_list) != 6:
                     correct_length = 6
                     raise IncorrectInputLength(6)
-                f = input("specialty: ")
-                if not f:
+                department = input("department: ")
+                if not department:
                     raise FieldEmpty()
-                g = (input("telephone number: "))
-                if not g:
+                teleNo = (input("telephone number: "))
+                if not teleNo:
                     raise FieldEmpty()
-                input_list = [i for i in g]
+                input_list = [i for i in teleNo]  
                 if len(input_list) != 11:
                     correct_length = 11
                     raise IncorrectInputLength(correct_length)
-                i = input("gender (enter male/female/non-binary/prefer not to say): ")
-                if not i:
+                gender = input("gender (enter male/female/non-binary/prefer not to say): ")
+                if not gender:
                     raise FieldEmpty()
-                if i != "male" or i != "female" or i != "non-binary" or i != "prefer not to say":
+                if gender != 'male' and gender != 'female' and gender != 'non-binary' and gender != 'prefer not to say':
                     raise GenderError()
-                j = "Y"
+                active = "Y"
+                addressL1 = input("Address Line 1: ")
+                if not addressL1:
+                    raise FieldEmpty()
+                addressL2 = input("Address Line 2: ")
+                if not addressL2:
+                    raise FieldEmpty()
             except FieldEmpty:
                 error = FieldEmpty()
                 print(error)
@@ -170,9 +179,9 @@ class adminFunctions():
                 print(error)
                 return 1
             else:
-                gp = [a, b, c, d, f, g, i, j]
-                self.c.execute("""INSERT INTO Doctor VALUES(?, ?, ?, ?, ?, ?, ?, ?)""", gp)
-                self.c.execute("SELECT * FROM Doctor")
+                gp = [a, pw, b, c, gender, dateOfBirth, addressL1, addressL2, teleNo, department, active]
+                self.c.execute("""INSERT INTO GP VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", gp)
+                self.c.execute("SELECT * FROM GP")
                 items = self.c.fetchall()
                 for i in items:
                     print(i)
@@ -185,7 +194,7 @@ class adminFunctions():
             raise NameError
 
     def check_registrations(self):
-        self.c.execute("""SELECT COUNT(patientID) FROM PatientDetail WHERE registrationConfirm = 'N' """)
+        self.c.execute("""SELECT COUNT(patientEmail) FROM PatientDetail WHERE registrationConfirm = 'N' """)
         items = self.c.fetchall()
         count = items[0][0]
         print("You have %d patient registrations to confirm" % count)
@@ -197,21 +206,21 @@ class adminFunctions():
             print("no patient registrations to confirm")
         else:
             for i in items:
-                print("first name: {}".format(i[1]))
-                print("last name: {}".format(i[2]))
-                print("date of birth: {}".format(i[3]))
-                print("age: {}".format(i[4]))
-                print("gender: {}".format(i[5]))
-                print("address line 1: {}".format(i[6]))
-                print("addresss line 2: {}".format(i[7]))
-                print("postcode: {}".format(i[8]))
-                print("telephone number: {}".format(i[9]))
-                print("email: {}".format(i[10]))
+                print("email: {}".format(i[1]))
+                print("first name: {}".format(i[2]))
+                print("last name: {}".format(i[3]))
+                print("date of birth: {}".format(i[4]))
+                print("age: {}".format(i[5]))
+                print("gender: {}".format(i[6]))
+                print("address line 1: {}".format(i[7]))
+                print("addresss line 2: {}".format(i[8]))
+                print("postcode: {}".format(i[9]))
+                print("telephone number: {}".format(i[10]))
                 change = input("Do you want to confirm this registration?: (Y/N) ")
                 while change != 'Y' and change != 'N':
                     if change == 'Y':
-                        self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 'Y' WHERE email = ? """,
-                                       (i[10],))
+                        self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 'Y' WHERE patientEmail = ? """,
+                                       (i[1],))
                     elif change == 'N':
                         print("registration not confirmed")
                     else:
@@ -237,14 +246,14 @@ class adminFunctions():
             print(error)
             return 1
         else:
-            self.c.execute("SELECT * FROM Doctor WHERE email = ?", (email,))
+            self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
             items = self.c.fetchall()
             if len(items) == 0:
                 print("no record exists with this email")
                 return 1
             else:
-                self.c.execute("""UPDATE Doctor SET active = 'N' WHERE email = ?""", (email,))
-                self.c.execute("SELECT * FROM Doctor")
+                self.c.execute("""UPDATE GP SET active = 'N' WHERE gpEmail = ?""", (email,))
+                self.c.execute("SELECT * FROM GP")
                 items = self.c.fetchall()
                 for i in items:
                     print(i)
@@ -269,14 +278,14 @@ class adminFunctions():
             print(error)
             return 2
         else:
-            self.c.execute("SELECT * FROM Doctor WHERE email = ?", (email,))
+            self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
             items = self.c.fetchall()
             if len(items) == 0:
                 print("no record exists with this email")
                 return 2
             else:
-                self.c.execute("DELETE FROM Doctor WHERE email = ?", (email,))
-                self.c.execute("SELECT * FROM Doctor")
+                self.c.execute("DELETE FROM GP WHERE gpEmail = ?", (email,))
+                self.c.execute("SELECT * FROM GP")
                 items = self.c.fetchall()
                 for i in items:
                     print(i)
