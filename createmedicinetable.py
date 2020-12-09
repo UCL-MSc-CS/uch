@@ -31,8 +31,13 @@ connection.commit()
 numrows = c.fetchone()[0]
 
 if numrows < 1:
-    medicines = pd.read_csv("medicinedata.txt",delimiter='\t',header=0,encoding='ANSI')
+    try:
+        medicines = pd.read_csv("medicinedata.txt",delimiter='\t',header=0,encoding='CP850')
+    except:
+        medicines = pd.read_csv("medicinedata.txt",delimiter='\t',header=0,encoding='ANSI')
+
     medicines.to_sql("Medicine",connection,if_exists='append',index=False)
+
     pass
 
 connection.close()
