@@ -47,8 +47,8 @@ def getdoclastname(docemail):
     sql = """SELECT lastName FROM GP WHERE gpEmail = ?"""
     values = (docemail,)
     conn['cursor'].execute(sql,values)
-    results = conn['cursor'].fetchall()
-    lastname = results[0][0]
+    results = conn['cursor'].fetchone()
+    lastname = results[0]
 
     closeconn(conn["connection"])
     return lastname
@@ -62,12 +62,14 @@ def book_time(date, startTime, endTime, reason, patientEmail, gpEmailArray):
     end = uf.tounixtime(datetime.strptime(date + " " + endTime, datetimeformat))
     dateRequested = uf.tounixtime(datetime.today())
     appointmentStatus = ''
+
     if reason == 'Appointment':
         appointmentStatus = 'Pending'
 
     for gpEmail in gpEmailArray:
+        gpLastName = getdoclastname(gpEmail)
         values = (
-            None, gpEmail, 'Ratwatte', patientEmail, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
+            None, gpEmail, gpLastName, patientEmail, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
             None)
         conn["cursor"].execute(
             """
