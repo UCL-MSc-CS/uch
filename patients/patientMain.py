@@ -5,6 +5,7 @@ from datetime import date
 from patient import Patient
 from PatientRiskProfile import PatientMedical
 from lifeStyleQuestionnaire import RiskProfile
+from appointment import Appointment
 
 connection = sql.connect('patient.db')
 c = connection.cursor()
@@ -16,9 +17,10 @@ def options(patientEmail):
 
         print("What would you like to do next?")
         print("Choose [1] to view appointment menu")
-        print("Choose [2] to see your profile")
+        print("Choose [2] to see your medical profile")
         action = int(input("Choice: "))
         if action == 1:
+            x = Appointment()
             x.bookAppointment(patientEmail)
         elif action == 2:
             print("Choose [1] to see your medical profile")
@@ -111,5 +113,7 @@ def task():
             options(patientEmail)
     
 
-print("Welcome!")
-task()
+# print("Welcome!")
+# task()
+
+# options("ariannabourke@hotmail.com")
