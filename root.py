@@ -31,7 +31,6 @@ class Menus():
         print("choose [0] to go back")
 
     def managedetails(self):
-        print("Select from options below:")
         print("choose [1] to change patient record")
         print("choose [2] to delete patient record")
         print("choose [0] to go back")
@@ -102,19 +101,23 @@ while selection1 != 0:
                 elif selection == 3:
                     ad.confirm_registrations()
                     selection = 0
+                #checking patient in or out
+
                 elif selection == 5:
                     AdminM.admin_submenuCheckIO()
                     CheckOpt = int(input("choice: "))
                     if CheckOpt == 1:
                         ad.cin()
-                        pass
+                        print("successfully checked patient in")
                     elif CheckOpt == 2:
                         ad.cout()
-                        pass
+                        print("successfully checked patient out")
                     elif CheckOpt == 0:
                         selection = 0
                     else:
                         print("not a valid option")
+
+                #updating/deleting patient details
                 elif selection == 6:
                     AdminM.managedetails()
                     detchoice = int(input("choice: "))
@@ -124,12 +127,14 @@ while selection1 != 0:
                         detchoice2 = int(input("choice: "))
                         if detchoice2 == 1:
                             ad.managedet()
+                            print("successfully changed patient record")
                         elif detchoice2 == 2:
                             pass
                         elif detchoice2 == 0:
                             selection = 6
                     elif detchoice == 2:
                         ad.delpatdet()
+                        print("successfully deleted patient record")
                     elif detchoice == 0:
                         selection = 0
 
