@@ -5,7 +5,7 @@ import medicinesearchfunctions as ms
 def prescription(doctoremail,appointmentID):
 
     root = Tk()
-    root.title('Appointment ID: ' + str(appointmentID))
+    root.title('Appointment ID: ' + str(appointmentID) + ', with Dr. ' + doctoremail)
     root.geometry("1920x950")
 
     mainFrame = Frame(root)
@@ -92,15 +92,14 @@ def prescription(doctoremail,appointmentID):
 
     def enterintodisabled(textbox, string):
         textbox.config(state=NORMAL)
-        textbox.delete('1.0', END)
-        textbox.insert(END, string)
+        textbox.delete(0, END)
+        textbox.insert(0, string)
         textbox.config(state=DISABLED)
 
     def submitchoice():
         if trv.selection():
             for row in trv.selection():
                 selected_medicine = trv.item(row, "values")
-                # print(selected_medicine)
                 break
             enterintodisabled(medid, selected_medicine[0])
             enterintodisabled(medname, selected_medicine[1])
@@ -115,34 +114,39 @@ def prescription(doctoremail,appointmentID):
 
     # Add record
     def addRecord():
-        global count
+        if medid.get():
+            global count
+            addvalues = (
+                            medid.get(),
+                            medname.get(),
+                            chosendose.get(),
+                            multiplier.get(),
+                            doseType.get(),
+                            furtherInformation.get()
+            )
+            myTree.insert(parent='', index='end', id=count, text="", values=addvalues)
+            count+= 1
 
-        myTree.insert(parent='', index='end', id=count, text="", values=(medid.get(1.0,END), medname.get(1.0,END), chosendose.get(), multiplier.get(1.0,END), doseType.get(1.0,END), furtherInformation.get(1.0,END)))
-        count+= 1
-
-        # Clear the boxes
-        medid.config(state=NORMAL)
-        medname.config(state=NORMAL)
-        doseType.config(state=NORMAL)
-        medid.delete('1.0',END)
-        medname.delete('1.0',END)
-        multiplier.delete('1.0',END)
-        doseType.delete('1.0',END)
-        furtherInformation.delete('1.0',END)
-        dosagedropdown.destroy()
-        medid.config(state=DISABLED)
-        medname.config(state=DISABLED)
-        doseType.config(state=DISABLED)
-
-
-
+            # Clear the boxes
+            medid.config(state=NORMAL)
+            medname.config(state=NORMAL)
+            doseType.config(state=NORMAL)
+            multiplier.config(state=NORMAL)
+            medid.delete(0,END)
+            medname.delete(0,END)
+            multiplier.delete(0, END)
+            multiplier.insert(0,1)
+            doseType.delete(0,END)
+            furtherInformation.delete(0,END)
+            dosagedropdown.destroy()
+            medid.config(state=DISABLED)
+            medname.config(state=DISABLED)
+            doseType.config(state=DISABLED)
+            multiplier.config(state='readonly')
 
 
     tree_frame = Frame(medResultsFrame)
-    tree_frame.pack(pady = 20, padx = 20)
-
-    tree_scroll = Scrollbar(tree_frame,orient = HORIZONTAL)
-    tree_scroll.pack(fill=X,side=BOTTOM)
+    tree_frame.pack(pady = 10, padx = 5)
 
     global trv
     trv = ttk.Treeview(
@@ -150,32 +154,32 @@ def prescription(doctoremail,appointmentID):
         columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
         show='headings',
         height='5',
-        selectmode="browse",
-        xscrollcommand=tree_scroll.set
+        selectmode="browse"
     )
     trv.pack()
 
     trv.heading(1, text="ID")
-    trv.column(1,width=50)
+    trv.column(1,width=45)
     trv.heading(2, text="Medicine Name")
+    trv.column(2, width=120)
     trv.heading(3, text="Type")
-    trv.column(3, width=80)
+    trv.column(3, width=90)
     trv.heading(4, text="Dosage method")
     trv.column(4, width=100)
     trv.heading(5, text="Drug route")
-    trv.column(5, width=100)
+    trv.column(5, width=50)
     trv.heading(6, text="Manufacturer")
     trv.column(6, width=100)
     trv.heading(7, text="Drug")
+    trv.column(7, width=100)
     trv.heading(8, text="Dosages")
     trv.column(8, width=100)
     trv.heading(9, text="Units")
     trv.column(9, width=100)
     trv.heading(10, text="Pharma class")
+    trv.column(10, width=100)
     trv.heading(11, text="Category")
-
-    tree_scroll.config(command = trv.xview)
-
+    trv.column(11, width=100)
 
     choosemedbutton = Button(medResultsFrame, text="Choose medicine", command=submitchoice)
     choosemedbutton.pack()
@@ -187,13 +191,13 @@ def prescription(doctoremail,appointmentID):
     medidlabel = Label(chosenmedframe,text="ID")
     medidlabel.grid(row=1,column=1)
     global medid
-    medid = Text(chosenmedframe, height=1, width=10,state=DISABLED)
+    medid = Entry(chosenmedframe, width=10,state=DISABLED,disabledbackground="white",disabledforeground="black")
     medid.grid(row=2,column=1)
 
     mednamelabel = Label(chosenmedframe,text="Medicine")
     mednamelabel.grid(row=1,column=2)
     global medname
-    medname = Text(chosenmedframe, height=1, width=30,state=DISABLED)
+    medname = Entry(chosenmedframe, width=30,state=DISABLED,disabledbackground="white",disabledforeground="black")
     medname.grid(row=2,column=2)
 
     doselabel = Label(chosenmedframe, text="Dose")
@@ -201,18 +205,18 @@ def prescription(doctoremail,appointmentID):
 
     multiplabel = Label(chosenmedframe, text="Dose-Multiplier")
     multiplabel.grid(row=1, column=4)
-    multiplier = Text(chosenmedframe, height=1, width=5)
+    multiplier = Spinbox(chosenmedframe,from_ = 1, to = 100 ,width=5,state='readonly',readonlybackground='white')
     multiplier.grid(row=2,column=4)
 
     Typelabel = Label(chosenmedframe, text="Type")
     Typelabel.grid(row=1, column=5)
     global doseType
-    doseType = Text(chosenmedframe, height=1, width=30,state=DISABLED)
+    doseType = Entry(chosenmedframe, width=30,state=DISABLED,disabledbackground="white",disabledforeground="black")
     doseType.grid(row=2,column=5)
 
     Freqlabel = Label(chosenmedframe, text="Further Information")
     Freqlabel.grid(row=1, column=6)
-    furtherInformation = Text(chosenmedframe, height=1, width=40)
+    furtherInformation = Entry(chosenmedframe, width=40)
     furtherInformation.grid(row=2,column=6)
 
     addRecord = Button(medResultsFrame, text="Add Medicine", command=addRecord)
@@ -245,9 +249,7 @@ def prescription(doctoremail,appointmentID):
 
 
     # Get data from database
-    data = [
-
-    ]
+    data = []
 
     # Add data
     global count
@@ -258,28 +260,6 @@ def prescription(doctoremail,appointmentID):
 
     # Pack to the screen
     myTree.pack(pady=20)
-
-    # addFrame = Frame(medSelectFrame)
-    # addFrame.pack(pady=20)
-
-    # il = Label(addFrame, text="Medicine ID")
-    # il.grid(row=0, column=0)
-    #
-    # tl = Label(addFrame, text="Medicine Type")
-    # tl.grid(row=0, column=1)
-    #
-    # nl = Label(addFrame, text="Medicine Name")
-    # nl.grid(row=0, column=2)
-    #
-    # #Entry boxes
-    # idBox = Entry(addFrame)
-    # idBox.grid(row=1, column=0)
-    #
-    # typeBox = Entry(addFrame)
-    # typeBox.grid(row=1, column=1)
-    #
-    # nameBox = Entry(addFrame)
-    # nameBox.grid(row=1, column=2)
 
     # Remove all records
     def removeAll():
@@ -302,17 +282,10 @@ def prescription(doctoremail,appointmentID):
             prescriptionList.pop(4)
             ms.addPrescription(prescriptionList)
 
-
-
-
         exit = messagebox.askyesno("Save Prescription", "Confirm if you want to exit.")
         if exit > 0:
             root.destroy()
             return
-
-    # Buttons
-    # addRecord = Button(medSelectFrame, text="Add Medicine", command=addRecord)
-    # addRecord.pack(pady=10)
 
     # Remove all
     removeAll = Button(prescriptionFrame, text="Remove All Medicine", command=removeAll)
@@ -328,4 +301,3 @@ def prescription(doctoremail,appointmentID):
 
 
     root.mainloop()
-
