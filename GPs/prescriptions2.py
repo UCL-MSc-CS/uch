@@ -268,6 +268,5 @@ def treeView():
 
     root.mainloop()
 
-treeView()
 
 prescription()
