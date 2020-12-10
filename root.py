@@ -42,6 +42,8 @@ class Menus():
         print("choose [0] to go back")
 
 
+
+
 """ This is the main loop"""
 masterlogin = Menus()
 masterlogin.MasterMenu()
@@ -128,7 +130,6 @@ while selection1 != 0:
                     CheckOpt = int(input("choice: "))
                     if CheckOpt == 1:
                         ad.cin()
-                        print("successfully checked patient in")
                     elif CheckOpt == 2:
                         ad.cout()
                         print("successfully checked patient out")
@@ -147,16 +148,18 @@ while selection1 != 0:
                         detchoice2 = int(input("choice: "))
                         if detchoice2 == 1:
                             ad.managedet()
-                            print("successfully changed patient record")
                         elif detchoice2 == 2:
-                            pass
+                            ad.manIndDet()
                         elif detchoice2 == 0:
                             selection = 6
+                        elif detchoice2 != 1 and detchoice2 != 2 and detchoice2 != 0:
+                            print("Not a valid choice")
                     elif detchoice == 2:
                         ad.delpatdet()
-                        print("successfully deleted patient record")
                     elif detchoice == 0:
                         selection = 0
+                    elif detchoice != 0 and detchoice != 1 and detchoice != 2:
+                        print("Not a valid option")
 
 
 
