@@ -1,5 +1,8 @@
+import sqlite3 as sql
+import random
 from datetime import time as x, date as xyz, datetime, timedelta
 import time
+import calendar
 
 def toregulartime(unixtimestamp):
     """ Converts unix timestamp to datetime object"""
@@ -61,6 +64,65 @@ def checkIfAppBooked():
     # #         print("Appointment already booked, please try again: ") etc etc...
     pass
 
+def printCalendar(mm):
+    print("----------")
+    print(calendar.month(2021, mm))
+    print("----------")
+    day = input("Please select a day (as dd): ")
+    date = "2021-{}-{}".format(mm, day)
+    return date
+
+def displayAvailable(start, end, gpDetails):
+    connection = sql.connect('patient.db')
+    c = connection.cursor()
+
+    c.execute("SELECT start, appointmentStatus FROM Appointment WHERE start >=? and end <? and gpEmail =?",
+                   [start, end, gpDetails[0]])
+    appointments = c.fetchall()
+    times = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+             "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"]
+    if not appointments:
+        for i in times:
+            print(i + " available")
+    else:
+        dict_time_status = {}
+        for items in appointments:
+            ts = toregulartime(items[0])
+            string_time = ts.strftime("%H:%M")
+            dict_time_status[string_time] = items[1]
+        for time in times:
+            if time in dict_time_status:
+                print(time + ' ' + dict_time_status[time])
+            else:
+                print(time + ' available')
+
+def chooseTime(start, gpDetails, patientEmail):
+    connection = sql.connect('patient.db')
+    c = connection.cursor()
+
+    end = start + (30 * 60)
+    gpLastName = gpDetails[1]
+    gpEmail = gpDetails[0]
+    reason = 'Appointment'
+    appointmentStatus = 'Pending'
+    dateRequested = tounixtime(datetime.today())
+
+    chosen = (gpEmail, gpLastName, patientEmail, start, end, reason, appointmentStatus,
+              dateRequested, '', '', '', '', '', None, None)
+    c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
+    connection.commit()
+
+def viewAppointments(patientEmail):
+    connection = sql.connect('patient.db')
+    c = connection.cursor()
+    c.execute("SELECT appointmentID, start, gpLastName FROM Appointment "
+                "WHERE patientEmail =? and appointmentStatus = 'Unavailable' ", [patientEmail])
+    appointments = c.fetchall()
+
+    for app in appointments:
+        dt = app[1]
+        dt = datetime.utcfromtimestamp(dt).strftime('%Y-%m-%d %H:%M')
+        print("Appointment ID: " + str(app[0]) + "\t" + "date and time: " + dt + "\t\t" + "with: Dr " + app[2])
 
 
 
