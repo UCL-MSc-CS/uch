@@ -54,7 +54,7 @@ def options(patientEmail):
                 x.medicalHistory()
                 x.cancer()
         elif action == 0:
-            # exit to main menu
+            # exit to main menu?
             pass
 
 
