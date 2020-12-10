@@ -105,3 +105,21 @@ def search(medname,drugname,dosetype,medtype,category):
 
     closeconn(conn["connection"])
     return results
+
+def addPrescription(prescription):
+    conn = connecttodb()
+
+    prescriptionTuple = tuple(prescription)
+    print(prescriptionTuple)
+
+    conn['cursor'].execute("""
+        INSERT INTO
+            Prescription
+        VALUES
+            (?, ?, ?, ?, ?)
+        """, prescriptionTuple)
+
+    closeconn(conn["connection"])
+
+
+
