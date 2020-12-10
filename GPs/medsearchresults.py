@@ -2,13 +2,26 @@ from tkinter import *
 from tkinter.ttk import Treeview
 import medicinesearchfunctions as ms
 
+def enterintodisabled(textbox,string):
+    textbox.config(state=NORMAL)
+    textbox.delete('1.0', END)
+    textbox.insert(END,string)
+    textbox.config(state=DISABLED)
+
 def submitchoice():
-    for row in trv.selection():
-        global selected_medicine
-        selected_medicine = trv.item(row,"values")
-        print(selected_medicine)
-        break
-    search_results.destroy()
+    if trv.selection():
+        for row in trv.selection():
+            selected_medicine = trv.item(row,"values")
+            #print(selected_medicine)
+            break
+        enterintodisabled(medid,selected_medicine[0])
+        enterintodisabled(medname,selected_medicine[1])
+        enterintodisabled(doseType,selected_medicine[3])
+        dosages = selected_medicine[7].split(";")
+        chosendose = StringVar()
+        chosendose.set(dosages[0])
+        dosagedropdown = OptionMenu(chosenmedframe,chosendose,*dosages)
+        dosagedropdown.grid(row=2,column=3)
 
 def medsearchresultspage(medsearchstring, drugsearchstring, dtype, mtype, ctype):
     results = ms.search(medsearchstring, drugsearchstring, dtype, mtype, ctype)
@@ -16,7 +29,7 @@ def medsearchresultspage(medsearchstring, drugsearchstring, dtype, mtype, ctype)
     global search_results
     search_results = Toplevel()
     search_results.title("Here are your results")
-    search_results.geometry("1000x750")
+    search_results.geometry("1200x400")
 
     tree_frame = Frame(search_results)
     tree_frame.pack(pady = 20, padx = 20)
@@ -29,7 +42,7 @@ def medsearchresultspage(medsearchstring, drugsearchstring, dtype, mtype, ctype)
         tree_frame,
         columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
         show='headings',
-        height='30',
+        height='5',
         selectmode="browse",
         xscrollcommand=tree_scroll.set
     )
@@ -59,7 +72,42 @@ def medsearchresultspage(medsearchstring, drugsearchstring, dtype, mtype, ctype)
     for result in results:
         trv.insert('','end',values = result)
 
-    submitbutton = Button(search_results, text="Submit choice", padx=20, pady=20,command=submitchoice)
-    submitbutton.pack()
+    choosemedbutton = Button(search_results, text="Choose medicine", padx=20, pady=20,command=submitchoice)
+    choosemedbutton.pack()
+
+    global chosenmedframe
+    chosenmedframe = LabelFrame(search_results,text="Chosen medicine",padx=20,pady=20)
+    chosenmedframe.pack()
+
+    medidlabel = Label(chosenmedframe,text="ID")
+    medidlabel.grid(row=1,column=1)
+    global medid
+    medid = Text(chosenmedframe, height=1, width=10,state=DISABLED)
+    medid.grid(row=2,column=1)
+
+    mednamelabel = Label(chosenmedframe,text="Medicine")
+    mednamelabel.grid(row=1,column=2)
+    global medname
+    medname = Text(chosenmedframe, height=1, width=30,state=DISABLED)
+    medname.grid(row=2,column=2)
+
+    doselabel = Label(chosenmedframe, text="Dose")
+    doselabel.grid(row=1, column=3)
+
+    multiplabel = Label(chosenmedframe, text="Dose-Multiplier")
+    multiplabel.grid(row=1, column=4)
+    multiplier = Text(chosenmedframe, height=1, width=5)
+    multiplier.grid(row=2,column=4)
+
+    Typelabel = Label(chosenmedframe, text="Type")
+    Typelabel.grid(row=1, column=5)
+    global doseType
+    doseType = Text(chosenmedframe, height=1, width=30,state=DISABLED)
+    doseType.grid(row=2,column=5)
+
+    Freqlabel = Label(chosenmedframe, text="Frequency")
+    Freqlabel.grid(row=1, column=6)
+    Frequency = Text(chosenmedframe, height=1, width=40)
+    Frequency.grid(row=2,column=6)
 
     search_results.mainloop()
