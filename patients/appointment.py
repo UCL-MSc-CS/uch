@@ -34,8 +34,11 @@ class Appointment:
             self.chooseDate(patientEmail, y)
 
         if dr_options == 0:
-            # return to options menu
-            pass
+            if input("Type yes to return to the main menu: ").lower() == 'yes':
+                pass
+            else:
+                print("Thank you for using the UCH e-health system! Goodbye for now!")
+                exit()
 
     def chooseSpecificDr(self, patientEmail):
         print("**********"
@@ -113,13 +116,20 @@ class Appointment:
             pf.chooseTime(start, gpDetails, patientEmail)
             print("You have requested to book an appointment on {} at {}, "
                   "\nyou will receive confirmation of your appointment shortly!".format(date, time))
-            # if input("Type yes to return to the main menu: ").lower() == 'yes':
-            #     return to main menu
+            if input("Type yes to return to the main menu: ").lower() == 'yes':
+                pass
+            else:
+                print("Thank you for using the UCH e-health system! Goodbye for now!")
+                exit()
+
         if options == 2:
             self.chooseDate(patientEmail, gpDetails)
         if options == 3:
-            # return to options menu
-            pass
+            if input("Type yes to return to the main menu: ").lower() == 'yes':
+                pass
+            else:
+                print("Thank you for using the UCH e-health system! Goodbye for now!")
+                exit()
 
     def cancelAppointment(self, patientEmail):
         print("**********"
@@ -137,23 +147,28 @@ class Appointment:
             self.c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
             self.connection.commit()
             print("You have cancelled your appointment")
-            # self.returnToAppMenu(patientEmail)
+            if input("Type yes to return to the main menu: ").lower() == 'yes':
+                pass
+            else:
+                print("Thank you for using the UCH e-health system! Goodbye for now!")
+                exit()
 
         if options == 2:
-            # return to options menu
-            pass
+            if input("Type yes to return to the main menu: ").lower() == 'yes':
+                pass
+            else:
+                print("Thank you for using the UCH e-health system! Goodbye for now!")
+                exit()
 
     def viewAppConfirmations(self, patientEmail):
         print("**********"
               "\nThese are your confirmed booked appointments: ")
         pf.viewAppointments(patientEmail)
-        # self.returnToMainMenu(patientEmail)
-
-    def returnToMainMenu(self, patientEmail):
         if input("Type yes to return to the main menu: ").lower() == 'yes':
-            self.options(patientEmail)
+            pass
+        else:
+            print("Thank you for using the UCH e-health system! Goodbye for now!")
+            exit()
 
 
-# ari = Appointment()
-# ari.bookAppointment("ariannabourke@hotmail.com")
 

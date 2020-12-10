@@ -1,5 +1,4 @@
 import sqlite3 as sql
-from getpass import getpass
 import datetime
 from datetime import date
 from patient import Patient
@@ -25,20 +24,23 @@ def options(patientEmail):
         if action == 1:
             x = Appointment()
             x.bookAppointment(patientEmail)
+            options(patientEmail)
         elif action == 2:
             x = Appointment()
             x.viewAppConfirmations(patientEmail)
+            options(patientEmail)
         elif action == 3:
             x = Appointment()
             x.cancelAppointment(patientEmail)
+            options(patientEmail)
         elif action == 4:
             print("Choose [1] to see your medical profile")
             print("Choose [2] to take the lifestyle risk questionnaire")
             print("Choose [3] to update your medical history")
             qaction = int(input("Choice: "))
             if qaction == 1:
-                name = RiskProfile
-                name.show_profile()
+                name = PatientMedical()
+                name.show_profile(patientEmail)
             elif qaction == 2:
                 print("Please fill out the following risk profile")
                 x = RiskProfile()  # need to pass patientEmail into the functions
@@ -48,15 +50,14 @@ def options(patientEmail):
                 x.smoking()
                 x.drugs()
                 x.alcohol()
-                x.insert_to_table()
+                x.insert_to_table(patientEmail)
             elif qaction == 3:
                 x = PatientMedical()
-                x.medicalHistory()
-                x.cancer()
+                x.medicalHistory(patientEmail)
+                x.cancer(patientEmail)
         elif action == 0:
-            # exit to main menu?
-            pass
-
+            print("Thank you for using the UCH e-health system! Goodbye for now!")
+            exit()
 
 def task():
     print("Choose [1] to register for a new account")
@@ -98,13 +99,13 @@ def task():
         patientEmail=input("Please enter your email. ")
         c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
         patientEmails = c.fetchall()
-        if patientEmail != []:
+        if patientEmails != []:
             while patientEmails != []:
                 print("I'm sorry, that email is already in use. Please use another email.")
                 patientEmail=input("Please enter your email. ")
                 c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
                 patientEmails = c.fetchall()
-        password=getpass("Please enter your password. ")
+        password=input("Please enter your password. ")
         x=Patient(patientEmail, firstName, lastName, dateOfBirth, age, gender, addressLine1, addressLine2, postcode, telephoneNumber, password)
         x.register()
         x.registrationSummary()
@@ -113,11 +114,11 @@ def task():
         patientEmail=input("Please enter your email. ")
         c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
         patientEmails = c.fetchall()
-        password=getpass("Please enter your password. ")
+        password=input("Please enter your password. ")
         if password != patientEmails[0][10]:
             while password != patientEmails[0][10]:
                 print("I'm sorry, that password is not correct. ")
-                password=getpass("Please enter your password. ")
+                password=input("Please enter your password. ")
             print("Wonderful! Hi, " + patientEmails[0][1] + " you are now logged in.")
             options(patientEmail)
         else:
@@ -125,7 +126,6 @@ def task():
             options(patientEmail)
     
 
-# print("Welcome!")
-# task()
+print("Welcome!")
+task()
 
-options("ariannabourke@hotmail.com")

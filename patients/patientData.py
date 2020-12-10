@@ -19,6 +19,9 @@ c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
                     loggedIn DATATYPE INTEGER,
                     registrationConfirm DATATYPE INTEGER)""")
 
+c.execute("INSERT INTO PatientDetail VALUES ('ariannabourke@hotmail.com', 'Arianna', 'Bourke', '27/04/1988', 10, "
+          "'male', '123 Happy', 'street', '12343', '389753957', '1234', 1, 1) ")
+
 c.execute('DROP TABLE IF EXISTS questionnaireTable')
 c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
             patientEmail text PRIMARY KEY,
