@@ -47,8 +47,22 @@ class EmailInvalid(Error):
         super().__init__(self.message)
 
 class EmailNotExists(Error):
-    """Exception raised when email does not exist in list"""
+    """
+    Exception raised when email does not exist in list
+    
+    :param: message - explanation of the error to the user
+    """
     def __init__(self, message = "email does not exists"):
+        self.message = message
+        super().__init__(self.message)
+
+class TeleNoFormatError(Error):
+    """
+    Exception raised when the inputted phone number is not in the format +<country code>xxxxxxxxxx
+
+    :param: message - explanation of the error to the user
+    """
+    def __init__(self, message = "please enter the phone number in the correct format"):
         self.message = message
         super().__init__(self.message)
 
@@ -142,14 +156,18 @@ class adminFunctions():
                 department = input("department: ")
                 if not department:
                     raise FieldEmpty()
-                teleNo = (input("telephone number: "))
+                teleNo = (input("telephone number (no spaces, with country code. E.g. +4471234123123): "))
                 if not teleNo:
                     raise FieldEmpty()
+                if '+' not in teleNo or ' ' in teleNo:
+                    raise TeleNoFormatError()
+                teleNo = teleNo.replace('+', '')
                 input_list = [i for i in teleNo]  
-                if len(input_list) != 11:
-                    correct_length = 11
+                if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
+                    correct_length = '12 to 18'
                     raise IncorrectInputLength(correct_length)
                 gender = input("gender (enter male/female/non-binary/prefer not to say): ")
+                gender = gender.lower()
                 if not gender:
                     raise FieldEmpty()
                 if gender != 'male' and gender != 'female' and gender != 'non-binary' and gender != 'prefer not to say':
@@ -175,6 +193,10 @@ class adminFunctions():
                 return 1
             except ValueError:
                 print("please provide a numerical input")
+                return 1
+            except TeleNoFormatError:
+                error = TeleNoFormatError()
+                print(error)
                 return 1
             except IncorrectInputLength:
                 error = IncorrectInputLength(correct_length)
