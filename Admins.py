@@ -410,7 +410,7 @@ class adminFunctions():
         # question_num = 0
         while manageback == 0:
             try:
-                # while question_num == 0:
+                while question_num == 0:
                     nhsnum = input("Enter patient nhs number (enter [1] to return to menu): ")
                     self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                     nhsq = self.c.fetchall()
@@ -421,15 +421,15 @@ class adminFunctions():
                         raise FieldEmpty
                     elif len(nhsq) < 1:
                         raise nhsNotExists
-                    # question_num = 1
-                # while question_num == 1:
+                    question_num = 1
+                while question_num == 1:
                     email = input("email: ")
                     if "@" not in email or ".com" not in email:
                         raise EmailInvalid(email)
 
                     elif not email:
                         raise FieldEmpty
-                    # question_num = 2
+                    question_num = 2
 
                 firstn = input("first name: ")
                 if not firstn:
