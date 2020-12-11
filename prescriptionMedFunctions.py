@@ -111,7 +111,6 @@ def addPrescription(prescription):
     conn = connecttodb()
 
     prescriptionTuple = tuple(prescription)
-    print(prescriptionTuple)
 
     conn['cursor'].execute("""
         INSERT INTO
@@ -158,6 +157,3 @@ def deleteMedRecord(appointmentID):
             appointmentID = ?
         """, (appointmentID,))
     closeconn(conn["connection"])
-
-
-# print(getPrescription(2))
