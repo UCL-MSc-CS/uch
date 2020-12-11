@@ -75,13 +75,14 @@ def allcategories():
 
     return categories
 
+# This searches for drugs
 def search(medname,drugname,dosetype,medtype,category):
     conn = connecttodb()
 
     if medname:
-        medname = "%" + medname[:-1] + "%"
+        medname = "%" + medname + "%"
     if drugname:
-        drugname = "%"+ drugname[:-1] + "%"
+        drugname = "%" + drugname + "%"
 
     valuearray = [medname, medtype, drugname, dosetype, category]
 
