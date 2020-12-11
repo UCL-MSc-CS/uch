@@ -19,6 +19,9 @@ c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
                     loggedIn DATATYPE INTEGER,
                     registrationConfirm DATATYPE INTEGER)""")
 
+c.execute("INSERT INTO PatientDetail VALUES ('ariannabourke@hotmail.com', 'Arianna', 'Bourke', '27/04/1988', 10, "
+          "'male', '123 Happy', 'street', '12343', '389753957', '1234', 1, 1) ")
+
 c.execute('DROP TABLE IF EXISTS questionnaireTable')
 c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
             patientEmail text PRIMARY KEY,
@@ -76,13 +79,13 @@ c.execute("""CREATE TABLE IF NOT EXISTS cancer(
                     )""")
 
 
-c.execute("INSERT INTO GP VALUES ('Shepherd@dr.com', '1234', 'Derek', 'Shepherd', 'M',"
+c.execute("INSERT INTO GP VALUES ('Shepherd@dr.com', '1234', 'Derek', 'Shepherd', 'male',"
           " '01/01/01', '123', 'street', '023942', 'GP', 'y')")
-c.execute("INSERT INTO GP VALUES ('Meredith@dr.com', '1234', 'Meredith', 'Grey', 'F',"
+c.execute("INSERT INTO GP VALUES ('Meredith@dr.com', '1234', 'Meredith', 'Grey', 'female',"
           "'01/01/01', '123', 'street', '023942', 'GP', 'y' )")
-c.execute("INSERT INTO GP VALUES ('Bailey@dr.com', '1234', 'Miranda', 'Bailey', 'F', "
+c.execute("INSERT INTO GP VALUES ('Bailey@dr.com', '1234', 'Miranda', 'Bailey', 'female', "
           "'01/01/01', '123', 'street', '023942', 'GP', 'y')")
-c.execute("INSERT INTO GP VALUES ('Julia@dr.com', '1234', 'Julia', 'Bailey', 'F',"
+c.execute("INSERT INTO GP VALUES ('Julia@dr.com', '1234', 'Julia', 'Bailey', 'non-binary',"
           "'01/01/01', '123', 'street', '023942', 'GP', 'y' )")
 
 c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
