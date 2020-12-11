@@ -6,4 +6,3 @@ def gpStart():
     login(email)
     mainmenu(email[0])
 
-
