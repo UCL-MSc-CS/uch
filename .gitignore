@@ -3,3 +3,4 @@ venv/
 .idea/
 __pycache__/
 GPs/__pycache__/
+!**/__pycache__/

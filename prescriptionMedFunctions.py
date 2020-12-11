@@ -75,13 +75,14 @@ def allcategories():
 
     return categories
 
+# This searches for drugs
 def search(medname,drugname,dosetype,medtype,category):
     conn = connecttodb()
 
     if medname:
-        medname = "%" + medname[:-1] + "%"
+        medname = "%" + medname + "%"
     if drugname:
-        drugname = "%"+ drugname[:-1] + "%"
+        drugname = "%" + drugname + "%"
 
     valuearray = [medname, medtype, drugname, dosetype, category]
 
@@ -105,3 +106,54 @@ def search(medname,drugname,dosetype,medtype,category):
 
     closeconn(conn["connection"])
     return results
+
+def addPrescription(prescription):
+    conn = connecttodb()
+
+    prescriptionTuple = tuple(prescription)
+
+    conn['cursor'].execute("""
+        INSERT INTO
+            Prescription
+        VALUES
+            (?, ?, ?, ?, ?)
+        """, prescriptionTuple)
+
+    closeconn(conn["connection"])
+
+def getPrescription(appointmentID):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+        SELECT medicineID, medicineName, dosage, dosageMultiplier, dosageType, furtherInformation
+        FROM Prescription
+        LEFT JOIN Medicine
+        USING (medicineID)
+        WHERE appointmentID = ?
+    """,(appointmentID,))
+
+    results = conn['cursor'].fetchall()
+    closeconn(conn["connection"])
+    return results
+
+def getUnits(medicineID):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+        SELECT activeIngredientUnit
+        FROM Medicine
+        WHERE medicineID = ?
+    """,(medicineID,))
+
+    results = conn['cursor'].fetchall()[0]
+    closeconn(conn["connection"])
+    return results
+
+def deleteMedRecord(appointmentID):
+    conn = connecttodb()
+    conn['cursor'].execute("""
+            DELETE from Prescription
+            WHERE 
+            appointmentID = ?
+        """, (appointmentID,))
+    closeconn(conn["connection"])
