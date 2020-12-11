@@ -6,7 +6,7 @@ def login(gpEmail):
         email = input("Please enter your email address: ")
         password = input("Please enter your password: ")
 
-        with sql.connect("../UCH.db") as db:
+        with sql.connect("UCH.db") as db:
             c = db.cursor()
 
         find_doctor = ("SELECT * FROM GP WHERE gpEmail =? AND password =?")
