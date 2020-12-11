@@ -164,7 +164,7 @@ class adminFunctions():
                 if '+' not in teleNo or ' ' in teleNo:
                     raise TeleNoFormatError()
                 teleNo = teleNo.replace('+', '')
-                input_list = [i for i in teleNo]  
+                input_list = [i for i in teleNo]
                 if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
                     correct_length = '12 to 18'
                     raise IncorrectInputLength(correct_length)
@@ -461,12 +461,16 @@ class adminFunctions():
                 if not postcode:
                     raise FieldEmpty()
 
-                tel = input("telephone number: ")
+                tel = (input("telephone number (no spaces, with country code. E.g. +4471234123123): "))
                 if not tel:
                     raise FieldEmpty()
+                if '+' not in tel or ' ' in tel:
+                    raise TeleNoFormatError()
+                tel = tel.replace('+', '')
                 input_list = [i for i in tel]
-                if len(input_list) != 11:
-                    correct_length = 11
+                if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
+                        input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
+                    correct_length = '12 to 18'
                     raise IncorrectInputLength(correct_length)
 
                 regcon = input("Registration confirmation: Y or N ")
@@ -493,8 +497,8 @@ class adminFunctions():
             except EmailInvalid:
                 error = EmailInvalid(email)
                 print(error)
-            except GoingBack:
-                error = GoingBack
+            except TeleNoFormatError:
+                error = TeleNoFormatError()
                 print(error)
             else:
                 self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?,
@@ -763,15 +767,19 @@ class adminFunctions():
                         back10 = 0
                         while back10 == 0:
                             try:
-                                Ctel = input("new telephone number: ")
-                                if Ctel.isdigit() == False:
-                                    raise IntegerError
-                                elif not Ctel:
+                                Ctel = (input("telephone number (no spaces, with country code. E.g. +4471234123123): "))
+                                if not Ctel:
                                     raise FieldEmpty()
+                                if '+' not in Ctel or ' ' in Ctel:
+                                    raise TeleNoFormatError()
+                                Ctel = Ctel.replace('+', '')
                                 input_list = [i for i in Ctel]
-                                if len(input_list) != 11:
-                                    correct_length = 11
+                                if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
+                                        input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(
+                                    input_list) != 18:
+                                    correct_length = '12 to 18'
                                     raise IncorrectInputLength(correct_length)
+
                             except FieldEmpty:
                                 error = FieldEmpty()
                                 print(error)
@@ -780,6 +788,9 @@ class adminFunctions():
                                 print(error)
                             except IntegerError:
                                 error = IntegerError()
+                                print(error)
+                            except TeleNoFormatError:
+                                error = TeleNoFormatError()
                                 print(error)
                             else:
                                 self.c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""", (Ctel, nhsnum))
