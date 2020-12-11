@@ -6,6 +6,6 @@ def gpStartHere():
     login(email)
     mainmenu(email[0])
 
-gpStartHere()
+
 
 
