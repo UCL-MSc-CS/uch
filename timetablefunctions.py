@@ -289,8 +289,8 @@ def saveDoctorNotes(doctorsnotes):
 
 
 
-# book_appointment("2020-12-05", "15:00", "16:30", "cooldude@gmail.com", ["test@gmail.com"])
-# book_appointment("2020-12-05", "14:00", "15:00", "iamsick@gmail.com", ["test@gmail.com"])
-# book_appointment("2020-12-09", "17:30", "18:30", "whyunotreatme@gmail.com", ["test@gmail.com"])
-# print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
+#book_appointment("2020-12-11", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
+#book_appointment("2020-12-11", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
+#book_appointment("2020-12-11", "17:30", "18:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
+#print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
 
