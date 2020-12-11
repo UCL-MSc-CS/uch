@@ -18,7 +18,7 @@ class Patient:
         self.password = password
         self.loggedIn = 1
         self.registrationConfirm = 0
-        self.connection = sql.connect('patient.db')
+        self.connection = sql.connect('UCH.db')
         self.c = self.connection.cursor()
 
     def register(self):

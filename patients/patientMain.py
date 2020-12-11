@@ -1,12 +1,12 @@
 import sqlite3 as sql
 import datetime
 from datetime import date
-from patient import Patient
-from PatientRiskProfile import PatientMedical
-from lifeStyleQuestionnaire import RiskProfile
-from appointment import Appointment
+from patients.patient import Patient
+from patients.PatientRiskProfile import PatientMedical
+from patients.lifeStyleQuestionnaire import RiskProfile
+from patients.appointment import Appointment
 
-connection = sql.connect('patient.db')
+connection = sql.connect('UCH.db')
 c = connection.cursor()
 
 
@@ -53,7 +53,7 @@ def options(patientEmail):
                 x.insert_to_table(patientEmail)
             elif qaction == 3:
                 x = PatientMedical()
-                x.medicalHistory(patientEmail)
+                x.vaccination(patientEmail)
                 x.cancer(patientEmail)
         elif action == 0:
             print("Thank you for using the UCH e-health system! Goodbye for now!")
@@ -126,6 +126,6 @@ def task():
             options(patientEmail)
     
 
-print("Welcome!")
-task()
+# print("Welcome!")
+# task()
 

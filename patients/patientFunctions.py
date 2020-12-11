@@ -73,7 +73,7 @@ def printCalendar(mm):
     return date
 
 def displayAvailable(start, end, gpDetails):
-    connection = sql.connect('patient.db')
+    connection = sql.connect('UCH.db')
     c = connection.cursor()
 
     c.execute("SELECT start, appointmentStatus FROM Appointment WHERE start >=? and end <? and gpEmail =?",
@@ -97,7 +97,7 @@ def displayAvailable(start, end, gpDetails):
                 print(time + ' available')
 
 def chooseTime(start, gpDetails, patientEmail):
-    connection = sql.connect('patient.db')
+    connection = sql.connect('UCH.db')
     c = connection.cursor()
 
     end = start + (30 * 60)
@@ -113,7 +113,7 @@ def chooseTime(start, gpDetails, patientEmail):
     connection.commit()
 
 def viewAppointments(patientEmail):
-    connection = sql.connect('patient.db')
+    connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute("SELECT appointmentID, start, gpLastName FROM Appointment "
                 "WHERE patientEmail =? and appointmentStatus = 'Unavailable' ", [patientEmail])

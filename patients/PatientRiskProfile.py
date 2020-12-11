@@ -4,7 +4,7 @@ import sqlite3 as sql
 #  need to add exception handling and other additional features.
 class PatientMedical:
     def __init__(self):
-        self.connection = sql.connect('patient.db')
+        self.connection = sql.connect('UCH.db')
         self.a = self.connection.cursor()
         self.vaccination_history = ["DTap", "HepC", "HepB",
                                     "Measles", "Mumps", "Rubella", "Varicella"]
