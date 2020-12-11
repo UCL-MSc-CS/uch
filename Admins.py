@@ -396,10 +396,10 @@ class adminFunctions():
         manageback = 0
         while manageback == 0:
             try:
-                nhsnum = int(input("Enter patient nhs number (enter [1] to return to menu): "))
+                nhsnum = input("Enter patient nhs number (enter [1] to return to menu): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
-                if nhsnum == 1:
+                if nhsnum == "1":
                     manageback = 1
                     break
                 elif not nhsnum:
@@ -508,10 +508,10 @@ class adminFunctions():
         delback = 0
         while delback == 0:
             try:
-                nhsnum = int(input("Enter patient nhs number (enter [1] to return to menu): "))
+                nhsnum = input("Enter patient nhs number (enter [1] to return to menu): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
-                if nhsnum == 1:
+                if nhsnum == "1":
                     delback = 1
                     break
                 elif not nhsnum:
