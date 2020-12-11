@@ -1,8 +1,17 @@
 from tkinter import *
 from tkinter import messagebox, ttk
-import medicinesearchfunctions as ms
+import prescriptionMedFunctions as ms
 
 def prescription(doctoremail,appointmentID):
+
+
+    # Pull all saved prescription records from the database
+    prescriptionData = ms.getPrescription(appointmentID)
+
+    # Pull medicine IDs from prescription database and append into initial treeviewMedID
+    treeviewMedID = []
+    for medicine in prescriptionData:
+        treeviewMedID.append(medicine[0])
 
     root = Tk()
     root.title('Appointment ID: ' + str(appointmentID) + ', with Dr. ' + doctoremail)
@@ -22,7 +31,7 @@ def prescription(doctoremail,appointmentID):
     bottomFrame.pack(side=BOTTOM)
 
     # Frame for select and print medicine sections (top)
-    medicineFrame = Frame(mainFrame, bd=20, width=1350, height=400, padx=20, relief=RIDGE)
+    medicineFrame = Frame(mainFrame, bd=20, width=1350, height=400, padx=10, relief=RIDGE)
     medicineFrame.pack(side=BOTTOM)
 
     # Final medicine section
@@ -30,7 +39,7 @@ def prescription(doctoremail,appointmentID):
     prescriptionFrame.pack(side=BOTTOM)
 
     # Select medicine section --------------------------------------------
-    medSelectFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=20, relief=RIDGE, font=('arial', 12, 'bold'), text="Select Medicine:")
+    medSelectFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=10, relief=RIDGE, font=('arial', 12, 'bold'), text="Select Medicine:")
     medSelectFrame.pack(side=LEFT)
 
 
@@ -84,10 +93,10 @@ def prescription(doctoremail,appointmentID):
     catdropmenu.pack()
 
     medsearchsubmit = Button(medSelectFrame, text="Search Medicine", command=submitmedsearch)
-    medsearchsubmit.pack()
+    medsearchsubmit.pack(pady=10)
 
     # Print search medicine section --------------------------------------------
-    medResultsFrame = LabelFrame(medicineFrame, bd=10, width=350, height=250, padx=20, relief=RIDGE, font=('arial', 12, 'bold'), text="Medicine Results:")
+    medResultsFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=5, relief=RIDGE, font=('arial', 12, 'bold'), text="Medicine Results:")
     medResultsFrame.pack(side=RIGHT)
 
     def enterintodisabled(textbox, string):
@@ -114,13 +123,17 @@ def prescription(doctoremail,appointmentID):
 
     # Add record
     def addRecord():
-        if medid.get():
+
+        if medid.get() and int(medid.get()) not in treeviewMedID:
+            treeviewMedID.append(int(medid.get()))
+            doseUnit = ms.getUnits(medid.get())
+
             global count
             addvalues = (
                             medid.get(),
                             medname.get(),
-                            chosendose.get(),
-                            multiplier.get(),
+                            str(chosendose.get()) + " " + doseUnit[0], #todo concatenate activeIngredientUnit where medicineID = ?,
+                            str(multiplier.get()) + 'x',
                             doseType.get(),
                             furtherInformation.get()
             )
@@ -143,37 +156,45 @@ def prescription(doctoremail,appointmentID):
             medname.config(state=DISABLED)
             doseType.config(state=DISABLED)
             multiplier.config(state='readonly')
+        elif not medid.get():
+            messagebox.showerror("Error", "Please choose a medicine before you click 'Add Medicine'")
+        elif int(medid.get()) in treeviewMedID:
+            messagebox.showerror("Error", "You have added a medicine that already exists in your final prescriptions.")
 
 
-    tree_frame = Frame(medResultsFrame)
-    tree_frame.pack(pady = 10, padx = 5)
+    # tree_frame = Frame(medResultsFrame)
+    # tree_frame.pack(padx=20,pady=20)
 
+    # Place medicine results treeview in medicine results frame
     global trv
     trv = ttk.Treeview(
-        tree_frame,
+        medResultsFrame,
         columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
         show='headings',
         height='5',
         selectmode="browse"
     )
-    trv.pack()
 
+    # Pack to the screen
+    trv.pack(pady=5)
+
+    # Format columns and headings
     trv.heading(1, text="ID")
     trv.column(1,width=45)
     trv.heading(2, text="Medicine Name")
     trv.column(2, width=120)
     trv.heading(3, text="Type")
     trv.column(3, width=90)
-    trv.heading(4, text="Dosage method")
+    trv.heading(4, text="Dosage Method")
     trv.column(4, width=100)
-    trv.heading(5, text="Drug route")
-    trv.column(5, width=50)
+    trv.heading(5, text="Drug Route")
+    trv.column(5, width=100)
     trv.heading(6, text="Manufacturer")
     trv.column(6, width=100)
     trv.heading(7, text="Drug")
     trv.column(7, width=100)
-    trv.heading(8, text="Dosages")
-    trv.column(8, width=100)
+    trv.heading(8, text="Dosage")
+    trv.column(8, width=50)
     trv.heading(9, text="Units")
     trv.column(9, width=100)
     trv.heading(10, text="Pharma class")
@@ -182,25 +203,25 @@ def prescription(doctoremail,appointmentID):
     trv.column(11, width=100)
 
     choosemedbutton = Button(medResultsFrame, text="Choose medicine", command=submitchoice)
-    choosemedbutton.pack()
+    choosemedbutton.pack(pady=10)
 
     global chosenmedframe
     chosenmedframe = LabelFrame(medResultsFrame,text="Chosen medicine",padx=20,pady=20)
-    chosenmedframe.pack()
+    chosenmedframe.pack(pady=10,padx=10)
 
-    medidlabel = Label(chosenmedframe,text="ID")
+    medidlabel = Label(chosenmedframe,text="Medicine ID")
     medidlabel.grid(row=1,column=1)
     global medid
-    medid = Entry(chosenmedframe, width=10,state=DISABLED,disabledbackground="white",disabledforeground="black")
+    medid = Entry(chosenmedframe, width=5,state=DISABLED,disabledbackground="white",disabledforeground="black")
     medid.grid(row=2,column=1)
 
-    mednamelabel = Label(chosenmedframe,text="Medicine")
+    mednamelabel = Label(chosenmedframe,text="Medicine Name")
     mednamelabel.grid(row=1,column=2)
     global medname
     medname = Entry(chosenmedframe, width=30,state=DISABLED,disabledbackground="white",disabledforeground="black")
     medname.grid(row=2,column=2)
 
-    doselabel = Label(chosenmedframe, text="Dose")
+    doselabel = Label(chosenmedframe, text="Dosage")
     doselabel.grid(row=1, column=3)
 
     multiplabel = Label(chosenmedframe, text="Dose-Multiplier")
@@ -208,10 +229,10 @@ def prescription(doctoremail,appointmentID):
     multiplier = Spinbox(chosenmedframe,from_ = 1, to = 100 ,width=5,state='readonly',readonlybackground='white')
     multiplier.grid(row=2,column=4)
 
-    Typelabel = Label(chosenmedframe, text="Type")
+    Typelabel = Label(chosenmedframe, text="Dosage Method")
     Typelabel.grid(row=1, column=5)
     global doseType
-    doseType = Entry(chosenmedframe, width=30,state=DISABLED,disabledbackground="white",disabledforeground="black")
+    doseType = Entry(chosenmedframe, width=10,state=DISABLED,disabledbackground="white",disabledforeground="black")
     doseType.grid(row=2,column=5)
 
     Freqlabel = Label(chosenmedframe, text="Further Information")
@@ -226,7 +247,7 @@ def prescription(doctoremail,appointmentID):
     myTree = ttk.Treeview(prescriptionFrame)
 
     # Define our columns (treeview has a phantom column at the start)
-    myTree['columns'] = ("Medicine ID", "Medicine Name", "Dosage", "Dosage Multiplier", "Dosage Type", "Further Information")
+    myTree['columns'] = ("Medicine ID", "Medicine Name", "Dosage", "Dosage Multiplier", "Dosage Method", "Further Information")
 
     # Format our columns
     myTree.column('#0', width=0, stretch=NO)
@@ -234,7 +255,7 @@ def prescription(doctoremail,appointmentID):
     myTree.column("Medicine Name", anchor=W, width=140)
     myTree.column("Dosage", anchor=CENTER, width=140)
     myTree.column("Dosage Multiplier", anchor=CENTER, width=140)
-    myTree.column("Dosage Type", anchor=CENTER, width=140)
+    myTree.column("Dosage Method", anchor=CENTER, width=140)
     myTree.column("Further Information", anchor=W, width=140)
 
 
@@ -244,18 +265,15 @@ def prescription(doctoremail,appointmentID):
     myTree.heading("Medicine Name", text="Medicine Name", anchor=W)
     myTree.heading("Dosage", text="Dosage", anchor=CENTER)
     myTree.heading("Dosage Multiplier", text="Dosage Multiplier", anchor=CENTER)
-    myTree.heading("Dosage Type", text="Dosage Type", anchor=CENTER)
+    myTree.heading("Dosage Method", text="Dosage Method", anchor=CENTER)
     myTree.heading("Further Information", text="Further Information", anchor=W)
 
 
-    # Pull data from database
-    data = []
-
-    # Add data
+    # Pull data from database (prescriptionData) and add it into final prescription treeview.
     global count
     count= 0
-    for record in data:
-        myTree.insert(parent='', index='end', id=count, text="", values=(record[0],record[1],record[2]))
+    for record in prescriptionData:
+        myTree.insert(parent='', index='end', id=count, text="", values=(record[0],record[1],record[2],record[3],record[4],record[5]))
         count += 1
 
     # Pack to the screen
@@ -263,24 +281,37 @@ def prescription(doctoremail,appointmentID):
 
     # Remove all records
     def removeAll():
+        treeviewMedID.clear()
         for record in myTree.get_children():
             myTree.delete(record)
 
+
+
     # Remove one selected
     def removeSelected():
-        x = myTree.selection()[0]
-        myTree.delete(x)
+        for selection in myTree.selection():
+            selectionID = int(myTree.item(selection, "values")[0])
+            treeviewMedID.remove(selectionID)
+            myTree.delete(selection)
+
+
+        # x = myTree.selection()[0]
+        # print(x)
+        # myTree.delete(x)
 
     # Saves prescription data into database
     def savePrescription():
         #todo connect to database and insert new data
+        ms.deleteMedRecord(appointmentID)
         for record in myTree.get_children():
             prescriptionLine = myTree.item(record, "values")
             prescriptionList = list(prescriptionLine)
             prescriptionList.insert(0, appointmentID)
             prescriptionList.pop(2)
             prescriptionList.pop(4)
+
             ms.addPrescription(prescriptionList)
+
 
         exit = messagebox.askyesno("Save Prescription", "Confirm if you want to exit.")
         if exit > 0:

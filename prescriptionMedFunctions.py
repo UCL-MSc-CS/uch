@@ -122,5 +122,42 @@ def addPrescription(prescription):
 
     closeconn(conn["connection"])
 
+def getPrescription(appointmentID):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+        SELECT medicineID, medicineName, dosage, dosageMultiplier, dosageType, furtherInformation
+        FROM Prescription
+        LEFT JOIN Medicine
+        USING (medicineID)
+        WHERE appointmentID = ?
+    """,(appointmentID,))
+
+    results = conn['cursor'].fetchall()
+    closeconn(conn["connection"])
+    return results
+
+def getUnits(medicineID):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+        SELECT activeIngredientUnit
+        FROM Medicine
+        WHERE medicineID = ?
+    """,(medicineID,))
+
+    results = conn['cursor'].fetchall()[0]
+    closeconn(conn["connection"])
+    return results
+
+def deleteMedRecord(appointmentID):
+    conn = connecttodb()
+    conn['cursor'].execute("""
+            DELETE from Prescription
+            WHERE 
+            appointmentID = ?
+        """, (appointmentID,))
+    closeconn(conn["connection"])
 
 
+# print(getPrescription(2))

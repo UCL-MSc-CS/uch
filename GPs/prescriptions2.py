@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox, ttk
+# todo delete when prettying up is finished
 
 def prescription():
 
