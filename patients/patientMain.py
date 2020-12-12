@@ -7,15 +7,21 @@ from patients.lifeStyleQuestionnaire import RiskProfile
 from patients.appointment import Appointment
 import re
 import string
+import pandas as pd
 
 connection = sql.connect('UCH.db')
 c = connection.cursor()
 
+# class notRegistered(Exception):
+#     def __init__(self, message = "A GP needs to confirm your registration before you can access our services. Please try logging in tomorrow."):
+#         self.message = message
+#         super().__init__(self.message)
 
 def options(nhsNumber):
     c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
     results = c.fetchall()
     if results[0][12] == 0:
+        # raise notRegistered()
         print("A GP needs to confirm your registration before you can access our services. Please try logging in tomorrow.")
         exit()
     else:
@@ -27,7 +33,7 @@ def options(nhsNumber):
         print("Choose [5] to see your contact details")
         print("Choose [6] to update your contact details")
         print("Choose [0] to exit")
-        choice = input("Choice: ")
+        action = input("Choice: ")
         if action == '1':
             x = Appointment()
             x.bookAppointment(nhsNumber)
@@ -48,6 +54,7 @@ def options(nhsNumber):
             if qaction == '1':
                 name = PatientMedical()
                 name.show_profile(nhsNumber)
+                options(nhsNumber)
             elif qaction == '2':
                 print("Please fill out the following risk profile")
                 x = RiskProfile()  # need to pass patientEmail into the functions
@@ -58,14 +65,17 @@ def options(nhsNumber):
                 x.drugs()
                 x.alcohol()
                 x.insert_to_table(nhsNumber)
+                options(nhsNumber)
             elif qaction == '3':
                 x = PatientMedical()
                 x.vaccination(nhsNumber)
                 x.cancer(nhsNumber)
+                options(nhsNumber)
         elif action == '5':
-            print(results[0])
+            print(pd.Series(results[0]))
+            options(nhsNumber)
         elif action == '6':
-            pass
+            options(nhsNumber)
         elif action == '0':
             print("Thank you for using the UCH e-health system! Goodbye for now!")
             exit()
