@@ -264,11 +264,6 @@ def getDoctorNotes(appointmentId):
 # This saves/updates the doctor's notes
 def saveDoctorNotes(doctorsnotes):
     conn = connecttodb()
-    # patientComplaints = tuple[0]
-    # doctorFindings = tuple[1]
-    # diagnosis = tuple[2]
-    # furtherInspections = tuple[3]
-    # doctorAdvice = tuple[4]
 
     doctorsnotestuple = tuple(doctorsnotes)
 
@@ -289,8 +284,8 @@ def saveDoctorNotes(doctorsnotes):
 
 
 
-#book_appointment("2020-12-11", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-11", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-11", "17:30", "18:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
+#book_appointment("2020-12-12", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
+#book_appointment("2020-12-12", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
+#book_appointment("2020-12-12", "17:30", "18:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
 #print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
 

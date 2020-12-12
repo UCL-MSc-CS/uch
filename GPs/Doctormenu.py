@@ -14,7 +14,7 @@ def mainmenu(drdemail):
         print("\t Doctor Main Menu")
         print("--------------------------------------------")
         print("choose [1] to open appointment")
-        print("choose [2] to confirm appointments")
+        print("choose [2] to confirm pending appointments")
         print("choose [3] to add non-patient time (including holidays)")
         print("choose [4] to view your timetable")
         print("choose [5] to cancel appointments")

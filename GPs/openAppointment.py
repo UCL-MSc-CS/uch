@@ -25,19 +25,22 @@ def openappointment(doctoremail):
             print("choose [5] to exit this appointment")
             option = input(":")
             if option == "1":
+                print("\n Opening your notes for this appointment in a separate window.... \n")
                 appointmentnotes(doctoremail,appointmentid)
             elif option == "2":
                 patienthistory(doctoremail,appointmentid)
             elif option == "3":
+                print("\n Opening the prescription editor in a separate window... \n")
                 prescription(doctoremail,appointmentid)
             elif option == "4":
+                print("\n Switching appointments... \n")
                 openappointment(doctoremail)
                 break
             elif option == "5":
-                print("Returning to main menu......")
+                print("\n Returning to main menu...... \n")
                 break
             else:
-                print("Invalid option chosen. Try again")
+                print("\nInvalid option chosen. Try again\n")
 
             print("------------------------------------------------------------------------------------------------------")
 
