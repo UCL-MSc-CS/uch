@@ -1,4 +1,4 @@
-import pandas as pd
+# import pandas as pd
 import Admins
 import sqlite3 as sql
 from datetime import datetime as dt

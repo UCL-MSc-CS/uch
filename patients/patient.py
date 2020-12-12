@@ -24,7 +24,7 @@ class Patient:
         self.nhsGenerator()
 
     def register(self):
-        self.c.execute("INSERT INTO PatientDetail VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        self.c.execute("INSERT INTO PatientDetail VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
                        (self.nhsNumber, self.patientEmail, self.firstName, self.lastName, self.dateOfBirth, self.age, self.gender,
                         self.addressLine1, self.addressLine2, self.postcode, self.telephoneNumber, self.password,
                         self.registrationConfirm))
@@ -37,18 +37,18 @@ class Patient:
             x = random.randint(0,9)
             nhsNumber += str(x)
             count += 1
-        # self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
-        # nhsNumbers = self.c.fetchall()
-        # if nhsNumbers != []:
-        #     while nhsNumbers != []:
-        #         count = 0
-        #         nhsNumber = ""
-        #         while count < 10:
-        #             x = random.randint(0,9)
-        #             nhsNumber += str(x)
-        #             count += 1
-        #         self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
-        #         nhsNumbers = self.c.fetchall()
+        self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
+        nhsNumbers = self.c.fetchall()
+        if nhsNumbers != []:
+            while nhsNumbers != []:
+                count = 0
+                nhsNumber = ""
+                while count < 10:
+                    x = random.randint(0,9)
+                    nhsNumber += str(x)
+                    count += 1
+                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
+                nhsNumbers = self.c.fetchall()
         self.nhsNumber = nhsNumber
     
     def printNHS(self):
@@ -73,6 +73,7 @@ class Patient:
             print("Password: " + hash)
             self.connection.commit()
 
-kamala = Patient("hello@me.com", "Kamala", "Harris", "27/04/1988", 10, "male",
-              "123 Happy", "street", "12343", "389753957", "1234")
-kamala.printNHS()
+# kamala = Patient("hello@me.com", "Kamala", "Harris", "27/04/1988", 10, "male",
+#               "123 Happy", "street", "12343", "389753957", "1234")
+# kamala.printNHS()
+# kamala.register()

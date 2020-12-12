@@ -30,19 +30,19 @@ c.execute("""INSERT OR IGNORE INTO Admin VALUES(
 connection.commit()
 
 c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
-                    patientEmail text PRIMARY KEY ,
-                    firstName text,
-                    lastName text,
-                    dateOfBirth text,
-                    age integer, 
-                    gender text,
-                    addressLine1 text,
-                    addressLine2 text,
-                    postcode text,
-                    telephoneNumber integer,
-                    password text,
-                    registrationConfirm text,
-                    loggedIn text
+                    nhsNumber DATATYPE INTEGER,
+                    patientEmail DATATYPE TEXT PRIMARY KEY,
+                    firstName DATATYPE TEXT,
+                    lastName DATATYPE TEXT,
+                    dateOfBirth DATATYPE TEXT,
+                    age DATATYPE INTEGER,
+                    gender DATATYPE TEXT,
+                    addressLine1 DATATYPE TEXT,
+                    addressLine2 DATATYPE TEXT,
+                    postcode DATATYPE TEXT,
+                    telephoneNumber DATATYPE TEXT,
+                    password DATATYPE TEXT,
+                    registrationConfirm DATATYPE INTEGER
 )""")
 connection.commit()
 
@@ -158,19 +158,19 @@ connection.commit()
 print(" ")
 
 c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
+                    1234567890,
                     'm.shorvon@gmail.com',
                     'Matthew',
                     'Shorvon',
-                    '16071998',
+                    '1998-07-16',
                     22,
-                    'male',
-                    '10 downing street',
+                    'Male',
+                    '10 Downing Street',
                     'London',
-                    'idk',
+                    'SW1A 0AA',
                     07758221088,
-                    'passwrrrdd',
-                    'N',
-                    'N')""")
+                    '1234',
+                    0)""")
 connection.commit()
 
 c.execute("""INSERT OR IGNORE INTO GP VALUES(
