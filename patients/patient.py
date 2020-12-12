@@ -50,30 +50,28 @@ class Patient:
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
                 nhsNumbers = self.c.fetchall()
         self.nhsNumber = nhsNumber
-    
-    def printNHS(self):
-        x = str(self.nhsNumber)
-        one = x[0:3]
-        two = x[3:6]
-        three = x[6:10]
-        print(one, two, three)
 
     def registrationSummary(self):
         hash = ""
         for i in self.password:
             hash += "*"
-        self.c.execute("SELECT * FROM PatientDetail WHERE firstName =? AND lastName =? AND patientEmail =?",
-                       [self.firstName, self.lastName, self.patientEmail])
-        patientDetail = self.c.fetchall()
-        for i in patientDetail:
-            print("Welcome, " + i[1] + "! Thank you for registering with UCH.")
-            print("First Name: " + i[1])
-            print("Last Name: " + i[2])
-            print("Email: " + i[0])
-            print("Password: " + hash)
-            self.connection.commit()
+        print("Welcome, " + self.firstName + "! Thank you for registering with UCH.")
+        print("Your NHS number is: ")
+        x = str(self.nhsNumber)
+        one = x[0:3]
+        two = x[3:6]
+        three = x[6:10]
+        print(one, two, three)
+        print("First Name: " + str(self.firstName))
+        print("Last Name: " + str(self.lastName))
+        print("Email: " + str(self.patientEmail))
+        print("Date of Birth: " + str(self.dateOfBirth))
+        print("Age: " + str(self.age))
+        print("Gender: " + str(self.gender))
+        print("Address: ")
+        print(str(self.addressLine1))
+        print(str(self.addressLine2))
+        print(str(self.postcode))
+        print("Telephone Number: +" + str(self.telephoneNumber))
+        print("Password: " + hash)
 
-# kamala = Patient("hello@me.com", "Kamala", "Harris", "27/04/1988", 10, "male",
-#               "123 Happy", "street", "12343", "389753957", "1234")
-# kamala.printNHS()
-# kamala.register()

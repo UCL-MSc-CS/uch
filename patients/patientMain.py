@@ -13,6 +13,7 @@ c = connection.cursor()
 
 
 def options(patientEmail):
+    print(patientEmail)
     # if registration is not confirmed where patientEmail = patientEmail, try again later, end program
     # else, run program below:
 
@@ -72,11 +73,11 @@ def task():
     elif action == 1:
         # First Name
         firstName=input("Please enter your first name. ")
-        firstName = string.capwords(firstName)
+        firstName = string.capwords(firstName.strip())
         print(firstName)
         # Last Name
         lastName=input("Please enter your last name. ")
-        lastName = string.capwords(lastName)
+        lastName = string.capwords(lastName.strip())
         print(lastName)
         # Date of Birth
         dateOfBirth = input('Please enter your birthday in DD-MM-YYYY format. ')
@@ -109,20 +110,20 @@ def task():
         print(gender)
         # Address Line 1
         addressLine1 = input("Address Line 1: ")
-        addressLine1 = string.capwords(addressLine1)
+        addressLine1 = string.capwords(addressLine1.strip())
         print(addressLine1)
         # Address Line 2
         addressLine2 = input("Address Line 2: ")
-        addressLine2 = string.capwords(addressLine2)
+        addressLine2 = string.capwords(addressLine2.strip())
         print(addressLine2)
         # City
         city = input("City: ")
-        city = string.capwords(city)
-        addressLine2 = addressLine2 + ", " + city
+        city = string.capwords(city.strip())
+        addressLine2 = (addressLine2 + " " + city).strip()
         print(addressLine2)
         # Postcode
         postcode = input("Postcode: ")
-        postcode = postcode.upper()
+        postcode = postcode.strip().upper()
         print(postcode)
         # Telephone Number
         telephoneNumber = input("Telephone number, including country code (i.e. +447123456789): ")
@@ -149,12 +150,12 @@ def task():
         c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
         patientEmails = c.fetchall()
         password=input("Please enter your password. ")
-        if password != patientEmails[0][10]:
-            while password != patientEmails[0][10]:
+        if password != patientEmails[0][11]:
+            while password != patientEmails[0][11]:
                 print("I'm sorry, that password is not correct. ")
                 password=input("Please enter your password. ")
-            print("Wonderful! Hi, " + patientEmails[0][1] + " you are now logged in.")
-            options(patientEmail)
+            print("Wonderful! Hi, " + patientEmails[0][2] + " you are now logged in.")
+            options(patientEmails[0][0])
         else:
-            print("Wonderful! Hi, " + patientEmails[0][1] + " you are now logged in.")
-            options(patientEmail)
+            print("Wonderful! Hi, " + patientEmails[0][2] + " you are now logged in.")
+            options(patientEmails[0][0])
