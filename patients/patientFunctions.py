@@ -4,6 +4,30 @@ from datetime import time as x, date as xyz, datetime, timedelta
 import time
 import calendar
 
+class Error(Exception):
+    """Error exception class"""
+    pass
+
+class timeNotValid(Error):
+    """Raised when time entered by user is not valid"""
+    pass
+
+class monthNotValid(Error):
+    """Raised when month entered by user is not valid"""
+    pass
+
+class dayNotValid(Error):
+    """Raised when day entered by user is not valid"""
+    pass
+
+class timeBooked(Error):
+    """Raised when appointment is not available to book"""
+    pass
+
+class dateAfterCurrent(Error):
+    """Raised when date chosen is in the past"""
+    pass
+
 def toregulartime(unixtimestamp):
     """ Converts unix timestamp to datetime object"""
     return datetime.utcfromtimestamp(int(unixtimestamp))
@@ -37,6 +61,7 @@ def generateEndTime(date):
     end = tounixtime(dt_end)
     return end
 
+
 def chooseDr(dr_names):
     """ Allows user to select a gp from list obtained from database
         returns chosen dr email and last name in a list"""
@@ -50,34 +75,74 @@ def chooseDr(dr_names):
     dr_options = int(input("**********"
                            "\nPlease choose the doctor you would "
                            "like to book an appointment with: "))
+
+    # add exception
     gp_chosen_email = gp_list[dr_options - 1][2]
     gp_chosen_name = gp_list[dr_options - 1][1]
     gpDetails = [gp_chosen_email, gp_chosen_name]
     return gpDetails
 
-def checkIfAppBooked():
-    # self.c.execute("SELECT start FROM Appointment WHERE appointmentStatus = 'Pending' and gpEmail =?",
-    #                [gpDetails[0]])
-    # booked_times = self.c.fetchall()
-    # # for i in booked_times:
-    # #     if start == i[0]:
-    # #         print("Appointment already booked, please try again: ") etc etc...
-    pass
 
-def printCalendar(mm):
-    print("----------")
-    print(calendar.month(2021, mm))
-    print("----------")
-    day = input("Please select a day (as dd): ")
-    date = "2021-{}-{}".format(mm, day)
-    return date
+def chooseMonth():
+    """ Checks month entered by user is between 1 to 12, prints calendar for the month chosen"""
+    while True:
+        try:
+            mm = int(input("Please choose the month would you would like your appointment in 2021: "))
+            if not 1 <= mm <= 12:
+                raise monthNotValid
+            else:
+                print("----------")
+                print(calendar.month(2021, mm))
+                print("----------")
+                month = '{:02}'.format(mm)
+                return month
+        except monthNotValid:
+            print("This is not a valid option, please try again")
+        except ValueError:
+            print("This is not a valid option, please try again")
+
+
+def chooseDate(month):
+    """ Checks date chosen by user is in a valid form"""
+    # days_31 = [1, 3, 5, 7, 8, 10, 12]
+    # days_30 = [4, 6, 9, 11]
+    # days_28 = [2]
+    # check by days in month!
+    while True:
+        try:
+            day = int(input("Please choose a date in your chosen month: "))
+            if not 1 <= day <= 31:
+                raise dayNotValid
+            else:
+                date = "2021-{}-{:02}".format(str(month), day)
+                date_obj = toDateObjApp00(date)
+                current = datetime.now()
+                if date_obj < current:
+                    raise dateAfterCurrent
+            return date
+        except dayNotValid:
+            print("Invalid date entered, please enter a date in the correct format")
+        except dateAfterCurrent:
+            print("This date has already passed, please choose another")
+        except ValueError:
+            print("This is not a valid option, please try again")
+
+
+def generateStartTime(date):
+    """ Generates a unix start time stamp from the date input from the user
+    """
+    start_obj = toDateObjApp00(date)
+    start = tounixtime(start_obj)
+    return start
+
 
 def displayAvailable(start, end, gpDetails):
-    connection = sql.connect('UCH.db')
+    """ Displays appointments from date and time chosen by user
+    """
+    connection = sql.connect('patient.db')
     c = connection.cursor()
-
     c.execute("SELECT start, appointmentStatus FROM Appointment WHERE start >=? and end <? and gpEmail =?",
-                   [start, end, gpDetails[0]])
+              [start, end, gpDetails[0]])
     appointments = c.fetchall()
     times = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
              "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"]
@@ -95,9 +160,49 @@ def displayAvailable(start, end, gpDetails):
                 print(time + ' ' + dict_time_status[time])
             else:
                 print(time + ' available')
+    return times
 
-def chooseTime(start, gpDetails, patientEmail):
-    connection = sql.connect('UCH.db')
+
+def chooseTime(date, times, gpDetails):
+    """ Checks time entered by user is valid and present in the list of appointment times
+        Checks if time entered by user has already been booked
+    """
+    connection = sql.connect('patient.db')
+    c = connection.cursor()
+    while True:
+        try:
+            time = input("Please choose a time from the available appointments (as HH:MM): ")
+            start = createStart(date, time)
+            c.execute("SELECT start FROM Appointment WHERE appointmentStatus = 'Pending' "
+                      "or appointmentStatus = 'Unavailable' and gpEmail =?",
+                           [gpDetails[0]])
+            booked_times = c.fetchall()
+            for item in booked_times:
+                if item[0] == start:
+                    raise timeBooked
+            if time not in times:
+                raise timeNotValid
+            else:
+                return time
+        except timeNotValid:
+            print("This is not a valid time option, please try again")
+        except timeBooked:
+            print("This time is unavailable, please try again")
+
+
+def createStart(date, time):
+    """ Creates a unix timestamp from the chosen date and appointment start time by the user
+    """
+    day_str = date + ' ' + time
+    dt_object = toDateTimeObj(day_str)
+    start = tounixtime(dt_object)
+    return start
+
+
+def InsertAppointment(start, gpDetails, patientEmail):
+    """ Inserts the appointment details into the database
+    """
+    connection = sql.connect('patient.db')
     c = connection.cursor()
 
     end = start + (30 * 60)
@@ -112,11 +217,14 @@ def chooseTime(start, gpDetails, patientEmail):
     c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
     connection.commit()
 
+
 def viewAppointments(patientEmail):
-    connection = sql.connect('UCH.db')
+    """ Displays all appointments for that user which are confirmed
+    """
+    connection = sql.connect('patient.db')
     c = connection.cursor()
     c.execute("SELECT appointmentID, start, gpLastName FROM Appointment "
-                "WHERE patientEmail =? and appointmentStatus = 'Unavailable' ", [patientEmail])
+              "WHERE patientEmail =? and appointmentStatus = 'Unavailable' ", [patientEmail])
     appointments = c.fetchall()
 
     for app in appointments:
@@ -125,4 +233,30 @@ def viewAppointments(patientEmail):
         print("Appointment ID: " + str(app[0]) + "\t" + "date and time: " + dt + "\t\t" + "with: Dr " + app[2])
 
 
+def returnToMain():
+    """Returns user to main patient menu when typing 'yes'
+    If user types anything else, will exit the program with a goodbye message"""
+    if input("Type yes to return to the main menu: ").lower() == 'yes':
+        pass
+    else:
+        print("Thank you for using the UCH e-health system! Goodbye for now!")
+        exit()
 
+
+def deleteAppointment(cancel):
+    """ Deletes a chosen appointment from the database"""
+    connection = sql.connect('UCH.db')
+    c = connection.cursor()
+    c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
+    connection.commit()
+    print("You have cancelled your appointment")
+
+
+def appointmentSummary():
+    pass
+
+
+def chooseFavDr():
+    pass
+
+# add pandas
