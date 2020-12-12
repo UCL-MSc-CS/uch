@@ -27,28 +27,28 @@ def options(nhsNumber):
         print("Choose [5] to see your contact details")
         print("Choose [6] to update your contact details")
         print("Choose [0] to exit")
-        choice = int(input("Choice: "))
-        if choice == 1:
+        choice = input("Choice: ")
+        if action == '1':
             x = Appointment()
             x.bookAppointment(nhsNumber)
             options(nhsNumber)
-        elif choice == 2:
+        elif action == '2':
             x = Appointment()
             x.viewAppConfirmations(nhsNumber)
             options(nhsNumber)
-        elif choice == 3:
+        elif action == '3':
             x = Appointment()
             x.cancelAppointment(nhsNumber)
             options(nhsNumber)
-        elif choice == 4:
+        elif action == '4':
             print("Choose [1] to see your medical profile")
             print("Choose [2] to take the lifestyle risk questionnaire")
             print("Choose [3] to update your medical history")
-            qchoice = int(input("Choice: "))
-            if qchoice == 1:
+            qchoice = input("Choice: ")
+            if qaction == '1':
                 name = PatientMedical()
                 name.show_profile(nhsNumber)
-            elif qchoice == 2:
+            elif qaction == '2':
                 print("Please fill out the following risk profile")
                 x = RiskProfile()  # need to pass patientEmail into the functions
                 x.questions()
@@ -58,15 +58,15 @@ def options(nhsNumber):
                 x.drugs()
                 x.alcohol()
                 x.insert_to_table(nhsNumber)
-            elif qchoice == 3:
+            elif qaction == '3':
                 x = PatientMedical()
                 x.vaccination(nhsNumber)
                 x.cancer(nhsNumber)
-        elif choice == 5:
+        elif action == '5':
             print(results[0])
-        elif choice == 6:
+        elif action == '6':
             pass
-        elif choice == 0:
+        elif action == '0':
             print("Thank you for using the UCH e-health system! Goodbye for now!")
             exit()
 
@@ -74,11 +74,11 @@ def options(nhsNumber):
 def task():
     print("Choose [1] to register for a new account")
     print("Choose [2] to login")
-    action=int(input("Choice: "))
-    if action != 1 and action != 2:
+    action=input("Choice: ")
+    if action != '1' and action != '2':
         print("I'm sorry, '" + str(action) + "' is an invalid option. ")
         task()
-    elif action == 1:
+    elif action == '1':
         # First Name
         firstName=input("Please enter your first name. ")
         firstName = string.capwords(firstName.strip())
@@ -101,19 +101,19 @@ def task():
         print("Choose [1] for female")
         print("Choose [2] for male")
         print("Choose [3] for non-binary")
-        gender=int(input("Choice: "))
-        while gender != 1 and gender != 2 and gender != 3:
+        gender=input("Choice: ")
+        while gender != '1' and gender != '2' and gender != '3':
             print("I'm sorry, '" + gender + "' is an invalid option. ")
             print("Gender")
             print("Choose [1] for female")
             print("Choose [2] for male")
             print("Choose [3] for non-binary")
-            gender=int(input("Choice: "))
-        if gender == 1:
+            gender=input("Choice: ")
+        if gender == '1':
             gender = "Female"
-        elif gender == 2:
+        elif gender == '2':
             gender = "Male"
-        elif gender == 3:
+        elif gender == '3':
             gender = "Non-Binary"
         print(gender)
         # Address Line 1
@@ -135,7 +135,12 @@ def task():
         print(postcode)
         # Telephone Number
         telephoneNumber = input("Telephone number, including country code (i.e. +447123456789): ")
-        telephoneNumber = int(re.sub("[^0-9]", "", telephoneNumber))
+        telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
+        while len(telephoneNumber) > 12 or len(telephoneNumber) < 11:
+            print("I'm sorry, that is not a valid telephone. Please try again. ")
+            telephoneNumber = input("Telephone number, including country code (i.e. +447123456789): ")
+            telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
+        telephoneNumber = int(telephoneNumber)
         print(telephoneNumber)
         # Email
         patientEmail=input("Please enter your email. ")
@@ -165,7 +170,7 @@ def task():
         x.register()
         x.registrationSummary()
         options(x.nhsNumber)
-    elif action == 2:
+    elif action == '2':
         patientEmail=input("Please enter your email. ")
         goodEmail = True
         if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
