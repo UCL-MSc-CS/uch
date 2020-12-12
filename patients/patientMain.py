@@ -5,6 +5,8 @@ from patients.patient import Patient
 from patients.PatientRiskProfile import PatientMedical
 from patients.lifeStyleQuestionnaire import RiskProfile
 from patients.appointment import Appointment
+import re
+import string
 
 connection = sql.connect('UCH.db')
 c = connection.cursor()
@@ -60,126 +62,99 @@ def options(patientEmail):
         exit()
 
 
-def action():
+def task():
     print("Choose [1] to register for a new account")
     print("Choose [2] to login")
-    action = input("Choice: ")
-    if action != '1' and action != '2':
-        print("I'm sorry, '" + action + "' is an invalid option. ")
-        action()
-    elif action == '1':
-        firstName()
-    elif action == '2':
-        patientEmail = input("Please enter your email. ")
-        c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?",
-                  [patientEmail])
-        patientEmails = c.fetchall()
-        password = input("Please enter your password. ")
-        if password != patientEmails[0][10]:
-            while password != patientEmails[0][10]:
-                print("I'm sorry, that password is not correct. ")
-                password = input("Please enter your password. ")
-            print("Wonderful! Hi, " +
-                  patientEmails[0][1] + " you are now logged in.")
-            options(patientEmail)
-        else:
-            print("Wonderful! Hi, " +
-                  patientEmails[0][1] + " you are now logged in.")
-            options(patientEmail)
-
-
-def firstName():
-    firstName = input("Please enter your first name. ")
-    lastName = input("Please enter your last name. ")
-    dateOfBirth = input(
-        'Please enter your birthday in YYYY-MM-DD format. ')
-    year, month, day = map(int, dateOfBirth.split('-'))
-    dateOfBirth = datetime.date(year, month, day)
-    today = date.today()
-    age = today.year - dateOfBirth.year - \
-        ((today.month, today.day) < (dateOfBirth.month, dateOfBirth.day))
-    print("Gender")
-    print("Choose [1] for female")
-    print("Choose [2] for male")
-     print("Choose [3] for non-binary")
-      gender = input("Choice: ")
-       while gender != '1' and gender != '2' and gender != '3':
+    action=int(input("Choice: "))
+    if action != 1 and action != 2:
+        print("I'm sorry, '" + str(action) + "' is an invalid option. ")
+        task()
+    elif action == 1:
+        # First Name
+        firstName=input("Please enter your first name. ")
+        firstName = string.capwords(firstName)
+        print(firstName)
+        # Last Name
+        lastName=input("Please enter your last name. ")
+        lastName = string.capwords(lastName)
+        print(lastName)
+        # Date of Birth
+        dateOfBirth = input('Please enter your birthday in DD-MM-YYYY format. ')
+        day, month, year = map(int, dateOfBirth.split('-'))
+        dateOfBirth = datetime.date(year, month, day)
+        print(dateOfBirth)
+        # Age
+        today = date.today()
+        age = today.year - dateOfBirth.year - ((today.month, today.day) < (dateOfBirth.month, dateOfBirth.day))
+        print(age)
+        # Gender
+        print("Gender")
+        print("Choose [1] for female")
+        print("Choose [2] for male")
+        print("Choose [3] for non-binary")
+        gender=int(input("Choice: "))
+        while gender != 1 and gender != 2 and gender != 3:
             print("I'm sorry, '" + gender + "' is an invalid option. ")
             print("Gender")
             print("Choose [1] for female")
             print("Choose [2] for male")
             print("Choose [3] for non-binary")
-            gender = input("Choice: ")
-        if gender == '1':
+            gender=int(input("Choice: "))
+        if gender == 1:
             gender = "Female"
-        elif gender == '2':
+        elif gender == 2:
             gender = "Male"
-        elif gender == '3':
+        elif gender == 3:
             gender = "Non-Binary"
+        print(gender)
+        # Address Line 1
         addressLine1 = input("Address Line 1: ")
-        addressLine2 = input("Address Line 2 (including city): ")
+        addressLine1 = string.capwords(addressLine1)
+        print(addressLine1)
+        # Address Line 2
+        addressLine2 = input("Address Line 2: ")
+        addressLine2 = string.capwords(addressLine2)
+        print(addressLine2)
+        # City
+        city = input("City: ")
+        city = string.capwords(city)
+        addressLine2 = addressLine2 + ", " + city
+        print(addressLine2)
+        # Postcode
         postcode = input("Postcode: ")
-        telephoneNumber = input("Telephone in XXXXX-XXX-XXX format: ")
-        patientEmail = input("Please enter your email. ")
-        c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?",
-                  [patientEmail])
+        postcode = postcode.upper()
+        print(postcode)
+        # Telephone Number
+        telephoneNumber = input("Telephone number, including country code (i.e. +447123456789): ")
+        telephoneNumber = int(re.sub("[^0-9]", "", telephoneNumber))
+        print(telephoneNumber)
+        # Email
+        patientEmail=input("Please enter your email. ")
+        c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
         patientEmails = c.fetchall()
         if patientEmails != []:
             while patientEmails != []:
-                print(
-                    "I'm sorry, that email is already in use. Please use another email.")
-                patientEmail = input("Please enter your email. ")
-                c.execute(
-                    "SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
+                print("I'm sorry, that email is already in use. Please use another email.")
+                patientEmail=input("Please enter your email. ")
+                c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
                 patientEmails = c.fetchall()
-        password = input("Please enter your password. ")
-        x = Patient(patientEmail, firstName, lastName, dateOfBirth, age, gender,
-                    addressLine1, addressLine2, postcode, telephoneNumber, password)
+        # Password
+        password=input("Please enter your password. ")
+        x=Patient(patientEmail, firstName, lastName, dateOfBirth, age, gender, addressLine1, addressLine2, postcode, telephoneNumber, password)
         x.register()
         x.registrationSummary()
         options(x.patientEmail)
-
-
-def lastName():
-    pass
-
-
-def dateOfBirth():
-    pass
-
-
-def age():
-    pass
-
-
-def gender():
-    pass
-
-
-def addressLine1():
-    pass
-
-
-def addressLine2():
-    pass
-
-
-def postcode():
-    pass
-
-
-def telephoneNumber():
-    pass
-
-
-def patientEmail():
-    pass
-
-
-def password():
-    pass
-
-
-def task():
-    print("Welcome!")
-    action()
+    elif action == 2:
+        patientEmail=input("Please enter your email. ")
+        c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
+        patientEmails = c.fetchall()
+        password=input("Please enter your password. ")
+        if password != patientEmails[0][10]:
+            while password != patientEmails[0][10]:
+                print("I'm sorry, that password is not correct. ")
+                password=input("Please enter your password. ")
+            print("Wonderful! Hi, " + patientEmails[0][1] + " you are now logged in.")
+            options(patientEmail)
+        else:
+            print("Wonderful! Hi, " + patientEmails[0][1] + " you are now logged in.")
+            options(patientEmail)
