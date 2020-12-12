@@ -21,5 +21,7 @@ def clearhours(doctoremail):
             if idnum in appointments:
                 db.deleteappointment(idnum)
                 print("Successfully deleted Appointment " + str(idnum))
+            else:
+                print("Appointment of ID: "+str(idnum)+" doesn't exist on the given date.")
         except:
             print(id + " is not a valid number")

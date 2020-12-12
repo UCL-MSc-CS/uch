@@ -13,6 +13,7 @@ def login(gpEmail):
 
         # avoid using %s as this is vulnerable to injection attacks.
         c.execute(find_doctor, [(email), (password)])
+        db.commit()
         results = c.fetchall()
 
         if results:
