@@ -545,6 +545,8 @@ class adminFunctions():
                     except TeleNoFormatError:
                         error = TeleNoFormatError()
                         print(error)
+                    except ValueError:
+                        print("Enter correct data type")
                     else:
                         self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?,
                         age = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
