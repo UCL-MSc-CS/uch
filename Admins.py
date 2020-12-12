@@ -553,6 +553,7 @@ class adminFunctions():
                         self.connection.commit()
                         print("succesfully updated entire patient record")
                         patback = 1
+                        masterback = 1
 
     def delpatdet(self):
         delback = 0
