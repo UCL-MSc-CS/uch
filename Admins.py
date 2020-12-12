@@ -429,9 +429,9 @@ class adminFunctions():
                 print(error)
             else:
                 patback = 0
+                question_num = 1
                 while patback == 0:
                     try:
-                        question_num = 1
                         while question_num == 1:
                             emails = input("email: ")
                             if "@" not in emails or ".com" not in emails:
