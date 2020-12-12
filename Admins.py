@@ -555,7 +555,9 @@ class adminFunctions():
         delback = 0
         while delback == 0:
             try:
-                nhsnum = input("Enter patient nhs number (enter [1] to return to menu): ")
+                print("**********")
+                print("[1] to return to patient details menu")
+                nhsnum = input("Enter patient nhs number: ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "1":
@@ -582,7 +584,9 @@ class adminFunctions():
         masterback = 0
         while masterback == 0:
             try:
-                nhsnum = input("Enter patient nhs number (enter [1] to return to patient details menu): ")
+                print("**********")
+                print("[1] to go back to patient details main menu")
+                nhsnum = input("Enter patient nhs number: ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "1":
@@ -599,247 +603,312 @@ class adminFunctions():
                 error = FieldEmpty()
                 print(error)
             else:
-                print("choose [1] for email")
-                print("choose [2] for first name")
-                print("choose [3] for last name")
-                print("choose [4] for date of birth")
-                print("choose [5] for age")
-                print("choose [6] for gender")
-                print("choose [7] for address line 1")
-                print("choose [8] for address line 2")
-                print("choose [9] for post code")
-                print("choose [10] for telephone number")
-                try:
-                    detinp = input("Choose which detail to change: ")
-                    if detinp.isdigit() == False:
-                        raise IntegerError
-                    indetinp = int(detinp)
-                    if indetinp > 10:
-                        raise IntegerError
-                    elif not indetinp:
-                        raise FieldEmpty
-                except FieldEmpty:
-                    error = FieldEmpty()
-                    print(error)
-                except IntegerError:
-                    error = IntegerError()
-                    print(error)
-                else:
-                    if indetinp == 1:
-                        back = 0
-                        while back == 0:
-                            try:
-                                CEmail = input("new email: ")
-                                if "@" not in CEmail or ".com" not in CEmail:
-                                    raise EmailInvalid(CEmail)
-                                elif not CEmail:
-                                    raise FieldEmpty
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            except EmailInvalid:
-                                error = EmailInvalid(CEmail)
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (CEmail, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed email")
-                                back = 1
+                Cagain = 0
+                while Cagain == 0:
+                    print("**********")
+                    print("choose [1] for email")
+                    print("choose [2] for first name")
+                    print("choose [3] for last name")
+                    print("choose [4] for date of birth")
+                    print("choose [5] for age")
+                    print("choose [6] for gender")
+                    print("choose [7] for address line 1")
+                    print("choose [8] for address line 2")
+                    print("choose [9] for post code")
+                    print("choose [10] for telephone number")
+                    try:
+                        detinp = input("Choose which detail to change: ")
+                        if detinp.isdigit() == False:
+                            raise IntegerError
+                        indetinp = int(detinp)
+                        if indetinp > 10:
+                            raise IntegerError
+                        elif not indetinp:
+                            raise FieldEmpty
+                    except FieldEmpty:
+                            error = FieldEmpty()
+                            print(error)
+                    except IntegerError:
+                            error = IntegerError()
+                            print(error)
+                    else:
+                        print("**********")
+                        print("[1] to re-enter nhs number")
+                        print("[2] to go back to options")
+                        if indetinp == 1:
+                            back = 0
+                            while back == 0:
+                                try:
+                                    CEmail = input("new email: ")
+                                    if CEmail == '1':
+                                        Cagain = 1
+                                        break
+                                    elif CEmail == '2':
+                                        back = 0
+                                        break
+                                    elif "@" not in CEmail or ".com" not in CEmail:
+                                        raise EmailInvalid(CEmail)
+                                    elif not CEmail:
+                                        raise FieldEmpty
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                except EmailInvalid:
+                                    error = EmailInvalid(CEmail)
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (CEmail, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed email")
+                                    back = 1
 
-                    elif indetinp == 2:
-                        back2 = 0
-                        while back2 == 0:
-                            try:
-                                Cfn = input("new first name: ")
-                                if not Cfn:
-                                    raise FieldEmpty
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (Cfn, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed first name")
-                                back2 = 1
+                        elif indetinp == 2:
+                            back2 = 0
+                            while back2 == 0:
+                                try:
+                                    Cfn = input("new first name: ")
+                                    if Cfn == '1':
+                                        Cagain = 1
+                                        break
+                                    elif Cfn == '2':
+                                        back2 = 1
+                                        break
+                                    elif not Cfn:
+                                        raise FieldEmpty
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (Cfn, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed first name")
+                                    back2 = 1
 
-                    elif indetinp == 3:
-                        back3 = 0
-                        while back3 == 0:
-                            try:
-                                Cln = input("new last name: ")
-                                if not Cln:
-                                    raise FieldEmpty
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (Cln, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed last name")
-                                back3 = 1
+                        elif indetinp == 3:
+                            back3 = 0
+                            while back3 == 0:
+                                try:
+                                    Cln = input("new last name: ")
+                                    if Cln == '1':
+                                        Cagain = 1
+                                        break
+                                    elif Cln == '2':
+                                        back3 = 1
+                                        break
+                                    elif not Cln:
+                                        raise FieldEmpty
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (Cln, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed last name")
+                                    back3 == 1
 
-                    elif indetinp == 4:
-                        back4 = 0
-                        while back4 ==0:
-                            try:
-                                Cdb = int(input("new date of birth as dd/mm/yyyy: "))
-                                strdateob = str(Cdb)
-                                if not Cdb:
-                                    raise FieldEmpty()
-                                input_list2 = [int(i) for i in str(Cdb)]
-                                if len(input_list2) != 8:
-                                    correct_length = 8
-                                    raise IncorrectInputLength(8)
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            except IncorrectInputLength:
-                                error = IncorrectInputLength(correct_length)
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (Cdb, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed date of birth")
-                                back4 = 1
+                        elif indetinp == 4:
+                            back4 = 0
+                            while back4 == 0:
+                                try:
+                                    Cdb = int(input("new date of birth as dd/mm/yyyy: "))
+                                    if Cdb == 1:
+                                        Cagain = 1
+                                        break
+                                    elif Cdb == 2:
+                                        back4 = 1
+                                        break
+                                    elif not Cdb:
+                                        raise FieldEmpty()
+                                    input_list2 = [int(i) for i in str(Cdb)]
+                                    if len(input_list2) != 8:
+                                        correct_length = 8
+                                        raise IncorrectInputLength(8)
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                except IncorrectInputLength:
+                                    error = IncorrectInputLength(correct_length)
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (Cdb, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed date of birth")
+                                    back4 = 1
 
-                    elif indetinp == 5:
-                        back5 = 0
-                        while back5 == 0:
-                            try:
-                                Cage = int(input("new age: "))
-                                currdate = dt.now().year
-                                self.c.execute("""SELECT dateOfBirth FROM PatientDetail WHERE nhsNumber = ?""", (nhsnum,))
-                                Cdb = self.c.fetchone()
-                                dobyear = Cdb % 10000
-                                if Cage != currdate - dobyear and Cage != currdate - dobyear - 1:
-                                    raise InvalidAgeRange
-                                elif not Cage:
-                                    raise FieldEmpty()
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            except InvalidAgeRange:
-                                error = InvalidAgeRange()
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET age = ? WHERE nhsNumber = ?""", (Cage, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed age")
-                                back5 = 1
+                        elif indetinp == 5:
+                            back5 = 0
+                            while back5 == 0:
+                                try:
+                                    Cage = int(input("new age: "))
+                                    currdate = dt.now().year
+                                    self.c.execute("""SELECT dateOfBirth FROM PatientDetail WHERE nhsNumber = ?""", (nhsnum,))
+                                    Cdb = self.c.fetchone()
+                                    dobyear = Cdb % 10000
+                                    if Cage == 1:
+                                        Cagain = 1
+                                        break
+                                    elif Cage == 2:
+                                        back5 = 1
+                                        break
+                                    elif Cage != currdate - dobyear and Cage != currdate - dobyear - 1:
+                                        raise InvalidAgeRange
+                                    elif not Cage:
+                                        raise FieldEmpty()
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                except InvalidAgeRange:
+                                    error = InvalidAgeRange()
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET age = ? WHERE nhsNumber = ?""", (Cage, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed age")
+                                    back5 = 1
 
-                    elif indetinp == 6:
-                        back6 = 0
-                        while back6 == 0:
-                            try:
-                                Cgen = input("new gender (enter male/female/non-binary/prefer not to say): ")
-                                if not Cgen:
-                                    raise FieldEmpty()
-                                if Cgen != "male" and Cgen != "female" and Cgen != "non-binary" and Cgen != "prefer not to say":
-                                    raise GenderError()
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            except GenderError:
-                                error = GenderError()
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET gender = ? WHERE nhsNumber = ?""", (Cgen, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed gender")
-                                back6 = 1
+                        elif indetinp == 6:
+                            back6 = 0
+                            while back6 == 0:
+                                try:
+                                    Cgen = input("new gender (enter male/female/non-binary/prefer not to say): ")
+                                    if Cgen == '1':
+                                        Cagain = 1
+                                        break
+                                    elif Cgen == '2':
+                                        back6 = 1
+                                        break
+                                    elif not Cgen:
+                                        raise FieldEmpty()
+                                    elif Cgen != "male" and Cgen != "female" and Cgen != "non-binary" and Cgen != "prefer not to say":
+                                        raise GenderError()
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                except GenderError:
+                                    error = GenderError()
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET gender = ? WHERE nhsNumber = ?""", (Cgen, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed gender")
+                                    back6 = 1
 
-                    elif indetinp == 7:
-                        back7 = 0
-                        while back7 == 0:
-                            try:
-                                Cad1 = input("new address line 1: ")
-                                if not Cad1:
-                                    raise FieldEmpty()
-                                elif any(chr.isdigit() for chr in Cad1) == False:
-                                    raise InvalidAdd
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            except InvalidAdd:
-                                error = InvalidAdd()
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""", (Cad1, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed address line 1")
-                                back7 = 1
+                        elif indetinp == 7:
+                            back7 = 0
+                            while back7 == 0:
+                                try:
+                                    Cad1 = input("new address line 1: ")
+                                    if Cad1 == '1':
+                                        Cagain = 1
+                                        break
+                                    elif Cad1 == '2':
+                                        back7 = 1
+                                        break
+                                    elif not Cad1:
+                                        raise FieldEmpty()
+                                    elif any(chr.isdigit() for chr in Cad1) == False:
+                                        raise InvalidAdd
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                except InvalidAdd:
+                                    error = InvalidAdd()
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""", (Cad1, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed address line 1")
+                                    back7 = 1
 
-                    elif indetinp == 8:
-                        back8 = 0
-                        while back8 == 0:
-                            try:
-                                Cad2 = input("new address line 2: ")
-                                if not Cad2:
-                                    raise FieldEmpty()
-                                elif any(chr.isdigit() for chr in Cad2) == False:
-                                    raise InvalidAdd
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            except InvalidAdd:
-                                error = InvalidAdd()
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""", (Cad2, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed address line 2")
-                                back8 = 1
+                        elif indetinp == 8:
+                            back8 = 0
+                            while back8 == 0:
+                                try:
+                                    Cad2 = input("new address line 2: ")
+                                    if Cad2 == '1':
+                                        Cagain = 1
+                                        break
+                                    elif Cad2 == '2':
+                                        back8 = 1
+                                        break
+                                    elif not Cad2:
+                                        raise FieldEmpty()
+                                    elif any(chr.isdigit() for chr in Cad2) == False:
+                                        raise InvalidAdd
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                except InvalidAdd:
+                                    error = InvalidAdd()
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""", (Cad2, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed address line 2")
+                                    back8 = 1
 
-                    elif indetinp == 9:
-                        back9 = 0
-                        while back9 == 0:
-                            try:
-                                Cpost = input("new postcode: ")
-                                if not Cpost:
-                                    raise FieldEmpty()
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""", (Cpost, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed post code")
-                                back9 = 1
+                        elif indetinp == 9:
+                            back9 = 0
+                            while back9 == 0:
+                                try:
+                                    Cpost = input("new postcode: ")
+                                    if Cpost == '1':
+                                        Cagain = 1
+                                        break
+                                    elif Cpost == '2':
+                                        back9 = 1
+                                        break
+                                    elif not Cpost:
+                                        raise FieldEmpty()
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""", (Cpost, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed post code")
+                                    back9 = 1
 
-                    elif indetinp == 10:
-                        back10 = 0
-                        while back10 == 0:
-                            try:
-                                Ctel = (input("telephone number (no spaces, with country code. E.g. +4471234123123): "))
-                                if not Ctel:
-                                    raise FieldEmpty()
-                                if '+' not in Ctel or ' ' in Ctel:
-                                    raise TeleNoFormatError()
-                                Ctel = Ctel.replace('+', '')
-                                input_list = [i for i in Ctel]
-                                if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
-                                        input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(
-                                    input_list) != 18:
-                                    correct_length = '12 to 18'
-                                    raise IncorrectInputLength(correct_length)
+                        elif indetinp == 10:
+                            back10 = 0
+                            while back10 == 0:
+                                try:
+                                    Ctel = (input("telephone number (no spaces, with country code. E.g. +4471234123123): "))
+                                    if Ctel == '1':
+                                        Cagain = 1
+                                        break
+                                    elif Ctel == '2':
+                                        back10 = 1
+                                        break
+                                    elif not Ctel:
+                                        raise FieldEmpty()
+                                    if '+' not in Ctel or ' ' in Ctel:
+                                        raise TeleNoFormatError()
+                                    Ctel = Ctel.replace('+', '')
+                                    input_list = [i for i in Ctel]
+                                    if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
+                                            input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(
+                                        input_list) != 18:
+                                        correct_length = '12 to 18'
+                                        raise IncorrectInputLength(correct_length)
 
-                            except FieldEmpty:
-                                error = FieldEmpty()
-                                print(error)
-                            except IncorrectInputLength:
-                                error = IncorrectInputLength(correct_length)
-                                print(error)
-                            except IntegerError:
-                                error = IntegerError()
-                                print(error)
-                            except TeleNoFormatError:
-                                error = TeleNoFormatError()
-                                print(error)
-                            else:
-                                self.c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""", (Ctel, nhsnum))
-                                self.connection.commit()
-                                print("successfully changed telephone number")
-                                back10 = 1
+                                except FieldEmpty:
+                                    error = FieldEmpty()
+                                    print(error)
+                                except IncorrectInputLength:
+                                    error = IncorrectInputLength(correct_length)
+                                    print(error)
+                                except IntegerError:
+                                    error = IntegerError()
+                                    print(error)
+                                except TeleNoFormatError:
+                                    error = TeleNoFormatError()
+                                    print(error)
+                                else:
+                                    self.c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""", (Ctel, nhsnum))
+                                    self.connection.commit()
+                                    print("successfully changed telephone number")
+                                    back10 = 1
 
 
     def commit_and_close(self):
