@@ -1,7 +1,9 @@
-from GPLogin import login
-from Doctormenu import mainmenu
+from GPs.GPLogin import login
+from GPs.Doctormenu import mainmenu
 
-email = []
-login(email)
-mainmenu(email[0])
+def gpStart():
+    email = []
+    login(email)
+    mainmenu(email[0])
+
 

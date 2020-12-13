@@ -3,13 +3,13 @@ import calendar
 import random
 from datetime import time as x, date as xyz, datetime, timedelta
 import time
-import patientFunctions as pf
+import patients.patientFunctions as pf
 
 
 class Appointment:
 
     def __init__(self):
-        self.connection = sql.connect('patient.db')
+        self.connection = sql.connect('UCH.db')
         self.c = self.connection.cursor()
 
     def bookAppointment(self, patientEmail):

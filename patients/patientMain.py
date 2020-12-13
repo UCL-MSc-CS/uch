@@ -1,12 +1,12 @@
 import sqlite3 as sql
 import datetime
 from datetime import date
-from patient import Patient
-from PatientRiskProfile import PatientMedical
-from lifeStyleQuestionnaire import RiskProfile
-from appointment import Appointment
+from patients.patient import Patient
+from patients.PatientRiskProfile import PatientMedical
+from patients.lifeStyleQuestionnaire import RiskProfile
+from patients.appointment import Appointment
 
-connection = sql.connect('patient.db')
+connection = sql.connect('UCH.db')
 c = connection.cursor()
 
 
@@ -126,6 +126,6 @@ def task():
             options(patientEmail)
     
 
-print("Welcome!")
-task()
+# print("Welcome!")
+# task()
 

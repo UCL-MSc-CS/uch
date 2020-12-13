@@ -16,6 +16,18 @@ connection = sqlite3.connect('UCH.db')
 c = connection.cursor()
 #create Appointment table
 
+c.execute("""CREATE TABLE IF NOT EXISTS Admin(
+                    username text PRIMARY KEY,
+                    password text
+)""")
+
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO Admin VALUES(
+            'Matthew',
+            '1234'
+)""")
+connection.commit()
 
 c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
                     patientEmail text PRIMARY KEY ,
@@ -34,60 +46,49 @@ c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
 )""")
 connection.commit()
 
-c.execute("""CREATE TABLE IF NOT EXISTS MedicalHistory (
-                    gpEmail text PRIMARY KEY ,
-                    password text,
-                    firstName text,
-                    lastName text,
-                    gender text,
-                    dateOfBirth text,
-                    addressLine1 text,
-                    addressLine2 text,
-                    telephoneNumber integer,
-                    department text,
-                    active text
-)""")
+c.execute("""CREATE TABLE IF NOT EXISTS medicalHistory(
+            patientEmail DATATYPE text,
+            Status DATATYPE text,
+            DTap DATATYPE text,
+            HepC DATATYPE text,
+            HepB DATATYPE text,
+            Measles DATATYPE text,
+            Mumps DATATYPE text,
+            Rubella DATATYPE text,
+            Varicella DATATYPE text,
+            PRIMARY KEY (patientEmail, Status)
+            )""")
 connection.commit()
 
-c.execute("""CREATE TABLE IF NOT EXISTS PatientQuestionaire (
-                    questionnaireID integer PRIMARY KEY ,
-                    height integer,
-                    weight integer,
-                    bmi text,
-                    smoking text,
-                    alcohol text,
-                    diet text,
-                    drugs text,
-                    exercise text,
-                    exerciseType text,
-                    exerciseFrequency text,
-                    exerciseDuration text,
-                    goal text
-)""")
+c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
+            patientEmail text PRIMARY KEY,
+            exercise DATATYPE text,
+            exerciseType DATATYPE text,
+            exerciseFrequency DATATYPE integer,
+            exerciseDuration DATATYPE integer,
+            goal DATATYPE text,
+            height DATATYPE real,
+            weight DATATYPE real,
+            bmi DATATYPE real,
+            smoking DATATYPE text,
+            drugs DATATYPE text,
+            drugType DATATYPE text,
+            alcohol DATATYPE text,
+            alcoholUnit DATATYPE text,
+            meat DATATYPE text,
+            diet DATATYPE text,
+            caffeine DATATYPE text
+            )""")
 connection.commit()
 
-
-c.execute("""CREATE TABLE IF NOT EXISTS FamilyMedicalHistory(
-                    familyMedHistoryID integer PRIMARY KEY,
-                    medHistoryID integer,
-                    dTap text,
-                    hepC text,
-                    hepB text,
-                    measles text,
-                    mumps text,
-                    rubella text,
-                    varicella text
-)""")
-
-c.execute("""CREATE TABLE IF NOT EXISTS Cancer(
-                    patientEmail text PRIMARY KEY ,
-                    cancer text,
-                    cancerType text,
-                    cancerAge integer,
-                    cancerFamily text,
-                    cancerTypeFamily text,
-                    cancerAgeFamily text
-)""")
+c.execute("""CREATE TABLE IF NOT EXISTS cancer(
+                    patientEmail DATATYPE text,
+                    cancerRelation DATATYPE text,
+                    cancerType DATATYPE text,
+                    cancerAge DATATYPE text,
+                    PRIMARY KEY (patientEmail, cancerRelation)
+                    )""")
+connection.commit()
 
 c.execute("""CREATE TABLE IF NOT EXISTS GP(
                     gpEmail text PRIMARY KEY ,
@@ -105,7 +106,6 @@ c.execute("""CREATE TABLE IF NOT EXISTS GP(
 connection.commit()
 
 
-#create the appointments table
 c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
                     appointmentID integer primary key,
                     gpEmail text,
@@ -156,6 +156,36 @@ for i in items:
     print(i)
 connection.commit()
 print(" ")
+
+c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
+                    'm.shorvon@gmail.com',
+                    'Matthew',
+                    'Shorvon',
+                    '16071998',
+                    22,
+                    'male',
+                    '10 downing street',
+                    'London',
+                    'idk',
+                    07758221088,
+                    'passwrrrdd',
+                    'N',
+                    'N')""")
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO GP VALUES(
+            'matthew.shorvon@ucl.ac.uk',
+            'another passwrrrdd',
+            'Matthew',
+            'Shorvon',
+            'male',
+            '160798',
+            '10 Beverly Hills',
+            'LA',
+            '07758221088',
+            'Plastic Surgery',
+            'Y')""")
+connection.commit()
 
 connection.close()
 

@@ -1,6 +1,8 @@
 from tkinter import *
 from timetablefunctions import getDoctorNotes, saveDoctorNotes
 from tkinter import messagebox, ttk
+from functools import partial
+from GPs.prescription import prescription
 
 
 
@@ -84,6 +86,9 @@ def appointmentnotes(doctoremail,appointmentid):
 
     saveButton = Button(buttonFrame, text='Save Notes', font=('arial',12,'bold'), width=9, command=saveNotes, background='SlateGray1')
     saveButton.grid(row=0,column=0)
+
+    saveButton = Button(buttonFrame, text='Open prescription', font=('arial',12,'bold'), width=20, command=partial(prescription, doctoremail, appointmentid), background='SlateGray1')
+    saveButton.grid(row=0,column=1)
 
 
 
