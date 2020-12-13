@@ -61,7 +61,7 @@ class DateInvalidError(Error):
     :param: date - input date which causes the error
             message - explanation of the error to the user
     """
-    def __init__(self, message = "please enter a valid date"):
+    def __init__(self, message = "date does not exist, please enter a valid date"):
         self.message = message
         super().__init__(self.message)
 
@@ -73,6 +73,17 @@ class DateInFutureError(Error):
             message - explanation of the error to the user
     """
     def __init__(self, message = "date of birth cannot be in the future"):
+        self.message = message
+        super().__init__(self.message)
+
+class DateFormatError(Error):
+    """
+    Exception raised when the date of birth is not in the format dd/mm/yyyy
+
+    :param: date - input date which causes the error
+            message - explanation of the error to the user
+    """
+    def __init__(self, message = "please enter the date in the correct format, with '/'s as separators"):
         self.message = message
         super().__init__(self.message)
 
@@ -149,7 +160,7 @@ class adminFunctions():
             print("Logged in")
             return True
 
-        def add_doctor(self):
+    def add_doctor(self):
         question_num = 0
         while True:
             try:
