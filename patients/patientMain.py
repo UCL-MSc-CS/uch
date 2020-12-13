@@ -9,6 +9,8 @@ import re
 import string
 import pandas as pd
 
+""" This is the main menu when the patient is selected in the first menu"""
+
 connection = sql.connect('UCH.db')
 c = connection.cursor()
 
@@ -72,7 +74,29 @@ def options(nhsNumber):
                 x.cancer(nhsNumber)
                 options(nhsNumber)
         elif action == '5':
-            print(pd.Series(results[0]))
+            # Put this in the patientFunctions.py?
+            hash = ""
+            for i in results[0][11]:
+                hash += "*"
+            print("Your NHS number is: ")
+            x = str(results[0][0])
+            one = x[0:3]
+            two = x[3:6]
+            three = x[6:10]
+            print(one, two, three)
+            print("First Name: " + str(results[0][2]))
+            print("Last Name: " + str(results[0][3]))
+            print("Email: " + str(results[0][1]))
+            print("Date of Birth: " + str(results[0][4]))
+            print("Age: " + str(results[0][5]))
+            print("Gender: " + str(results[0][6]))
+            print("Address: ")
+            print(str(results[0][7]))
+            print(str(results[0][8]))
+            print(str(results[0][9]))
+            print("Telephone Number: +" + str(results[0][10]))
+            print("Password: " + hash)
+            # print(pd.Series(results[0]))
             options(nhsNumber)
         elif action == '6':
             options(nhsNumber)
@@ -92,20 +116,20 @@ def task():
         # First Name
         firstName=input("Please enter your first name. ")
         firstName = string.capwords(firstName.strip())
-        print(firstName)
+        # print(firstName)
         # Last Name
         lastName=input("Please enter your last name. ")
         lastName = string.capwords(lastName.strip())
-        print(lastName)
+        # print(lastName)
         # Date of Birth
         dateOfBirth = input('Please enter your birthday in DD-MM-YYYY format. ')
         day, month, year = map(int, dateOfBirth.split('-'))
         dateOfBirth = datetime.date(year, month, day)
-        print(dateOfBirth)
+        # print(dateOfBirth)
         # Age
         today = date.today()
         age = today.year - dateOfBirth.year - ((today.month, today.day) < (dateOfBirth.month, dateOfBirth.day))
-        print(age)
+        # print(age)
         # Gender
         print("Gender")
         print("Choose [1] for female")
@@ -125,24 +149,24 @@ def task():
             gender = "Male"
         elif gender == '3':
             gender = "Non-Binary"
-        print(gender)
+        # print(gender)
         # Address Line 1
         addressLine1 = input("Address Line 1: ")
         addressLine1 = string.capwords(addressLine1.strip())
-        print(addressLine1)
+        # print(addressLine1)
         # Address Line 2
         addressLine2 = input("Address Line 2: ")
         addressLine2 = string.capwords(addressLine2.strip())
-        print(addressLine2)
+        # print(addressLine2)
         # City
         city = input("City: ")
         city = string.capwords(city.strip())
         addressLine2 = (addressLine2 + " " + city).strip()
-        print(addressLine2)
+        # print(addressLine2)
         # Postcode
         postcode = input("Postcode: ")
         postcode = postcode.strip().upper()
-        print(postcode)
+        # print(postcode)
         # Telephone Number
         telephoneNumber = input("Telephone number, including country code (i.e. +447123456789): ")
         telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
@@ -151,7 +175,7 @@ def task():
             telephoneNumber = input("Telephone number, including country code (i.e. +447123456789): ")
             telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
         telephoneNumber = int(telephoneNumber)
-        print(telephoneNumber)
+        # print(telephoneNumber)
         # Email
         patientEmail=input("Please enter your email. ")
         goodEmail = True

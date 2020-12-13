@@ -1,9 +1,10 @@
 import sqlite3 as sql
-import random
+from numpy import random
 
+""" This is the main patient class, to create a new patient in the database"""
 
 class Patient:
-
+    # Initializing a patient
     def __init__(self, patientEmail, firstName, lastName, dateOfBirth, age, gender, addressLine1, addressLine2,
                  postcode, telephoneNumber, password):
         self.nhsNumber = 0
@@ -18,12 +19,14 @@ class Patient:
         self.postcode = postcode
         self.telephoneNumber = telephoneNumber
         self.password = password
+        # For admins to confirm registration of new patients
         self.registrationConfirm = 0
         self.connection = sql.connect('UCH.db')
         self.c = self.connection.cursor()
         self.nhsGenerator()
 
     def register(self):
+        # Puts new patients into the database
         self.c.execute("INSERT INTO PatientDetail VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
                        (self.nhsNumber, self.patientEmail, self.firstName, self.lastName, self.dateOfBirth, self.age, self.gender,
                         self.addressLine1, self.addressLine2, self.postcode, self.telephoneNumber, self.password,
@@ -31,6 +34,7 @@ class Patient:
         self.connection.commit()
     
     def nhsGenerator(self):
+        # To create a random and unique NHS number for each new patient
         count = 0
         nhsNumber = ""
         while count < 10:
@@ -52,9 +56,11 @@ class Patient:
         self.nhsNumber = nhsNumber
 
     def registrationSummary(self):
+        # To show patients their profiles upon registration
         hash = ""
         for i in self.password:
             hash += "*"
+        # Keep V that line
         print("Welcome, " + self.firstName + "! Thank you for registering with UCH.")
         print("Your NHS number is: ")
         x = str(self.nhsNumber)
