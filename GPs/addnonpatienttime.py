@@ -12,15 +12,21 @@ clinicstart = "{:02d}".format(starthour) + ":" + "{:02d}".format(startmin)
 clinicend =  "{:02d}".format(endhour) + ":" + "{:02d}".format(endmin)
 
 def addnonpatienttime(doctoremail):
-    print("choose [1] to book a holiday")
-    print("choose [2] to add non-patient hours")
-    choice = input(":")
-    if choice == '1':
-        addholiday(doctoremail)
-    elif choice == '2':
-        addnonpatienthours(doctoremail)
-    else:
-        print("Invalid option chosen, please try again")
+    while True:
+        print("choose [1] to book a holiday")
+        print("choose [2] to add non-patient hours")
+        print("choose [3] to return to main menu")
+        choice = input(":")
+        if choice == '1':
+            addholiday(doctoremail)
+            break
+        elif choice == '2':
+            addnonpatienthours(doctoremail)
+            break
+        elif choice == '3':
+            break
+        else:
+            print("Invalid option chosen, please try again")
 
 def addholiday(doctoremail):
     startdate = uf.validatedate("Please enter a start date")

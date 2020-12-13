@@ -194,7 +194,7 @@ def prescription(doctoremail,appointmentID):
     trv.heading(7, text="Drug")
     trv.column(7, width=100)
     trv.heading(8, text="Dosage")
-    trv.column(8, width=50)
+    trv.column(8, width=75)
     trv.heading(9, text="Units")
     trv.column(9, width=100)
     trv.heading(10, text="Pharma class")
@@ -244,7 +244,15 @@ def prescription(doctoremail,appointmentID):
     addRecord.pack(pady=10)
 
     # place treeview in prescription frame
-    myTree = ttk.Treeview(prescriptionFrame)
+    myTree = ttk.Treeview(prescriptionFrame, height='5')
+
+    # trv = ttk.Treeview(
+    #     medResultsFrame,
+    #     columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
+    #     show='headings',
+    #     height='5',
+    #     selectmode="browse"
+    # )
 
     # Define our columns (treeview has a phantom column at the start)
     myTree['columns'] = ("Medicine ID", "Medicine Name", "Dosage", "Dosage Multiplier", "Dosage Method", "Further Information")
