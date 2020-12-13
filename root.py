@@ -108,6 +108,7 @@ while selection1 != 0:
                             create = int(input("choose [1] to input physician or [2] to exit: "))
                         if create == 1:
                             selection = ad.add_doctor()
+                            print(selection)
                         elif create == 2:
                             selection = 0
                     while selection == 2:

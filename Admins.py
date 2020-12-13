@@ -1,5 +1,7 @@
 import sqlite3 as sql
 from datetime import datetime as dt
+from datetime import date 
+import usefulfunctions as uf
 
 """exceptions under here"""
 # still need to come up with UK postcode validity check - make user input space separated post code,
@@ -49,6 +51,28 @@ class EmailInvalid(Error):
 class nhsNotExists(Error):
     """Exception raised when email does not exist in list"""
     def __init__(self, message = "nhs number does not exist"):
+        self.message = message
+        super().__init__(self.message)
+
+class DateInvalidError(Error):
+    """
+    Exception raised when the date is not in the correct format (dd/mm/yyyy)
+
+    :param: date - input date which causes the error
+            message - explanation of the error to the user
+    """
+    def __init__(self, message = "please enter a valid date"):
+        self.message = message
+        super().__init__(self.message)
+
+class DateInFutureError(Error):
+    """
+    Exception raised when the date of birth is in the future
+
+    :param: date - input date which causes the error
+            message - explanation of the error to the user
+    """
+    def __init__(self, message = "date of birth cannot be in the future"):
         self.message = message
         super().__init__(self.message)
 
@@ -167,16 +191,30 @@ class adminFunctions():
                     raise FieldEmpty()
                 question_num = 4
             while question_num == 4:
-                dateOfBirth = int(input("enter date of birth as ddmmyy: "))
+                dateOfBirth = (input("enter date of birth as dd/mm/yyyy: "))
                 if dateOfBirth == 0:
                     print('going back')
                     return 1
                 if not dateOfBirth:
                     raise FieldEmpty()
-                input_list = [int(i) for i in str(dateOfBirth)]
-                if len(input_list) != 6:
-                    correct_length = 6
-                    raise IncorrectInputLength(6)
+                if len(dateOfBirth) != 10:
+                    correct_length = 10
+                    raise IncorrectInputLength(10)
+                if '/' not in dateOfBirth:
+                    raise DateInvalidError
+                day = int(dateOfBirth[0:2])
+                month = int(dateOfBirth[3:5])
+                year = int(dateOfBirth[6:10])
+                if day > 31:
+                    raise DateInvalidError
+                if month > 12:
+                    raise DateInvalidError
+                
+                # input_list = [int(i) for i in str(dateOfBirth)]
+                date_entered = date(year,month,day)
+                date_today = date.today()
+                if date_entered > date_today:
+                    raise DateInFutureError
                 question_num = 5
             while question_num == 5:
                 department = input("department: ")
