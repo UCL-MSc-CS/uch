@@ -14,6 +14,7 @@ class Appointment:
         self.c = self.connection.cursor()
 
     def bookAppointment(self, nhsNumber):
+        """ Prints appointment menu for user to choose by doctor type"""
         print("**********"
               "\n[1] To book an appointment with a specific doctor"
               "\n[2] To book an appointment with any doctor"
@@ -37,6 +38,8 @@ class Appointment:
             self.bookAppointment(nhsNumber)
 
     def chooseSpecificDr(self, nhsNumber):
+        """ Allows user to choose a specific doctor from a list from all doctors registered
+        :return: gpDetails (list) with gp last name and email address"""
         print("**********"
               "\nThe doctors currently available at the practice are: ")
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
@@ -45,6 +48,8 @@ class Appointment:
         return gpDetails
 
     def chooseAnyDr(self, nhsNumber):
+        """ Assigns user any doctor from a list from all doctors registered
+        :return: gpDetails (list) with gp last name and email address"""
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
         dr_names = self.c.fetchall()
         gp_list = []
@@ -59,6 +64,8 @@ class Appointment:
         return gpDetails
 
     def chooseDrGender(self, nhsNumber):
+        """ Allows user to choose a doctor by gender from a list from all doctors registered
+        :return: gpDetails (list) with gp last name and email address"""
         print("**********"
               "\n[1] To book an appointment with a male doctor"
               "\n[2] to book an appointment with a female doctor"
@@ -84,6 +91,11 @@ class Appointment:
             self.chooseDrGender(nhsNumber)
 
     def chooseAppointment(self, nhsNumber, gpDetails):
+        """ Allows user to to book an appointment
+        User can choose the month and day
+        User then presented with a list of all appointments on that day by time
+        User can then choose which time they would like the appointment
+        appointment details inserted into the database for chosen date and time for this user"""
         print("**********"
               "\n [1] January     \t[2] February      \t[3] March"
               "\n [4] April     \t\t[5] May           \t[6] June"
@@ -99,6 +111,7 @@ class Appointment:
         pf.timeMenu(date, times, gpDetails, nhsNumber)
 
     def cancelAppointment(self, nhsNumber):
+        """ Presents user with all their appointments and allows them to cancel one"""
         print("**********"
               "\nThese are your confirmed booked appointments: ")
         vc.viewAppointments(nhsNumber)
@@ -118,6 +131,7 @@ class Appointment:
             self.cancelAppointment(nhsNumber)
 
     def viewAppConfirmations(self, nhsNumber):
+        """ Presents user with all their booked/pending appointments"""
         print("**********"
               "\nThese are your confirmed booked appointments: ")
         vc.viewAppointments(nhsNumber)

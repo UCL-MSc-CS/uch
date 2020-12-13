@@ -6,6 +6,9 @@ import calendar
 import pandas as pd
 
 ## add exceptions for when no appointment booked and no drs
+## improve docstrings and comments
+## allow user to cancel more than 1 appointment
+## change 'pending' to reserved in display available with explanation for user
 
 class Error(Exception):
     """Error exception class"""
@@ -64,8 +67,9 @@ def toDateObjApp00(string):
 
 
 def generateEndTime(date):
-    """Generate end for displaying available appointment times
-    Creates a unix time stamp with date string input by user, of date + 23:59:59"""
+    """ Generates end timestamp
+    :param date: date string from user input
+    :return: unix time stamp with date + 23:59:59 time"""
     year, month, day = map(int, date.split('-'))
     dt_str_obj = xyz(year, month, day)
     dt_time = x(23, 59, 59)
@@ -76,7 +80,8 @@ def generateEndTime(date):
 
 def chooseDr(dr_names):
     """ Allows user to select a gp from list obtained from database
-        returns chosen dr email and last name in a list"""
+        returns chosen dr email and last name in a list
+        """
     gp_list = []
     counts = []
     count = 1
@@ -110,7 +115,7 @@ def chooseMonth():
         if month an int
         if month between 1 to 12
         if month chosen is in the past
-        returns:
+        :return:
         prints calendar for the month chosen
         month as string, padded with 0 if month a single number """
     currentMonth = datetime.now().month
@@ -140,7 +145,7 @@ def chooseDate(month):
         Checks: if input is an int
                 if day entered is valid according to the month
                 if date chosen is in the past
-        returns: date string with days padded with 0 for single day number"""
+        :return: date string with days padded with 0 for single day number"""
     days_31 = ['01', '03', '05', '07', '08', '10', '12']
     days_30 = ['04', '06', '09', '11']
     days_28 = ['02']
