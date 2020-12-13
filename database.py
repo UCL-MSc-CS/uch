@@ -1,5 +1,5 @@
 import sqlite3
-
+import pandas as pd
 """ This will function as our main database script. Rather than making large changes to this file, 
 set up your own database script to make test changes to, and implement them here when they are 
 finalised. If you want to test out queries and test out features with dummy data, do this in your
@@ -29,13 +29,13 @@ c.execute("""INSERT OR IGNORE INTO Admin VALUES(
 )""")
 connection.commit()
 
+# patientEmail is not UNIQUE/PRIMARY KEY ..
 c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
-                    nhsNumber DATATYPE INTEGER,
-                    patientEmail DATATYPE TEXT PRIMARY KEY,
+                    nhsNumber DATATYPE INTEGER PRIMARY KEY,
+                    patientEmail DATATYPE TEXT,
                     firstName DATATYPE TEXT,
                     lastName DATATYPE TEXT,
                     dateOfBirth DATATYPE TEXT,
-                    age DATATYPE INTEGER,
                     gender DATATYPE TEXT,
                     addressLine1 DATATYPE TEXT,
                     addressLine2 DATATYPE TEXT,
@@ -110,7 +110,7 @@ c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
                     appointmentID integer primary key,
                     gpEmail text,
                     gpLastName text,
-                    patientEmail text,
+                    nhsNumber integer,
                     start integer,
                     end integer,
                     reason text,
@@ -124,21 +124,50 @@ c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
                     checkIn integer NULL,
                     checkOut integer NULL)""")
 
-c.execute("""CREATE TABLE IF NOT EXISTS Medecine(
-                    medicineID integer PRIMARY KEY,
-                    medicineName text,
-                    medicineCompany text,
-                    drug text,
-                    medicineType text
-)""")
+c.execute("DROP TABLE IF EXISTS Medicine")
 connection.commit()
 
-c.execute("""CREATE TABLE IF NOT EXISTS Prescription(
-                    AppointmentID integer PRIMARY KEY,
+#create medicine table
+c.execute("""CREATE TABLE IF NOT EXISTS Medicine (
+                    medicineID integer primary key,
+                    medicineName text,
+                    medicineType text,
+                    dosageType text,
+                    drugRoute text,
+                    company text,
+                    drug text,
+                    dosages text,
+                    activeIngredientUnit text,
+                    pharmacologicalClasses text,
+                    category text)""")
+connection.commit()
+
+c.execute("""
+            SELECT COUNT(medicineID)
+            FROM Medicine
+""")
+connection.commit()
+
+numrows = c.fetchone()[0]
+
+if numrows < 1:
+    try:
+        medicines = pd.read_csv("medicinedata.txt",delimiter='\t',header=0,encoding='CP850')
+    except:
+        medicines = pd.read_csv("medicinedata.txt",delimiter='\t',header=0,encoding='ANSI')
+
+    medicines.to_sql("Medicine",connection,if_exists='append',index=False)
+
+    pass
+
+
+
+c.execute("""CREATE TABLE IF NOT EXISTS Prescription (
+                    appointmentID integer,
                     medicineID integer,
                     dosage text,
-                    frequency text,
-                    duration text
+                    dosageMultiplier integer,
+                    furtherInformation text
 )""")
 
 connection.commit()
@@ -163,19 +192,18 @@ c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
                     'Matthew',
                     'Shorvon',
                     '1998-07-16',
-                    22,
                     'Male',
                     '10 Downing Street',
                     'London',
                     'SW1A 0AA',
                     07758221088,
                     '1234',
-                    0)""")
+                    1)""")
 connection.commit()
 
 c.execute("""INSERT OR IGNORE INTO GP VALUES(
             'matthew.shorvon@ucl.ac.uk',
-            'another passwrrrdd',
+            '1234',
             'Matthew',
             'Shorvon',
             'male',

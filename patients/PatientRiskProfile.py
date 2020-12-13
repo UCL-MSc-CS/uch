@@ -204,7 +204,7 @@ class PatientMedical:
         self.connection.close()
 
 
-Erin = PatientMedical()
-# Erin.vaccination("ariannabourke@hotmail.com")
-# Erin.cancer("ariannabourke@hotmail.com")
-Erin.show_profile("ariannabourke@hotmail.com")
+# Erin = PatientMedical()
+# # Erin.vaccination("ariannabourke@hotmail.com")
+# # Erin.cancer("ariannabourke@hotmail.com")
+# Erin.show_profile("ariannabourke@hotmail.com")

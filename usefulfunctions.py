@@ -42,3 +42,8 @@ def daterange(start_date, end_date):
     for n in range(int((end_date + timedelta(1) - start_date).days)):
         yield start_date + timedelta(n)
 
+def banner(staff):
+    print("--------------------------------------------")
+    print("\t {} Main Menu" .format(staff))
+    print("--------------------------------------------")
+    print("Welcome {}" .format(staff))

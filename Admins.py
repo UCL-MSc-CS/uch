@@ -203,7 +203,7 @@ class adminFunctions():
                         raise FieldEmpty()
                     question_num = 4
                 while question_num == 4:
-                    dateOfBirth = (input("enter date of birth as dd/mm/yyyy: "))
+                    dateOfBirth = (input("enter date of birth as YYYY-MM-DD: "))
                     if dateOfBirth == '0':
                         print('going back')
                         return 1
@@ -212,11 +212,11 @@ class adminFunctions():
                     if len(dateOfBirth) != 10:
                         correct_length = 10
                         raise IncorrectInputLength(10)
-                    if dateOfBirth[2] != '/' or dateOfBirth[5] != '/':
+                    if dateOfBirth[2] != '-' or dateOfBirth[5] != '-':
                         raise DateFormatError
-                    day = int(dateOfBirth[0:2])
-                    month = int(dateOfBirth[3:5])
-                    year = int(dateOfBirth[6:10])
+                    day = int(dateOfBirth[8:10])
+                    month = int(dateOfBirth[5:7])
+                    year = int(dateOfBirth[0:4])
                     if month == 9 or month == 4 or month == 6 or month == 11:
                         if day > 30:
                             raise DateInvalidError
