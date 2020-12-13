@@ -149,155 +149,174 @@ class adminFunctions():
             print("Logged in")
             return True
 
-    def add_doctor(self):
+        def add_doctor(self):
         question_num = 0
-        try:
-            while question_num == 0:
-                a = input("email: ")
-                if a == '0':
-                    print('going back')
-                    return 1
-                if not a:
-                    raise FieldEmpty()
-                if "@" not in a or (".co" not in a and ".ac" not in a and ".org" not in a and ".gov" not in a):
-                    raise EmailInvalid(a)
-                self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (a,))
+        while True:
+            try:
+                while question_num == 0:
+                    a = input("email: ")
+                    if a == '0':
+                        print('going back')
+                        return 1
+                    if not a:
+                        raise FieldEmpty()
+                    if "@" not in a or (".co" not in a and ".ac" not in a and ".org" not in a and ".gov" not in a):
+                        raise EmailInvalid(a)
+                    self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (a,))
+                    items = self.c.fetchall()
+                    if len(items) != 0:
+                        raise EmailInUse(a)
+                    question_num = 1
+                while question_num == 1:
+                    pw = input("password: ")
+                    if pw == '0':
+                        print('going back')
+                        return 1
+                    if not pw:
+                        raise FieldEmpty()
+                    question_num = 2
+                while question_num == 2:
+                    b = input("first name: ")
+                    if b == '0':
+                        print('going back')
+                        return 1
+                    if not b:
+                        raise FieldEmpty()
+                    question_num = 3
+                while question_num == 3:
+                    c = input("last name: ")
+                    if c == '0':
+                        print('going back')
+                        return 1
+                    if not c:
+                        raise FieldEmpty()
+                    question_num = 4
+                while question_num == 4:
+                    dateOfBirth = (input("enter date of birth as dd/mm/yyyy: "))
+                    if dateOfBirth == '0':
+                        print('going back')
+                        return 1
+                    if not dateOfBirth:
+                        raise FieldEmpty()
+                    if len(dateOfBirth) != 10:
+                        correct_length = 10
+                        raise IncorrectInputLength(10)
+                    if dateOfBirth[2] != '/' or dateOfBirth[5] != '/':
+                        raise DateFormatError
+                    day = int(dateOfBirth[0:2])
+                    month = int(dateOfBirth[3:5])
+                    year = int(dateOfBirth[6:10])
+                    if month == 9 or month == 4 or month == 6 or month == 11:
+                        if day > 30:
+                            raise DateInvalidError
+                    elif month == 2:
+                        if year % 4 != 0:
+                            if day > 28:
+                                raise DateInvalidError
+                        elif year % 4 == 0:
+                            if day > 29:
+                                raise DateInvalidError
+                    else:
+                        if day > 31:
+                            raise DateInvalidError
+                    if month > 12:
+                        raise DateInvalidError
+                    
+                    # input_list = [int(i) for i in str(dateOfBirth)]
+                    date_entered = date(year,month,day)
+                    date_today = date.today()
+                    if date_entered > date_today:
+                        raise DateInFutureError
+                    dateOfBirth = uf.tounixtime(date_entered)
+                    print(dateOfBirth)
+                    question_num = 5
+                while question_num == 5:
+                    department = input("department: ")
+                    if department == '0':
+                        print('going back')
+                        return 1
+                    if not department:
+                        raise FieldEmpty()
+                    question_num = 6
+                while question_num == 6:
+                    teleNo = input("telephone number (no spaces, with country code. E.g. +4471234123123): ")
+                    if teleNo == '0':
+                        print('going back')
+                        return 1
+                    if not teleNo:
+                        raise FieldEmpty()
+                    if '+' not in teleNo or ' ' in teleNo:
+                        raise TeleNoFormatError()
+                    teleNo = teleNo.replace('+', '')
+                    input_list = [i for i in teleNo]
+                    if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
+                        correct_length = '12 to 18'
+                        raise IncorrectInputLength(correct_length)
+                    question_num = 7
+                while question_num == 7:
+                    gender = input("gender (enter male/female/non-binary/prefer not to say): ")
+                    gender = gender.lower()
+                    if gender == '0':
+                        print('going back')
+                        return 1
+                    if not gender:
+                        raise FieldEmpty()
+                    if gender != 'male' and gender != 'female' and gender != 'non-binary' and gender != 'prefer not to say':
+                        raise GenderError()
+                    active = "Y"
+                    question_num = 8
+                while question_num == 8:
+                    addressL1 = input("Address Line 1: ")
+                    if addressL1 == '0':
+                        print('going back')
+                        return 1
+                    if not addressL1:
+                        raise FieldEmpty()
+                    addressL2 = input("Address Line 2: ")
+                    if addressL2 == '0':
+                        print('going back')
+                        return 1
+                    if not addressL2:
+                        raise FieldEmpty()
+                    question_num = 9
+            except FieldEmpty:
+                error = FieldEmpty()
+                print(error)
+            except EmailInvalid:
+                error = EmailInvalid(a)
+                print(error)
+            except EmailInUse:
+                error = EmailInUse(a)
+                print(error)
+            except ValueError:
+                print("please provide a numerical input")
+            except TeleNoFormatError:
+                error = TeleNoFormatError()
+                print(error)
+            except IncorrectInputLength:
+                error = IncorrectInputLength(correct_length)
+                print(error)
+            except GenderError:
+                error = GenderError()
+                print(error)
+            except DateInvalidError:
+                error = DateInvalidError()
+                print(error)
+            except DateInFutureError:
+                error = DateInFutureError()
+                print(error)
+            except DateFormatError:
+                error = DateFormatError()
+                print(error)
+            else:
+                gp = [a, pw, b, c, gender, dateOfBirth, addressL1, addressL2, teleNo, department, active]
+                self.c.execute("""INSERT INTO GP VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", gp)
+                self.c.execute("SELECT * FROM GP")
                 items = self.c.fetchall()
-                if len(items) != 0:
-                    raise EmailInUse(a)
-                question_num = 1
-            while question_num == 1:
-                pw = input("password: ")
-                if pw == '0':
-                    print('going back')
-                    return 1
-                if not pw:
-                    raise FieldEmpty()
-                question_num = 2
-            while question_num == 2:
-                b = input("first name: ")
-                if b == '0':
-                    print('going back')
-                    return 1
-                if not b:
-                    raise FieldEmpty()
-                question_num = 3
-            while question_num == 3:
-                c = input("last name: ")
-                if c == '0':
-                    print('going back')
-                    return 1
-                if not c:
-                    raise FieldEmpty()
-                question_num = 4
-            while question_num == 4:
-                dateOfBirth = (input("enter date of birth as dd/mm/yyyy: "))
-                if dateOfBirth == '0':
-                    print('going back')
-                    return 1
-                if not dateOfBirth:
-                    raise FieldEmpty()
-                if len(dateOfBirth) != 10:
-                    correct_length = 10
-                    raise IncorrectInputLength(10)
-                if '/' not in dateOfBirth:
-                    raise DateInvalidError
-                day = int(dateOfBirth[0:2])
-                month = int(dateOfBirth[3:5])
-                year = int(dateOfBirth[6:10])
-                if day > 31:
-                    raise DateInvalidError
-                if month > 12:
-                    raise DateInvalidError
-                
-                # input_list = [int(i) for i in str(dateOfBirth)]
-                date_entered = date(year,month,day)
-                date_today = date.today()
-                if date_entered > date_today:
-                    raise DateInFutureError
-                question_num = 5
-            while question_num == 5:
-                department = input("department: ")
-                if department == '0':
-                    print('going back')
-                    return 1
-                if not department:
-                    raise FieldEmpty()
-                question_num = 6
-            while question_num == 6:
-                teleNo = input("telephone number (no spaces, with country code. E.g. +4471234123123): ")
-                if teleNo == '0':
-                    print('going back')
-                    return 1
-                if not teleNo:
-                    raise FieldEmpty()
-                if '+' not in teleNo or ' ' in teleNo:
-                    raise TeleNoFormatError()
-                teleNo = teleNo.replace('+', '')
-                input_list = [i for i in teleNo]
-                if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
-                    correct_length = '12 to 18'
-                    raise IncorrectInputLength(correct_length)
-                question_num = 7
-            while question_num == 7:
-                gender = input("gender (enter male/female/non-binary/prefer not to say): ")
-                gender = gender.lower()
-                if gender == '0':
-                    print('going back')
-                    return 1
-                if not gender:
-                    raise FieldEmpty()
-                if gender != 'male' and gender != 'female' and gender != 'non-binary' and gender != 'prefer not to say':
-                    raise GenderError()
-                active = "Y"
-                question_num = 8
-            while question_num == 8:
-                addressL1 = input("Address Line 1: ")
-                if addressL1 == '0':
-                    print('going back')
-                    return 1
-                if not addressL1:
-                    raise FieldEmpty()
-                addressL2 = input("Address Line 2: ")
-                if addressL2 == '0':
-                    print('going back')
-                    return 1
-                if not addressL2:
-                    raise FieldEmpty()
-                question_num = 9
-        except FieldEmpty:
-            error = FieldEmpty()
-            print(error)
-        except EmailInvalid:
-            error = EmailInvalid(a)
-            print(error)
-        except EmailInUse:
-            error = EmailInUse(a)
-            print(error)
-        except ValueError:
-            print("please provide a numerical input")
-        except TeleNoFormatError:
-            error = TeleNoFormatError()
-            print(error)
-        except IncorrectInputLength:
-            error = IncorrectInputLength(correct_length)
-            print(error)
-        except GenderError:
-            error = GenderError()
-            print(error)
-        else:
-            gp = [a, pw, b, c, gender, dateOfBirth, addressL1, addressL2, teleNo, department, active]
-            self.c.execute("""INSERT INTO GP VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", gp)
-            self.c.execute("SELECT * FROM GP")
-            items = self.c.fetchall()
-            for i in items:
-                print(i)
-            self.connection.commit()
-            return 1
-        
-        # else:
-        #     print("did not enter Y or N")
-        #     raise NameError
+                for i in items:
+                    print(i)
+                self.connection.commit()
+                return 1
 
     def check_registrations(self):
         self.c.execute("""SELECT COUNT(patientEmail) FROM PatientDetail WHERE registrationConfirm = 'N' """)
@@ -335,8 +354,7 @@ class adminFunctions():
             self.connection.commit()
 
     def deactivate_doctor(self):
-        providing_input = True
-        while providing_input == True:
+        while True:
             try:
                 email = input("Type in the practitioner's email (press 0 to go back): ")
                 if email == '0':
