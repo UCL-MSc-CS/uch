@@ -101,14 +101,13 @@ class Appointment:
               "\n[1] to select a time"
               "\n[2] to select another date"
               "\n[3] to exit to the main menu ")
-        options = input("**********"
-                        "\nPlease choose from the options above: ")
+        options = input("\nPlease choose from the options above: ")
         if options == '1':
             time = pf.chooseTime(date, times, gpDetails)
             start = pf.createStart(date, time)
             pf.InsertAppointment(start, gpDetails, patientEmail)
             print("You have requested to book an appointment on {} at {}, "
-                  "\nyou will receive confirmation of your appointment shortly!".format(date, time))
+                  "\nYou will receive confirmation of your appointment shortly!".format(date, time))
             pf.returnToMain()
         elif options == '2':
             self.chooseDate(patientEmail, gpDetails)

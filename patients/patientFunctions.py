@@ -84,7 +84,14 @@ def chooseDr(dr_names):
 
 
 def chooseMonth():
-    """ Checks month entered by user is between 1 to 12, prints calendar for the month chosen"""
+    """ Checks month entered by user is valid:
+        checks:
+        if month an int
+        if month between 1 to 12
+        returns:
+        prints calendar for the month chosen
+        month as string, padded with 0 if month a single number """
+    # check month not in past
     while True:
         try:
             mm = int(input("Please choose the month would you would like your appointment in 2021: "))
@@ -103,16 +110,29 @@ def chooseMonth():
 
 
 def chooseDate(month):
-    """ Checks date chosen by user is in a valid form"""
-    # days_31 = [1, 3, 5, 7, 8, 10, 12]
-    # days_30 = [4, 6, 9, 11]
-    # days_28 = [2]
-    # check by days in month!
+    """ Checks date chosen by user is in a valid form
+        Checks: if input is an int
+                if day entered is valid according to the month
+                if date chosen is in the past
+        returns: date string with days padded with 0 for single day number"""
+    days_31 = ['01', '03', '05', '07', '08', '10', '12']
+    days_30 = ['04', '06', '09', '11']
+    days_28 = ['02']
     while True:
         try:
             day = int(input("Please choose a date in your chosen month: "))
-            if not 1 <= day <= 31:
-                raise dayNotValid
+            for mm in days_31:
+                if mm == month:
+                    if not 1 <= day <= 31:
+                        raise dayNotValid
+            for mm in days_30:
+                if mm == month:
+                    if not 1 <= day <= 30:
+                        raise dayNotValid
+            for mm in days_28:
+                if mm == month:
+                    if not 1 <= day <= 28:
+                        raise dayNotValid
             else:
                 date = "2021-{}-{:02}".format(str(month), day)
                 date_obj = toDateObjApp00(date)
@@ -164,7 +184,7 @@ def displayAvailable(start, end, gpDetails):
 
 
 def chooseTime(date, times, gpDetails):
-    """ Checks time entered by user is valid and present in the list of appointment times
+    """ Checks time entered by user is in valid form and present in the list of appointment times
         Checks if time entered by user has already been booked
     """
     connection = sql.connect('patient.db')
@@ -255,8 +275,13 @@ def deleteAppointment(cancel):
 def appointmentSummary():
     pass
 
-
 def chooseFavDr():
+    pass
+
+def connection():
+    pass
+
+def todaysNotifications():
     pass
 
 # add pandas
