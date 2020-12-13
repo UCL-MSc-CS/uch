@@ -635,6 +635,8 @@ class adminFunctions():
                     except TeleNoFormatError:
                         error = TeleNoFormatError()
                         print(error)
+                    except ValueError:
+                        print("Enter correct data type")
                     else:
                         self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?,
                         age = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
@@ -643,6 +645,7 @@ class adminFunctions():
                         self.connection.commit()
                         print("succesfully updated entire patient record")
                         patback = 1
+                        masterback = 1
 
     def delpatdet(self):
         delback = 0
@@ -822,42 +825,46 @@ class adminFunctions():
                                 except IncorrectInputLength:
                                     error = IncorrectInputLength(correct_length)
                                     print(error)
+                                except ValueError:
+                                    print("date of birth must consist of only integers")
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (Cdb, nhsnum))
                                     self.connection.commit()
                                     print("successfully changed date of birth")
                                     back4 = 1
 
-                        elif indetinp == 5:
-                            back5 = 0
-                            while back5 == 0:
-                                try:
-                                    Cage = int(input("new age: "))
-                                    currdate = dt.now().year
-                                    self.c.execute("""SELECT dateOfBirth FROM PatientDetail WHERE nhsNumber = ?""", (nhsnum,))
-                                    Cdb = self.c.fetchone()
-                                    dobyear = Cdb % 10000
-                                    if Cage == 1:
-                                        Cagain = 1
-                                        break
-                                    elif Cage == 2:
-                                        back5 = 1
-                                        break
-                                    elif Cage != currdate - dobyear and Cage != currdate - dobyear - 1:
-                                        raise InvalidAgeRange
-                                    elif not Cage:
-                                        raise FieldEmpty()
-                                except FieldEmpty:
-                                    error = FieldEmpty()
-                                    print(error)
-                                except InvalidAgeRange:
-                                    error = InvalidAgeRange()
-                                    print(error)
-                                else:
-                                    self.c.execute("""UPDATE PatientDetail SET age = ? WHERE nhsNumber = ?""", (Cage, nhsnum))
-                                    self.connection.commit()
-                                    print("successfully changed age")
-                                    back5 = 1
+                        # elif indetinp == 5:
+                        #     back5 = 0
+                        #     while back5 == 0:
+                        #         try:
+                        #             Cage = int(input("new age: "))
+                        #             currdate = dt.now().year
+                        #             self.c.execute("""SELECT dateOfBirth FROM PatientDetail WHERE nhsNumber = ?""", (nhsnum,))
+                        #             Cdb = self.c.fetchone()
+                        #             dobyear = Cdb % 10000
+                        #             if Cage == 1:
+                        #                 Cagain = 1
+                        #                 break
+                        #             elif Cage == 2:
+                        #                 back5 = 1
+                        #                 break
+                        #             elif Cage != currdate - dobyear and Cage != currdate - dobyear - 1:
+                        #                 raise InvalidAgeRange
+                        #             elif not Cage:
+                        #                 raise FieldEmpty()
+                        #         except FieldEmpty:
+                        #             error = FieldEmpty()
+                        #             print(error)
+                        #         except InvalidAgeRange:
+                        #             error = InvalidAgeRange()
+                        #             print(error)
+                        #         except ValueError:
+                        #             print("age must be an integer")
+                        #         else:
+                        #             self.c.execute("""UPDATE PatientDetail SET age = ? WHERE nhsNumber = ?""", (Cage, nhsnum))
+                        #             self.connection.commit()
+                        #             print("successfully changed age")
+                        #             back5 = 1
 
                         elif indetinp == 6:
                             back6 = 0
