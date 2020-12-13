@@ -53,7 +53,7 @@ def options(patientEmail):
                 x.insert_to_table(patientEmail)
             elif qaction == 3:
                 x = PatientMedical()
-                x.medicalHistory(patientEmail)
+                x.vaccination(patientEmail)
                 x.cancer(patientEmail)
         elif action == 0:
             print("Thank you for using the UCH e-health system! Goodbye for now!")
