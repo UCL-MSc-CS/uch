@@ -192,7 +192,7 @@ class adminFunctions():
                 question_num = 4
             while question_num == 4:
                 dateOfBirth = (input("enter date of birth as dd/mm/yyyy: "))
-                if dateOfBirth == 0:
+                if dateOfBirth == '0':
                     print('going back')
                     return 1
                 if not dateOfBirth:
