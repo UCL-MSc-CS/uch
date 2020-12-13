@@ -5,6 +5,8 @@ import time
 import calendar
 import pandas as pd
 
+## add exceptions for when no appointment booked and no drs
+
 class Error(Exception):
     """Error exception class"""
     pass
@@ -117,8 +119,8 @@ def chooseMonth():
             mm = int(input("Please choose the month would you would like your appointment in 2021: "))
             if not 1 <= mm <= 12:
                 raise monthNotValid
-            if mm < currentMonth:
-                raise monthAfterCurrent
+            # if mm < currentMonth:
+            #     raise monthAfterCurrent
             else:
                 print("----------")
                 print(calendar.month(2021, mm))
@@ -127,8 +129,8 @@ def chooseMonth():
                 return month
         except monthNotValid:
             print("This is not a valid option, please try again")
-        except monthAfterCurrent:
-            print("This month has already passed, please try again")
+        # except monthAfterCurrent:
+        #     print("This month has already passed, please try again")
         except ValueError:
             print("This is not a valid option, please try again")
 
@@ -144,7 +146,7 @@ def chooseDate(month):
     days_28 = ['02']
     while True:
         try:
-            day = int(input("Please choose a date in your chosen month: "))
+            day = int(input("Please choose a date in your chosen month (as d/dd): "))
             for mm in days_31:
                 if mm == month:
                     if not 1 <= day <= 31:
@@ -183,7 +185,7 @@ def generateStartTime(date):
 def displayAvailable(start, end, gpDetails):
     """ Displays appointments from date and time chosen by user
     """
-    connection = sql.connect('patient.db')
+    connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute("SELECT start, appointmentStatus FROM Appointment WHERE start >=? and end <? and gpEmail =?",
               [start, end, gpDetails[0]])
@@ -206,7 +208,7 @@ def displayAvailable(start, end, gpDetails):
                 print(time + ' available')
     return times
 
-def timeMenu(date, times, gpDetails, patientEmail):
+def timeMenu(date, times, gpDetails, nhsNumber):
     """ Displays menu for user to select a time, reserves appointment as 'Pending' in the database,
     or allows user to exit to main menu
     """
@@ -217,7 +219,7 @@ def timeMenu(date, times, gpDetails, patientEmail):
     if options == '1':
         time = chooseTime(date, times, gpDetails)
         start = createStart(date, time)
-        insertAppointment(start, gpDetails, patientEmail)
+        insertAppointment(start, gpDetails, nhsNumber)
         print("You have requested to book an appointment on {} at {}, "
               "\nYou will receive confirmation of your appointment shortly!".format(date, time))
         returnToMain()
@@ -225,13 +227,13 @@ def timeMenu(date, times, gpDetails, patientEmail):
         returnToMain()
     else:
         print("This is not a valid option, please try again")
-        timeMenu(date, times, gpDetails, patientEmail)
+        timeMenu(date, times, gpDetails, nhsNumber)
 
 def chooseTime(date, times, gpDetails):
     """ Checks time entered by user is in valid form and present in the list of appointment times
         Checks if time entered by user has already been booked
     """
-    connection = sql.connect('patient.db')
+    connection = sql.connect('UCH.db')
     c = connection.cursor()
     while True:
         try:
@@ -263,11 +265,18 @@ def createStart(date, time):
     return start
 
 
-def insertAppointment(start, gpDetails, patientEmail):
+def insertAppointment(start, gpDetails, nhsNumber):
     """ Inserts the appointment details into the database
     """
-    connection = sql.connect('patient.db')
+    connection = sql.connect('UCH.db')
     c = connection.cursor()
+
+    #remove, switch to nhsNumber?
+    c.execute("SELECT patientEmail FROM patientDetails "
+              "WHERE nhsNumber =?",
+              [nhsNumber])
+    patientEmails = c.fetchall()
+    patientEmail = patientEmails[0]
 
     end = start + (30 * 60)
     gpLastName = gpDetails[1]

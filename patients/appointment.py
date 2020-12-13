@@ -3,19 +3,17 @@ import calendar
 import random
 from datetime import time as x, date as xyz, datetime, timedelta
 import time
-# import patients.patientFunctions as pf
-# import patients.viewCancelFunctions as vc
-import patientFunctions as pf
-import viewCancelFunctions as vc
+import patients.patientFunctions as pf
+import patients.viewCancelFunctions as vc
 
 
 class Appointment:
 
     def __init__(self):
-        self.connection = sql.connect('patient.db')
+        self.connection = sql.connect('UCH.db')
         self.c = self.connection.cursor()
 
-    def bookAppointment(self, patientEmail):
+    def bookAppointment(self, nhsNumber):
         print("**********"
               "\n[1] To book an appointment with a specific doctor"
               "\n[2] To book an appointment with any doctor"
@@ -24,21 +22,21 @@ class Appointment:
               "\n**********")
         dr_options = input("Please choose from the options above: ")
         if dr_options == '1':
-            y = self.chooseSpecificDr(patientEmail)
-            self.chooseAppointment(patientEmail, y)
+            y = self.chooseSpecificDr(nhsNumber)
+            self.chooseAppointment(nhsNumber, y)
         elif dr_options == '2':
-            y = self.chooseAnyDr(patientEmail)
-            self.chooseAppointment(patientEmail, y)
+            y = self.chooseAnyDr(nhsNumber)
+            self.chooseAppointment(nhsNumber, y)
         elif dr_options == '3':
-            y = self.chooseDrGender(patientEmail)
-            self.chooseAppointment(patientEmail, y)
+            y = self.chooseDrGender(nhsNumber)
+            self.chooseAppointment(nhsNumber, y)
         elif dr_options == '0':
             pf.returnToMain()
         else:
             print("This is not a valid option, please try again")
-            self.bookAppointment(patientEmail)
+            self.bookAppointment(nhsNumber)
 
-    def chooseSpecificDr(self, patientEmail):
+    def chooseSpecificDr(self, nhsNumber):
         print("**********"
               "\nThe doctors currently available at the practice are: ")
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
@@ -46,7 +44,7 @@ class Appointment:
         gpDetails = pf.chooseDr(dr_names)
         return gpDetails
 
-    def chooseAnyDr(self, patientEmail):
+    def chooseAnyDr(self, nhsNumber):
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
         dr_names = self.c.fetchall()
         gp_list = []
@@ -60,7 +58,7 @@ class Appointment:
         print("The doctor you have been assigned is Dr {}".format(gp_chosen_name))
         return gpDetails
 
-    def chooseDrGender(self, patientEmail):
+    def chooseDrGender(self, nhsNumber):
         print("**********"
               "\n[1] To book an appointment with a male doctor"
               "\n[2] to book an appointment with a female doctor"
@@ -83,9 +81,9 @@ class Appointment:
             return gpDetails
         else:
             print("This is not a valid option, please try again")
-            self.chooseDrGender(patientEmail)
+            self.chooseDrGender(nhsNumber)
 
-    def chooseAppointment(self, patientEmail, gpDetails):
+    def chooseAppointment(self, nhsNumber, gpDetails):
         print("**********"
               "\n [1] January     \t[2] February      \t[3] March"
               "\n [4] April     \t\t[5] May           \t[6] June"
@@ -98,12 +96,12 @@ class Appointment:
         start = pf.generateStartTime(date)
         end = pf.generateEndTime(date)
         times = pf.displayAvailable(start, end, gpDetails)
-        pf.timeMenu(date, times, gpDetails, patientEmail)
+        pf.timeMenu(date, times, gpDetails, nhsNumber)
 
-    def cancelAppointment(self, patientEmail):
+    def cancelAppointment(self, nhsNumber):
         print("**********"
               "\nThese are your confirmed booked appointments: ")
-        vc.viewAppointments(patientEmail)
+        vc.viewAppointments(nhsNumber)
         print("**********"
               "\n[1] To cancel an appointment"
               "\n[2] To exit to the main menu"
@@ -117,17 +115,17 @@ class Appointment:
             pf.returnToMain()
         else:
             print("This is not a valid option, please try again")
-            self.cancelAppointment(patientEmail)
+            self.cancelAppointment(nhsNumber)
 
-    def viewAppConfirmations(self, patientEmail):
+    def viewAppConfirmations(self, nhsNumber):
         print("**********"
               "\nThese are your confirmed booked appointments: ")
-        vc.viewAppointments(patientEmail)
+        vc.viewAppointments(nhsNumber)
         pf.returnToMain()
 
-
-Ari = Appointment()
-Ari.bookAppointment('ariannabourke@hotmail.com')
+#
+# Ari = Appointment()
+# Ari.bookAppointment('ariannabourke@hotmail.com')
 
 
 

@@ -3,12 +3,20 @@ from datetime import time as x, date as xyz, datetime, timedelta
 import time
 import pandas as pd
 
-def viewAppointments(patientEmail):
+def viewAppointments(nhsNumber):
     """ Displays all appointments for that user which are pending or confirmed
     Returns: pandas dataframe
     """
-    connection = sql.connect('patient.db')
+    connection = sql.connect('UCH.db')
     c = connection.cursor()
+
+    # remove, switch to nhsNumber?
+    c.execute("SELECT patientEmail FROM patientDetails "
+              "WHERE nhsNumber =?",
+              [nhsNumber])
+    patientEmails = c.fetchall()
+    patientEmail = patientEmails[0]
+
     c.execute("SELECT appointmentID, start, gpLastName, appointmentStatus FROM Appointment "
               "WHERE patientEmail =? ", [patientEmail])
     appointments = c.fetchall()
