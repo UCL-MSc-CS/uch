@@ -3,6 +3,7 @@ import random
 from datetime import time as x, date as xyz, datetime, timedelta
 import time
 import calendar
+import pandas as pd
 
 class Error(Exception):
     """Error exception class"""
@@ -27,6 +28,15 @@ class timeBooked(Error):
 class dateAfterCurrent(Error):
     """Raised when date chosen is in the past"""
     pass
+
+class monthAfterCurrent(Error):
+    """Raised when month chosen is in the past"""
+    pass
+
+class drChoiceNotValid(Error):
+    """Raised when choice of dr not valid"""
+    pass
+
 
 def toregulartime(unixtimestamp):
     """ Converts unix timestamp to datetime object"""
@@ -66,21 +76,30 @@ def chooseDr(dr_names):
     """ Allows user to select a gp from list obtained from database
         returns chosen dr email and last name in a list"""
     gp_list = []
+    counts = []
     count = 1
     for dr in dr_names:
         print("[" + str(count) + "] Dr", dr[0] + ' ' + dr[1])
         count += 1
         gp_list.append(dr)
-
-    dr_options = int(input("**********"
-                           "\nPlease choose the doctor you would "
-                           "like to book an appointment with: "))
-
-    # add exception
-    gp_chosen_email = gp_list[dr_options - 1][2]
-    gp_chosen_name = gp_list[dr_options - 1][1]
-    gpDetails = [gp_chosen_email, gp_chosen_name]
-    return gpDetails
+        counts.append(count - 1)
+    while True:
+        try:
+            dr_options = int(input("**********"
+                                   "\nPlease choose the doctor you would "
+                                   "like to book an appointment with: "))
+            if dr_options not in counts:
+                raise drChoiceNotValid
+            else:
+                gp_chosen_email = gp_list[dr_options - 1][2]
+                gp_chosen_name = gp_list[dr_options - 1][1]
+                gpDetails = [gp_chosen_email, gp_chosen_name]
+                print("You have chosen Dr {}".format(gp_chosen_name))
+                return gpDetails
+        except drChoiceNotValid:
+            print("This is not a valid choice, please try again")
+        except ValueError:
+            print("This is not a valid choice, please try again")
 
 
 def chooseMonth():
@@ -88,15 +107,18 @@ def chooseMonth():
         checks:
         if month an int
         if month between 1 to 12
+        if month chosen is in the past
         returns:
         prints calendar for the month chosen
         month as string, padded with 0 if month a single number """
-    # check month not in past
+    currentMonth = datetime.now().month
     while True:
         try:
             mm = int(input("Please choose the month would you would like your appointment in 2021: "))
             if not 1 <= mm <= 12:
                 raise monthNotValid
+            if mm < currentMonth:
+                raise monthAfterCurrent
             else:
                 print("----------")
                 print(calendar.month(2021, mm))
@@ -105,6 +127,8 @@ def chooseMonth():
                 return month
         except monthNotValid:
             print("This is not a valid option, please try again")
+        except monthAfterCurrent:
+            print("This month has already passed, please try again")
         except ValueError:
             print("This is not a valid option, please try again")
 
@@ -182,6 +206,26 @@ def displayAvailable(start, end, gpDetails):
                 print(time + ' available')
     return times
 
+def timeMenu(date, times, gpDetails, patientEmail):
+    """ Displays menu for user to select a time, reserves appointment as 'Pending' in the database,
+    or allows user to exit to main menu
+    """
+    print("**********"
+          "\n[1] to select a time"
+          "\n[2] to exit to the main menu ")
+    options = input("\nPlease choose from the options above: ")
+    if options == '1':
+        time = chooseTime(date, times, gpDetails)
+        start = createStart(date, time)
+        insertAppointment(start, gpDetails, patientEmail)
+        print("You have requested to book an appointment on {} at {}, "
+              "\nYou will receive confirmation of your appointment shortly!".format(date, time))
+        returnToMain()
+    elif options == '2':
+        returnToMain()
+    else:
+        print("This is not a valid option, please try again")
+        timeMenu(date, times, gpDetails, patientEmail)
 
 def chooseTime(date, times, gpDetails):
     """ Checks time entered by user is in valid form and present in the list of appointment times
@@ -193,8 +237,8 @@ def chooseTime(date, times, gpDetails):
         try:
             time = input("Please choose a time from the available appointments (as HH:MM): ")
             start = createStart(date, time)
-            c.execute("SELECT start FROM Appointment WHERE appointmentStatus = 'Pending' "
-                      "or appointmentStatus = 'Unavailable' and gpEmail =?",
+            c.execute("SELECT start FROM Appointment "
+                      "WHERE gpEmail =? AND appointmentStatus IN ('Pending', 'Unavailable')",
                            [gpDetails[0]])
             booked_times = c.fetchall()
             for item in booked_times:
@@ -219,7 +263,7 @@ def createStart(date, time):
     return start
 
 
-def InsertAppointment(start, gpDetails, patientEmail):
+def insertAppointment(start, gpDetails, patientEmail):
     """ Inserts the appointment details into the database
     """
     connection = sql.connect('patient.db')
@@ -238,21 +282,6 @@ def InsertAppointment(start, gpDetails, patientEmail):
     connection.commit()
 
 
-def viewAppointments(patientEmail):
-    """ Displays all appointments for that user which are confirmed
-    """
-    connection = sql.connect('patient.db')
-    c = connection.cursor()
-    c.execute("SELECT appointmentID, start, gpLastName FROM Appointment "
-              "WHERE patientEmail =? and appointmentStatus = 'Unavailable' ", [patientEmail])
-    appointments = c.fetchall()
-
-    for app in appointments:
-        dt = app[1]
-        dt = datetime.utcfromtimestamp(dt).strftime('%Y-%m-%d %H:%M')
-        print("Appointment ID: " + str(app[0]) + "\t" + "date and time: " + dt + "\t\t" + "with: Dr " + app[2])
-
-
 def returnToMain():
     """Returns user to main patient menu when typing 'yes'
     If user types anything else, will exit the program with a goodbye message"""
@@ -263,25 +292,3 @@ def returnToMain():
         exit()
 
 
-def deleteAppointment(cancel):
-    """ Deletes a chosen appointment from the database"""
-    connection = sql.connect('UCH.db')
-    c = connection.cursor()
-    c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
-    connection.commit()
-    print("You have cancelled your appointment")
-
-
-def appointmentSummary():
-    pass
-
-def chooseFavDr():
-    pass
-
-def connection():
-    pass
-
-def todaysNotifications():
-    pass
-
-# add pandas

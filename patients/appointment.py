@@ -4,7 +4,9 @@ import random
 from datetime import time as x, date as xyz, datetime, timedelta
 import time
 # import patients.patientFunctions as pf
+# import patients.viewCancelFunctions as vc
 import patientFunctions as pf
+import viewCancelFunctions as vc
 
 
 class Appointment:
@@ -96,32 +98,12 @@ class Appointment:
         start = pf.generateStartTime(date)
         end = pf.generateEndTime(date)
         times = pf.displayAvailable(start, end, gpDetails)
-
-        print("**********"
-              "\n[1] to select a time"
-              "\n[2] to select another date"
-              "\n[3] to exit to the main menu ")
-        options = input("\nPlease choose from the options above: ")
-        if options == '1':
-            time = pf.chooseTime(date, times, gpDetails)
-            start = pf.createStart(date, time)
-            pf.InsertAppointment(start, gpDetails, patientEmail)
-            print("You have requested to book an appointment on {} at {}, "
-                  "\nYou will receive confirmation of your appointment shortly!".format(date, time))
-            pf.returnToMain()
-        elif options == '2':
-            self.chooseDate(patientEmail, gpDetails)
-        elif options == '3':
-            pf.returnToMain()
-        else:
-            print("This is not a valid option, please try again")
-            self.chooseAppointment(patientEmail, gpDetails)
-            ## change this
+        pf.timeMenu(date, times, gpDetails, patientEmail)
 
     def cancelAppointment(self, patientEmail):
         print("**********"
               "\nThese are your confirmed booked appointments: ")
-        pf.viewAppointments(patientEmail)
+        vc.viewAppointments(patientEmail)
         print("**********"
               "\n[1] To cancel an appointment"
               "\n[2] To exit to the main menu"
@@ -129,7 +111,7 @@ class Appointment:
         options = input("Please choose from the options above: ")
         if options == '1':
             cancel = input("\nPlease enter the appointment ID you would like to cancel: ")
-            pf.deleteAppointment(cancel)
+            vc.deleteAppointment(cancel)
             pf.returnToMain()
         elif options == '2':
             pf.returnToMain()
@@ -140,7 +122,7 @@ class Appointment:
     def viewAppConfirmations(self, patientEmail):
         print("**********"
               "\nThese are your confirmed booked appointments: ")
-        pf.viewAppointments(patientEmail)
+        vc.viewAppointments(patientEmail)
         pf.returnToMain()
 
 
