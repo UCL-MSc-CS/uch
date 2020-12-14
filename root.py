@@ -20,9 +20,8 @@ class Menus():
         print("Choose [1] to add a new doctor")
         print("Choose [2] to deactivate or delete a profile")
         print("Choose [3] to confirm patient registration")
-        print("Choose [4] to check patient details")
-        print("Choose [5] to check in/out a patient")
-        print("Choose [6] to change patient details")
+        print("Choose [4] to check in/out a patient")
+        print("Choose [5] to change patient details")
         print("Choose [0] when finished navigating menu")
 
     def admin_submenu2(self):
@@ -131,7 +130,7 @@ while True:
                                 selection = 0
                             #checking patient in or out
 
-                            elif selection == 5:
+                            elif selection == 4:
                                 AdminM.admin_submenuCheckIO()
                                 CheckOpt = int(input("choice: "))
                                 if CheckOpt == 1:
@@ -145,7 +144,7 @@ while True:
                                     print("not a valid option")
 
                             #updating/deleting patient details
-                            elif selection == 6:
+                            elif selection == 5:
                                 AdminM.managedetails()
                                 detchoice = int(input("choice: "))
 
