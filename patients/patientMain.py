@@ -70,6 +70,12 @@ class nhsDoesNotExist(Error):
         self.message = message
         super().__init__(self.message)
 
+
+class invalidTelephone(Error):
+    def __init__(self, message="I'm sorry, that is not a valid telephone, please try again"):
+        self.message = message
+        super().__init__(self.message)
+
 # Patient Functions
 
 
@@ -286,13 +292,19 @@ def firstNameQ(newPatient):
     try:
         firstName = input("Please enter your first name (press 0 to exit registration): ")
         firstName = string.capwords(firstName.strip())
-        if firstName == '0':
+        if firstName == '':
+            raise emptyAnswer()
+        elif firstName == '0':
             task()
         elif firstName == "1":
             raise invalidAnswer()
         else:
             newPatient["firstName"] = firstName
             lastNameQ(newPatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        firstNameQ(newPatient)
     except invalidAnswer:
         error = invalidAnswer()
         print(error)
@@ -302,7 +314,9 @@ def lastNameQ(newPatient):
     try:
         lastName = input("Please enter your last name (press 0 to exit registration, press 1 to go back): ")
         lastName = string.capwords(lastName.strip())
-        if lastName == '0':
+        if lastName == '':
+            raise emptyAnswer()
+        elif lastName == '0':
             task()
         elif lastName == '1':
             firstNameQ(newPatient)
@@ -311,6 +325,10 @@ def lastNameQ(newPatient):
         else:
             newPatient["lastName"] = lastName
             dateOfBirthQ(newPatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        lastNameQ(newPatient)
     except invalidAnswer:
         error = invalidAnswer()
         print(error)
@@ -319,7 +337,9 @@ def lastNameQ(newPatient):
 def dateOfBirthQ(newPatient):
     try:
         dateOfBirth = input('Please enter your birthday in YYYY-MM-DD format (press 0 to exit registration, press 1 to go back): ')
-        if dateOfBirth == '0':
+        if dateOfBirth == '':
+            raise emptyAnswer()
+        elif dateOfBirth == '0':
             task()
         elif dateOfBirth == '1':
             lastNameQ(newPatient)
@@ -330,6 +350,10 @@ def dateOfBirthQ(newPatient):
             dateOfBirth = str(datetime.date(year, month, day))
             newPatient["dateOfBirth"] = dateOfBirth
             genderQ(newPatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        dateOfBirthQ(newPatient)
     except invalidAnswer:
         error = invalidAnswer()
         print(error)
@@ -350,29 +374,202 @@ def genderQ(newPatient):
         elif choice == '1':
             gender = "Female"
             newPatient["gender"] = gender
-            print(newPatient)
+            addressLine1Q(newPatient)
         elif choice == "2":
             gender = "Male"
             newPatient["gender"] = gender
-            print(newPatient)
+            addressLine1Q(newPatient)
         elif choice == "3":
             gender = "Non-Binary"
             newPatient["gender"] = gender
-            print(newPatient)
+            addressLine1Q(newPatient)
         elif choice == "4":
             task()
         elif choice == "5":
             dateOfBirthQ(newPatient)
         else:
             raise invalidAnswer()
-    except invalidAnswer:
-        error = invalidAnswer()
+    except emptyAnswer:
+        error = emptyAnswer()
         print(error)
         genderQ(newPatient)
     except emptyAnswer:
         error = emptyAnswer()
         print(error)
         genderQ(newPatient)
+
+def addressLine1Q(newPatient):
+    try:
+        addressLine1 = input("Address Line 1 (press 0 to exit registration, press 1 to go back): ")
+        addressLine1 = string.capwords(addressLine1.strip())
+        if addressLine1 == '':
+            raise emptyAnswer()
+        elif addressLine1 == '0':
+            task()
+        elif addressLine1 == "1":
+            genderQ(newPatient)
+        elif addressLine1 == '2':
+            raise invalidAnswer()
+        else:
+            newPatient["addressLine1"] = addressLine1
+            addressLine2Q(newPatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        addressLine1Q(newPatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        addressLine1Q(newPatient)
+
+def addressLine2Q(newPatient):
+    try:
+        addressLine2 = input("Address Line 2 (press 0 to exit registration, press 1 to go back): ")
+        addressLine2 = string.capwords(addressLine2.strip())
+        if addressLine2 == '0':
+            task()
+        elif addressLine2 == "1":
+            addressLine1Q(newPatient)
+        elif addressLine2 == '2':
+            raise invalidAnswer()
+        else:
+            newPatient["addressLine2"] = addressLine2
+            cityQ(newPatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        addressLine2Q(newPatient)
+
+def cityQ(newPatient):
+    try:
+        city = input("City (press 0 to exit registration, press 1 to go back): ")
+        city = string.capwords(city.strip())
+        if city == '':
+            raise emptyAnswer()
+        elif city == '0':
+            task()
+        elif city == "1":
+            addressLine2Q(newPatient)
+        elif city == '2':
+            raise invalidAnswer()
+        else:
+            addressLine2 = (newPatient["addressLine2"] + " " + city).strip()
+            newPatient["addressLine2"] = addressLine2
+            postcodeQ(newPatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        cityQ(newPatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        cityQ(newPatient)
+
+def postcodeQ(newPatient):
+    try:
+        postcode = input("Postcode (press 0 to exit registration, press 1 to go back): ")
+        postcode = postcode.strip().upper()
+        if postcode == '':
+            raise emptyAnswer()
+        elif postcode == '0':
+            task()
+        elif postcode == "1":
+            cityQ(newPatient)
+        elif postcode == '2':
+            raise invalidAnswer()
+        else:
+            newPatient["postcode"] = postcode
+            telephoneNumberQ(newPatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        postcodeQ(newPatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        postcodeQ(newPatient)
+
+def telephoneNumberQ(newPatient):
+    try:
+        telephoneNumber = input("Telephone number, including country code (i.e. +447123456789)(press 0 to exit registration, press 1 to go back): ")
+        if telephoneNumber == '':
+            raise emptyAnswer()
+        elif telephoneNumber == '0':
+            task()
+        elif telephoneNumber == "1":
+            postcodeQ(newPatient)
+        telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
+        if len(telephoneNumber) > 12 or len(telephoneNumber) < 11:
+            raise invalidTelephone()
+        else:
+            telephoneNumber = int(telephoneNumber)
+            newPatient["telephoneNumber"] = telephoneNumber
+            patientEmailQ(newPatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        telephoneNumberQ(newPatient)
+    except invalidTelephone:
+        error = invalidTelephone()
+        print(error)
+        telephoneNumberQ(newPatient)
+
+def patientEmailQ(newPatient):
+    try:
+        patientEmail = input("Email (press 0 to exit registration, press 1 to go back): ")
+        if patientEmail == '':
+            raise emptyAnswer()
+        elif patientEmail == '0':
+            task()
+        elif patientEmail == "1":
+            telephoneNumberQ(newPatient)
+        elif re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
+            patientEmailQCheck(newPatient, patientEmail)
+        else:
+            raise invalidEmail()
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        patientEmailQ(newPatient)
+    except invalidEmail:
+        error = invalidEmail()
+        print(error)
+        patientEmailQ(newPatient)
+
+def patientEmailQCheck(newPatient, patientEmail):
+    try:
+        c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?",
+              [patientEmail])
+        patientEmails = c.fetchall()
+        if patientEmails != []:
+            raise emailAlreadyExists()
+        else:
+            newPatient["patientEmail"] = patientEmail
+            passwordQ(newPatient)
+    except emailAlreadyExists:
+        error = emailAlreadyExists()
+        print(error)
+        patientEmailQ(newPatient)
+
+def passwordQ(newPatient):
+    try:
+        password = input("Password (press 0 to exit registration, press 1 to go back): ")
+        if password == '':
+            raise emptyAnswer()
+        elif password == '0':
+            task()
+        elif password == "1":
+            patientEmailQ(newPatient)
+        else:
+            newPatient["password"] = password
+            x = Patient(newPatient["patientEmail"], newPatient["firstName"], newPatient["lastName"], newPatient["dateOfBirth"], newPatient["gender"], newPatient["addressLine1"], newPatient["addressLine2"], newPatient["postcode"], newPatient["telephoneNumber"], newPatient["password"])
+            x.register()
+            ps.summary(x.nhsNumber)
+            options(x.nhsNumber)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        passwordQ(newPatient)
 
 def register():
     newPatient = {"firstName": "",
