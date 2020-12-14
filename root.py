@@ -147,18 +147,20 @@ while True:
                             elif selection == 5:
                                 AdminM.managedetails()
                                 detchoice = int(input("choice: "))
-
+                                backvar = 0
                                 if detchoice == 1:
-                                    AdminM.managedetails2()
-                                    detchoice2 = int(input("choice: "))
-                                    if detchoice2 == 1:
-                                        ad.managedet()
-                                    elif detchoice2 == 2:
-                                        ad.manIndDet()
-                                    elif detchoice2 == 0:
-                                        selection = 6
-                                    elif detchoice2 != 1 and detchoice2 != 2 and detchoice2 != 0:
-                                        print("Not a valid choice")
+                                    while backvar == 0:
+                                        AdminM.managedetails2()
+                                        detchoice2 = int(input("choice: "))
+                                        if detchoice2 == 1:
+                                            ad.managedet()
+                                        elif detchoice2 == 2:
+                                            ad.manIndDet()
+                                        elif detchoice2 == 0:
+                                            backvar == 1
+                                            break
+                                        elif detchoice2 != 1 and detchoice2 != 2 and detchoice2 != 0:
+                                            print("Not a valid choice")
                                 elif detchoice == 2:
                                     ad.delpatdet()
                                 elif detchoice == 0:
@@ -174,6 +176,7 @@ while True:
                                 AdminM.adminmenu()
                                 ad.check_registrations()
                                 selection = int(input("please select an option: "))
+
 
                             # print("exiting menu")
                         if selection == 0:
