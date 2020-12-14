@@ -58,10 +58,12 @@ class emailAlreadyExists(Error):
         self.message = message
         super().__init__(self.message)
 
+
 class passwordIncorrect(Error):
     def __init__(self, message="I'm sorry, that password is not correct, please try again"):
         self.message = message
         super().__init__(self.message)
+
 
 class nhsDoesNotExist(Error):
     def __init__(self, message="I'm sorry, that NHS number is not in our system, please try again"):
@@ -181,7 +183,7 @@ def options(nhsNumber):
 def emailPasswordCheck(patientEmail):
     try:
         c.execute(
-                "SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
+            "SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
         patientEmails = c.fetchall()
         password = input("Password: ")
         if password != patientEmails[0][10]:
@@ -222,10 +224,11 @@ def emailLogin():
         print(error)
         emailLogin()
 
+
 def nhsPasswordCheck(nhsNumber):
     try:
         c.execute(
-                "SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
+            "SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
         nhsNumbers = c.fetchall()
         password = input("Password: ")
         if password != nhsNumbers[0][10]:
@@ -236,6 +239,7 @@ def nhsPasswordCheck(nhsNumber):
         error = passwordIncorrect()
         print(error)
         nhsPasswordCheck(nhsNumber)
+
 
 def nhsLogin():
     try:
@@ -278,102 +282,110 @@ def login():
         print(error)
         login()
 
+def firstNameQ(newPatient):
+    try:
+        firstName = input("Please enter your first name (press 0 to exit registration): ")
+        firstName = string.capwords(firstName.strip())
+        if firstName == '0':
+            task()
+        elif firstName == "1":
+            raise invalidAnswer()
+        else:
+            newPatient["firstName"] = firstName
+            lastNameQ(newPatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        firstNameQ(newPatient)
 
-def register():
-    # First Name
-    firstName = input("Please enter your first name: ")
-    firstName = string.capwords(firstName.strip())
-    # print(firstName)
-    # Last Name
-    lastName = input("Please enter your last name: ")
-    lastName = string.capwords(lastName.strip())
-    # print(lastName)
-    # Date of Birth
-    dateOfBirth = input('Please enter your birthday in YYYY-MM-DD format: ')
-    year, month, day = map(int, dateOfBirth.split('-'))
-    dateOfBirth = datetime.date(year, month, day)
-    # print(dateOfBirth)
-    # Gender
-    print("********************************************")
-    print("Choose [1] for female")
-    print("Choose [2] for male")
-    print("Choose [3] for non-binary")
-    print("********************************************")
-    gender = input("Please select an option: ")
-    while gender != '1' and gender != '2' and gender != '3':
-        print("I'm sorry, '" + gender + "' is an invalid option")
+def lastNameQ(newPatient):
+    try:
+        lastName = input("Please enter your last name (press 0 to exit registration, press 1 to go back): ")
+        lastName = string.capwords(lastName.strip())
+        if lastName == '0':
+            task()
+        elif lastName == '1':
+            firstNameQ(newPatient)
+        elif lastName == "2":
+            raise invalidAnswer()
+        else:
+            newPatient["lastName"] = lastName
+            dateOfBirthQ(newPatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        lastNameQ(newPatient)
+    
+def dateOfBirthQ(newPatient):
+    try:
+        dateOfBirth = input('Please enter your birthday in YYYY-MM-DD format (press 0 to exit registration, press 1 to go back): ')
+        if dateOfBirth == '0':
+            task()
+        elif dateOfBirth == '1':
+            lastNameQ(newPatient)
+        elif dateOfBirth == "2":
+            raise invalidAnswer()
+        else:
+            year, month, day = map(int, dateOfBirth.split('-'))
+            dateOfBirth = str(datetime.date(year, month, day))
+            newPatient["dateOfBirth"] = dateOfBirth
+            genderQ(newPatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        dateOfBirthQ(newPatient)
+
+def genderQ(newPatient):
+    try:
         print("********************************************")
         print("Choose [1] for female")
         print("Choose [2] for male")
         print("Choose [3] for non-binary")
+        print("Choose [4] to exit registration")
+        print("Choose [5] to go back")
         print("********************************************")
-        gender = input("Please select an option: ")
-    if gender == '1':
-        gender = "Female"
-    elif gender == '2':
-        gender = "Male"
-    elif gender == '3':
-        gender = "Non-Binary"
-    # print(gender)
-    # Address Line 1
-    addressLine1 = input("Address Line 1: ")
-    addressLine1 = string.capwords(addressLine1.strip())
-    # print(addressLine1)
-    # Address Line 2
-    addressLine2 = input("Address Line 2: ")
-    addressLine2 = string.capwords(addressLine2.strip())
-    # print(addressLine2)
-    # City
-    city = input("City: ")
-    city = string.capwords(city.strip())
-    addressLine2 = (addressLine2 + " " + city).strip()
-    # print(addressLine2)
-    # Postcode
-    postcode = input("Postcode: ")
-    postcode = postcode.strip().upper()
-    # print(postcode)
-    # Telephone Number
-    telephoneNumber = input(
-        "Telephone number, including country code (i.e. +447123456789): ")
-    telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
-    while len(telephoneNumber) > 12 or len(telephoneNumber) < 11:
-        print("I'm sorry, that is not a valid telephone")
-        telephoneNumber = input(
-            "Telephone number, including country code (i.e. +447123456789): ")
-        telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
-    telephoneNumber = int(telephoneNumber)
-    # print(telephoneNumber)
-    # Email
-    patientEmail = input("Email: ")
-    goodEmail = True
-    if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
-        goodEmail = True
-    else:
-        goodEmail = False
-    while goodEmail == False:
-        print("I'm sorry, that is not a valid email")
-        patientEmail = input("Email: ")
-        if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
-            goodEmail = True
+        choice = input("Please select an option: ")
+        if choice == '':
+            raise emptyAnswer()
+        elif choice == '1':
+            gender = "Female"
+            newPatient["gender"] = gender
+            print(newPatient)
+        elif choice == "2":
+            gender = "Male"
+            newPatient["gender"] = gender
+            print(newPatient)
+        elif choice == "3":
+            gender = "Non-Binary"
+            newPatient["gender"] = gender
+            print(newPatient)
+        elif choice == "4":
+            task()
+        elif choice == "5":
+            dateOfBirthQ(newPatient)
         else:
-            goodEmail = False
-    c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?",
-              [patientEmail])
-    patientEmails = c.fetchall()
-    if patientEmails != []:
-        while patientEmails != []:
-            print("I'm sorry, that email is already in use")
-            patientEmail = input("Email: ")
-            c.execute(
-                "SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
-            patientEmails = c.fetchall()
-    # Password
-    password = input("Password: ")
-    x = Patient(patientEmail, firstName, lastName, dateOfBirth, gender,
-                addressLine1, addressLine2, postcode, telephoneNumber, password)
-    x.register()
-    ps.summary(x.nhsNumber)
-    options(x.nhsNumber)
+            raise invalidAnswer()
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        genderQ(newPatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        genderQ(newPatient)
+
+def register():
+    newPatient = {"firstName": "",
+                  "lastName": "",
+                  "dateOfBirth": "",
+                  "gender": "",
+                  "addressLine1": "",
+                  "addressLine2": "",
+                  "postcode": "",
+                  "telephoneNumber": 0,
+                  "patientEmail": "",
+                  "password": ""}
+    firstNameQ(newPatient)
 
 
 # Main Patient Function
