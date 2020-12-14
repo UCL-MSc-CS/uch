@@ -15,18 +15,25 @@ import usefulfunctions as uf
 connection = sql.connect('UCH.db')
 c = connection.cursor()
 
-# class notRegistered(Exception):
-#     def __init__(self, message = "A GP needs to confirm your registration before you can access our services. Please try logging in tomorrow."):
-#         self.message = message
-#         super().__init__(self.message)
+class Error(Exception):
+    """Base class for exceptions in this module"""
+    pass
+
+class notRegistered(Error):
+    def __init__(self, message = "A GP needs to confirm your registration before you can access our services - please try logging in tomorrow"):
+        self.message = message
+        super().__init__(self.message)
 
 def options(nhsNumber):
-    c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
-    results = c.fetchall()
-    uf.banner('Patient')
-    if results[0][11] == 0:
-        # raise notRegistered()
-        print("A GP needs to confirm your registration before you can access our services - please try logging in tomorrow")
+    try:
+        c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
+        results = c.fetchall()
+        uf.banner('Patient')
+        if results[0][11] == 0:
+            raise notRegistered()
+    except notRegistered:
+        error = notRegistered()
+        print(error)
         exit()
     else:
         print("********************************************")
