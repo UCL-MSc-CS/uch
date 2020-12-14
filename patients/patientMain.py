@@ -67,7 +67,7 @@ def options(nhsNumber):
         print("Choose [4] to see your medical profile")
         print("Choose [5] to see your contact details")
         print("Choose [6] to update your contact details")
-        print("Choose [0] to exit")
+        print("Choose [0] to log out")
         print("********************************************")
         action = input("Please select an option: ")
         if action == '':
@@ -118,7 +118,7 @@ def options(nhsNumber):
             options(nhsNumber)
         elif action == '0':
             print("Thank you for using the UCH e-health system! Goodbye for now!")
-            exit()
+            return 0
         else:
             raise invalidAnswer()
     except invalidAnswer:
