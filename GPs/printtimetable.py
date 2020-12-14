@@ -21,7 +21,7 @@ def printtimetable(doctoremail):
         print("Choose [1] to view this week")
         print("Choose [2] to view next week")
         print("Choose [3] to view any other week.")
-        print("Choose [4] to return to the main menu.")
+        print("Choose [0] to return to the main menu.")
         option = input(":")
         try:
             if int(option) == 1:
@@ -37,7 +37,7 @@ def printtimetable(doctoremail):
                 printdays(selected_date, doctoremail)
                 input("\nPress any button to continue....")
                 break
-            elif int(option) == 4:
+            elif int(option) == 0:
                 break
             else:
                 print("\t<Invalid option choice, please try again>")
