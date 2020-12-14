@@ -40,7 +40,37 @@ class invalidAnswer(Error):
         self.message = message
         super().__init__(self.message)
 
+
+class invalidEmail(Error):
+    def __init__(self, message="I'm sorry, that is not a valid email, please try again"):
+        self.message = message
+        super().__init__(self.message)
+
+
+class emailDoesNotExist(Error):
+    def __init__(self, message="I'm sorry, that email is not in our system, please try again"):
+        self.message = message
+        super().__init__(self.message)
+
+
+class emailAlreadyExists(Error):
+    def __init__(self, message="I'm sorry, that email is already in use, please try again"):
+        self.message = message
+        super().__init__(self.message)
+
+class passwordIncorrect(Error):
+    def __init__(self, message="I'm sorry, that password is not correct, please try again"):
+        self.message = message
+        super().__init__(self.message)
+
+class nhsDoesNotExist(Error):
+    def __init__(self, message="I'm sorry, that NHS number is not in our system, please try again"):
+        self.message = message
+        super().__init__(self.message)
+
 # Patient Functions
+
+
 def checkNHS(nhsNumber):
     try:
         c.execute(
@@ -55,6 +85,48 @@ def checkNHS(nhsNumber):
         exit()
     else:
         options(nhsNumber)
+
+
+def questOptions(nhsNumber):
+    try:
+        print("********************************************")
+        print("Choose [1] to see your medical profile")
+        print("Choose [2] to take the lifestyle risk questionnaire")
+        print("Choose [3] to update your medical history")
+        print("********************************************")
+        action = input("Please select an option: ")
+        if action == '':
+            raise emptyAnswer()
+        elif action == '1':
+            name = PatientMedical(nhsNumber)
+            name.show_profile(nhsNumber)
+            options(nhsNumber)
+        elif action == '2':
+            print("Please fill out the following risk profile")
+            x = RiskProfile(nhsNumber)
+            x.questions(nhsNumber)
+            x.BMI_calculator(nhsNumber)
+            x.diet(nhsNumber)
+            x.smoking(nhsNumber)
+            x.drugs(nhsNumber)
+            x.alcohol(nhsNumber)
+            x.insert_to_table(nhsNumber)
+            options(nhsNumber)
+        elif action == '3':
+            x = PatientMedical(nhsNumber)
+            x.vaccination(nhsNumber)
+            x.cancer(nhsNumber)
+            options(nhsNumber)
+        else:
+            raise invalidAnswer()
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        questOptions(nhsNumber)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        questOptions(nhsNumber)
 
 
 def options(nhsNumber):
@@ -85,32 +157,7 @@ def options(nhsNumber):
             x.cancelAppointment(nhsNumber)
             options(nhsNumber)
         elif action == '4':
-            print("********************************************")
-            print("Choose [1] to see your medical profile")
-            print("Choose [2] to take the lifestyle risk questionnaire")
-            print("Choose [3] to update your medical history")
-            print("********************************************")
-            qchoice = input("Please select an option: ")
-            if qaction == '1':
-                name = PatientMedical(nhsNumber)
-                name.show_profile(nhsNumber)
-                options(nhsNumber)
-            elif qaction == '2':
-                print("Please fill out the following risk profile")
-                x = RiskProfile(nhsNumber)  
-                x.questions(nhsNumber)
-                x.BMI_calculator(nhsNumber)
-                x.diet(nhsNumber)
-                x.smoking(nhsNumber)
-                x.drugs(nhsNumber)
-                x.alcohol(nhsNumber)
-                x.insert_to_table(nhsNumber)
-                options(nhsNumber)
-            elif qaction == '3':
-                x = PatientMedical(nhsNumber)
-                x.vaccination(nhsNumber)
-                x.cancer(nhsNumber)
-                options(nhsNumber)
+            questOptions(nhsNumber)
         elif action == '5':
             ps.summary(nhsNumber)
             options(nhsNumber)
@@ -131,65 +178,105 @@ def options(nhsNumber):
         options(nhsNumber)
 
 
-def login():
-    print("********************************************")
-    print("Choose [1] to login using your email")
-    print("Choose [2] to login using your NHS number")
-    print("********************************************")
-    action = input("Please select an option: ")
-    if action == '1':
-        patientEmail = input("Email: ")
-        goodEmail = True
-        if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
-            goodEmail = True
+def emailPasswordCheck(patientEmail):
+    try:
+        c.execute(
+                "SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
+        patientEmails = c.fetchall()
+        password = input("Password: ")
+        if password != patientEmails[0][10]:
+            raise passwordIncorrect()
         else:
-            goodEmail = False
-        while goodEmail == False:
-            print("I'm sorry, that is not a valid email")
-            patientEmail = input("Email: ")
-            if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
-                goodEmail = True
-            else:
-                goodEmail = False
+            checkNHS(patientEmails[0][0])
+    except passwordIncorrect:
+        error = passwordIncorrect()
+        print(error)
+        emailPasswordCheck(patientEmail)
+
+
+def emailCheck(patientEmail):
+    try:
         c.execute(
             "SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
         patientEmails = c.fetchall()
         if patientEmails == []:
-            while patientEmails == []:
-                print("I'm sorry, that email is not in our system")
-                patientEmail = input("Email: ")
-                c.execute(
-                "SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
-                patientEmails = c.fetchall()
-        password = input("Password: ")
-        if password != patientEmails[0][10]:
-            while password != patientEmails[0][10]:
-                print("I'm sorry, that password is not correct")
-                password = input("Password: ")
-            checkNHS(patientEmails[0][0])
+            raise emailDoesNotExist
         else:
-            checkNHS(patientEmails[0][0])
-    elif action == '2':
+            emailPasswordCheck(patientEmail)
+    except emailDoesNotExist:
+        error = emailDoesNotExist()
+        print(error)
+        patientEmail = input("Email: ")
+        emailCheck(patientEmail)
+
+
+def emailLogin():
+    try:
+        patientEmail = input("Email: ")
+        if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
+            emailCheck(patientEmail)
+        else:
+            raise invalidEmail()
+    except invalidEmail:
+        error = invalidEmail()
+        print(error)
+        emailLogin()
+
+def nhsPasswordCheck(nhsNumber):
+    try:
+        c.execute(
+                "SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
+        nhsNumbers = c.fetchall()
+        password = input("Password: ")
+        if password != nhsNumbers[0][10]:
+            raise passwordIncorrect()
+        else:
+            checkNHS(nhsNumbers[0][0])
+    except passwordIncorrect:
+        error = passwordIncorrect()
+        print(error)
+        nhsPasswordCheck(nhsNumber)
+
+def nhsLogin():
+    try:
         nhsNumber = input("NHS Number: ")
         nhsNumber = int(re.sub("[^0-9]", "", nhsNumber))
         c.execute(
             "SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
         nhsNumbers = c.fetchall()
         if nhsNumbers == []:
-            while nhsNumbers == []:
-                print("I'm sorry, that NHS number is not in our system")
-                nhsNumber = input("NHS Number: ")
-                c.execute(
-                "SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
-                nhsNumbers = c.fetchall()
-        password = input("Password: ")
-        if password != nhsNumbers[0][10]:
-            while password != nhsNumbers[0][10]:
-                print("I'm sorry, that password is not correct")
-                password = input("Password: ")
-            checkNHS(nhsNumbers[0][0])
+            raise nhsDoesNotExist()
         else:
-            checkNHS(nhsNumbers[0][0])
+            nhsPasswordCheck(nhsNumber)
+    except nhsDoesNotExist:
+        error = nhsDoesNotExist()
+        print(error)
+        nhsLogin()
+
+
+def login():
+    try:
+        print("********************************************")
+        print("Choose [1] to login using your email")
+        print("Choose [2] to login using your NHS number")
+        print("********************************************")
+        action = input("Please select an option: ")
+        if action == '':
+            raise emptyAnswer
+        elif action == '1':
+            emailLogin()
+        elif action == '2':
+            nhsLogin()
+        else:
+            raise invalidAnswer()
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        login()
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        login()
 
 
 def register():
