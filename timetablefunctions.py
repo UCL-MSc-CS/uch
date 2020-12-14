@@ -101,7 +101,7 @@ def checkslotavailable(date, startTime, endTime, gpemailarray):
                 (start < ? AND end >= ?) OR
                 (start > ? AND end < ?)
             ) AND
-            appointmentStatus not in ('Pending','Unavailable')
+            appointmentStatus not in ('Pending','Declined')
     """
     values = (startunix,startunix,endunix,endunix,startunix,endunix)
 
@@ -138,7 +138,7 @@ def timetableblock(gpemail, date):
             gpEmail = ? AND
             start >= ? AND 
             end <= ? AND
-            appointmentStatus not in ('Pending','Unavailable')
+            appointmentStatus not in ('Pending','Declined')
         ORDER BY start asc
     """
     values = (gpemail,start,end)
@@ -164,7 +164,7 @@ def TodayAppointments(gpemail):
             gpEmail = ? AND
             start >= ? AND 
             end <= ? AND
-            appointmentStatus = 'Available'
+            appointmentStatus = 'Accepted'
         ORDER BY start asc
     """
     values = (gpemail, start, end)
@@ -217,7 +217,7 @@ def acceptappointment(appointmentId):
     UPDATE 
         Appointment
     SET
-       appointmentStatus = 'Available'
+       appointmentStatus = 'Accepted'
     WHERE
         appointmentID = ? 
     """, (appointmentId,))
@@ -233,7 +233,7 @@ def declineappointment(appointmentId):
     UPDATE 
         Appointment
     SET
-       appointmentStatus = 'Unavailable'
+       appointmentStatus = 'Declined'
     WHERE
         appointmentID = ? 
     """, (appointmentId,))
@@ -287,5 +287,5 @@ def saveDoctorNotes(doctorsnotes):
 #book_appointment("2020-12-14", "15:00", "16:30", "1234567890", ["drgrey@gmail.com"])
 #book_appointment("2020-12-14", "14:00", "15:00", "1098765432", ["drgrey@gmail.com"])
 #book_appointment("2020-12-14", "17:30", "18:30", "0987651234", ["drgrey@gmail.com"])
-#print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
+#print(checkslotavailable("2020-12-14","13:30","14:01",["drgrey@gmail.com","matthew.shorvon@ucl.ac.uk"]))
 
