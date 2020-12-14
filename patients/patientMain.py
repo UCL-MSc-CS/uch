@@ -161,7 +161,7 @@ def task():
         telephoneNumber = int(telephoneNumber)
         # print(telephoneNumber)
         # Email
-        patientEmail=input("Please enter your email: ")
+        patientEmail=input("Email: ")
         goodEmail = True
         if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
             goodEmail = True
@@ -179,44 +179,67 @@ def task():
         if patientEmails != []:
             while patientEmails != []:
                 print("I'm sorry, that email is already in use")
-                patientEmail=input("Please enter your email: ")
+                patientEmail=input("Email: ")
                 c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
                 patientEmails = c.fetchall()
         # Password
-        password=input("Please enter your password: ")
+        password=input("Password: ")
         x=Patient(patientEmail, firstName, lastName, dateOfBirth, gender, addressLine1, addressLine2, postcode, telephoneNumber, password)
         x.register()
         ps.summary(x.nhsNumber)
         options(x.nhsNumber)
     elif action == '2':
-        patientEmail=input("Please enter your email: ")
-        goodEmail = True
-        if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
-            goodEmail = True
-        else:
-            goodEmail = False
-        while goodEmail == False:
-            print("I'm sorry, that is not a valid email")
+        print("********************************************")
+        print("Choose [1] to login using your email")
+        print("Choose [2] to login using your NHS number")
+        print("********************************************")
+        action = input("Please select an option: ")
+        if action == '1':
             patientEmail=input("Email: ")
+            goodEmail = True
             if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
                 goodEmail = True
             else:
                 goodEmail = False
-        c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
-        patientEmails = c.fetchall()
-        if patientEmails == []:
-            while patientEmails == []:
-                print("I'm sorry, that email is not in our system")
+            while goodEmail == False:
+                print("I'm sorry, that is not a valid email")
                 patientEmail=input("Email: ")
-                c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
-                patientEmails = c.fetchall()
-        password=input("Please enter your password: ")
-        if password != patientEmails[0][10]:
-            while password != patientEmails[0][10]:
-                print("I'm sorry, that password is not correct")
-                password=input("Please enter your password: ")
-            # print("Wonderful! Hi, " + patientEmails[0][2] + " you are now logged in.")
-            options(patientEmails[0][0])
-        else:
-            # print("Wonderful! Hi, " + patientEmails[0][2] + " you are now logged in.")
-            options(patientEmails[0][0])
+                if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
+                    goodEmail = True
+                else:
+                    goodEmail = False
+            c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
+            patientEmails = c.fetchall()
+            if patientEmails == []:
+                while patientEmails == []:
+                    print("I'm sorry, that email is not in our system")
+                    patientEmail=input("Email: ")
+                    c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
+                    patientEmails = c.fetchall()
+            password=input("Password: ")
+            if password != patientEmails[0][10]:
+                while password != patientEmails[0][10]:
+                    print("I'm sorry, that password is not correct")
+                    password=input("Password: ")
+                options(patientEmails[0][0])
+            else:
+                options(patientEmails[0][0])
+        elif action == '2':
+            nhsNumber=input("NHS Number: ")
+            nhsNumber = int(re.sub("[^0-9]", "", nhsNumber))
+            c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
+            nhsNumbers = c.fetchall()
+            if nhsNumbers == []:
+                while nhsNumbers == []:
+                    print("I'm sorry, that NHS number is not in our system")
+                    nhsNumber=input("NHS Number: ")
+                    c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
+                    nhsNumbers = c.fetchall()
+            password=input("Password: ")
+            if password != nhsNumbers[0][10]:
+                while password != nhsNumbers[0][10]:
+                    print("I'm sorry, that password is not correct")
+                    password=input("Password: ")
+                options(nhsNumbers[0][0])
+            else:
+                options(nhsNumbers[0][0])
