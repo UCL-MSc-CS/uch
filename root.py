@@ -131,6 +131,7 @@ while True:
                             #checking patient in or out
 
                             elif selection == 4:
+                                print("********************************************")
                                 AdminM.admin_submenuCheckIO()
                                 CheckOpt = int(input("choice: "))
                                 if CheckOpt == 1:
@@ -145,11 +146,13 @@ while True:
 
                             #updating/deleting patient details
                             elif selection == 5:
+                                print("********************************************")
                                 AdminM.managedetails()
                                 detchoice = int(input("choice: "))
                                 backvar = 0
                                 if detchoice == 1:
                                     while backvar == 0:
+                                        print("********************************************")
                                         AdminM.managedetails2()
                                         detchoice2 = int(input("choice: "))
                                         if detchoice2 == 1:
