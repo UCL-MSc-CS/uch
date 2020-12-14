@@ -191,14 +191,14 @@ c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
                     'm.shorvon@gmail.com',
                     'Matthew',
                     'Shorvon',
-                    '1998-07-16',
+                    900543600,
                     'Male',
                     '10 Downing Street',
                     'London',
                     'SW1A 0AA',
                     07758221088,
                     '1234',
-                    1)""")
+                    0)""")
 connection.commit()
 
 c.execute("""INSERT OR IGNORE INTO GP VALUES(
