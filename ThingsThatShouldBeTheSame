@@ -1,0 +1,41 @@
+#LOGIN:
+#Username/Email/Whatever: 
+#Password: 
+
+# when you log in:
+# Email (press 0 to go back): 
+# Password: 
+# call the banner function
+
+#general punctuation:
+#Start with capital
+#No fullstops
+#Use colons when asking for input
+
+#when you choose and option:
+# ******************************************** 
+#Choose [1] to do whatever
+#Choose [2] 
+# ******************************************** (this length of *s)
+#Please select an option: 
+
+#when you go back:
+#Choose [0] to go back
+#or during input, e.g. 'email (press 0 to go back): '
+
+#for yes no questions: ask for Y/N input
+#then if you are inputting to a database attribute, input N as 0 and Y as 1
+
+#Dates:
+#Enter date of birth YYYY-MM-DD
+
+#EXCEPTION MESSAGES:
+#'please' somewhere in the message
+# e.g.:
+#
+#   < This field cannot be left empty, please try again >
+#
+# (one tab, then carrot)
+
+#ASKING FOR input:
+#Use colons

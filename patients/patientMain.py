@@ -8,6 +8,7 @@ from patients.appointment import Appointment
 import re
 import string
 import pandas as pd
+import usefulfunctions as uf
 
 """ This is the main menu when the patient is selected in the first menu"""
 
@@ -22,6 +23,7 @@ c = connection.cursor()
 def options(nhsNumber):
     c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
     results = c.fetchall()
+    uf.banner('Patient')
     if results[0][12] == 0:
         # raise notRegistered()
         print("A GP needs to confirm your registration before you can access our services. Please try logging in tomorrow.")
@@ -231,8 +233,8 @@ def task():
             while password != patientEmails[0][11]:
                 print("I'm sorry, that password is not correct. ")
                 password=input("Please enter your password. ")
-            print("Wonderful! Hi, " + patientEmails[0][2] + " you are now logged in.")
+            # print("Wonderful! Hi, " + patientEmails[0][2] + " you are now logged in.")
             options(patientEmails[0][0])
         else:
-            print("Wonderful! Hi, " + patientEmails[0][2] + " you are now logged in.")
+            # print("Wonderful! Hi, " + patientEmails[0][2] + " you are now logged in.")
             options(patientEmails[0][0])

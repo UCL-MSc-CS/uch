@@ -4,6 +4,5 @@ from GPs.Doctormenu import mainmenu
 def gpStart():
     email = []
     login(email)
-    mainmenu(email[0])
-
-
+    if email:
+        mainmenu(email[0])

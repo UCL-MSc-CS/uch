@@ -42,10 +42,10 @@ def confirmappointments(doctoremail):
         except:
             print("That is not a integer value")
 
-        choosecontinue = input("Would you like to try again y/n ? :")
-        if choosecontinue == 'y':
+        choosecontinue = input("Would you like to continue confirming appointments y/n ? :")
+        if choosecontinue.lower() == 'y':
             continueconfirming = True
-        elif choosecontinue == 'n':
+        elif choosecontinue.lower() == 'n':
             continueconfirming = False
         else:
             print("Invalid option chosen, exiting appointment confirmation....")
