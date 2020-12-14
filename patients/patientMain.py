@@ -41,8 +41,6 @@ class invalidAnswer(Error):
         super().__init__(self.message)
 
 # Patient Functions
-
-
 def checkNHS(nhsNumber):
     try:
         c.execute(
@@ -94,22 +92,22 @@ def options(nhsNumber):
             print("********************************************")
             qchoice = input("Please select an option: ")
             if qaction == '1':
-                name = PatientMedical()
+                name = PatientMedical(nhsNumber)
                 name.show_profile(nhsNumber)
                 options(nhsNumber)
             elif qaction == '2':
                 print("Please fill out the following risk profile")
-                x = RiskProfile()  # need to pass patientEmail into the functions
-                x.questions()
-                x.BMI_calculator()
-                x.diet()
-                x.smoking()
-                x.drugs()
-                x.alcohol()
+                x = RiskProfile(nhsNumber)  
+                x.questions(nhsNumber)
+                x.BMI_calculator(nhsNumber)
+                x.diet(nhsNumber)
+                x.smoking(nhsNumber)
+                x.drugs(nhsNumber)
+                x.alcohol(nhsNumber)
                 x.insert_to_table(nhsNumber)
                 options(nhsNumber)
             elif qaction == '3':
-                x = PatientMedical()
+                x = PatientMedical(nhsNumber)
                 x.vaccination(nhsNumber)
                 x.cancer(nhsNumber)
                 options(nhsNumber)
