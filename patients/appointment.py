@@ -15,13 +15,13 @@ class Appointment:
 
     def bookAppointment(self, nhsNumber):
         """ Prints appointment menu for user to choose by doctor type"""
-        print("**********"
-              "\n[1] To book an appointment with a specific doctor"
-              "\n[2] To book an appointment with any doctor"
-              "\n[3] To book an appointment with a doctor of a specific gender"
-              "\n[0] To exit to the main menu"
-              "\n**********")
-        dr_options = input("Please choose from the options above: ")
+        print("********************************************"
+              "\nChoose [1] to book an appointment with a specific doctor"
+              "\nChoose [2] to book an appointment with any doctor"
+              "\nChoose [3] to book an appointment with a doctor of a specific gender"
+              "\nChoose [0] to exit to the main menu"
+              "\n********************************************")
+        dr_options = input("Please select an option: ")
         if dr_options == '1':
             y = self.chooseSpecificDr(nhsNumber)
             self.chooseAppointment(nhsNumber, y)
@@ -66,11 +66,12 @@ class Appointment:
     def chooseDrGender(self, nhsNumber):
         """ Allows user to choose a doctor by gender from a list from all doctors registered
         :return: gpDetails (list) with gp last name and email address"""
-        print("**********"
-              "\n[1] To book an appointment with a male doctor"
-              "\n[2] to book an appointment with a female doctor"
-              "\n[3] to book an appointment with a non-binary doctor")
-        gp_options = input("Please choose from the options above: ")
+        print("********************************************"
+              "\nChoose [1] to book an appointment with a male doctor"
+              "\nChoose [2] to book an appointment with a female doctor"
+              "\nChoose [3] to book an appointment with a non-binary doctor"
+              "\n********************************************")
+        gp_options = input("Please select an option: ")
         if gp_options == '1':
             self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'male' ")
             dr_names = self.c.fetchall()
@@ -96,11 +97,12 @@ class Appointment:
         User then presented with a list of all appointments on that day by time
         User can then choose which time they would like the appointment
         appointment details inserted into the database for chosen date and time for this user"""
-        print("**********"
+        print("********************************************"
               "\n [1] January     \t[2] February      \t[3] March"
               "\n [4] April     \t\t[5] May           \t[6] June"
               "\n [7] July      \t\t[8] August        \t[9] September "
-              "\n [10] October    \t[11] November     \t[12] December")
+              "\n [10] October    \t[11] November     \t[12] December"
+              "\n********************************************")
         month = pf.chooseMonth()
         date = pf.chooseDate(month)
 
@@ -112,14 +114,14 @@ class Appointment:
 
     def cancelAppointment(self, nhsNumber):
         """ Presents user with all their appointments and allows them to cancel one"""
-        print("**********"
+        print("********************************************"
               "\nThese are your confirmed booked appointments: ")
         vc.viewAppointments(nhsNumber)
-        print("**********"
-              "\n[1] To cancel an appointment"
-              "\n[2] To exit to the main menu"
-              "\n**********")
-        options = input("Please choose from the options above: ")
+        print("********************************************"
+              "\nChoose [1] to cancel an appointment"
+              "\nChoose [2] to exit to the main menu"
+              "\n********************************************")
+        options = input("Please select an option: ")
         if options == '1':
             cancel = input("\nPlease enter the appointment ID you would like to cancel: ")
             vc.deleteAppointment(cancel)
@@ -132,7 +134,7 @@ class Appointment:
 
     def viewAppConfirmations(self, nhsNumber):
         """ Presents user with all their booked/pending appointments"""
-        print("**********"
+        print("********************************************"
               "\nThese are your confirmed booked appointments: ")
         vc.viewAppointments(nhsNumber)
         pf.returnToMain()

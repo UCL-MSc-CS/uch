@@ -10,15 +10,8 @@ def viewAppointments(nhsNumber):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
 
-    # remove, switch to nhsNumber?
-    c.execute("SELECT patientEmail FROM patientDetails "
-              "WHERE nhsNumber =?",
-              [nhsNumber])
-    patientEmails = c.fetchall()
-    patientEmail = patientEmails[0]
-
     c.execute("SELECT appointmentID, start, gpLastName, appointmentStatus FROM Appointment "
-              "WHERE patientEmail =? ", [patientEmail])
+              "WHERE nhsNumber =? ", [nhsNumber])
     appointments = c.fetchall()
     appointmentID = []
     date = []
@@ -41,8 +34,10 @@ def viewAppointments(nhsNumber):
 
     data = pd.DataFrame({'Appointment ID': appointmentID, 'Date and Time': date,
         'Doctor': gp, 'Status': new_status})
+    print("********************************************")
     print(data.to_string(columns=['Appointment ID', 'Date and Time', 'Doctor',
                                   'Status'], index=False))
+    print("********************************************")
 
 def deleteAppointment(cancel):
     """ Deletes a chosen appointment from the database"""
