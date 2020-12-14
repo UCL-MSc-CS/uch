@@ -165,7 +165,7 @@ while True:
                                     selection = 0
                                 elif detchoice != 0 and detchoice != 1 and detchoice != 2:
                                     print("Not a valid option")
-                            elif selection > 6 or selection < 0:
+                            elif selection > 5 or selection < 0:
                                 print("Not a valid selection, please enter a number between 0 and 6")
                                 AdminM.adminmenu()
                                 ad.check_registrations()
