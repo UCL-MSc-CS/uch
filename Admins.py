@@ -518,10 +518,19 @@ class adminFunctions():
                 patback = 0
                 question_num = 1
                 while patback == 0:
+                    print("********************************************")
+                    print("Press [0] to re-enter NHS number: ")
+                    print("Press [1] to go back to update patient details menu")
                     try:
                         while question_num == 1:
                             emails = input("New email: ")
-                            if "@" not in emails or ".com" not in emails:
+                            if emails == '0':
+                                return adminFunctions.managedet(self)
+                                break
+                            elif emails == '1':
+                                return masterback
+                                break
+                            elif "@" not in emails or ".com" not in emails:
                                 raise EmailInvalid(emails)
                             elif not emails:
                                 raise FieldEmpty
@@ -529,40 +538,80 @@ class adminFunctions():
 
                         while question_num == 2:
                             firstn = input("New first name: ")
-                            if not firstn:
+                            if firstn == '0':
+                                return adminFunctions.managedet(self)
+                                break
+                            elif firstn == '1':
+                                return masterback
+                                break
+                            elif not firstn:
                                 raise FieldEmpty
                             question_num = 3
 
                         while question_num == 3:
                             lastnm = input("New last name: ")
-                            if not lastnm:
+                            if lastnm == '0':
+                                return adminFunctions.managedet(self)
+                                break
+                            elif lastnm == '1':
+                                return masterback
+                                break
+                            elif not lastnm:
                                 raise FieldEmpty
                             question_num = 4
 
                         while question_num == 4:
-                            dateob= int(input("New date of birth as dd/mm/yyyy: "))
-                            strdateob = str(dateob)
-                            if not dateob:
+                            dateOfBirth = (input("New date of birth as YYYY-MM-DD: "))
+                            if dateOfBirth == '0':
+                                return adminFunctions.managedet(self)
+                                break
+                            elif dateOfBirth == '1':
+                                return masterback
+                                break
+                            elif not dateOfBirth:
                                 raise FieldEmpty()
-                            input_list2 = [int(i) for i in str(dateob)]
-                            if len(input_list2) != 8:
-                                correct_length = 8
-                                raise IncorrectInputLength(8)
-                            question_num = 5
+                            elif len(dateOfBirth) != 10:
+                                correct_length = 10
+                                raise IncorrectInputLength(10)
+                            elif dateOfBirth[4] != '-' or dateOfBirth[7] != '-':
+                                raise DateFormatError
+                            day = int(dateOfBirth[8:10])
+                            month = int(dateOfBirth[5:7])
+                            year = int(dateOfBirth[0:4])
+                            if month == 9 or month == 4 or month == 6 or month == 11:
+                                if day > 30:
+                                    raise DateInvalidError
+                            elif month == 2:
+                                if year % 4 != 0:
+                                    if day > 28:
+                                        raise DateInvalidError
+                                elif year % 4 == 0:
+                                    if day > 29:
+                                        raise DateInvalidError
+                            else:
+                                if day > 31:
+                                    raise DateInvalidError
+                            if month > 12:
+                                raise DateInvalidError
 
-                        while question_num == 5:
-                            age = int(input("New age: "))
-                            currdate = dt.now().year
-                            dobyear = dateob % 10000
-                            if age != currdate - dobyear and age != currdate - dobyear - 1:
-                                raise InvalidAgeRange
-                            elif not age:
-                                raise FieldEmpty()
+                            # input_list = [int(i) for i in str(dateOfBirth)]
+                            date_entered = date(year, month, day)
+                            date_today = date.today()
+                            if date_entered > date_today:
+                                raise DateInFutureError
+                            dateOfBirth = uf.tounixtime(date_entered)
+                            print(dateOfBirth)
                             question_num = 6
 
                         while question_num == 6:
                             gender = input("New gender (enter male/female/non-binary/prefer not to say): ")
-                            if not gender:
+                            if gender == '0':
+                                return adminFunctions.managedet(self)
+                                break
+                            elif gender == '1':
+                                return masterback
+                                break
+                            elif not gender:
                                 raise FieldEmpty()
                             if gender != "male" and gender != "female" and gender != "non-binary" and gender != "prefer not to say":
                                 raise GenderError()
@@ -570,7 +619,13 @@ class adminFunctions():
 
                         while question_num == 7:
                             addl1 = input("New address line 1: ")
-                            if not addl1:
+                            if addl1 == '0':
+                                return adminFunctions.managedet(self)
+                                break
+                            elif addl1 == '1':
+                                return masterback
+                                break
+                            elif not addl1:
                                 raise FieldEmpty()
                             elif any(chr.isdigit() for chr in addl1) == False:
                                 raise InvalidAdd
@@ -578,7 +633,13 @@ class adminFunctions():
 
                         while question_num == 8:
                             addl2 = input("New address line 2: ")
-                            if not addl2:
+                            if addl2 == '0':
+                                return adminFunctions.managedet(self)
+                                break
+                            elif addl2 == '1':
+                                return masterback
+                                break
+                            elif not addl2:
                                 raise FieldEmpty()
                             elif any(chr.isdigit() for chr in addl1) == False:
                                 raise InvalidAdd
@@ -586,13 +647,25 @@ class adminFunctions():
 
                         while question_num == 9:
                             postcode = input("New postcode: ")
-                            if not postcode:
+                            if postcode == '0':
+                                return adminFunctions.managedet(self)
+                                break
+                            elif postcode == '1':
+                                return masterback
+                                break
+                            elif not postcode:
                                 raise FieldEmpty()
                             question_num = 10
 
                         while question_num == 10:
                             tel = (input("New telephone number (no spaces, with country code. E.g. +4471234123123): "))
-                            if not tel:
+                            if tel == '0':
+                                return adminFunctions.managedet(self)
+                                break
+                            elif tel == '1':
+                                return masterback
+                                break
+                            elif not tel:
                                 raise FieldEmpty()
                             if '+' not in tel or ' ' in tel:
                                 raise TeleNoFormatError()
@@ -604,10 +677,6 @@ class adminFunctions():
                                 raise IncorrectInputLength(correct_length)
                             question_num = 11
 
-                        while question_num == 11:
-                            regcon = input("New registration confirmation: Y or N ")
-                            #fill in Y later
-                            question_num = 12
                     except nhsNotExists:
                         error = nhsNotExists()
                         print(error)
@@ -635,14 +704,13 @@ class adminFunctions():
                     except ValueError:
                         print("< Please provide a numerical input >")
                     else:
-                        self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?,
-                        age = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
-                        telephoneNumber = ?, registrationConfirm = ? WHERE nhsNumber = ?""",
-                        (emails, firstn, lastnm, strdateob, age, gender, addl1, addl2, postcode, tel, regcon, nhsnum))
+                        self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?
+                        , gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
+                        telephoneNumber = ? WHERE nhsNumber = ?""",
+                        (emails, firstn, lastnm, dateOfBirth, gender, addl1, addl2, postcode, tel, nhsnum))
                         self.connection.commit()
                         print("Succesfully updated entire patient record")
-                        patback = 1
-                        masterback = 1
+                        return masterback
 
     def delpatdet(self):
         delback = 0
