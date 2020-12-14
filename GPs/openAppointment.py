@@ -49,7 +49,9 @@ def printtodayappointments(doctoremail):
     # Todo disallow user to 'stay within appointment' if they have entered wrong invalid id
     day = datetime.today()
 
-    print("\n--------------------\n" + datetime.strftime(day, "%A %d %b %Y") + "\n--------------------")
+    print("--------------------------------------------")
+    print(datetime.strftime(day, "%A %d %b %Y"))
+    print("--------------------------------------------")
     appointments = db.TodayAppointments(doctoremail)
     appointmentids = []
     print("id" + "\t" + "reason")
@@ -58,9 +60,9 @@ def printtodayappointments(doctoremail):
         reason = appointment[0]
         start = datetime.strftime(uf.toregulartime(appointment[1]), timeformatstring)
         end = datetime.strftime(uf.toregulartime(appointment[2]), timeformatstring)
-        patientemail = appointment[3]
+        nhsNumber = str(appointment[3]).zfill(10)
         appointmentid = str(appointment[4])
-        print(appointmentid + "\t" + reason + "\t" + start + "-" + end + "\t" + patientemail)
+        print(appointmentid + "\t" + reason + "\t" + start + "-" + end + "\t" + nhsNumber)
     continueSelecting = True
     while continueSelecting:
         id = input("Please enter the appointment id you wish to open: \n")

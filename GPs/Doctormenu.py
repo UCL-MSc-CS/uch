@@ -32,6 +32,7 @@ def mainmenu(drdemail):
             clearhours(doctoremail)
         elif option == "0":
             print("Logging out.....")
+            print("********************************************")
             break
         else:
             print("\t<Invalid option chosen. Please try again>")

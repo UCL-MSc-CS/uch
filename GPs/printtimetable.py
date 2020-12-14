@@ -26,19 +26,16 @@ def printtimetable(doctoremail):
         try:
             if int(option) == 1:
                 printdays(today, doctoremail)
-                input("\n\nPress any button to continue....")
-                print("\n********************************************")
+                input("\nPress any button to continue....")
                 break
             elif int(option) == 2:
                 printdays(today + timedelta(7), doctoremail)
-                input("\n\nPress any button to continue....")
-                print("\n********************************************")
+                input("\nPress any button to continue....")
                 break
             elif int(option) == 3:
                 selected_date = uf.validatedate("Please enter a date to view its weekly timetable")
                 printdays(selected_date, doctoremail)
-                input("\n\nPress any button to continue....")
-                print("\n********************************************")
+                input("\nPress any button to continue....")
                 break
             elif int(option) == 4:
                 break
