@@ -644,7 +644,7 @@ class adminFunctions():
                         telephoneNumber = ?, registrationConfirm = ? WHERE nhsNumber = ?""",
                         (emails, firstn, lastnm, strdateob, age, gender, addl1, addl2, postcode, tel, regcon, nhsnum))
                         self.connection.commit()
-                        print("succesfully updated entire patient record")
+                        print("Succesfully updated entire patient record")
                         patback = 1
                         masterback = 1
 
@@ -673,7 +673,8 @@ class adminFunctions():
             else:
                 self.c.execute("""DELETE FROM PatientDetail WHERE nhsNumber = ?""", (nhsnum,))
                 self.connection.commit()
-                print("successfully deleted patient record")
+                print("Successfully deleted patient record")
+                delback = 1
 
 
     def manIndDet(self):
