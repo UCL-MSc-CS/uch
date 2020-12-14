@@ -83,7 +83,7 @@ class DateFormatError(Error):
     :param: date - input date which causes the error
             message - explanation of the error to the user
     """
-    def __init__(self, message = "please enter the date in the correct format, with '/'s as separators"):
+    def __init__(self, message = "please enter the date in the correct format, with '-'s as separators"):
         self.message = message
         super().__init__(self.message)
 
@@ -141,11 +141,9 @@ class IntegerError(Error):
 
 class adminFunctions():
 
-    def __init__(self):
-        print("connection initialized")  # whenever you close the connection, you will have to
+    def __init__(self): 
         self.connection = sql.connect('UCH.db')
-        # create a new adminFunctions() object to re-open
-        self.c = self.connection.cursor()  # the connection, so that __init__ is called.
+        self.c = self.connection.cursor()  
 
     def admin_login(self):
         username = input('Username: (press 0 to go back) ')
@@ -157,7 +155,6 @@ class adminFunctions():
         if len(items) == 0:
             return False
         else:
-            print("Logged in")
             return True
 
     def add_doctor(self):
@@ -168,7 +165,7 @@ class adminFunctions():
                     a = input("email: ")
                     if a == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not a:
                         raise FieldEmpty()
                     if "@" not in a or (".co" not in a and ".ac" not in a and ".org" not in a and ".gov" not in a):
@@ -182,7 +179,7 @@ class adminFunctions():
                     pw = input("password: ")
                     if pw == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not pw:
                         raise FieldEmpty()
                     question_num = 2
@@ -190,7 +187,7 @@ class adminFunctions():
                     b = input("first name: ")
                     if b == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not b:
                         raise FieldEmpty()
                     question_num = 3
@@ -198,7 +195,7 @@ class adminFunctions():
                     c = input("last name: ")
                     if c == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not c:
                         raise FieldEmpty()
                     question_num = 4
@@ -206,13 +203,13 @@ class adminFunctions():
                     dateOfBirth = (input("enter date of birth as YYYY-MM-DD: "))
                     if dateOfBirth == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not dateOfBirth:
                         raise FieldEmpty()
                     if len(dateOfBirth) != 10:
                         correct_length = 10
                         raise IncorrectInputLength(10)
-                    if dateOfBirth[2] != '-' or dateOfBirth[5] != '-':
+                    if dateOfBirth[4] != '-' or dateOfBirth[7] != '-':
                         raise DateFormatError
                     day = int(dateOfBirth[8:10])
                     month = int(dateOfBirth[5:7])
@@ -245,7 +242,7 @@ class adminFunctions():
                     department = input("department: ")
                     if department == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not department:
                         raise FieldEmpty()
                     question_num = 6
@@ -253,14 +250,14 @@ class adminFunctions():
                     teleNo = input("telephone number (no spaces, with country code. E.g. +4471234123123): ")
                     if teleNo == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not teleNo:
                         raise FieldEmpty()
                     if '+' not in teleNo or ' ' in teleNo:
                         raise TeleNoFormatError()
                     teleNo = teleNo.replace('+', '')
                     input_list = [i for i in teleNo]
-                    if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
+                    if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 and len(input_list) != 17:
                         correct_length = '12 to 18'
                         raise IncorrectInputLength(correct_length)
                     question_num = 7
@@ -269,7 +266,7 @@ class adminFunctions():
                     gender = gender.lower()
                     if gender == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not gender:
                         raise FieldEmpty()
                     if gender != 'male' and gender != 'female' and gender != 'non-binary' and gender != 'prefer not to say':
@@ -280,13 +277,13 @@ class adminFunctions():
                     addressL1 = input("Address Line 1: ")
                     if addressL1 == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not addressL1:
                         raise FieldEmpty()
                     addressL2 = input("Address Line 2: ")
                     if addressL2 == '0':
                         print('going back')
-                        return 1
+                        return 0
                     if not addressL2:
                         raise FieldEmpty()
                     question_num = 9
@@ -322,40 +319,39 @@ class adminFunctions():
             else:
                 gp = [a, pw, b, c, gender, dateOfBirth, addressL1, addressL2, teleNo, department, active]
                 self.c.execute("""INSERT INTO GP VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", gp)
-                self.c.execute("SELECT * FROM GP")
-                items = self.c.fetchall()
-                for i in items:
-                    print(i)
-                self.connection.commit()
-                return 1
+                print("Details entered successfully")
+                return 0
 
     def check_registrations(self):
-        self.c.execute("""SELECT COUNT(patientEmail) FROM PatientDetail WHERE registrationConfirm = 'N' """)
+        self.c.execute("""SELECT COUNT(patientEmail) FROM PatientDetail WHERE registrationConfirm = 0 """)
         items = self.c.fetchall()
         count = items[0][0]
-        print("You have %d patient registrations to confirm" % count)
+        print("   < You have %d patient registrations to confirm >" % count)
 
     def confirm_registrations(self):
-        self.c.execute("""SELECT * FROM PatientDetail WHERE registrationConfirm = 'N'""")
+        self.c.execute("""SELECT * FROM PatientDetail WHERE registrationConfirm = 0 """)
         items = self.c.fetchall()
         if len(items) == 0:
             print("no patient registrations to confirm")
         else:
             for i in items:
+                print("NHS Number: {}".format(i[0]))
                 print("email: {}".format(i[1]))
                 print("first name: {}".format(i[2]))
                 print("last name: {}".format(i[3]))
-                print("date of birth: {}".format(i[4]))
-                print("age: {}".format(i[5]))
-                print("gender: {}".format(i[6]))
-                print("address line 1: {}".format(i[7]))
-                print("addresss line 2: {}".format(i[8]))
-                print("postcode: {}".format(i[9]))
-                print("telephone number: {}".format(i[10]))
+                date = uf.toregulartime(i[4])
+                date = date.strftime("%Y-%m-%d") 
+                print("date of birth: {}".format(date))
+                print("gender: {}".format(i[5]))
+                print("address line 1: {}".format(i[6]))
+                print("addresss line 2: {}".format(i[7]))
+                print("postcode: {}".format(i[8]))
+                tele_no = '+' + str(i[9])
+                print("telephone number: {}".format(tele_no))
                 change = input("Do you want to confirm this registration?: (Y/N) ")
                 while change != 'Y' and change != 'N':
                     if change == 'Y':
-                        self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 'Y' WHERE patientEmail = ? """,
+                        self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 1 WHERE patientEmail = ? """,
                                        (i[1],))
                     elif change == 'N':
                         print("registration not confirmed")
