@@ -24,7 +24,7 @@ def options(nhsNumber):
     c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
     results = c.fetchall()
     uf.banner('Patient')
-    if results[0][12] == 0:
+    if results[0][11] == 0:
         # raise notRegistered()
         print("A GP needs to confirm your registration before you can access our services. Please try logging in tomorrow.")
         exit()
@@ -111,6 +111,8 @@ def task():
     print("Choose [1] to register for a new account")
     print("Choose [2] to login")
     action=input("Choice: ")
+    if action == '0':
+        return 0
     if action != '1' and action != '2':
         print("I'm sorry, '" + str(action) + "' is an invalid option. ")
         task()
@@ -229,8 +231,8 @@ def task():
                 c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
                 patientEmails = c.fetchall()
         password=input("Please enter your password. ")
-        if password != patientEmails[0][11]:
-            while password != patientEmails[0][11]:
+        if password != patientEmails[0][10]:
+            while password != patientEmails[0][10]:
                 print("I'm sorry, that password is not correct. ")
                 password=input("Please enter your password. ")
             # print("Wonderful! Hi, " + patientEmails[0][2] + " you are now logged in.")

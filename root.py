@@ -58,7 +58,7 @@ while True:
         selection1 = int(input("Please select an option: "))
         while selection1 != 0:
             if selection1 == 2:
-                pm.task()
+                selection1 = pm.task()
             elif selection1 == 3:
                 # # todo replace hard code with function call.
                 # email = input("Please enter your email address: ")
