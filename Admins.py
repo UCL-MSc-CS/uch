@@ -941,10 +941,10 @@ class adminFunctions():
                             while back6 == 0:
                                 try:
                                     Cgen = input("New gender (enter male/female/non-binary/prefer not to say): ")
-                                    if Cgen == '1':
+                                    if Cgen == '0':
                                         Cagain = 1
                                         break
-                                    elif Cgen == '2':
+                                    elif Cgen == '1':
                                         back6 = 1
                                         break
                                     elif not Cgen:
@@ -969,10 +969,10 @@ class adminFunctions():
                             while back7 == 0:
                                 try:
                                     Cad1 = input("New address line 1: ")
-                                    if Cad1 == '1':
+                                    if Cad1 == '0':
                                         Cagain = 1
                                         break
-                                    elif Cad1 == '2':
+                                    elif Cad1 == '1':
                                         back7 = 1
                                         break
                                     elif not Cad1:
@@ -997,10 +997,10 @@ class adminFunctions():
                             while back8 == 0:
                                 try:
                                     Cad2 = input("new address line 2: ")
-                                    if Cad2 == '1':
+                                    if Cad2 == '0':
                                         Cagain = 1
                                         break
-                                    elif Cad2 == '2':
+                                    elif Cad2 == '1':
                                         back8 = 1
                                         break
                                     elif not Cad2:
@@ -1025,10 +1025,10 @@ class adminFunctions():
                             while back9 == 0:
                                 try:
                                     Cpost = input("New postcode: ")
-                                    if Cpost == '1':
+                                    if Cpost == '0':
                                         Cagain = 1
                                         break
-                                    elif Cpost == '2':
+                                    elif Cpost == '1':
                                         back9 = 1
                                         break
                                     elif not Cpost:
@@ -1049,10 +1049,10 @@ class adminFunctions():
                                 try:
                                     Ctel = (
                                         input("Telephone number (no spaces, with country code. E.g. +4471234123123): "))
-                                    if Ctel == '1':
+                                    if Ctel == '0':
                                         Cagain = 1
                                         break
-                                    elif Ctel == '2':
+                                    elif Ctel == '1':
                                         back10 = 1
                                         break
                                     elif not Ctel:
