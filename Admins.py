@@ -50,7 +50,7 @@ class EmailInvalid(Error):
 
 class nhsNotExists(Error):
     """Exception raised when email does not exist in list"""
-    def __init__(self, message = "nhs number does not exist"):
+    def __init__(self, message = "please enter an existing NHS number"):
         self.message = message
         super().__init__(self.message)
 
