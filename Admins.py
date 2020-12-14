@@ -428,6 +428,7 @@ class adminFunctions():
     def cin(self):
         try:
             intime = dt.now()
+            print("********************************************")
             In = str(input("Type in appointment id (press 0 to go back): "))
             if In == "0":
                 return 0
@@ -439,18 +440,18 @@ class adminFunctions():
             print(error)
             return 1
         except ValueError:
-            print("please provide a numerical input")
+            print("< Please provide a numerical input >")
             return 1
         else:
             self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
             if len(items) == 0:
-                print("no record exists with this appointmentID")
+                print("No record exists with this appointmentID")
                 return 1
             self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
             if len(items) != 0:
-                print("a check-in time has already been provided for that appointment")
+                print("A check-in time has already been provided for that appointment")
                 return 1
             else:
                 unixd = dt.utcnow().timestamp()
@@ -463,6 +464,7 @@ class adminFunctions():
     def cout(self):
         try:
             outtime = dt.now()
+            print("********************************************")
             Out = str(input("Type in appointment id (press 0 to go back): "))
             if Out == "0":
                 return 0
@@ -474,37 +476,36 @@ class adminFunctions():
             print(error)
             return 2
         except ValueError:
-            print("please provide a numerical input")
+            print("< Please provide a numerical input >")
             return 2
         else:
             self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (Out,))
             items = self.c.fetchall()
             if len(items) == 0:
-                print("no record exists with this appointmentID")
+                print("No record exists with this appointmentID")
                 return 2
             self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (In,))
             items = self.c.fetchall()
             if len(items) != 0:
-                print("a check-in time has already been provided for that appointment")
+                print("A check-in time has already been provided for that appointment")
                 return 2
             else:
                 unixd = dt.utcnow().timestamp()
                 print(unixd)
                 self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, Out))
                 self.connection.commit()
-                print("successfully checked out patient")
+                print("Successfully checked out patient")
                 return 0
 
     def managedet(self):
         masterback = 0
         while masterback == 0:
             try:
-                print("**********")
-                print("[1] to return to update patient details menu")
-                nhsnum = input("Enter patient nhs number: ")
+                print("********************************************")
+                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
-                if nhsnum == '1':
+                if nhsnum == '0':
                     masterback = 1
                     break
                 elif not nhsnum:
@@ -523,7 +524,7 @@ class adminFunctions():
                 while patback == 0:
                     try:
                         while question_num == 1:
-                            emails = input("email: ")
+                            emails = input("New email: ")
                             if "@" not in emails or ".com" not in emails:
                                 raise EmailInvalid(emails)
                             elif not emails:
@@ -531,19 +532,19 @@ class adminFunctions():
                             question_num = 2
 
                         while question_num == 2:
-                            firstn = input("first name: ")
+                            firstn = input("New first name: ")
                             if not firstn:
                                 raise FieldEmpty
                             question_num = 3
 
                         while question_num == 3:
-                            lastnm = input("last name: ")
+                            lastnm = input("New last name: ")
                             if not lastnm:
                                 raise FieldEmpty
                             question_num = 4
 
                         while question_num == 4:
-                            dateob= int(input("date of birth as dd/mm/yyyy: "))
+                            dateob= int(input("New date of birth as dd/mm/yyyy: "))
                             strdateob = str(dateob)
                             if not dateob:
                                 raise FieldEmpty()
@@ -554,7 +555,7 @@ class adminFunctions():
                             question_num = 5
 
                         while question_num == 5:
-                            age = int(input("age: "))
+                            age = int(input("New age: "))
                             currdate = dt.now().year
                             dobyear = dateob % 10000
                             if age != currdate - dobyear and age != currdate - dobyear - 1:
@@ -564,7 +565,7 @@ class adminFunctions():
                             question_num = 6
 
                         while question_num == 6:
-                            gender = input("gender (enter male/female/non-binary/prefer not to say): ")
+                            gender = input("New gender (enter male/female/non-binary/prefer not to say): ")
                             if not gender:
                                 raise FieldEmpty()
                             if gender != "male" and gender != "female" and gender != "non-binary" and gender != "prefer not to say":
@@ -572,7 +573,7 @@ class adminFunctions():
                             question_num = 7
 
                         while question_num == 7:
-                            addl1 = input("address line 1: ")
+                            addl1 = input("New address line 1: ")
                             if not addl1:
                                 raise FieldEmpty()
                             elif any(chr.isdigit() for chr in addl1) == False:
@@ -580,7 +581,7 @@ class adminFunctions():
                             question_num = 8
 
                         while question_num == 8:
-                            addl2 = input("address line 2: ")
+                            addl2 = input("New address line 2: ")
                             if not addl2:
                                 raise FieldEmpty()
                             elif any(chr.isdigit() for chr in addl1) == False:
@@ -588,13 +589,13 @@ class adminFunctions():
                             question_num = 9
 
                         while question_num == 9:
-                            postcode = input("postcode: ")
+                            postcode = input("New postcode: ")
                             if not postcode:
                                 raise FieldEmpty()
                             question_num = 10
 
                         while question_num == 10:
-                            tel = (input("telephone number (no spaces, with country code. E.g. +4471234123123): "))
+                            tel = (input("New telephone number (no spaces, with country code. E.g. +4471234123123): "))
                             if not tel:
                                 raise FieldEmpty()
                             if '+' not in tel or ' ' in tel:
@@ -608,7 +609,7 @@ class adminFunctions():
                             question_num = 11
 
                         while question_num == 11:
-                            regcon = input("Registration confirmation: Y or N ")
+                            regcon = input("New registration confirmation: Y or N ")
                             #fill in Y later
                             question_num = 12
                     except nhsNotExists:
@@ -636,7 +637,7 @@ class adminFunctions():
                         error = TeleNoFormatError()
                         print(error)
                     except ValueError:
-                        print("Enter correct data type")
+                        print("< Please provide a numerical input >")
                     else:
                         self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?,
                         age = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
@@ -651,12 +652,11 @@ class adminFunctions():
         delback = 0
         while delback == 0:
             try:
-                print("**********")
-                print("[1] to return to patient details menu")
-                nhsnum = input("Enter patient nhs number: ")
+                print("********************************************")
+                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
-                if nhsnum == "1":
+                if nhsnum == "0":
                     delback = 1
                     break
                 elif not nhsnum:
@@ -680,12 +680,11 @@ class adminFunctions():
         masterback = 0
         while masterback == 0:
             try:
-                print("**********")
-                print("[1] to go back to patient details main menu")
-                nhsnum = input("Enter patient nhs number: ")
+                print("********************************************")
+                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
-                if nhsnum == "1":
+                if nhsnum == "0":
                     masterback = 1
                     break
                 if not nhsnum:
@@ -701,20 +700,24 @@ class adminFunctions():
             else:
                 Cagain = 0
                 while Cagain == 0:
-                    print("**********")
-                    print("choose [1] for email")
-                    print("choose [2] for first name")
-                    print("choose [3] for last name")
-                    print("choose [4] for date of birth")
-                    print("choose [5] for age")
-                    print("choose [6] for gender")
-                    print("choose [7] for address line 1")
-                    print("choose [8] for address line 2")
-                    print("choose [9] for post code")
-                    print("choose [10] for telephone number")
+                    print("********************************************")
+                    print("Choose [1] to update email")
+                    print("Choose [2] to update first name")
+                    print("Choose [3] to update last name")
+                    print("Choose [4] to update date of birth")
+                    print("Choose [5] to update gender")
+                    print("Choose [6] to update address line 1")
+                    print("Choose [7] to update address line 2")
+                    print("Choose [8] to update post code")
+                    print("Choose [9] to update telephone number")
+                    print("********************************************")
                     try:
+                        print("Press [0] to re-enter NHS number")
                         detinp = input("Choose which detail to change: ")
-                        if detinp.isdigit() == False:
+                        if detinp == '0':
+                            Cagain = '1'
+                            break
+                        elif detinp.isdigit() == False:
                             raise IntegerError
                         indetinp = int(detinp)
                         if indetinp > 10:
@@ -728,18 +731,18 @@ class adminFunctions():
                             error = IntegerError()
                             print(error)
                     else:
-                        print("**********")
-                        print("[1] to re-enter nhs number")
-                        print("[2] to go back to options")
+                        print("********************************************")
+                        print("Press [0] to re-enter NHS number")
+                        print("Press [1] to go back to options")
                         if indetinp == 1:
                             back = 0
                             while back == 0:
                                 try:
-                                    CEmail = input("new email: ")
-                                    if CEmail == '1':
+                                    CEmail = input("New email: ")
+                                    if CEmail == '0':
                                         Cagain = 1
                                         break
-                                    elif CEmail == '2':
+                                    elif CEmail == '1':
                                         back = 0
                                         break
                                     elif "@" not in CEmail or ".com" not in CEmail:
@@ -755,18 +758,18 @@ class adminFunctions():
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (CEmail, nhsnum))
                                     self.connection.commit()
-                                    print("successfully changed email")
+                                    print("Successfully changed email")
                                     back = 1
 
                         elif indetinp == 2:
                             back2 = 0
                             while back2 == 0:
                                 try:
-                                    Cfn = input("new first name: ")
-                                    if Cfn == '1':
+                                    Cfn = input("New first name: ")
+                                    if Cfn == '0':
                                         Cagain = 1
                                         break
-                                    elif Cfn == '2':
+                                    elif Cfn == '1':
                                         back2 = 1
                                         break
                                     elif not Cfn:
@@ -777,18 +780,18 @@ class adminFunctions():
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (Cfn, nhsnum))
                                     self.connection.commit()
-                                    print("successfully changed first name")
+                                    print("Successfully changed first name")
                                     back2 = 1
 
                         elif indetinp == 3:
                             back3 = 0
                             while back3 == 0:
                                 try:
-                                    Cln = input("new last name: ")
-                                    if Cln == '1':
+                                    Cln = input("New last name: ")
+                                    if Cln == '0':
                                         Cagain = 1
                                         break
-                                    elif Cln == '2':
+                                    elif Cln == '1':
                                         back3 = 1
                                         break
                                     elif not Cln:
@@ -799,82 +802,82 @@ class adminFunctions():
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (Cln, nhsnum))
                                     self.connection.commit()
-                                    print("successfully changed last name")
-                                    back3 == 1
+                                    print("Successfully changed last name")
+                                    back3 = 1
 
                         elif indetinp == 4:
                             back4 = 0
                             while back4 == 0:
                                 try:
-                                    Cdb = int(input("new date of birth as dd/mm/yyyy: "))
-                                    if Cdb == 1:
+                                    dateOfBirth = (input("New date of birth as YYYY-MM-DD: "))
+                                    if dateOfBirth == '0':
                                         Cagain = 1
                                         break
-                                    elif Cdb == 2:
+                                    elif dateOfBirth == '1':
                                         back4 = 1
                                         break
-                                    elif not Cdb:
+                                    elif not dateOfBirth:
                                         raise FieldEmpty()
-                                    input_list2 = [int(i) for i in str(Cdb)]
-                                    if len(input_list2) != 8:
-                                        correct_length = 8
-                                        raise IncorrectInputLength(8)
+                                    elif len(dateOfBirth) != 10:
+                                        correct_length = 10
+                                        raise IncorrectInputLength(10)
+                                    elif dateOfBirth[4] != '-' or dateOfBirth[7] != '-':
+                                        raise DateFormatError
+                                    day = int(dateOfBirth[8:10])
+                                    month = int(dateOfBirth[5:7])
+                                    year = int(dateOfBirth[0:4])
+                                    if month == 9 or month == 4 or month == 6 or month == 11:
+                                        if day > 30:
+                                            raise DateInvalidError
+                                    elif month == 2:
+                                        if year % 4 != 0:
+                                            if day > 28:
+                                                raise DateInvalidError
+                                        elif year % 4 == 0:
+                                            if day > 29:
+                                                raise DateInvalidError
+                                    else:
+                                        if day > 31:
+                                            raise DateInvalidError
+                                    if month > 12:
+                                        raise DateInvalidError
+
+                                    # input_list = [int(i) for i in str(dateOfBirth)]
+                                    date_entered = date(year, month, day)
+                                    date_today = date.today()
+                                    if date_entered > date_today:
+                                        raise DateInFutureError
+                                    dateOfBirth = uf.tounixtime(date_entered)
+                                    print(dateOfBirth)
                                 except FieldEmpty:
                                     error = FieldEmpty()
                                     print(error)
                                 except IncorrectInputLength:
                                     error = IncorrectInputLength(correct_length)
                                     print(error)
-                                except ValueError:
-                                    print("date of birth must consist of only integers")
+                                except DateFormatError:
+                                    error = DateFormatError()
+                                    print(error)
+                                except DateInvalidError:
+                                    error = DateInvalidError()
+                                    print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (Cdb, nhsnum))
+                                    self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (dateOfBirth, nhsnum))
                                     self.connection.commit()
-                                    print("successfully changed date of birth")
+                                    print("Successfully changed date of birth")
                                     back4 = 1
 
-                        # elif indetinp == 5:
-                        #     back5 = 0
-                        #     while back5 == 0:
-                        #         try:
-                        #             Cage = int(input("new age: "))
-                        #             currdate = dt.now().year
-                        #             self.c.execute("""SELECT dateOfBirth FROM PatientDetail WHERE nhsNumber = ?""", (nhsnum,))
-                        #             Cdb = self.c.fetchone()
-                        #             dobyear = Cdb % 10000
-                        #             if Cage == 1:
-                        #                 Cagain = 1
-                        #                 break
-                        #             elif Cage == 2:
-                        #                 back5 = 1
-                        #                 break
-                        #             elif Cage != currdate - dobyear and Cage != currdate - dobyear - 1:
-                        #                 raise InvalidAgeRange
-                        #             elif not Cage:
-                        #                 raise FieldEmpty()
-                        #         except FieldEmpty:
-                        #             error = FieldEmpty()
-                        #             print(error)
-                        #         except InvalidAgeRange:
-                        #             error = InvalidAgeRange()
-                        #             print(error)
-                        #         except ValueError:
-                        #             print("age must be an integer")
-                        #         else:
-                        #             self.c.execute("""UPDATE PatientDetail SET age = ? WHERE nhsNumber = ?""", (Cage, nhsnum))
-                        #             self.connection.commit()
-                        #             print("successfully changed age")
-                        #             back5 = 1
 
-                        elif indetinp == 6:
+
+                        elif indetinp == 5:
                             back6 = 0
                             while back6 == 0:
                                 try:
-                                    Cgen = input("new gender (enter male/female/non-binary/prefer not to say): ")
-                                    if Cgen == '1':
+                                    Cgen = input("New gender (enter male/female/non-binary/prefer not to say): ")
+                                    if Cgen == '0':
                                         Cagain = 1
                                         break
-                                    elif Cgen == '2':
+                                    elif Cgen == '1':
                                         back6 = 1
                                         break
                                     elif not Cgen:
@@ -890,18 +893,18 @@ class adminFunctions():
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET gender = ? WHERE nhsNumber = ?""", (Cgen, nhsnum))
                                     self.connection.commit()
-                                    print("successfully changed gender")
+                                    print("Successfully changed gender")
                                     back6 = 1
 
-                        elif indetinp == 7:
+                        elif indetinp == 6:
                             back7 = 0
                             while back7 == 0:
                                 try:
-                                    Cad1 = input("new address line 1: ")
-                                    if Cad1 == '1':
+                                    Cad1 = input("New address line 1: ")
+                                    if Cad1 == '0':
                                         Cagain = 1
                                         break
-                                    elif Cad1 == '2':
+                                    elif Cad1 == '1':
                                         back7 = 1
                                         break
                                     elif not Cad1:
@@ -917,18 +920,18 @@ class adminFunctions():
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""", (Cad1, nhsnum))
                                     self.connection.commit()
-                                    print("successfully changed address line 1")
+                                    print("Successfully changed address line 1")
                                     back7 = 1
 
-                        elif indetinp == 8:
+                        elif indetinp == 7:
                             back8 = 0
                             while back8 == 0:
                                 try:
-                                    Cad2 = input("new address line 2: ")
-                                    if Cad2 == '1':
+                                    Cad2 = input("New address line 2: ")
+                                    if Cad2 == '0':
                                         Cagain = 1
                                         break
-                                    elif Cad2 == '2':
+                                    elif Cad2 == '1':
                                         back8 = 1
                                         break
                                     elif not Cad2:
@@ -944,18 +947,18 @@ class adminFunctions():
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""", (Cad2, nhsnum))
                                     self.connection.commit()
-                                    print("successfully changed address line 2")
+                                    print("Successfully changed address line 2")
                                     back8 = 1
 
-                        elif indetinp == 9:
+                        elif indetinp == 8:
                             back9 = 0
                             while back9 == 0:
                                 try:
-                                    Cpost = input("new postcode: ")
-                                    if Cpost == '1':
+                                    Cpost = input("New postcode: ")
+                                    if Cpost == '0':
                                         Cagain = 1
                                         break
-                                    elif Cpost == '2':
+                                    elif Cpost == '1':
                                         back9 = 1
                                         break
                                     elif not Cpost:
@@ -966,18 +969,18 @@ class adminFunctions():
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""", (Cpost, nhsnum))
                                     self.connection.commit()
-                                    print("successfully changed post code")
+                                    print("Successfully changed post code")
                                     back9 = 1
 
-                        elif indetinp == 10:
+                        elif indetinp == 9:
                             back10 = 0
                             while back10 == 0:
                                 try:
-                                    Ctel = (input("telephone number (no spaces, with country code. E.g. +4471234123123): "))
-                                    if Ctel == '1':
+                                    Ctel = (input("New telephone number (no spaces, with country code. E.g. +4471234123123): "))
+                                    if Ctel == '0':
                                         Cagain = 1
                                         break
-                                    elif Ctel == '2':
+                                    elif Ctel == '1':
                                         back10 = 1
                                         break
                                     elif not Ctel:
@@ -1007,9 +1010,11 @@ class adminFunctions():
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""", (Ctel, nhsnum))
                                     self.connection.commit()
-                                    print("successfully changed telephone number")
+                                    print("Successfully changed telephone number")
                                     back10 = 1
 
+                        elif indetinp > 9:
+                            print("< Please enter a valid option >")
 
     def commit_and_close(self):
         self.connection.commit()
