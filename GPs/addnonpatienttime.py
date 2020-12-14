@@ -13,9 +13,12 @@ clinicend =  "{:02d}".format(endhour) + ":" + "{:02d}".format(endmin)
 
 def addnonpatienttime(doctoremail):
     while True:
-        print("choose [1] to book a holiday")
-        print("choose [2] to add non-patient hours")
-        print("choose [3] to return to main menu")
+        print("--------------------------------------------")
+        print("\t Doctor Add non-patient time")
+        print("--------------------------------------------")
+        print("Choose [1] to book a holiday")
+        print("Choose [2] to add non-patient hours")
+        print("Choose [0] to return to main menu")
         choice = input(":")
         if choice == '1':
             addholiday(doctoremail)
@@ -23,10 +26,11 @@ def addnonpatienttime(doctoremail):
         elif choice == '2':
             addnonpatienthours(doctoremail)
             break
-        elif choice == '3':
+        elif choice == '0':
             break
         else:
-            print("Invalid option chosen, please try again")
+            print("\t <Invalid option chosen, Please try again>")
+        print("********************************************")
 
 def addholiday(doctoremail):
     startdate = uf.validatedate("Please enter a start date")
@@ -44,7 +48,7 @@ def addholiday(doctoremail):
             db.book_time(datestring, clinicstart, clinicend, reason, "", [doctoremail])
         print("Successfully booked holiday!!!")
     else:
-        print("You have entered an end date that is before a start date. Please try again")
+        print("\t <You have entered an end date that is before a start date. Please try again>")
 
 
 def addnonpatienthours(doctoremail):
@@ -60,22 +64,22 @@ def addnonpatienthours(doctoremail):
         db.book_time(datestring, starttimestring, endtimestring, reason, "", [doctoremail])
         print("Successfully booked in non patient hours for " + datestring)
     elif starttime < endtime and status[0] == 'unavailable':
-        print("You already have booked time during this period, please check your timetable")
+        print("\t <You already have booked time during this period, please check your timetable>")
     else:
-        print("You've entered an end time before a start time, please try again")
+        print("\t <You've entered an end time before a start time, please try again>")
 
 def selectreason():
     while True:
         reasondict = {1:'scheduled break',2:'admin tasks',3:'emergency',4:'other'}
         print("Please select a reason for non-patient hours: ")
         for key,value in reasondict.items():
-            print("choose [" + str(key) + "] for " + value)
+            print("Choose [" + str(key) + "] for " + value)
         option = input(":")
         try:
             if (1 <= int(option) <= len(reasondict)):
                 reason = reasondict[int(option)]
                 return reason
             else:
-                print("You need to enter a value between 1 and " + len(reasondict) + " try again!")
+                print("\t <You need to enter a value between 1 and " + len(reasondict) + ", Please try again!>")
         except:
-            print("You failed to enter  number try again")
+            print("\t<You failed to enter  number try again>")

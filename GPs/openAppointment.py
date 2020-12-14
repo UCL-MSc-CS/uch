@@ -18,11 +18,11 @@ def openappointment(doctoremail):
             print("--------------------------------------------")
             print("\t Appointment ID: " + str(appointmentid))
             print("--------------------------------------------")
-            print("choose [1] for Appointment notes")
-            print("choose [2] for Patient history")
-            print("choose [3] for editing Patient prescription")
-            print("choose [4] for selecting a different appointment")
-            print("choose [5] to exit this appointment")
+            print("Choose [1] for Appointment notes")
+            print("Choose [2] for Patient history")
+            print("Choose [3] for editing Patient prescription")
+            print("Choose [4] for selecting a different appointment")
+            print("Choose [0] to exit this appointment")
             option = input(":")
             if option == "1":
                 print("\n Opening your notes for this appointment in a separate window.... \n")
@@ -36,13 +36,13 @@ def openappointment(doctoremail):
                 print("\n Switching appointments... \n")
                 openappointment(doctoremail)
                 break
-            elif option == "5":
+            elif option == "0":
                 print("\n Returning to main menu...... \n")
                 break
             else:
-                print("\nInvalid option chosen. Try again\n")
+                print("\n\t<Invalid option chosen. Try again>\n")
 
-            print("------------------------------------------------------------------------------------------------------")
+            print("********************************************")
 
 
 def printtodayappointments(doctoremail):
@@ -72,9 +72,9 @@ def printtodayappointments(doctoremail):
                 # todo connect current appointment options
                 return idNum
             else:
-                print("You entered an invalid id number!")
+                print("\t<You entered an invalid id number!>")
         except:
-            print("That is not a integer value")
+            print("\t<That is not a integer value>")
 
         choosecontinue = input("Would you like to try again y/n ? :")
         if choosecontinue.lower() == 'y':
@@ -83,5 +83,5 @@ def printtodayappointments(doctoremail):
             print("Returning to main menu......")
             continueSelecting = False
         else:
-            print("Invalid option chosen, exiting today's appointments....")
+            print("\t<Invalid option chosen, exiting today's appointments....>")
             continueSelecting = False

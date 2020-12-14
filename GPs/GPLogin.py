@@ -3,8 +3,8 @@ import time
 
 def login(gpEmail):
     while True:
-        email = input("Please enter your email address: ")
-        password = input("Please enter your password: ")
+        email = input("Please enter your Email Address: ")
+        password = input("Please enter your Password: ")
 
         with sql.connect("UCH.db") as db:
             c = db.cursor()
@@ -24,8 +24,8 @@ def login(gpEmail):
             return("exit")
 
         else:
-            print("Email and password not recognised")
-            again = input("Do you want to try again?(y/n)")
+            print("\t<Email and password not recognised>")
+            again = input("Would you like to try again? (Y/N):")
             if again.lower() == "n":
                 print("Goodbye")
                 time.sleep(1)

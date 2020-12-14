@@ -30,7 +30,7 @@ def confirmappointments(doctoremail):
             else:
                 db.declineappointment(appointmentid)
                 pendingids.remove(appointment[4])
-        id = input("please enter the id of an appointment you would like to confirm: ")
+        id = input("Please enter the id of an appointment you would like to confirm: ")
 
         try:
             idnum = int(id)
@@ -38,15 +38,15 @@ def confirmappointments(doctoremail):
                 db.acceptappointment(idnum)
                 print("Accepted appointment with id " + id)
             else:
-                print("You entered an invalid id number!")
+                print("\t<You entered an invalid id number!>")
         except:
-            print("That is not a integer value")
+            print("\t<That is not a integer value>")
 
-        choosecontinue = input("Would you like to continue confirming appointments y/n ? :")
+        choosecontinue = input("Would you like to continue confirming appointments Y/N ? :")
         if choosecontinue.lower() == 'y':
             continueconfirming = True
         elif choosecontinue.lower() == 'n':
             continueconfirming = False
         else:
-            print("Invalid option chosen, exiting appointment confirmation....")
+            print("\t <Invalid option chosen, exiting appointment confirmation....>")
             continueconfirming = False

@@ -18,3 +18,4 @@ def printday(day,doctoremail):
         patientemail = appointment[3]
         appointmentid = str(appointment[4])
         print(appointmentid + "\t" + reason + "\t" + start + "-" + end + "\t" + patientemail)
+    print("\n")
