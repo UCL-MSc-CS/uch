@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import usefulfunctions as uf
 
 connection = sql.connect('UCH.db')
 c = connection.cursor()
@@ -6,6 +7,8 @@ c = connection.cursor()
 def summary(nhsNumber):
     c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
     results = c.fetchall()
+    dateOfBirth = uf.toregulartime(results[0][4])
+    dateOfBirth = str(dateOfBirth)[0:10]
     hash = ""
     for i in results[0][10]:
         hash += "*"
@@ -21,7 +24,7 @@ def summary(nhsNumber):
     print("First Name: " + str(results[0][2]))
     print("Last Name: " + str(results[0][3]))
     print("Email: " + str(results[0][1]))
-    print("Date of Birth: " + str(results[0][4]))
+    print("Date of Birth: " + str(dateOfBirth))
     print("Gender: " + str(results[0][5]))
     print("Address: ")
     print(str(results[0][6]))

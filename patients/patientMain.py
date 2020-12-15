@@ -185,9 +185,10 @@ def options(nhsNumber):
             ps.summary(nhsNumber)
             options(nhsNumber)
         elif action == '6':
-            options(nhsNumber)
+            ps.summary(nhsNumber)
+            updateOptions(nhsNumber)
         elif action == '0':
-            print("Thank you for using the UCH e-health system! Goodbye for now!")
+            task()
             return 0
         else:
             raise invalidAnswer()
@@ -199,6 +200,67 @@ def options(nhsNumber):
         error = emptyAnswer()
         print(error)
         options(nhsNumber)
+
+def updateOptions(nhsNumber):
+    try:
+        print("********************************************")
+        print("Which details would you like to update?")
+        print("Choose [1] for first name")
+        print("Choose [2] for last name")
+        print("Choose [3] for address")
+        print("Choose [4] for email address")
+        print("Choose [5] for password")
+        print("Choose [0] to go back")
+        print("********************************************")
+        action = input("Please select an option: ")
+        if action == '':
+            raise emptyAnswer()
+        elif action == '1':
+            try:
+                firstName = input("Please enter your first name (press 0 to go back): ")
+                firstName = string.capwords(firstName.strip())
+                if firstName == '':
+                    raise emptyAnswer()
+                elif firstName == '0':
+                    updateOptions(nhsNumber)
+                x = firstName.replace(" ", "")
+                if x.isalpha() == False:
+                    raise invalidAnswer()
+                else:
+                    c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (firstName, nhsNumber))
+                    connection.commit()
+                    print("Successfully changed first name")
+                    ps.summary(nhsNumber)
+                    options(nhsNumber)
+            except emptyAnswer:
+                error = emptyAnswer()
+                print(error)
+                firstNameQ(newPatient)
+            except invalidAnswer:
+                error = invalidAnswer()
+                print(error)
+                firstNameQ(newPatient)
+        elif action == '2':
+            pass
+        elif action == '3':
+            pass
+        elif action == '4':
+            pass
+        elif action == '5':
+            pass
+        elif action == '0':
+            options(nhsNumber)
+        else:
+            raise invalidAnswer()
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        updateOptions(nhsNumber)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updateOptions(nhsNumber)
+
 
 
 def emailPasswordCheck(patientEmail):
@@ -500,7 +562,10 @@ def cityQ(newPatient):
             task()
         elif city == "1":
             addressLine2Q(newPatient)
-        elif city == '2':
+        elif len(city) > 100:
+            raise invalidAnswer()
+        x = city.replace(" ", "")
+        if x.isalpha() == False:
             raise invalidAnswer()
         else:
             addressLine2 = (newPatient["addressLine2"] + " " + city).strip()
@@ -525,7 +590,7 @@ def postcodeQ(newPatient):
             task()
         elif postcode == "1":
             cityQ(newPatient)
-        elif postcode == '2':
+        elif len(postcode) > 100:
             raise invalidAnswer()
         else:
             newPatient["postcode"] = postcode
@@ -641,6 +706,7 @@ def task():
         print("********************************************")
         print("Choose [1] to register for a new account")
         print("Choose [2] to login")
+        print("Choose [0] to exit")
         print("********************************************")
         action = input("Please select an option: ")
         if action == '':
@@ -649,6 +715,9 @@ def task():
             register()
         elif action == '2':
             login()
+        elif action == '0':
+            print("Thank you for using the UCH e-health system! Goodbye for now!")
+            exit()
         else:
             raise invalidAnswer()
     except invalidAnswer:
