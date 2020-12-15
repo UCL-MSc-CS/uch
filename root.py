@@ -25,24 +25,24 @@ class Menus():
         print("Choose [0] when finished navigating menu")
 
     def admin_submenu2(self):
-        print("choose [1] to deactivate a profile")
-        print("choose [2] to delete a profile")
-        print("choose [0] when finished navigating menu.")
+        print("Choose [1] to deactivate a profile")
+        print("Choose [2] to delete a profile")
+        print("Choose [0] when finished navigating menu.")
 
     def admin_submenuCheckIO(self):
-        print("choose [1] to check patient in")
-        print("choose [2] to check patient out")
-        print("choose [0] to go back")
+        print("Choose [1] to check patient in")
+        print("Choose [2] to check patient out")
+        print("Choose [0] to go back")
 
     def managedetails(self):
-        print("choose [1] to change patient record")
-        print("choose [2] to delete patient record")
-        print("choose [0] to go back")
+        print("Choose [1] to change patient record")
+        print("Choose [2] to delete patient record")
+        print("Choose [0] to go back")
 
     def managedetails2(self):
-        print("choose [1] to alter entire patient record")
-        print("choose [2] to alter part of patient record")
-        print("choose [0] to go back")
+        print("Choose [1] to alter entire patient record")
+        print("Choose [2] to alter part of patient record")
+        print("Choose [0] to go back")
 
 
 
