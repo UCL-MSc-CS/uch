@@ -282,10 +282,40 @@ def saveDoctorNotes(doctorsnotes):
 
     closeconn(conn["connection"])
 
+# This pulls basic patient information for the doctor
+def getPatientInfo(appointmentId):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+            SELECT 
+                nhsNumber,
+                patientEmail,
+                firstName,
+                lastName,
+                dateOfBirth,
+                gender,
+                addressLine1,
+                addressLine2,
+                postcode,
+                telephoneNumber,
+                appointmentID
+            FROM
+                Appointment
+            LEFT JOIN
+                PatientDetail
+            USING (nhsNumber)
+            WHERE
+                appointmentID = ?
+            """, (appointmentId,))
+
+    results = list(conn['cursor'].fetchone())
+    closeconn(conn["connection"])
+    return results
+
 
 
 #book_appointment("2020-12-14", "15:00", "16:30", "1234567890", ["drgrey@gmail.com"])
 #book_appointment("2020-12-14", "14:00", "15:00", "1098765432", ["drgrey@gmail.com"])
-#book_appointment("2020-12-14", "17:30", "18:30", "0987651234", ["drgrey@gmail.com"])
+book_appointment("2020-12-14", "17:30", "18:30", "1234567890", ["matthew.shorvon@ucl.ac.uk"])
 #print(checkslotavailable("2020-12-14","13:30","14:01",["drgrey@gmail.com","matthew.shorvon@ucl.ac.uk"]))
 
