@@ -1,6 +1,4 @@
 UCH.db
 venv/
 .idea/
-__pycache__/
-GPs/__pycache__/
-!**/__pycache__/
+**/__pycache__
