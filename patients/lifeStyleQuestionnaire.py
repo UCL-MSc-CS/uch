@@ -228,7 +228,7 @@ class RiskProfile:
         print("1 unit of alcohol is around 76ml(~1/2 a glass) of wine or 250ml of beer (~1/2 a pint).")
         while True:
             try:
-                alcohol = (input("Y for yes, N for no. Do you drink alcohol in general: ")).lower()
+                alcohol = input("Y for yes, N for no. Do you drink alcohol in general: ").lower()
                 if not alcohol:
                     raise pf.EmptyFieldError()
                 if alcohol != "n" and alcohol != "y":
@@ -319,7 +319,7 @@ class RiskProfile:
         self.answers.append(diet)
         self.answers.append(caffeine)
 
-    def save_your_answers(self, nhs_number):
+    def insert_to_table(self, nhs_number):
         self.answers.insert(0, nhs_number)
         question_query = """INSERT INTO questionnaireTable (nhsNumber, exercise, exerciseType, exerciseFrequency,
         exerciseDuration, goal, height, weight, bmi, smoking, drugs, drugType, alcohol, 
@@ -340,3 +340,4 @@ class RiskProfile:
 # Erin.diet("0123456789")
 # Erin.smoking("0123456789")
 # Erin.save_your_answers()
+# correct order: smoking, drugs, alcohol, diet

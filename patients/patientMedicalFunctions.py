@@ -46,7 +46,7 @@ def display_medical_history(nhs_number):
             for column in cancer_table:
                 print(column + ':' + patient_med_record[record][count])
                 count += 1
-            print("********************")  # separating each record of the patient
+            print("*"*10)  # separating each record of the patient
             record += 1
             rows += 1
         # add display for pre-existing condition

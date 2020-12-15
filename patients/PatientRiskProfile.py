@@ -179,36 +179,54 @@ class PatientMedical:
                     break
             print('Please enter your answers to the following questions with Y/N.')
             if menu_choice == "1":
-                while True:  # asking patient about existing medical conditions
-                    try:
-                        major_illness = input('Do you have any pre-existing conditions?'
-                        '\nIf so, please enter the name of the pre-existing condition using comma to '
-                        'separate different consitions. Otherwise, leave this field blank: ').split(',')
-                    except ValueError:
-                        print('    <Please enter a non-numeric value or leave this field blank>')
-                    else:
-                        break
-                condition = []
-                for i in major_illness:
-                    condition_record = tuple([nhs_number, i])
-                    condition.append(condition_record)
-                self.a.executemany("""INSERT INTO preExistingCondition(nhsNumber, conditionType) VALUES (?, ?)""", condition)
-                self.connection.commit()
-                while True:  # asking patient about existing medicine allergy
-                    try:
-                        med_allergy = input('Do you have any allgeries to any medicines?'
-                        '\nIf so, please enter the name of the medicine using comma to '
-                        'separate different types. Otherwise, leave this field blank: ').split(',')
-                    except ValueError:
-                        print('    <Please enter a non-numeric value or leave this field blank>')
-                    else:
-                        break
-                allergy = []
-                for i in med_allergy:
-                    allergy_record = tuple([nhs_number, i])
-                    allergy.append(allergy_record)
-                self.a.executemany("""INSERT INTO medAllergy(nhsNumber, medName) VALUES (?, ?)""", allergy)
-                self.connection.commit()
+                self.a.execute("""
+                                SELECT nhsNumber FROM preExistingCondition 
+                                WHERE nhsNumber =? """, [nhs_number])
+                patient_result = self.a.fetchall()
+                if not patient_result:
+                    while True:  # asking patient about existing medical conditions
+                        try:
+                            major_illness = input('Do you have any pre-existing conditions?'
+                            '\nIf so, please enter the name of the pre-existing condition using comma to '
+                            'separate different consitions. Otherwise, type N for no: ').split(',')
+                            if major_illness == "":
+                                raise pf.EmptyFieldError()
+                        except pf.EmptyFieldError:
+                            error_message = pf.EmptyFieldError()
+                            print(error_message)
+                        except ValueError:
+                            print('    <Please enter a non-numeric value>')
+                        else:
+                            break
+                    condition = []
+                    for i in major_illness:
+                        condition_record = tuple([nhs_number, i])
+                        condition.append(condition_record)
+                    self.a.executemany("""INSERT INTO preExistingCondition(nhsNumber, conditionType) VALUES (?, ?)""", condition)
+                    self.connection.commit()
+                self.a.execute("""SELECT nhsNumber FROM medAllergy WHERE nhsNumber =? """, [nhs_number])
+                allergy_result = self.a.fetchall()
+                if not allergy_result:
+                    while True:  # asking patient about existing medicine allergy
+                        try:
+                            med_allergy = input('Do you have any allgeries to any medicines?'
+                            '\nIf so, please enter the name of the medicine using comma to '
+                            'separate different types. Otherwise, type N for no: ').split(',')
+                            if med_allergy == "":
+                                raise pf.EmptyFieldError()
+                        except pf.EmptyFieldError:
+                            error_message = pf.EmptyFieldError()
+                            print(error_message)
+                        except ValueError:
+                            print('    <Please enter a non-numeric value>')
+                        else:
+                            break
+                    allergy = []
+                    for i in med_allergy:
+                        allergy_record = tuple([nhs_number, i])
+                        allergy.append(allergy_record)
+                    self.a.executemany("""INSERT INTO medAllergy(nhsNumber, medName) VALUES (?, ?)""", allergy)
+                    self.connection.commit()
                 while True:
                     try:
                         cancer = input('Have you ever been diagnosed with cancer: ').lower()
@@ -446,8 +464,8 @@ class PatientMedical:
                             count += 1
                 else:
                     print("Your vaccination history is empty. Please update your vaccination history as soon as possible.")
-                print('Your medical history:')
-                pf.display_medical_history(nhs_number)
+                # print('Your medical history:')
+                # pf.display_medical_history(nhs_number)
             elif profile == "2":
                 while True:
                     try:
@@ -480,8 +498,8 @@ class PatientMedical:
                             count += 1
                 else:
                     print("{}'s vaccination history is empty. Please update the vaccination history as soon as possible.".format(child_name))
-                print("{}'s medical history:".format(child_name))
-                pf.display_medical_history(nhs_number)
+                # print("{}'s medical history:".format(child_name))
+                # pf.display_medical_history(nhs_number)
             self.connection.commit()
 
     def close_connection(self):
