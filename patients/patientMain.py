@@ -76,6 +76,21 @@ class invalidTelephone(Error):
         self.message = message
         super().__init__(self.message)
 
+class dateInvalidError(Error):
+    def __init__(self, message = "I'm sorry, that is not a valid date, please try again"):
+        self.message = message
+        super().__init__(self.message)
+
+class dateInFutureError(Error):
+    def __init__(self, message = "I'm sorry, your date of birth cannot be in the future, please try again"):
+        self.message = message
+        super().__init__(self.message)
+
+class dateFormatError(Error):
+    def __init__(self, message = "I'm sorry, this date in not in the proper YYYY-MM-DD format, with '-'s as separators, please try again"):
+        self.message = message
+        super().__init__(self.message)
+
 # Patient Functions
 
 
@@ -296,7 +311,8 @@ def firstNameQ(newPatient):
             raise emptyAnswer()
         elif firstName == '0':
             task()
-        elif firstName == "1":
+        x = firstName.replace(" ", "")
+        if x.isalpha() == False:
             raise invalidAnswer()
         else:
             newPatient["firstName"] = firstName
@@ -320,7 +336,8 @@ def lastNameQ(newPatient):
             task()
         elif lastName == '1':
             firstNameQ(newPatient)
-        elif lastName == "2":
+        x = lastName.replace(" ", "")
+        if x.isalpha() == False:
             raise invalidAnswer()
         else:
             newPatient["lastName"] = lastName
@@ -343,19 +360,52 @@ def dateOfBirthQ(newPatient):
             task()
         elif dateOfBirth == '1':
             lastNameQ(newPatient)
-        elif dateOfBirth == "2":
-            raise invalidAnswer()
+        x = dateOfBirth.replace(" ", "")
+        x = x.replace("-", "")
+        if (len(dateOfBirth) != 10) or (dateOfBirth[4] != '-' or dateOfBirth[7] != '-') or (x.isdigit() == False):
+            raise dateFormatError()
+        day = dateOfBirth[8:10]
+        month = dateOfBirth[5:7]
+        year = dateOfBirth[0:4]
+        if (day.isdigit() == False) or (month.isdigit() == False) or (year.isdigit() == False):
+            raise dateInvalidError()
+        day = int(dateOfBirth[8:10])
+        month = int(dateOfBirth[5:7])
+        year = int(dateOfBirth[0:4])
+        if month > 12 or month < 1:
+            raise dateInvalidError()
+        elif (month == 9 or month == 4 or month == 6 or month == 11) and day > 30:
+            raise dateInvalidError()
+        elif month == 2 and year % 4 != 0 and day > 28:
+            raise dateInvalidError()
+        elif month == 2 and year % 4 == 0 and day > 29:
+            raise dateInvalidError()
+        elif day > 31 or day < 1:
+                raise dateInvalidError()
         else:
-            year, month, day = map(int, dateOfBirth.split('-'))
-            dateOfBirth = str(datetime.date(year, month, day))
-            newPatient["dateOfBirth"] = dateOfBirth
-            genderQ(newPatient)
+            dateOfBirth = datetime.date(year, month, day)
+            today = date.today()
+            if dateOfBirth > today:
+                raise dateInFutureError()
+            else:
+                dateOfBirth = uf.tounixtime(dateOfBirth)
+                newPatient["dateOfBirth"] = dateOfBirth
+                print(newPatient)
+                genderQ(newPatient)
     except emptyAnswer:
         error = emptyAnswer()
         print(error)
         dateOfBirthQ(newPatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except dateFormatError:
+        error = dateFormatError()
+        print(error)
+        dateOfBirthQ(newPatient)
+    except dateInvalidError:
+        error = dateInvalidError()
+        print(error)
+        dateOfBirthQ(newPatient)
+    except dateInFutureError:
+        error = dateInFutureError()
         print(error)
         dateOfBirthQ(newPatient)
 
@@ -408,7 +458,7 @@ def addressLine1Q(newPatient):
             task()
         elif addressLine1 == "1":
             genderQ(newPatient)
-        elif addressLine1 == '2':
+        elif len(addressLine1) > 100:
             raise invalidAnswer()
         else:
             newPatient["addressLine1"] = addressLine1
@@ -430,7 +480,7 @@ def addressLine2Q(newPatient):
             task()
         elif addressLine2 == "1":
             addressLine1Q(newPatient)
-        elif addressLine2 == '2':
+        elif len(addressLine2) > 100:
             raise invalidAnswer()
         else:
             newPatient["addressLine2"] = addressLine2
@@ -579,7 +629,7 @@ def register():
                   "addressLine1": "",
                   "addressLine2": "",
                   "postcode": "",
-                  "telephoneNumber": 0,
+                  "telephoneNumber": "",
                   "patientEmail": "",
                   "password": ""}
     firstNameQ(newPatient)
