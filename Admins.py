@@ -20,7 +20,7 @@ class FieldEmpty(Error):
 
     :param: message - explanation of the error to the user
     """
-    def __init__(self, message = "this field cannot be left empty"):
+    def __init__(self, message = "\n   < Field cannot be left empty, please provide an input > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -31,7 +31,7 @@ class EmailInUse(Error):
     :param: email - input email which causes the error
             message - explanation of the error to the user
     """
-    def __init__(self, email, message = "email already in use"):
+    def __init__(self, email, message = "\n   < Email already in use > \n"):
         self.email = email
         self.message = message
         super().__init__(self.message)
@@ -43,7 +43,7 @@ class EmailInvalid(Error):
     :param: email - input email which causes the error
             message - explanation of the error to the user
     """
-    def __init__(self, email, message = "please enter a valid email"):
+    def __init__(self, email, message = "\n   < Please enter a valid email > \n"):
         self.email = email
         self.message = message
         super().__init__(self.message)
@@ -61,7 +61,7 @@ class DateInvalidError(Error):
     :param: date - input date which causes the error
             message - explanation of the error to the user
     """
-    def __init__(self, message = "date does not exist, please enter a valid date"):
+    def __init__(self, message = "\n   < Date does not exist, please enter a valid date > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -72,7 +72,7 @@ class DateInFutureError(Error):
     :param: date - input date which causes the error
             message - explanation of the error to the user
     """
-    def __init__(self, message = "date of birth cannot be in the future"):
+    def __init__(self, message = "\n   < Date of birth cannot be in the future > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -83,7 +83,7 @@ class DateFormatError(Error):
     :param: date - input date which causes the error
             message - explanation of the error to the user
     """
-    def __init__(self, message = "please enter the date in the correct format, with '-'s as separators"):
+    def __init__(self, message = "\n   < Please enter the date in the correct format, with '-'s as separators > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -93,7 +93,7 @@ class TeleNoFormatError(Error):
 
     :param: message - explanation of the error to the user
     """
-    def __init__(self, message = "please enter the phone number in the correct format"):
+    def __init__(self, message = "\n   < Please enter the phone number in the correct format > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -106,7 +106,7 @@ class IncorrectInputLength(Error):
     """
     def __init__(self, correct_length):
         self.correct_length = str(correct_length)
-        self.message = "Incorrect input length, input should be {} characters long" .format(correct_length)
+        self.message = "\n   < Please enter the correct input length, input should be {} characters long > \n" .format(correct_length)
         super().__init__(self.message)
 
 class GenderError(Error):
@@ -115,7 +115,7 @@ class GenderError(Error):
 
     :param: message - explanation of the error to the user
     """
-    def __init__(self, message = "please enter one of the options shown"):
+    def __init__(self, message = "\n   < Please enter one of the options shown > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -134,6 +134,12 @@ class InvalidAdd(Error):
 class IntegerError(Error):
     """exception raised when integer is not in choice range"""
     def __init__(self, message = "please input a valid number"):
+        self.message = message
+        super().__init__(self.message)
+
+class YNError(Error):
+    """exception raised when input is not in Y/N"""
+    def __init__(self, message = "\n   < Please enter Y/N > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -162,9 +168,9 @@ class adminFunctions():
         while True:
             try:
                 while question_num == 0:
-                    a = input("email: ")
+                    a = input("Email: ")
                     if a == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not a:
                         raise FieldEmpty()
@@ -176,25 +182,25 @@ class adminFunctions():
                         raise EmailInUse(a)
                     question_num = 1
                 while question_num == 1:
-                    pw = input("password: ")
+                    pw = input("Password: ")
                     if pw == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not pw:
                         raise FieldEmpty()
                     question_num = 2
                 while question_num == 2:
-                    b = input("first name: ")
+                    b = input("First name: ")
                     if b == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not b:
                         raise FieldEmpty()
                     question_num = 3
                 while question_num == 3:
-                    c = input("last name: ")
+                    c = input("Last name: ")
                     if c == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not c:
                         raise FieldEmpty()
@@ -202,7 +208,7 @@ class adminFunctions():
                 while question_num == 4:
                     dateOfBirth = (input("enter date of birth as YYYY-MM-DD: "))
                     if dateOfBirth == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not dateOfBirth:
                         raise FieldEmpty()
@@ -235,21 +241,20 @@ class adminFunctions():
                     date_today = date.today()
                     if date_entered > date_today:
                         raise DateInFutureError
-                    dateOfBirth = uf.tounixtime(date_entered)
-                    print(dateOfBirth)
+                    dateOfBirth = date_entered.isoformat()
                     question_num = 5
                 while question_num == 5:
-                    department = input("department: ")
+                    department = input("Department: ")
                     if department == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not department:
                         raise FieldEmpty()
                     question_num = 6
                 while question_num == 6:
-                    teleNo = input("telephone number (no spaces, with country code. E.g. +4471234123123): ")
+                    teleNo = input("Telephone number (no spaces, with country code. E.g. +4471234123123): ")
                     if teleNo == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not teleNo:
                         raise FieldEmpty()
@@ -262,10 +267,10 @@ class adminFunctions():
                         raise IncorrectInputLength(correct_length)
                     question_num = 7
                 while question_num == 7:
-                    gender = input("gender (enter male/female/non-binary/prefer not to say): ")
+                    gender = input("Gender (enter male/female/non-binary/prefer not to say): ")
                     gender = gender.lower()
                     if gender == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not gender:
                         raise FieldEmpty()
@@ -276,13 +281,13 @@ class adminFunctions():
                 while question_num == 8:
                     addressL1 = input("Address Line 1: ")
                     if addressL1 == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not addressL1:
                         raise FieldEmpty()
                     addressL2 = input("Address Line 2: ")
                     if addressL2 == '0':
-                        print('going back')
+                        print('Going back')
                         return 0
                     if not addressL2:
                         raise FieldEmpty()
@@ -297,7 +302,7 @@ class adminFunctions():
                 error = EmailInUse(a)
                 print(error)
             except ValueError:
-                print("please provide a numerical input")
+                print("   < Please provide a numerical input >")
             except TeleNoFormatError:
                 error = TeleNoFormatError()
                 print(error)
@@ -327,42 +332,87 @@ class adminFunctions():
         items = self.c.fetchall()
         count = items[0][0]
         print("   < You have %d patient registrations to confirm >" % count)
+        # self.c.execute("SELECT * FROM PatientDetail WHERE registrationConfirm = 0")
+        # items = self.c.fetchall()
+        # for i in items:
+        #     print(i)
 
     def confirm_registrations(self):
+        print("********************************************")
         self.c.execute("""SELECT * FROM PatientDetail WHERE registrationConfirm = 0 """)
         items = self.c.fetchall()
         if len(items) == 0:
-            print("no patient registrations to confirm")
+            print("No patient registrations to confirm")
+            return 0
         else:
             for i in items:
                 print("NHS Number: {}".format(i[0]))
-                print("email: {}".format(i[1]))
-                print("first name: {}".format(i[2]))
-                print("last name: {}".format(i[3]))
+                print("Email: {}".format(i[1]))
+                print("First name: {}".format(i[2]))
+                print("Last name: {}".format(i[3]))
                 date = uf.toregulartime(i[4])
                 date = date.strftime("%Y-%m-%d") 
-                print("date of birth: {}".format(date))
-                print("gender: {}".format(i[5]))
-                print("address line 1: {}".format(i[6]))
-                print("addresss line 2: {}".format(i[7]))
-                print("postcode: {}".format(i[8]))
+                print("Date of birth: {}".format(date))
+                print("Gender: {}".format(i[5]))
+                print("Address line 1: {}".format(i[6]))
+                print("Addresss line 2: {}".format(i[7]))
+                print("Postcode: {}".format(i[8]))
                 tele_no = '+' + str(i[9])
-                print("telephone number: {}".format(tele_no))
-                change = input("Do you want to confirm this registration?: (Y/N) ")
+                print("Telephone number: {}".format(tele_no))
+                print("********************************************")
+                change = ''
                 while change != 'Y' and change != 'N':
-                    if change == 'Y':
-                        self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 1 WHERE patientEmail = ? """,
-                                       (i[1],))
-                    elif change == 'N':
-                        print("registration not confirmed")
-                    else:
-                        print("please enter Y/N")
+                    try:
                         change = input("Do you want to confirm this registration?: (Y/N) ")
+                        if change == 'Y':
+                            self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 1 WHERE patientEmail = ? """,
+                                        (i[1],))
+                            print("Registration confirmed successfully")
+                            # self.c.execute("SELECT * FROM PatientDetail WHERE registrationConfirm = 1")
+                            # items = self.c.fetchall()
+                            # for i in items:
+                            #     print(i)
+                        elif change == 'N':
+                            print("Registration not confirmed")
+                        else:
+                            raise YNError
+                    except YNError:
+                        print("Please enter Y/N")
+                        # change = input("Do you want to confirm this registration?: (Y/N) ")
             self.connection.commit()
+            return 3
+
+    def unconfirm_registrations(self):
+        while True:
+            try:
+                print("********************************************")
+                nhs_num = input("Type in the patients NHS Number (press 0 to go back): ")
+                if nhs_num == '0':
+                    return 3
+                if not nhs_num:
+                    raise FieldEmpty()
+            except FieldEmpty:
+                error = FieldEmpty()
+                print(error)
+            else:
+                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_num,))
+                items = self.c.fetchall()
+                if len(items) == 0:
+                    print("No record exists with this email")
+                else:
+                    self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 0 WHERE nhsNumber = ?""", (nhs_num,))
+                    print("Registration un-confirmed successfully")
+                    # self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_num,))
+                    # items = self.c.fetchall()
+                    # for i in items:
+                    #     print(i)
+                    self.connection.commit()
+                    return 3
 
     def deactivate_doctor(self):
         while True:
             try:
+                print("********************************************")
                 email = input("Type in the practitioner's email (press 0 to go back): ")
                 if email == '0':
                     return 2
@@ -380,20 +430,18 @@ class adminFunctions():
                 self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
                 items = self.c.fetchall()
                 if len(items) == 0:
-                    print("no record exists with this email")
+                    print("No record exists with this email")
                 else:
-                    self.c.execute("""UPDATE GP SET active = 'N' WHERE gpEmail = ?""", (email,))
+                    self.c.execute("""UPDATE GP SET active = 0 WHERE gpEmail = ?""", (email,))
                     self.c.execute("SELECT * FROM GP")
-                    items = self.c.fetchall()
-                    for i in items:
-                        print(i)
-                    self.connection.commit()
+                    print("Record deactivated successfully")
                     return 2
 
     def delete_doctor(self):
         providing_input = True
         while providing_input == True:
             try:
+                print("********************************************")
                 email = input("Type in the practitioner's email (press 0 to go back): ")
                 if email == "0":
                     return 2
@@ -411,14 +459,11 @@ class adminFunctions():
                 self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
                 items = self.c.fetchall()
                 if len(items) == 0:
-                    print("no record exists with this email")
+                    print("No record exists with this email")
                 else:
                     self.c.execute("DELETE FROM GP WHERE gpEmail = ?", (email,))
                     self.c.execute("SELECT * FROM GP")
-                    items = self.c.fetchall()
-                    for i in items:
-                        print(i)
-                    self.connection.commit()
+                    print("Record deleted successfully")
                     return 2
 
     def cin(self):

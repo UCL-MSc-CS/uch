@@ -191,7 +191,7 @@ c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
                     'm.shorvon@gmail.com',
                     'Matthew',
                     'Shorvon',
-                    '1998-07-16',
+                    900543600,
                     'Male',
                     '10 Downing Street',
                     'London',
@@ -207,13 +207,34 @@ c.execute("""INSERT OR IGNORE INTO GP VALUES(
             'Matthew',
             'Shorvon',
             'male',
-            '1998-07-16',
+            '160798',
             '10 Beverly Hills',
             'LA',
             '07758221088',
             'Plastic Surgery',
             'Y')""")
 connection.commit()
+
+c.execute("SELECT * FROM PatientDetail WHERE registrationConfirm = 0")
+items = c.fetchall()
+for i in items:
+    print(i)
+
+c.execute("""UPDATE PatientDetail SET registrationConfirm = 1 WHERE patientEmail = 'm.shorvon@gmail.com' """)
+connection.commit()
+
+c.execute("SELECT * FROM PatientDetail WHERE registrationConfirm = 1")
+items = c.fetchall()
+for i in items:
+    print(i)
+
+c.execute("""UPDATE PatientDetail SET registrationConfirm = 0 WHERE patientEmail = 'm.shorvon@gmail.com' """)
+connection.commit()
+
+c.execute("SELECT * FROM PatientDetail WHERE registrationConfirm = 0")
+items = c.fetchall()
+for i in items:
+    print(i)
 
 connection.close()
 

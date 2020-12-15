@@ -19,15 +19,17 @@ class Menus():
         uf.banner('Admin')
         print("Choose [1] to add a new doctor")
         print("Choose [2] to deactivate or delete a profile")
-        print("Choose [3] to confirm patient registration")
+        print("Choose [3] to confirm/un-confirm patient registrations")
         print("Choose [4] to check in/out a patient")
         print("Choose [5] to change patient details")
         print("Choose [0] when finished navigating menu")
 
     def admin_submenu2(self):
+        print("********************************************")
         print("choose [1] to deactivate a profile")
         print("choose [2] to delete a profile")
         print("choose [0] when finished navigating menu.")
+        print("********************************************")
 
     def admin_submenuCheckIO(self):
         print("choose [1] to check patient in")
@@ -102,22 +104,18 @@ while True:
                         while selection != 0:
                             while selection == 1:
                                 print("********************************************")
-                                # print("Choose [1] to add a ")
-                                # create = int(input("choose [1] to input physician or [2] to exit: "))
-                                # while create != 1 and create != 2:
-                                #     print('please enter 1 or 2')
-                                #     create = int(input("choose [1] to input physician or [2] to exit: "))
-                                # if create == 1:
-                                #     selection = ad.add_doctor()
-                                #     print(selection)
-                                # elif create == 2:
-                                #     selection = 0
                                 selection = ad.add_doctor()
                             while selection == 2:
                                 AdminM.admin_submenu2()
-                                ipt = int(input("please select an option: "))
+                                ipt = ''
+                                while ipt == '':
+                                    try:
+                                        ipt = int(input("Please select an option: "))
+                                    except ValueError:
+                                        print("   < Please provide a numerical input >")
+
                                 while ipt != 1 and ipt != 2 and ipt != 0:
-                                    print('not a valid input')
+                                    print('Not a valid input')
                                     ipt = int(input("please select an option: "))
                                 if ipt == 1:
                                     selection = ad.deactivate_doctor()
@@ -125,12 +123,32 @@ while True:
                                     selection = ad.delete_doctor()
                                 if ipt == 0:
                                     selection = 0
-                            if selection == 3:
-                                ad.confirm_registrations()
-                                selection = 0
+                            while selection == 3:
+                                print("********************************************")
+                                print("choose [1] to confirm a registration")
+                                print("choose [2] to un-confirm a registration")
+                                print("choose [0] when finished navigating menu.")
+                                print("********************************************")
+                                ipt = ''
+                                while ipt == '':
+                                    try:
+                                        ipt = int(input("Please select an option: "))
+                                    except ValueError:
+                                        print("   < Please provide a numerical input >")
+
+                                while ipt != 1 and ipt != 2 and ipt != 0:
+                                    print('Not a valid input')
+                                    ipt = int(input("please select an option: "))
+                                if ipt == 1:
+                                    selection = ad.confirm_registrations()
+                                if ipt == 2:
+                                    selection = ad.unconfirm_registrations()
+                                if ipt == 0:
+                                    selection = 0
+                                
                             #checking patient in or out
 
-                            elif selection == 4:
+                            if selection == 4:
                                 AdminM.admin_submenuCheckIO()
                                 CheckOpt = int(input("choice: "))
                                 if CheckOpt == 1:
@@ -179,19 +197,19 @@ while True:
                         if selection == 0:
                             logged_in = "restart"
                     except ValueError:
-                        print("please enter a number")
+                        print("\n   < Please enter a number > \n")
                 while logged_in == False:
-                    print("incorrect username/password")
+                    print("\n   < Incorrect username/password > \n")
                     logged_in = "entering details"
                 if logged_in == "restart":
                     ad.commit_and_close()
                     masterlogin.MasterMenu()
                     selection1 = int(input("please select an option: "))
     except ValueError:
-        print("please enter a number")
+        print("\n   < Please enter a number >\n")
     except KeyboardInterrupt:
-        print("closing program")
+        print("Closing program")
         sys.exit()
     except EOFError:
-        print("closing program")
+        print("Closing program")
         sys.exit()
