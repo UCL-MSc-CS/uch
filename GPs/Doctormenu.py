@@ -13,12 +13,12 @@ def mainmenu(drdemail):
         print("--------------------------------------------")
         print("\t Doctor Main Menu")
         print("--------------------------------------------")
-        print("choose [1] to open appointment")
-        print("choose [2] to confirm pending appointments")
-        print("choose [3] to add non-patient time (including holidays)")
-        print("choose [4] to view your timetable")
-        print("choose [5] to cancel appointments")
-        print("choose [6] to exit")
+        print("Choose [1] to open appointment")
+        print("Choose [2] to confirm pending appointments")
+        print("Choose [3] to add non-patient time (including holidays)")
+        print("Choose [4] to view your timetable")
+        print("Choose [5] to cancel appointments")
+        print("Choose [0] to exit")
         option = input(":")
         if option == "1":
             openappointment(doctoremail)
@@ -30,9 +30,10 @@ def mainmenu(drdemail):
             printtimetable(doctoremail)
         elif option == "5":
             clearhours(doctoremail)
-        elif option == "6":
+        elif option == "0":
             print("Logging out.....")
+            print("********************************************")
             break
         else:
-            print("Invalid option chosen. Try again")
-        print("------------------------------------------------------------------------------------------------------")
+            print("\t<Invalid option chosen. Please try again>")
+        print("********************************************")
