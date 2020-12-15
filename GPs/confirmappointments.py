@@ -6,9 +6,12 @@ dateformatstring = "%Y-%m-%d"
 timeformatstring = "%H:%M"
 
 def confirmappointments(doctoremail):
-    # todo once doctor has accepted the appointment, all pending appointments for other doctors get auto-rejected
-    # todo make sure patient cannot have more than one pending appointment at a time (?)
-    confirmdate = uf.validatedate("Please enter a date for confirming appointments")
+    while True:
+        confirmdate = uf.validatedate("Please enter a date for confirming appointments")
+        if confirmdate.date() >= datetime.today().date():
+            break
+        else:
+            print("\t<You cannot confirm appointments in the past, please try again>")
     datestring = datetime.strftime(confirmdate,dateformatstring)
     continueconfirming = True
     while continueconfirming:

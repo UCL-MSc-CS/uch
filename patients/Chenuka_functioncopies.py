@@ -62,4 +62,7 @@ for item in status:
     elif item == 'Pending':
         item = 'Still Pending Approval'
         new_status.append(item)
+    elif item == 'Declined':
+        item = 'The Doctor has declined your appointment'
+        new_status.append(item)
 """

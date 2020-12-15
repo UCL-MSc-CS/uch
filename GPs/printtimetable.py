@@ -26,17 +26,26 @@ def printtimetable(doctoremail):
         try:
             if int(option) == 1:
                 printdays(today, doctoremail)
-                input("\nPress any button to continue....")
-                break
+                choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
+                if choice == '0':
+                    continue
+                else:
+                    break
             elif int(option) == 2:
                 printdays(today + timedelta(7), doctoremail)
-                input("\nPress any button to continue....")
-                break
+                choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
+                if choice == '0':
+                    continue
+                else:
+                    break
             elif int(option) == 3:
                 selected_date = uf.validatedate("Please enter a date to view its weekly timetable")
                 printdays(selected_date, doctoremail)
-                input("\nPress any button to continue....")
-                break
+                choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
+                if choice == '0':
+                    continue
+                else:
+                    break
             elif int(option) == 0:
                 break
             else:
