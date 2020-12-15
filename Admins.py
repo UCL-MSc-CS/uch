@@ -531,12 +531,16 @@ class adminFunctions():
                     try:
                         while question_num == 1:
                             emails = input("New email: ")
+                            self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (emails,))
+                            emailCheck = self.c.fetchall()
                             if emails == '0':
                                 return adminFunctions.managedet(self)
                                 break
                             elif emails == '1':
                                 return masterback
                                 break
+                            elif len(emailCheck) > 0:
+                                raise EmailInUse
                             elif "@" not in emails or ".com" not in emails:
                                 raise EmailInvalid(emails)
                             elif not emails:
@@ -684,6 +688,9 @@ class adminFunctions():
                                 raise IncorrectInputLength(correct_length)
                             question_num = 11
 
+                    except EmailInUse:
+                        error = EmailInUse()
+                        print(error)
                     except nhsNotExists:
                         error = nhsNotExists()
                         print(error)
