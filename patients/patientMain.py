@@ -156,10 +156,10 @@ def questOptions(nhsNumber):
             x = RiskProfile(nhsNumber)
             x.questions(nhsNumber)
             x.BMI_calculator(nhsNumber)
-            x.diet(nhsNumber)
             x.smoking(nhsNumber)
             x.drugs(nhsNumber)
             x.alcohol(nhsNumber)
+            x.diet(nhsNumber)
             x.insert_to_table(nhsNumber)
             options(nhsNumber)
         elif action == '3':
