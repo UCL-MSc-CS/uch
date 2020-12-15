@@ -221,7 +221,7 @@ c.execute("""INSERT OR IGNORE INTO GP VALUES(
             'LA',
             '447758221088',
             'Plastic Surgery',
-            'Y')""")
+            1)""")
 connection.commit()
 
 connection.close()

@@ -126,7 +126,6 @@ def checkNHS(nhsNumber):
         c.execute(
             "SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
         results = c.fetchall()
-        uf.banner('Patient')
         if results[0][11] == 0:
             raise notRegistered()
     except notRegistered:
@@ -181,7 +180,7 @@ def questOptions(nhsNumber):
 
 def options(nhsNumber):
     try:
-        print("********************************************")
+        uf.banner('Patient')
         print("What would you like to do next?")
         print("Choose [1] to book an appointment")
         print("Choose [2] to view your confirmed appointments")
@@ -190,7 +189,6 @@ def options(nhsNumber):
         print("Choose [5] to see your contact details")
         print("Choose [6] to update your contact details")
         print("Choose [0] to log out")
-        print("********************************************")
         action = input("Please select an option: ")
         if action == '':
             raise emptyAnswer()

@@ -213,7 +213,7 @@ class adminFunctions():
                         raise FieldEmpty()
                     question_num = 4
                 while question_num == 4:
-                    dateOfBirth = (input("enter date of birth as YYYY-MM-DD: "))
+                    dateOfBirth = (input("Enter date of birth as YYYY-MM-DD: "))
                     if dateOfBirth == '0':
                         print('Going back')
                         return 0

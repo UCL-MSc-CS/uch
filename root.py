@@ -11,9 +11,9 @@ import usefulfunctions as uf
 class Menus():
     def MasterMenu(self):
         print("Welcome, please login")
-        print("choose [1] for Admin")
-        print("choose [2] for Patient")
-        print("choose [3] for GP")
+        print("Choose [1] for Admin")
+        print("Choose [2] for Patient")
+        print("Choose [3] for GP")
 
     def adminmenu(self):
         uf.banner('Admin')
