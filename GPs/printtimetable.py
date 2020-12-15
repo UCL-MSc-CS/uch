@@ -14,29 +14,41 @@ def printtimetable(doctoremail):
     while True:
         now = datetime.today()
         today = datetime(now.year, now.month, now.day)
+        print("--------------------------------------------")
+        print("\t Doctor Timetable")
+        print("--------------------------------------------")
         print("Select option below to view weekly timetable:")
-        print("choose [1] to view this week")
-        print("choose [2] to view next week")
-        print("choose [3] to view any other week.")
-        print("choose [4] to return to the main menu.")
+        print("Choose [1] to view this week")
+        print("Choose [2] to view next week")
+        print("Choose [3] to view any other week.")
+        print("Choose [0] to return to the main menu.")
         option = input(":")
         try:
             if int(option) == 1:
                 printdays(today, doctoremail)
-                input("\n\nPress any button to continue....")
-                break
+                choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
+                if choice == '0':
+                    continue
+                else:
+                    break
             elif int(option) == 2:
                 printdays(today + timedelta(7), doctoremail)
-                input("\n\nPress any button to continue....")
-                break
+                choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
+                if choice == '0':
+                    continue
+                else:
+                    break
             elif int(option) == 3:
                 selected_date = uf.validatedate("Please enter a date to view its weekly timetable")
                 printdays(selected_date, doctoremail)
-                input("\n\nPress any button to continue....")
-                break
-            elif int(option) == 4:
+                choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
+                if choice == '0':
+                    continue
+                else:
+                    break
+            elif int(option) == 0:
                 break
             else:
-                print("invalid option choice, please try again")
+                print("\t<Invalid option choice, please try again>")
         except:
-            print("You didn't enter a number please try again")
+            print("\t<You didn't enter a number please try again>")
