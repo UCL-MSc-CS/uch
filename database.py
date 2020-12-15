@@ -46,23 +46,22 @@ c.execute("""CREATE TABLE IF NOT EXISTS PatientDetail (
 )""")
 connection.commit()
 
-c.execute("""CREATE TABLE IF NOT EXISTS medicalHistory(
-            patientEmail DATATYPE text,
+c.execute("""CREATE TABLE IF NOT EXISTS vaccineHistory(
+            nhsNumber DATATYPE INTEGER PRIMARY KEY,
             Status DATATYPE text,
-            DTap DATATYPE text,
-            HepC DATATYPE text,
-            HepB DATATYPE text,
-            Measles DATATYPE text,
-            Mumps DATATYPE text,
-            Rubella DATATYPE text,
-            Varicella DATATYPE text,
-            PRIMARY KEY (patientEmail, Status)
+            DTap DATATYPE integer,
+            HepC DATATYPE integer,
+            HepB DATATYPE integer,
+            Measles DATATYPE integer,
+            Mumps DATATYPE integer,
+            Rubella DATATYPE integer,
+            Varicella DATATYPE integer
             )""")
 connection.commit()
 
 c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
-            patientEmail text PRIMARY KEY,
-            exercise DATATYPE text,
+            nhsNumber DATATYPE INTEGER PRIMARY KEY,
+            exercise DATATYPE integer,
             exerciseType DATATYPE text,
             exerciseFrequency DATATYPE integer,
             exerciseDuration DATATYPE integer,
@@ -70,10 +69,10 @@ c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
             height DATATYPE real,
             weight DATATYPE real,
             bmi DATATYPE real,
-            smoking DATATYPE text,
-            drugs DATATYPE text,
+            smoking DATATYPE integer,
+            drugs DATATYPE integer,
             drugType DATATYPE text,
-            alcohol DATATYPE text,
+            alcohol DATATYPE integer,
             alcoholUnit DATATYPE text,
             meat DATATYPE text,
             diet DATATYPE text,
@@ -82,11 +81,22 @@ c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
 connection.commit()
 
 c.execute("""CREATE TABLE IF NOT EXISTS cancer(
-                    patientEmail DATATYPE text,
+                    nhsNumber DATATYPE integer,
                     cancerRelation DATATYPE text,
                     cancerType DATATYPE text,
-                    cancerAge DATATYPE text,
-                    PRIMARY KEY (patientEmail, cancerRelation)
+                    cancerAge DATATYPE text
+                    )""")
+connection.commit()
+
+c.execute("""CREATE TABLE IF NOT EXISTS preExistingCondition(
+                    nhsNumber DATATYPE integer,
+                    conditionType DATATYPE text
+                    )""")
+connection.commit()
+
+c.execute("""CREATE TABLE IF NOT EXISTS medAllergy(
+                    nhsNumber DATATYPE INTEGER,
+                    medName DATATYPE text
                     )""")
 connection.commit()
 
@@ -161,7 +171,6 @@ if numrows < 1:
     pass
 
 
-
 c.execute("""CREATE TABLE IF NOT EXISTS Prescription (
                     appointmentID integer,
                     medicineID integer,
@@ -191,7 +200,7 @@ c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
                     'm.shorvon@gmail.com',
                     'Matthew',
                     'Shorvon',
-                    '1998-07-16',
+                    '900572400',
                     'Male',
                     '10 Downing Street',
                     'London',
@@ -210,7 +219,7 @@ c.execute("""INSERT OR IGNORE INTO GP VALUES(
             '1998-07-16',
             '10 Beverly Hills',
             'LA',
-            '07758221088',
+            '447758221088',
             'Plastic Surgery',
             'Y')""")
 connection.commit()
