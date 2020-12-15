@@ -766,19 +766,19 @@ class adminFunctions():
                 Cagain = 0
                 while Cagain == 0:
                     print("********************************************")
-                    print("Choose [1] to update email")
-                    print("Choose [2] to update first name")
-                    print("Choose [3] to update last name")
-                    print("Choose [4] to update date of birth")
-                    print("Choose [5] to update gender")
-                    print("Choose [6] to update address line 1")
-                    print("Choose [7] to update address line 2")
-                    print("Choose [8] to update post code")
-                    print("Choose [9] to update telephone number")
+                    print("Choose [1] to go back to update patient details menu")
+                    print("Choose [2] to update email")
+                    print("Choose [3] to update first name")
+                    print("Choose [4] to update last name")
+                    print("Choose [5] to update date of birth")
+                    print("Choose [6] to update gender")
+                    print("Choose [7] to update address line 1")
+                    print("Choose [8] to update address line 2")
+                    print("Choose [9] to update post code")
+                    print("Choose [10] to update telephone number")
                     print("********************************************")
                     try:
                         print("Press [0] to re-enter NHS number")
-                        print("Press [1] to go back to update patient details menu")
                         detinp = input("Choose which detail to change: ")
                         if detinp == '0':
                             Cagain = 1
@@ -803,21 +803,28 @@ class adminFunctions():
                         print("********************************************")
                         print("Press [0] to re-enter NHS number")
                         print("Press [1] to go back to options")
-                        if indetinp == 1:
+                        if indetinp == 2:
                             back = 0
                             while back == 0:
                                 try:
                                     CEmail = input("New email: ")
+                                    self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (CEmail,))
+                                    emailCheck = self.c.fetchall()
                                     if CEmail == '0':
                                         Cagain = 1
                                         break
                                     elif CEmail == '1':
                                         back = 0
                                         break
+                                    elif len(emailCheck) > 0:
+                                        raise EmailInUse
                                     elif "@" not in CEmail or ".com" not in CEmail:
                                         raise EmailInvalid(CEmail)
                                     elif not CEmail:
                                         raise FieldEmpty
+                                except EmailInUse:
+                                    error = EmailInUse()
+                                    print(error)
                                 except FieldEmpty:
                                     error = FieldEmpty()
                                     print(error)
@@ -830,7 +837,7 @@ class adminFunctions():
                                     print("Successfully changed email")
                                     back = 1
 
-                        elif indetinp == 2:
+                        elif indetinp == 3:
                             back2 = 0
                             while back2 == 0:
                                 try:
@@ -852,7 +859,7 @@ class adminFunctions():
                                     print("Successfully changed first name")
                                     back2 = 1
 
-                        elif indetinp == 3:
+                        elif indetinp == 4:
                             back3 = 0
                             while back3 == 0:
                                 try:
@@ -874,7 +881,7 @@ class adminFunctions():
                                     print("Successfully changed last name")
                                     back3 = 1
 
-                        elif indetinp == 4:
+                        elif indetinp == 5:
                             back4 = 0
                             while back4 == 0:
                                 try:
@@ -936,7 +943,7 @@ class adminFunctions():
                                     print("Successfully changed date of birth")
                                     back4 = 1
 
-                        elif indetinp == 5:
+                        elif indetinp == 6:
                             back6 = 0
                             while back6 == 0:
                                 try:
@@ -964,7 +971,7 @@ class adminFunctions():
                                     print("Successfully changed gender")
                                     back6 = 1
 
-                        elif indetinp == 6:
+                        elif indetinp == 7:
                             back7 = 0
                             while back7 == 0:
                                 try:
@@ -992,7 +999,7 @@ class adminFunctions():
                                     print("Successfully changed address line 1")
                                     back7 = 1
 
-                        elif indetinp == 7:
+                        elif indetinp == 8:
                             back8 = 0
                             while back8 == 0:
                                 try:
@@ -1020,7 +1027,7 @@ class adminFunctions():
                                     print("Successfully changed address line 2")
                                     back8 = 1
 
-                        elif indetinp == 8:
+                        elif indetinp == 9:
                             back9 = 0
                             while back9 == 0:
                                 try:
@@ -1043,7 +1050,7 @@ class adminFunctions():
                                     print("Successfully changed post code")
                                     back9 = 1
 
-                        elif indetinp == 9:
+                        elif indetinp == 10:
                             back10 = 0
                             while back10 == 0:
                                 try:
