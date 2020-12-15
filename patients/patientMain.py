@@ -255,7 +255,7 @@ def updateOptions(nhsNumber):
         elif action == '4':
             updateTelephoneNumber(nhsNumber)
         elif action == '5':
-            pass
+            updatePatientEmail(nhsNumber)
         elif action == '6':
             pass
         elif action == '0':
@@ -448,6 +448,44 @@ def updateTelephoneNumber(nhsNumber):
         error = invalidTelephone()
         print(error)
         updateTelephoneNumber(nhsNumber)
+
+def updatePatientEmail(nhsNumber):
+    try:
+        patientEmail = input("Please enter your new email (press 0 to go back): ")
+        if patientEmail == '':
+            raise emptyAnswer()
+        elif patientEmail == '0':
+            updateOptions(nhsNumber)
+        elif re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
+            updatePatientEmailCheck(nhsNumber, patientEmail)
+        else:
+            raise invalidEmail()
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updatePatientEmail(nhsNumber)
+    except invalidEmail:
+        error = invalidEmail()
+        print(error)
+        updatePatientEmail(nhsNumber)
+
+def updatePatientEmailCheck(nhsNumber, patientEmail):
+    try:
+        c.execute("SELECT * FROM PatientDetail WHERE patientEmail =?",
+              [patientEmail])
+        patientEmails = c.fetchall()
+        if patientEmails != []:
+            raise emailAlreadyExists()
+        else:
+            c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (patientEmail, nhsNumber))
+            connection.commit()
+            print("Successfully changed email address")
+            summary(nhsNumber)
+            options(nhsNumber)
+    except emailAlreadyExists:
+        error = emailAlreadyExists()
+        print(error)
+        updatePatientEmail(nhsNumber)
 
 
 def emailPasswordCheck(patientEmail):
