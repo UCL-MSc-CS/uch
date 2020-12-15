@@ -257,7 +257,7 @@ def updateOptions(nhsNumber):
         elif action == '5':
             updatePatientEmail(nhsNumber)
         elif action == '6':
-            pass
+            updatePasswordCheck(nhsNumber)
         elif action == '0':
             options(nhsNumber)
         else:
@@ -487,6 +487,47 @@ def updatePatientEmailCheck(nhsNumber, patientEmail):
         print(error)
         updatePatientEmail(nhsNumber)
 
+def updatePasswordCheck(nhsNumber):
+    try:
+        c.execute(
+            "SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
+        nhsNumbers = c.fetchall()
+        password = input("In order to change your password, please enter your old password (press 0 to go back): ")
+        if password == '':
+            raise emptyAnswer()
+        elif password == '0':
+            updateOptions(nhsNumber)
+        else:
+            if password != nhsNumbers[0][10]:
+                raise passwordIncorrect()
+            else:
+                updatePassword(nhsNumber)
+    except passwordIncorrect:
+        error = passwordIncorrect()
+        print(error)
+        updatePasswordCheck(nhsNumber)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updatePasswordCheck(nhsNumber)
+
+def updatePassword(nhsNumber):
+    try:
+        password = input("Please enter your new password (press 0 to go back to update details menu): ")
+        if password == '':
+            raise emptyAnswer()
+        elif password == '0':
+            updateOptions(nhsNumber)
+        else:
+            c.execute("""UPDATE PatientDetail SET password = ? WHERE nhsNumber = ?""", (password, nhsNumber))
+            connection.commit()
+            print("Successfully changed password")
+            summary(nhsNumber)
+            options(nhsNumber)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updatePassword(nhsNumber)
 
 def emailPasswordCheck(patientEmail):
     try:
