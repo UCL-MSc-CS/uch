@@ -1,11 +1,9 @@
 import sqlite3 as sql
 import webbrowser
+from uch.patients import patientMedicalFunctions as pf
 
 
-class InvalidMenuSelectionError(Exception):
-    pass
-class InvalidAnswerError(Exception):
-    pass
+"""Patient can enter data about their lifestyles. Relevant NHS advise and support information are provided to them"""
 class RiskProfile:
     def __init__(self):
         self.connection = sql.connect('UCH.db')
@@ -20,60 +18,106 @@ class RiskProfile:
         self.BMIRelatedData = []
         self.answers = []
 
-    def questions(self):
+    def questions(self, nhs_number):
         print("EXERCISE")
-        try:
-            c_exercise = input("Are you currently involved in regular endurance (cardiovascular) exercise? "
-                               "Y for yes, N for no\n")
-            if c_exercise != "N" and c_exercise != "Y" and c_exercise != "n" and c_exercise != "y":
-                raise InvalidAnswerError()
-        except InvalidAnswerError:
-            print("Please enter Y for yes and N for no.")
-            c_exercise = input("Are you currently involved in regular endurance (cardiovascular) exercise? "
-                               "Y for yes, N for no\n")
-        c_exercise = c_exercise.lower()
-        self.questionnaire[0] = c_exercise
-        if "y" in c_exercise:
-            c_type = input("Please name one example of the regular endurance (cardiovascular) "
-                           "exercise you participate in?\n")
-            c_type = c_type.lower()
+        while True:
+            try:
+                c_exercise = input("Are you currently involved in regular endurance (cardiovascular) exercise? "
+                                   "Y for yes, N for no: ").lower()
+                if not c_exercise:
+                    raise pf.EmptyFieldError()
+                if c_exercise != "n" and c_exercise != "y":
+                    raise pf.InvalidAnswerError()
+            except pf.EmptyFieldError:
+                error = pf.EmptyFieldError()
+                print(error)
+            except pf.InvalidAnswerError:
+                print("    <Please enter Y for yes and N for no>")
+            else:
+                break
+        if c_exercise == "y":
+            c_exercise = 1
+        else:
+            c_exercise = 0
+        self.questionnaire[0] = str(c_exercise)
+        if c_exercise == 1:
+            while True:
+                try:
+                    c_type = input("Please name one example of the regular endurance (cardiovascular) "
+                                   "exercise you participate in: ")
+                    if not c_type:
+                        raise pf.EmptyFieldError()
+                except pf.EmptyFieldError:
+                    error = pf.EmptyFieldError()
+                    print(error)
+                else:
+                    break
+            c_type = c_type.title()
             self.questionnaire[1] = c_type
-            try:
-                c_frequency = int(input("How many times do you engage in " + c_type + " per week" + "?\n"))
-            except ValueError:
-                print("You have entered a non-numeric value.")
-                c_frequency = int(input("How many times do you engage in " + c_type + " per week" + "?\n"))
+            while True:
+                try:
+                    c_frequency = int(input("How many times do you engage in " + c_type + " per week" + ": "))
+                    if not c_frequency:
+                        raise pf.EmptyFieldError()
+                except pf.EmptyFieldError:
+                    error = pf.EmptyFieldError()
+                    print(error)
+                except ValueError:
+                    print("    <You have entered a non-numeric value>")
+                else:
+                    break
             self.questionnaire[2] = str(c_frequency)
-            try:
-                c_time = int(input("In minutes, how much time per week do you commit to " + c_type + "?\n"))
-                if c_time >= 10080:
-                    raise InvalidAnswerError()
-            except ValueError:
-                print("You have entered a non-numeric value.")
-                c_time = int(input("In minutes, how much time per week do you commit to " + c_type + "?\n"))
-            except InvalidAnswerError:
-                print("Please enter a realistic answer for this questions.")
-                c_time = int(input("In minutes, how much time per week do you commit to " + c_type + "?\n"))
+            while True:
+                try:
+                    c_time = int(input("In minutes, how much time per week do you commit to " + c_type + ": "))
+                    if not c_time:
+                        raise pf.EmptyFieldError()
+                    if c_time >= 10080:
+                        raise pf.InvalidAnswerError()
+                except pf.EmptyFieldError:
+                    error = pf.EmptyFieldError()
+                    print(error)
+                except ValueError:
+                    print("    <You have entered a non-numeric value>")
+                except pf.InvalidAnswerError:
+                    print("    <Please enter a realistic answer for this questions>")
+                else:
+                    break
             self.questionnaire[3] = str(c_time)
             if c_time < 150:
-                print("The nhs recommends at least 150 minutes of moderate intensity activity a week")
+                print("The nhs recommends at least 150 minutes of moderate intensity activity a week.")
         else:
             print("Regular exercises are the key to stay healthy.")
-        print("GOALS\n", "*"*20)
-        d_goals = input("What are your main health goals?\n")
-        d_goals = d_goals.lower()
+        print("GOALS\n", "*"*10)
+        while True:
+            try:
+                d_goals = input("What are your main health goals: ")
+                if not d_goals:
+                    raise pf.EmptyFieldError()
+            except pf.EmptyFieldError:
+                error = pf.EmptyFieldError()
+                print(error)
+            else:
+                break
+        d_goals = d_goals.title()
         self.questionnaire[4] = d_goals
 
-    def BMI_calculator(self):
-        try:
-            height = float(input("What is your height in metres? "))
-            weight = float(input("What is your weight in kg? "))
-            if height >= 3 or weight >= 400:
-                raise InvalidAnswerError()
-        except InvalidAnswerError:
-            print("Error! The entered height and weight seem to be too large.")
-            height = float(input("What is your height in metres? "))
-            weight = float(input("What is your weight in kg? "))
+    def BMI_calculator(self, nhs_number):
+        while True:
+            try:
+                height = float(input("What is your height in metres: "))
+                weight = float(input("What is your weight in kg: "))
+                if not height or not weight:
+                    raise pf.EmptyFieldError()
+                if height >= 3 or weight >= 400:
+                    raise pf.InvalidAnswerError()
+            except pf.EmptyFieldError:
+                error = pf.EmptyFieldError()
+                print(error)
+            except pf.InvalidAnswerError:
+                print("    <Error! The entered height and weight seem to be too large>")
+            else:
+                break
         bmi_calculation = round(weight/(height ** 2), 2)
         bmi = bmi_calculation
         self.BMIRelatedData.append(height)
@@ -83,7 +127,7 @@ class RiskProfile:
         self.answers.extend(self.BMIRelatedData)
         if bmi < 18.4:
             print("*" * 20)
-            print("Your BMI of {} suggests you are underweight".format(bmi))
+            print("Your BMI of {} suggests you are underweight.".format(bmi))
             print("Being underweight could be a sign you're not eating enough or you may be ill."
                   "\nPlease talk to your doctor. You can also find advice on the following NHS webpage: ")
             if input("Type Y for yes to open in browser: ").lower() == "y":
@@ -91,11 +135,11 @@ class RiskProfile:
 
         if 18.5 < bmi < 24.9:
             print("*" * 20)
-            print("Your BMI of {} is within a healthy range".format(bmi))
+            print("Your BMI of {} is within a healthy range.".format(bmi))
 
         if 25 < bmi < 30:
             print("*" * 20)
-            print("Your BMI of {} suggests you are overweight".format(bmi))
+            print("Your BMI of {} suggests you are overweight.".format(bmi))
             print("Losing and keeping off 5% of your weight can have health benefits, "
                   "\nsuch as lowering your blood pressure and reducing your risk of developing type 2 diabetes."
                   "\nYou should work towards achieving a healthier weight over time. "
@@ -106,7 +150,7 @@ class RiskProfile:
 
         if bmi > 30:
             print("*" * 20)
-            print("Your BMI of {} suggests you are obese".format(bmi))
+            print("Your BMI of {} suggests you are obese.".format(bmi))
             print("Losing and keeping off 5% of your weight can have health benefits, "
                   "\nsuch as lowering your blood pressure and reducing your risk of developing type 2 diabetes."
                   "\nYou should work towards achieving a healthier weight over time. "
@@ -115,18 +159,29 @@ class RiskProfile:
                 webbrowser.open("https://www.nhs.uk/live-well/healthy-weight/start-the-nhs-weight-loss-plan"
                                 "/?tabname=weight-loss-support", new=2)
 
-    def smoking(self):
+    def smoking(self, nhs_number):
         print("*" * 20)
-        print("This section of the survey will assess smoking: ")
-        try:
-            smoking = input("Y for yes, N for no. Do you smoke cigarettes regularly?: ").lower()
-            if smoking != "N" and smoking != "Y" and smoking != "n" and smoking != "y":
-                raise InvalidAnswerError()
-        except InvalidAnswerError:
-            print("Error! Please re-answer the questions with Y for yes and N for no")
-            smoking = input("Y for yes, N for no. Do you smoke cigarettes regularly?: ").lower()
-        self.answers.append(smoking)
+        print("This section of the survey will assess smoking.")
+        while True:
+            try:
+                smoking = input("Y for yes, N for no. Do you smoke cigarettes regularly: ").lower()
+                if not smoking:
+                    raise pf.EmptyFieldError()
+                if smoking != "n" and smoking != "y":
+                    raise pf.InvalidAnswerError()
+            except pf.EmptyFieldError:
+                error = pf.EmptyFieldError()
+                print(error)
+            except pf.InvalidAnswerError:
+                print("    <Error! Please re-answer the questions with Y for yes and N for no>")
+            else:
+                break
         if smoking == "y":
+            smoking = 1
+        else:
+            smoking = 0
+        self.answers.append(smoking)
+        if smoking == 1:
             print("*" * 20)
             print("Stopping smoking is one of the best things you'll ever do for your health."
                   "\nWhen you stop, you give your lungs the chance to repair and you'll"
@@ -137,53 +192,83 @@ class RiskProfile:
             if input("Type Y for yes to open in browser: ").lower() == "y":
                 webbrowser.open("https://www.nhs.uk/better-health/quit-smoking/", new=2)
 
-    def drugs(self):
+    def drugs(self, nhs_number):
         print("*" * 20)
-        try:
-            drugs = input("Y for yes, N for no. Do you consume recreational drugs? yes or no: ").lower()
-            if drugs != "N" and drugs != "Y" and drugs != "n" and drugs != "y":
-                raise InvalidAnswerError()
-        except InvalidAnswerError:
-            print("Error! Please enter Y for yes and N for no.")
-            drugs = input("Y for yes, N for no. Do you consume recreational drugs? yes or no: ").lower()
+        while True:
+            try:
+                drugs = input("Y for yes, N for no. Do you consume recreational drugs: ").lower()
+                if not drugs:
+                    raise pf.EmptyFieldError()
+                if drugs != "n" and drugs != "y":
+                    raise pf.InvalidAnswerError()
+            except pf.EmptyFieldError:
+                error = pf.EmptyFieldError()
+                print(error)
+            except pf.InvalidAnswerError:
+                print("    <Error! Please enter Y for yes and N for no>")
+            else:
+                break
         if drugs == "y":
-            drugs_type = input("Please name one type of drugs you regularly consume. ")
+            drugs = 1
+        else:
+            drugs = 0
+        if drugs == 1:
+            drugs_type = input("Please name one type of drugs you regularly "
+                               "consume or leave this field blank if prefer not to disclose: ")
             self.answers.append(drugs)
             self.answers.append(drugs_type)
         else:
-            drugs_type = ""
+            drugs_type = 0
             self.answers.append(drugs)
             self.answers.append(drugs_type)
 
-    def alcohol(self):
+    def alcohol(self, nhs_number):
         print("*" * 20)
-        print("The following part of the survey will assess your consumption of alcohol: ")
-        print("1 unit of alcohol is around 76ml(~1/2 a glass) of wine or 250ml of beer (~1/2 a pint)")
-        try:
-            alcohol = (input("Y for yes, N for no. Do you drink alcohol in general? ")).lower()
-            if alcohol != "N" and alcohol != "Y" and alcohol != "n" and alcohol != "y":
-                raise InvalidAnswerError()
-        except InvalidAnswerError:
-            print("Error! Please enter Y for yes and N for no.")
-            alcohol = (input("Y for yes, N for no. Do you drink alcohol in general? ")).lower()
-        if alcohol == "y":
-            print("On average, how many units of alcohol do you drink a week?")
-            print("1. 1-2"
-                    "\n2. 3-4"
-                    "\n3. 5-6"
-                    "\n4. 7-8"
-                    "\n5. 9-10"
-                    "\n6. 11-12"
-                    "\n7. 13-14"
-                    "\n8. 14+")
-            unit = [1, 2, 3, 4, 5, 6, 7, 8]
+        print("The following part of the survey will assess your consumption of alcohol.")
+        print("1 unit of alcohol is around 76ml(~1/2 a glass) of wine or 250ml of beer (~1/2 a pint).")
+        while True:
             try:
-                alcohol_unit = int(input("Please choose a number from the options above: "))
-                if alcohol_unit not in unit:
-                    raise InvalidAnswerError()
-            except InvalidAnswerError:
-                print("Please enter your answer based on the menu provided.")
-                alcohol_unit = int(input("Please choose a number from the options above: "))
+                alcohol = input("Y for yes, N for no. Do you drink alcohol in general: ").lower()
+                if not alcohol:
+                    raise pf.EmptyFieldError()
+                if alcohol != "n" and alcohol != "y":
+                    raise pf.InvalidAnswerError()
+            except pf.EmptyFieldError:
+                error = pf.EmptyFieldError()
+                print(error)
+            except pf.InvalidAnswerError:
+                print("    <Error! Please enter Y for yes and N for no>")
+            else:
+                break
+        if alcohol == "y":
+            alcohol = 1
+        else:
+            alcohol = 0
+        if alcohol == 1:
+            print("On average, how many units of alcohol do you drink a week?")
+            print("Choose [1]: 1-2"
+                    "\nChoose [2]: 3-4"
+                    "\nChoose [3]: 5-6"
+                    "\nChoose [4]: 7-8"
+                    "\nChoose [5]: 9-10"
+                    "\nChoose [6]: 11-12"
+                    "\nChoose [7]: 13-14"
+                    "\nChoose [8]: 14+")
+            unit = [1, 2, 3, 4, 5, 6, 7, 8]
+            while True:
+                try:
+                    alcohol_unit = int(input("Please choose a number from the options above: "))
+                    if not alcohol_unit:
+                        raise pf.EmptyFieldError()
+                    if alcohol_unit not in unit:
+                        raise pf.InvalidAnswerError()
+                except pf.EmptyFieldError:
+                    error = pf.EmptyFieldError()
+                    print(error)
+                except pf.InvalidAnswerError:
+                    print("    <Invalid answer. Please enter your answer based on the menu provided>")
+                else:
+                    break
             self.answers.append(alcohol)
             self.answers.append(alcohol_unit)
             if alcohol_unit == 8:
@@ -197,15 +282,24 @@ class RiskProfile:
                 if input("Type Y for yes to open in browser: ").lower() == "y":
                     webbrowser.open("https://www.nhs.uk/live-well/alcohol-support/tips-on-cutting-down-alcohol/", new=2)
         else:
-            alcohol_unit = ""
+            alcohol_unit = 0
             self.answers.append(alcohol)
             self.answers.append(alcohol_unit)
 
-    def diet(self):
+    def diet(self, nhs_number):
         print("*" * 20)
-        print("The following part of the survey will assess your diet: ")
-        meat = input("How many meals a week do you consume red meat? ")
-        diet = input("How many portions of fruit or vegetables do you consume a day? ")
+        print("The following part of the survey will assess your diet.")
+        while True:
+            try:
+                meat = input("How many meals a week do you consume red meat: ")
+                diet = input("How many portions of fruit or vegetables do you consume a day: ")
+                if not meat or not diet:
+                    raise pf.EmptyFieldError()
+            except pf.EmptyFieldError:
+                error = pf.EmptyFieldError()
+                print(error)
+            else:
+                break
         if int(diet) < 5:
             print("The NHS suggests that men and women should consume at least 5 "
                   "portions of fruit or vegetables a day as part of a healthy diet.")
@@ -213,10 +307,10 @@ class RiskProfile:
               "\nplease consult your doctor and look at the following NHS webpage: ")
         if input("Type Y for yes to open in browser: ").lower() == "y":
             webbrowser.open("https://www.nhs.uk/live-well/eat-well/meat-nutrition/", new=2)
-        caffeine = input("How many cups of coffee or caffeinated drinks do you consume per day? ")
+        caffeine = input("How many cups of coffee or caffeinated drinks do you consume per day: ")
         if int(caffeine) > 4:
-            print("According to the NHS guidelines, drinking up to four cups of coffee a day carries no health risk",
-                  "\nYou might want to cut down your daily caffeine intake a bit.")
+            print("According to the NHS guidelines, drinking up to four cups of coffee a day carries no health risk.",
+                  "\nYou might want to cut down your daily caffeine intake.")
             print("If you would like more advice and support, "
                   "\nplease consult your doctor and look at the following NHS webpage: ")
             if input("Type Y for yes to open in browser: ").lower() == "y":
@@ -225,9 +319,9 @@ class RiskProfile:
         self.answers.append(diet)
         self.answers.append(caffeine)
 
-    def insert_to_table(self, patient_email):
-        self.answers.insert(0, patient_email)
-        question_query = """INSERT INTO questionnaireTable (patientEmail, exercise, exerciseType, exerciseFrequency,
+    def insert_to_table(self, nhs_number):
+        self.answers.insert(0, nhs_number)
+        question_query = """INSERT INTO questionnaireTable (nhsNumber, exercise, exerciseType, exerciseFrequency,
         exerciseDuration, goal, height, weight, bmi, smoking, drugs, drugType, alcohol, 
         alcoholUnit, meat, diet, caffeine)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
@@ -239,8 +333,11 @@ class RiskProfile:
         # print(result)
 
 # Erin = RiskProfile()
-# # Erin.BMI_calculator()
-# Erin.alcohol()
-# Erin.drugs()
-# Erin.diet()
-# Erin.smoking()
+# Erin.questions("0123456789")
+# Erin.BMI_calculator("0123456789")
+# Erin.alcohol("0123456789")
+# Erin.drugs("0123456789")
+# Erin.diet("0123456789")
+# Erin.smoking("0123456789")
+# Erin.save_your_answers()
+# correct order: smoking, drugs, alcohol, diet
