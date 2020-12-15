@@ -140,7 +140,9 @@ class IntegerError(Error):
 class YNError(Error):
     """exception raised when input is not in Y/N"""
     def __init__(self, message = "\n   < Please enter Y/N > \n"):
-        
+        self.message
+        super().__init__(self.message)
+
 class EmailInUse(Error):
     """exception raised when email already exist"""
 
