@@ -1,10 +1,10 @@
 import pandas as pd
-from uch import Admins
+import Admins
 import sqlite3 as sql
 from datetime import datetime as dt
 import time
-from uch.patients import patientMain as pm
-from uch.GPs import GPMain as gpm
+import patients.patientMain as pm
+import GPs.GPMain as gpm
 
 class Menus():
     def MasterMenu(self):

@@ -1,11 +1,11 @@
 import sqlite3 as sql
 import webbrowser
-from uch.patients import patientMedicalFunctions as pf
+import patients.patientMedicalFunctions as pf
 
 
 """Patient can enter data about their lifestyles. Relevant NHS advise and support information are provided to them"""
 class RiskProfile:
-    def __init__(self):
+    def __init__(self, nhsNumber):
         self.connection = sql.connect('UCH.db')
         self.a = self.connection.cursor()
         self.questionnaire = [
