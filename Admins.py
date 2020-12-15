@@ -137,6 +137,13 @@ class IntegerError(Error):
         self.message = message
         super().__init__(self.message)
 
+class EmailInUse(Error):
+    """exception raised when email already exist"""
+
+    def __init__(self, message="< Email has already been used >"):
+        self.message = message
+        super().__init__(self.message)
+
 """ admin functions under here: """
 
 class adminFunctions():
