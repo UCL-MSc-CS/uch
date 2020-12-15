@@ -5,7 +5,6 @@ from patients.patient import Patient
 from patients.PatientRiskProfile import PatientMedical
 from patients.lifeStyleQuestionnaire import RiskProfile
 from patients.appointment import Appointment
-import patients.patientSummary as ps
 import re
 import string
 import usefulfunctions as uf
@@ -93,6 +92,34 @@ class dateFormatError(Error):
 
 # Patient Functions
 
+def summary(nhsNumber):
+    c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
+    results = c.fetchall()
+    dateOfBirth = uf.toregulartime(results[0][4])
+    dateOfBirth = str(dateOfBirth)[0:10]
+    hash = ""
+    for i in results[0][10]:
+        hash += "*"
+    print("--------------------------------------------")
+    print("Patient Summary of " + str(results[0][2]) + " " + str(results[0][3]))
+    print("--------------------------------------------")
+    print("Your NHS number is: ")
+    x = str(results[0][0])
+    one = x[0:3]
+    two = x[3:6]
+    three = x[6:10]
+    print(one, two, three)
+    print("First Name: " + str(results[0][2]))
+    print("Last Name: " + str(results[0][3]))
+    print("Email: " + str(results[0][1]))
+    print("Date of Birth: " + str(dateOfBirth))
+    print("Gender: " + str(results[0][5]))
+    print("Address: ")
+    print(str(results[0][6]))
+    print(str(results[0][7]))
+    print(str(results[0][8]))
+    print("Telephone Number: +" + str(results[0][9]))
+    print("Password: " + hash)
 
 def checkNHS(nhsNumber):
     try:
@@ -182,10 +209,10 @@ def options(nhsNumber):
         elif action == '4':
             questOptions(nhsNumber)
         elif action == '5':
-            ps.summary(nhsNumber)
+            summary(nhsNumber)
             options(nhsNumber)
         elif action == '6':
-            ps.summary(nhsNumber)
+            summary(nhsNumber)
             updateOptions(nhsNumber)
         elif action == '0':
             task()
@@ -208,8 +235,9 @@ def updateOptions(nhsNumber):
         print("Choose [1] for first name")
         print("Choose [2] for last name")
         print("Choose [3] for address")
-        print("Choose [4] for email address")
-        print("Choose [5] for password")
+        print("Choose [4] for telephone number")
+        print("Choose [5] for email address")
+        print("Choose [6] for password")
         print("Choose [0] to go back")
         print("********************************************")
         action = input("Please select an option: ")
@@ -225,8 +253,10 @@ def updateOptions(nhsNumber):
                   "postcode": ""}
             updateAddressLine1(nhsNumber,updatePatient)
         elif action == '4':
-            pass
+            updateTelephoneNumber(nhsNumber)
         elif action == '5':
+            pass
+        elif action == '6':
             pass
         elif action == '0':
             options(nhsNumber)
@@ -256,7 +286,7 @@ def updateFirstName(nhsNumber):
             c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (firstName, nhsNumber))
             connection.commit()
             print("Successfully changed first name")
-            ps.summary(nhsNumber)
+            summary(nhsNumber)
             options(nhsNumber)
     except emptyAnswer:
         error = emptyAnswer()
@@ -269,7 +299,7 @@ def updateFirstName(nhsNumber):
 
 def updateLastName(nhsNumber):
     try:
-        lastName = input("Please enter your new first name (press 0 to go back): ")
+        lastName = input("Please enter your new last name (press 0 to go back): ")
         lastName = string.capwords(lastName.strip())
         if lastName == '':
             raise emptyAnswer()
@@ -281,8 +311,8 @@ def updateLastName(nhsNumber):
         else:
             c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (lastName, nhsNumber))
             connection.commit()
-            print("Successfully changed first name")
-            ps.summary(nhsNumber)
+            print("Successfully changed last name")
+            summary(nhsNumber)
             options(nhsNumber)
     except emptyAnswer:
         error = emptyAnswer()
@@ -295,7 +325,7 @@ def updateLastName(nhsNumber):
 
 def updateAddressLine1(nhsNumber, updatePatient):
     try:
-        addressLine1 = input("Address Line 1 (press 0 to go back): ")
+        addressLine1 = input("Please enter your new address line 1 (press 0 to go back): ")
         addressLine1 = string.capwords(addressLine1.strip())
         if addressLine1 == '':
             raise emptyAnswer()
@@ -317,7 +347,7 @@ def updateAddressLine1(nhsNumber, updatePatient):
 
 def updateAddressLine2(nhsNumber, updatePatient):
     try:
-        addressLine2 = input("Address Line 2 (press 0 to go back to update details menu, press 1 to go back): ")
+        addressLine2 = input("Please enter your new address line 2 (press 0 to go back to update details menu, press 1 to go back): ")
         addressLine2 = string.capwords(addressLine2.strip())
         if addressLine2 == '0':
             updateOptions(nhsNumber)
@@ -335,7 +365,7 @@ def updateAddressLine2(nhsNumber, updatePatient):
 
 def updateCity(nhsNumber, updatePatient):
     try:
-        city = input("City (press 0 to go back to update details menu, press 1 to go back): ")
+        city = input("Please enter your new city (press 0 to go back to update details menu, press 1 to go back): ")
         city = string.capwords(city.strip())
         if city == '':
             raise emptyAnswer()
@@ -363,7 +393,7 @@ def updateCity(nhsNumber, updatePatient):
 
 def updatePostcode(nhsNumber, updatePatient):
     try:
-        postcode = input("Postcode (press 0 to go back to update details menu, press 1 to go back): ")
+        postcode = input("Please enter your new postcode (press 0 to go back to update details menu, press 1 to go back): ")
         postcode = postcode.strip().upper()
         if postcode == '':
             raise emptyAnswer()
@@ -382,7 +412,7 @@ def updatePostcode(nhsNumber, updatePatient):
             c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""", (updatePatient["postcode"], nhsNumber))
             connection.commit()
             print("Successfully changed address")
-            ps.summary(nhsNumber)
+            summary(nhsNumber)
             options(nhsNumber)
     except emptyAnswer:
         error = emptyAnswer()
@@ -392,6 +422,33 @@ def updatePostcode(nhsNumber, updatePatient):
         error = invalidAnswer()
         print(error)
         updatePostcode(nhsNumber, updatePatient)
+
+def updateTelephoneNumber(nhsNumber):
+    try:
+        telephoneNumber = input("Please enter your new telephone number, including country code (i.e. +447123456789)(press 0 to go back): ")
+        if telephoneNumber == '':
+            raise emptyAnswer()
+        elif telephoneNumber == '0':
+            updateOptions(nhsNumber)
+        telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
+        if len(telephoneNumber) > 12 or len(telephoneNumber) < 11:
+            raise invalidTelephone()
+        else:
+            telephoneNumber = int(telephoneNumber)
+            c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""", (telephoneNumber, nhsNumber))
+            connection.commit()
+            print("Successfully changed telephone number")
+            summary(nhsNumber)
+            options(nhsNumber)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updateTelephoneNumber(nhsNumber)
+    except invalidTelephone:
+        error = invalidTelephone()
+        print(error)
+        updateTelephoneNumber(nhsNumber)
+
 
 def emailPasswordCheck(patientEmail):
     try:
