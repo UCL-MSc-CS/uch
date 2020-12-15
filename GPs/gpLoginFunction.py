@@ -3,14 +3,14 @@ import time
 
 def login(gpEmail):
     while True:
-        email = input("Please enter your Email Address: ")
-        password = input("Please enter your Password: ")
+        email = input("Email (press 0 to go back): ")
+        if email == '0':
+            return ("exit")
+        password = input("Password: ")
 
-        with sql.connect("UCH.db") as db:
-            c = db.cursor()
-
+        db = sql.connect("UCH.db")
+        c = db.cursor()
         find_doctor = ("SELECT * FROM GP WHERE gpEmail =? AND password =?")
-
         # avoid using %s as this is vulnerable to injection attacks.
         c.execute(find_doctor, [(email), (password)])
         db.commit()
@@ -31,4 +31,3 @@ def login(gpEmail):
                 time.sleep(1)
                 db.close()
                 return("exit")
-
