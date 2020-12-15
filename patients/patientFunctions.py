@@ -226,7 +226,7 @@ def timeMenu(date, times, gpDetails, nhsNumber):
     """
     print("********************************************"
           "\nChoose [1] to select a time"
-          "\nChoose [2] to exit to the main menu "
+          "\nChoose [0] to exit to the main menu "
           "\n********************************************")
     options = input("\nPlease select an option: ")
     if options == '1':
@@ -302,7 +302,7 @@ def insertAppointment(start, gpDetails, nhsNumber):
 def returnToMain():
     """Returns user to main patient menu when typing 'yes'
     If user types anything else, will exit the program with a goodbye message"""
-    if input("Type yes to return to the main menu: ").lower() == 'yes':
+    if input("Type [0] to return to the main menu: ").lower() == '0':
         pass
     else:
         print("Thank you for using the UCH e-health system! Goodbye for now!")

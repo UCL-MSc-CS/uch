@@ -5,6 +5,8 @@ from datetime import time as x, date as xyz, datetime, timedelta
 import time
 import patients.patientFunctions as pf
 import patients.viewCancelFunctions as vc
+# import patientFunctions as pf
+# import viewCancelFunctions as vc
 
 
 class Appointment:
@@ -119,17 +121,18 @@ class Appointment:
         vc.viewAppointments(nhsNumber)
         print("********************************************"
               "\nChoose [1] to cancel an appointment"
-              "\nChoose [2] to exit to the main menu"
+              "\nChoose [0] to exit to the main menu"
               "\n********************************************")
         options = input("Please select an option: ")
         if options == '1':
-            cancel = input("\nPlease enter the appointment ID you would like to cancel: ")
+            cancel = vc.checkAppID(nhsNumber)
             vc.deleteAppointment(cancel)
             pf.returnToMain()
-        elif options == '2':
+        elif options == '0':
             pf.returnToMain()
         else:
-            print("This is not a valid option, please try again")
+            print("\n\t< This is not a valid option, please try again >"
+                  "\n")
             self.cancelAppointment(nhsNumber)
 
     def viewAppConfirmations(self, nhsNumber):
@@ -141,7 +144,7 @@ class Appointment:
 
 #
 # Ari = Appointment()
-# Ari.bookAppointment('ariannabourke@hotmail.com')
+# Ari.bookAppointment(1234567890)
 
 
 
