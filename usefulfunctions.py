@@ -13,7 +13,7 @@ def validatedate(string):
             date = datetime.strptime(datestring,dateformatstring)
             return date
         except:
-            print("Invalid date entered, try again...")
+            print("\t<Invalid date entered,Please try again...>")
 
 #call this function to validate any time entered by the user
 def validatetime(string):
@@ -23,7 +23,7 @@ def validatetime(string):
             time = datetime.strptime(timestring,timeformatstring)
             return time
         except:
-            print("Invalid date entered, try again...")
+            print("\t<Invalid time entered, Please try again...>")
 
 #convert a unix integer time back into a datetime object
 def toregulartime(unixtimestamp):
