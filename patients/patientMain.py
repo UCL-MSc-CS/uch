@@ -216,34 +216,14 @@ def updateOptions(nhsNumber):
         if action == '':
             raise emptyAnswer()
         elif action == '1':
-            try:
-                firstName = input("Please enter your first name (press 0 to go back): ")
-                firstName = string.capwords(firstName.strip())
-                if firstName == '':
-                    raise emptyAnswer()
-                elif firstName == '0':
-                    updateOptions(nhsNumber)
-                x = firstName.replace(" ", "")
-                if x.isalpha() == False:
-                    raise invalidAnswer()
-                else:
-                    c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (firstName, nhsNumber))
-                    connection.commit()
-                    print("Successfully changed first name")
-                    ps.summary(nhsNumber)
-                    options(nhsNumber)
-            except emptyAnswer:
-                error = emptyAnswer()
-                print(error)
-                firstNameQ(newPatient)
-            except invalidAnswer:
-                error = invalidAnswer()
-                print(error)
-                firstNameQ(newPatient)
+            updateFirstName(nhsNumber)
         elif action == '2':
-            pass
+            updateLastName(nhsNumber)
         elif action == '3':
-            pass
+            updatePatient = {"addressLine1": "",
+                  "addressLine2": "",
+                  "postcode": ""}
+            updateAddressLine1(nhsNumber,updatePatient)
         elif action == '4':
             pass
         elif action == '5':
@@ -261,7 +241,157 @@ def updateOptions(nhsNumber):
         print(error)
         updateOptions(nhsNumber)
 
+def updateFirstName(nhsNumber):
+    try:
+        firstName = input("Please enter your new first name (press 0 to go back): ")
+        firstName = string.capwords(firstName.strip())
+        if firstName == '':
+            raise emptyAnswer()
+        elif firstName == '0':
+            updateOptions(nhsNumber)
+        x = firstName.replace(" ", "")
+        if x.isalpha() == False:
+            raise invalidAnswer()
+        else:
+            c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (firstName, nhsNumber))
+            connection.commit()
+            print("Successfully changed first name")
+            ps.summary(nhsNumber)
+            options(nhsNumber)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updateFirstName(nhsNumber)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        updateFirstName(nhsNumber)
 
+def updateLastName(nhsNumber):
+    try:
+        lastName = input("Please enter your new first name (press 0 to go back): ")
+        lastName = string.capwords(lastName.strip())
+        if lastName == '':
+            raise emptyAnswer()
+        elif lastName == '0':
+            updateOptions(nhsNumber)
+        x = lastName.replace(" ", "")
+        if x.isalpha() == False:
+            raise invalidAnswer()
+        else:
+            c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (lastName, nhsNumber))
+            connection.commit()
+            print("Successfully changed first name")
+            ps.summary(nhsNumber)
+            options(nhsNumber)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updateLastName(nhsNumber)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        updateLastName(nhsNumber)
+
+def updateAddressLine1(nhsNumber, updatePatient):
+    try:
+        addressLine1 = input("Address Line 1 (press 0 to go back): ")
+        addressLine1 = string.capwords(addressLine1.strip())
+        if addressLine1 == '':
+            raise emptyAnswer()
+        elif addressLine1 == '0':
+            updateOptions(nhsNumber)
+        elif len(addressLine1) > 100:
+            raise invalidAnswer()
+        else:
+            updatePatient["addressLine1"] = addressLine1
+            updateAddressLine2(nhsNumber,updatePatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updateAddressLine1(nhsNumber, updatePatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        updateAddressLine1(nhsNumber, updatePatient)
+
+def updateAddressLine2(nhsNumber, updatePatient):
+    try:
+        addressLine2 = input("Address Line 2 (press 0 to go back to update details menu, press 1 to go back): ")
+        addressLine2 = string.capwords(addressLine2.strip())
+        if addressLine2 == '0':
+            updateOptions(nhsNumber)
+        elif addressLine2 == "1":
+            updateAddressLine1(nhsNumber, updatePatient)
+        elif len(addressLine2) > 100:
+            raise invalidAnswer()
+        else:
+            updatePatient["addressLine2"] = addressLine2
+            updateCity(nhsNumber, updatePatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        updateAddressLine2(nhsNumber, updatePatient)
+
+def updateCity(nhsNumber, updatePatient):
+    try:
+        city = input("City (press 0 to go back to update details menu, press 1 to go back): ")
+        city = string.capwords(city.strip())
+        if city == '':
+            raise emptyAnswer()
+        elif city == '0':
+            updateOptions(nhsNumber)
+        elif city == "1":
+            updateAddressLine2(nhsNumber, updatePatient)
+        elif len(city) > 100:
+            raise invalidAnswer()
+        x = city.replace(" ", "")
+        if x.isalpha() == False:
+            raise invalidAnswer()
+        else:
+            addressLine2 = (updatePatient["addressLine2"] + " " + city).strip()
+            updatePatient["addressLine2"] = addressLine2
+            updatePostcode(nhsNumber, updatePatient)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updateCity(nhsNumber, updatePatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        updateCity(nhsNumber, updatePatient)
+
+def updatePostcode(nhsNumber, updatePatient):
+    try:
+        postcode = input("Postcode (press 0 to go back to update details menu, press 1 to go back): ")
+        postcode = postcode.strip().upper()
+        if postcode == '':
+            raise emptyAnswer()
+        elif postcode == '0':
+            updateOptions(nhsNumber)
+        elif postcode == "1":
+            updateCity(nhsNumber, updatePatient)
+        elif len(postcode) > 100:
+            raise invalidAnswer()
+        else:
+            updatePatient["postcode"] = postcode
+            c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""", (updatePatient["addressLine1"], nhsNumber))
+            connection.commit()
+            c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""", (updatePatient["addressLine2"], nhsNumber))
+            connection.commit()
+            c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""", (updatePatient["postcode"], nhsNumber))
+            connection.commit()
+            print("Successfully changed address")
+            ps.summary(nhsNumber)
+            options(nhsNumber)
+    except emptyAnswer:
+        error = emptyAnswer()
+        print(error)
+        updatePostcode(nhsNumber, updatePatient)
+    except invalidAnswer:
+        error = invalidAnswer()
+        print(error)
+        updatePostcode(nhsNumber, updatePatient)
 
 def emailPasswordCheck(patientEmail):
     try:
