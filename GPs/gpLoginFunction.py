@@ -5,29 +5,27 @@ def login(gpEmail):
     while True:
         email = input("Email (press 0 to go back): ")
         if email == '0':
-            return ("exit")
-        password = input("Password: ")
-
+            return ("exitGPLogin")
         db = sql.connect("UCH.db")
         c = db.cursor()
-        find_doctor = ("SELECT * FROM GP WHERE gpEmail =? AND password =?")
-        # avoid using %s as this is vulnerable to injection attacks.
-        c.execute(find_doctor, [(email), (password)])
+        find_email = ("SELECT * FROM GP WHERE gpEmail =?")
+        c.execute(find_email, [email])
         db.commit()
         results = c.fetchall()
-
-        if results:
-            for i in results:
-                print("Welcome Doctor " + i[2] + " " + i[3])
-                gpEmail.append(email)
-            db.close()
-            return("exit")
-
+        if not results:
+            print("Sorry, this email does not exist.")
         else:
-            print("\t<Email and password not recognised>")
-            again = input("Would you like to try again? (Y/N):")
-            if again.lower() == "n":
-                print("Goodbye")
-                time.sleep(1)
-                db.close()
-                return("exit")
+            password = results[0][1]
+            break
+
+    while True:
+        inputPassword = input("Password (press 0 to go back): ")
+        if inputPassword == '0':
+            return ("exitGPLogin")
+        if inputPassword != password:
+            print("Sorry, you have entered the incorrect password.")
+        else:
+            gpEmail.append(email)
+            db.close()
+            break
+    print("\nWelcome Doctor " + results[0][2] + " " + results[0][3])

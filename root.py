@@ -57,36 +57,21 @@ while True:
 
 
         selection1 = int(input("Please select an option: "))
+        if selection1 > 3 or selection1 < 0:
+            try:
+                raise Admins.OutOfBounds()
+            except Admins.OutOfBounds as e:
+                print(e)
+
         while selection1 != 0:
             if selection1 == 2:
                 selection1 = pm.task()
-            elif selection1 == 3:
-                # # todo replace hard code with function call.
-                # email = input("Please enter your email address: ")
-                # password = input("Please enter your password: ")
 
-                # with sql.connect("UCH.db") as db:
-                #     c = db.cursor()
-                # find_doctor = ("SELECT * FROM GP WHERE gpEmail =? AND password =?")
-
-                # # avoid using %s as this is vulnerable to injection attacks.
-                # c.execute(find_doctor, [(email), (password)])
-                # results = c.fetchall()
-
-                # if results:
-                #     for i in results:
-                #         print("Welcome " + i[2])
-                #     selection1 = 0
-
-                # else:
-                #     print("Email and password not recognised")
-                #     again = input("Do you want to try again?(y/n)")
-                #     if again.lower() == "n":
-                #         print("Goodbye")
-                #         time.sleep(1)
-                #         selection1 = 0
-                gpm.gpStart()
-
+            while selection1 == 3:
+                gpChoice = gpm.gpStart()
+                if gpChoice == "exitGPLogin":
+                    masterlogin.MasterMenu()
+                    selection1 = int(input("Please select an option: "))
 
             while selection1 == 1:
                 ad = Admins.adminFunctions()
@@ -209,7 +194,7 @@ while True:
                 if logged_in == "restart":
                     ad.commit_and_close()
                     masterlogin.MasterMenu()
-                    selection1 = int(input("please select an option: "))
+                    selection1 = int(input("Please select an option: "))
     except ValueError:
         print("\n   < Please enter a number >\n")
     except KeyboardInterrupt:
