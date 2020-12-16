@@ -1,9 +1,10 @@
 import sqlite3 as sql
+import pandas as pd
+from datetime import time as x, date as xyz, datetime, timedelta
+import time
 
-def patientNotifications():
-    # Ari happy to work on this because most of the functions already built!
-    # pending appointments
-    # confirmed appointments
-    # rejected appointments
+
+def patientNotifications(nhsNumber):
     # today's appointments
     pass
+
