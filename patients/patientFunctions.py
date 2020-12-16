@@ -283,7 +283,7 @@ def insertAppointment(start, gpDetails, nhsNumber):
     dateRequested = tounixtime(datetime.today())
 
     chosen = (gpEmail, gpLastName, nhsNumber, start, end, reason, appointmentStatus,
-              dateRequested, '', '', '', '', '', None, None)
+              dateRequested, '', '', '', '', '', 0, 0)
     c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
     connection.commit()
 

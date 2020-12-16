@@ -23,70 +23,70 @@ class Error(Exception):
 
 
 class notRegistered(Error):
-    def __init__(self, message="A GP needs to confirm your registration before you can access our services - please try logging in tomorrow"):
+    def __init__(self, message="\n   < A GP needs to confirm your registration before you can access our services - please try logging in tomorrow > \n"):
         self.message = message
         super().__init__(self.message)
 
 
 class emptyAnswer(Error):
-    def __init__(self, message="I'm sorry, this field cannot be left empty, please try again"):
+    def __init__(self, message="\n   < I'm sorry, this field cannot be left empty, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
 class invalidAnswer(Error):
-    def __init__(self, message="I'm sorry, this is not a valid answer, please try again"):
+    def __init__(self, message="\n   < I'm sorry, this is not a valid answer, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
 class invalidEmail(Error):
-    def __init__(self, message="I'm sorry, that is not a valid email, please try again"):
+    def __init__(self, message="\n   < I'm sorry, that is not a valid email, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
 class emailDoesNotExist(Error):
-    def __init__(self, message="I'm sorry, that email is not in our system, please try again"):
+    def __init__(self, message="\n   < I'm sorry, that email is not in our system, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
 class emailAlreadyExists(Error):
-    def __init__(self, message="I'm sorry, that email is already in use, please try again"):
+    def __init__(self, message="\n   < I'm sorry, that email is already in use, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
 class passwordIncorrect(Error):
-    def __init__(self, message="I'm sorry, that password is not correct, please try again"):
+    def __init__(self, message="\n   < I'm sorry, that password is not correct, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
 class nhsDoesNotExist(Error):
-    def __init__(self, message="I'm sorry, that NHS number is not in our system, please try again"):
+    def __init__(self, message="\n   < I'm sorry, that NHS number is not in our system, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
 class invalidTelephone(Error):
-    def __init__(self, message="I'm sorry, that is not a valid telephone, please try again"):
+    def __init__(self, message="\n   < I'm sorry, that is not a valid telephone, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 class dateInvalidError(Error):
-    def __init__(self, message = "I'm sorry, that is not a valid date, please try again"):
+    def __init__(self, message="\n   < I'm sorry, that is not a valid date, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 class dateInFutureError(Error):
-    def __init__(self, message = "I'm sorry, your date of birth cannot be in the future, please try again"):
+    def __init__(self, message="\n   < I'm sorry, your date of birth cannot be in the future, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 class dateFormatError(Error):
-    def __init__(self, message = "I'm sorry, this date in not in the proper YYYY-MM-DD format, with '-'s as separators, please try again"):
+    def __init__(self, message="\n   < I'm sorry, this date in not in the proper YYYY-MM-DD format, with '-'s as separators, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -177,6 +177,10 @@ def questOptions(nhsNumber):
         print(error)
         questOptions(nhsNumber)
 
+def logout():
+    from root.py import Menus
+    x = Menu()
+    x.MasterMenu()
 
 def options(nhsNumber):
     try:
@@ -213,8 +217,7 @@ def options(nhsNumber):
             summary(nhsNumber)
             updateOptions(nhsNumber)
         elif action == '0':
-            task()
-            return 0
+            logout()
         else:
             raise invalidAnswer()
     except invalidAnswer:
@@ -970,6 +973,7 @@ def task():
         print("********************************************")
         print("Choose [1] to register for a new account")
         print("Choose [2] to login")
+        print("Choose [3] to go back to the main menu")
         print("Choose [0] to exit")
         print("********************************************")
         action = input("Please select an option: ")
@@ -979,6 +983,8 @@ def task():
             register()
         elif action == '2':
             login()
+        elif action == '3':
+            logout()
         elif action == '0':
             print("Thank you for using the UCH e-health system! Goodbye for now!")
             exit()
