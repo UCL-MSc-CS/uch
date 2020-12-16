@@ -1,0 +1,36 @@
+-----------------------------------------------------------------------------------
+                       Patient Summary of Matthew Shorvon
+-----------------------------------------------------------------------------------
+Your NHS number is: 
+123 456 7890 
+First Name: Matthew
+Last Name: Shorvon
+Email: m.shorvon@gmail.com
+Date of Birth: 1998-07-15
+Gender: Male
+Address: 
+10 Downing Street
+London
+SW1A 0AA
+Telephone Number: +7758221088
+--------------------------------------------
+PROBLEMS: 
+--------------------------------------------
+2020-12-14       Ket Overdose
+2020-12-13       coke Overdose
+2020-12-16       Molly Overdose
+2020-12-11       Acid Overdose
+2020-12-18       Shisha Overdose (:O wtf?!)
+2020-12-19       Tea Overdose (:O wtf?!)
+2020-12-20       Hes just dumb asf i swear
+2020-12-14       ODd on the meds I prescribed him to be less dumb 
+2020-12-21       omg srsly fuk this guy hes such a dumbass
+--------------------------------------------
+HEALTH STATUS: 
+--------------------------------------------
+Height:                     1.8
+Weight:                     75.0
+BMI:                        23.15
+Smoker:                     1
+Units of Alcohol/Week):     3
+Drug user:                  1

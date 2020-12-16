@@ -498,7 +498,8 @@ class adminFunctions():
                 return 1
             self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
-            if len(items) != 0:
+            print(items)
+            if items == 0:
                 print("A check-in time has already been provided for that appointment")
                 return 1
             else:

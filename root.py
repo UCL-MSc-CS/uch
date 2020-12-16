@@ -115,8 +115,11 @@ while True:
                                         print("   < Please provide a numerical input >")
 
                                 while ipt != 1 and ipt != 2 and ipt != 0:
-                                    print('Not a valid input')
-                                    ipt = int(input("please select an option: "))
+                                    try:
+                                        print('\n   < Not a valid input, please enter a number between 0 and 2>\n')
+                                        ipt = int(input("Please select an option: "))
+                                    except ValueError:
+                                        continue
                                 if ipt == 1:
                                     selection = ad.deactivate_doctor()
                                 if ipt == 2:
