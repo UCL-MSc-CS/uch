@@ -532,10 +532,10 @@ class adminFunctions():
             if len(items) == 0:
                 print("No record exists with this appointmentID")
                 return 2
-            self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (In,))
+            self.c.execute("SELECT checkOut FROM Appointment WHERE appointmentID = ?", (Out,))
             items = self.c.fetchall()
             if len(items) != 0:
-                print("A check-in time has already been provided for that appointment")
+                print("A check-out time has already been provided for that appointment")
                 return 2
             else:
                 unixd = dt.utcnow().timestamp()
