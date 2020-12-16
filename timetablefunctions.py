@@ -316,6 +316,6 @@ def getPatientInfo(appointmentId):
 
 #book_appointment("2020-12-14", "15:00", "16:30", "1234567890", ["drgrey@gmail.com"])
 #book_appointment("2020-12-14", "14:00", "15:00", "1098765432", ["drgrey@gmail.com"])
-#book_appointment("2020-12-15", "17:30", "18:30", "1234567890", ["matthew.shorvon@ucl.ac.uk"])
+# book_appointment("2020-12-16", "17:30", "18:30", "1234567890", ["matthew.shorvon@ucl.ac.uk"])
 #print(checkslotavailable("2020-12-14","13:30","14:01",["drgrey@gmail.com","matthew.shorvon@ucl.ac.uk"]))
 
