@@ -168,6 +168,7 @@ while True:
                             elif selection == 5:
                                 print("********************************************")
                                 AdminM.managedetails()
+                                print("********************************************")
                                 try:
                                     detchoice = int(input("choice: "))
                                     backvar = 0
@@ -176,6 +177,7 @@ while True:
                                             try:
                                                 print("********************************************")
                                                 AdminM.managedetails2()
+                                                print("********************************************")
                                                 detchoice2 = int(input("choice: "))
                                                 if detchoice2 == 1:
                                                     ad.managedet()
