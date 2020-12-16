@@ -150,16 +150,19 @@ while True:
 
                             if selection == 4:
                                 AdminM.admin_submenuCheckIO()
-                                CheckOpt = int(input("choice: "))
-                                if CheckOpt == 1:
-                                    ad.cin()
-                                elif CheckOpt == 2:
-                                    ad.cout()
-                                    print("successfully checked patient out")
-                                elif CheckOpt == 0:
-                                    selection = 0
-                                else:
-                                    print("not a valid option")
+                                try:
+                                    CheckOpt = int(input("choice: "))
+                                    if CheckOpt == 1:
+                                        ad.cin()
+                                    elif CheckOpt == 2:
+                                        ad.cout()
+                                        print("successfully checked patient out")
+                                    elif CheckOpt == 0:
+                                        selection = 0
+                                    else:
+                                        print("< Not a valid option >")
+                                except ValueError:
+                                    print("< Not a valid choice >")
 
                             #updating/deleting patient details
                             elif selection == 5:
