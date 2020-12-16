@@ -55,7 +55,7 @@ def getdoclastname(docemail):
 
 # allows one to book time into the system's calendar
 # the gpEmailArray is a list with all the GPs you wish to create an appointment for
-def book_time(date, startTime, endTime, reason, patientEmail, gpEmailArray):
+def book_time(date, startTime, endTime, reason, nhsNumber, gpEmailArray):
     conn = connecttodb()
 
     start = uf.tounixtime(datetime.strptime(date + " " + startTime, datetimeformat))
@@ -69,7 +69,7 @@ def book_time(date, startTime, endTime, reason, patientEmail, gpEmailArray):
     for gpEmail in gpEmailArray:
         gpLastName = getdoclastname(gpEmail)
         values = (
-            None, gpEmail, gpLastName, patientEmail, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
+            None, gpEmail, gpLastName, nhsNumber, start, end, reason, appointmentStatus, dateRequested, '', '', '', '', '', None,
             None)
         conn["cursor"].execute(
             """
@@ -82,8 +82,8 @@ def book_time(date, startTime, endTime, reason, patientEmail, gpEmailArray):
 
 
 # Books an appointment, autosets reason to "Appointment" to make life easy
-def book_appointment(date, startTime, endTime, patientEmail, gpEmailArray):
-    book_time(date, startTime, endTime, "Appointment", patientEmail, gpEmailArray)
+def book_appointment(date, startTime, endTime, nhsNumber, gpEmailArray):
+    book_time(date, startTime, endTime, "Appointment", nhsNumber, gpEmailArray)
 
 
 # returns a list of available gps during a timeframe that you have provided, else will return "unavailable"
@@ -101,7 +101,7 @@ def checkslotavailable(date, startTime, endTime, gpemailarray):
                 (start < ? AND end >= ?) OR
                 (start > ? AND end < ?)
             ) AND
-            appointmentStatus not in ('Pending','Unavailable')
+            appointmentStatus not in ('Pending','Declined')
     """
     values = (startunix,startunix,endunix,endunix,startunix,endunix)
 
@@ -133,12 +133,12 @@ def timetableblock(gpemail, date):
 
     sql= """
     
-        SELECT reason,start,end,patientEmail,appointmentID FROM Appointment 
+        SELECT reason,start,end,nhsNumber,appointmentID FROM Appointment 
         WHERE 
             gpEmail = ? AND
             start >= ? AND 
             end <= ? AND
-            appointmentStatus not in ('Pending','Unavailable')
+            appointmentStatus not in ('Pending','Declined')
         ORDER BY start asc
     """
     values = (gpemail,start,end)
@@ -159,12 +159,12 @@ def TodayAppointments(gpemail):
 
     sql = """
 
-        SELECT reason,start,end,patientEmail,appointmentID FROM Appointment 
+        SELECT reason,start,end,nhsNumber,appointmentID FROM Appointment 
         WHERE 
             gpEmail = ? AND
             start >= ? AND 
             end <= ? AND
-            appointmentStatus = 'Available'
+            appointmentStatus = 'Accepted'
         ORDER BY start asc
     """
     values = (gpemail, start, end)
@@ -195,7 +195,7 @@ def getallpendingappointments(gpemail, date):
 
     conn['cursor'].execute(
         """
-     SELECT reason,start,end,patientEmail,appointmentID 
+     SELECT reason,start,end,nhsNumber,appointmentID 
      FROM Appointment 
      WHERE
         appointmentStatus = 'Pending' AND
@@ -217,7 +217,7 @@ def acceptappointment(appointmentId):
     UPDATE 
         Appointment
     SET
-       appointmentStatus = 'Available'
+       appointmentStatus = 'Accepted'
     WHERE
         appointmentID = ? 
     """, (appointmentId,))
@@ -233,7 +233,7 @@ def declineappointment(appointmentId):
     UPDATE 
         Appointment
     SET
-       appointmentStatus = 'Unavailable'
+       appointmentStatus = 'Declined'
     WHERE
         appointmentID = ? 
     """, (appointmentId,))
@@ -282,10 +282,40 @@ def saveDoctorNotes(doctorsnotes):
 
     closeconn(conn["connection"])
 
+# This pulls basic patient information for the doctor
+def getPatientInfo(appointmentId):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+            SELECT 
+                nhsNumber,
+                patientEmail,
+                firstName,
+                lastName,
+                dateOfBirth,
+                gender,
+                addressLine1,
+                addressLine2,
+                postcode,
+                telephoneNumber,
+                appointmentID
+            FROM
+                Appointment
+            LEFT JOIN
+                PatientDetail
+            USING (nhsNumber)
+            WHERE
+                appointmentID = ?
+            """, (appointmentId,))
+
+    results = list(conn['cursor'].fetchone())
+    closeconn(conn["connection"])
+    return results
 
 
-#book_appointment("2020-12-12", "15:00", "16:30", "cooldude@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-12", "14:00", "15:00", "iamsick@gmail.com", ["drgrey@gmail.com"])
-#book_appointment("2020-12-12", "17:30", "18:30", "whyunotreatme@gmail.com", ["drgrey@gmail.com"])
-#print(checkslotavailable("2020-12-04","10:30","12:30",["drgrey@gmail.com"]))
+
+#book_appointment("2020-12-14", "15:00", "16:30", "1234567890", ["drgrey@gmail.com"])
+#book_appointment("2020-12-14", "14:00", "15:00", "1098765432", ["drgrey@gmail.com"])
+book_appointment("2020-12-14", "17:30", "18:30", "1234567890", ["matthew.shorvon@ucl.ac.uk"])
+#print(checkslotavailable("2020-12-14","13:30","14:01",["drgrey@gmail.com","matthew.shorvon@ucl.ac.uk"]))
 

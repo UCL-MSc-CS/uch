@@ -1,4 +1,4 @@
-from GPs.GPLogin import login
+from GPs.gpLoginFunction import login
 from GPs.Doctormenu import mainmenu
 
 def gpStart():

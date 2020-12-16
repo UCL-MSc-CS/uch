@@ -1,10 +1,10 @@
 import sqlite3 as sql
-from uch.patients import patientMedicalFunctions as pf
+import patients.patientMedicalFunctions as pf
 
 
 """Set up patient medical record"""
 class PatientMedical:
-    def __init__(self):
+    def __init__(self, nhsNumber):
         self.connection = sql.connect('UCH.db')
         self.a = self.connection.cursor()
         self.vaccination_history = ["DTap", "HepC", "HepB",
