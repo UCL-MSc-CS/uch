@@ -50,7 +50,7 @@ class EmailInvalid(Error):
 
 class nhsNotExists(Error):
     """Exception raised when email does not exist in list"""
-    def __init__(self, message = "please enter an existing NHS number"):
+    def __init__(self, message = "< Please enter an existing NHS number >"):
         self.message = message
         super().__init__(self.message)
 
@@ -127,13 +127,13 @@ class InvalidAgeRange(Error):
 
 class InvalidAdd(Error):
     """exception raised when address is not valid"""
-    def __init__(self, message = "please input address containing number and street"):
+    def __init__(self, message = "< Please input an address containing number and street >"):
         self.message = message
         super().__init__(self.message)
 
 class IntegerError(Error):
     """exception raised when integer is not in choice range"""
-    def __init__(self, message = "please input a valid number"):
+    def __init__(self, message = "< Please input a valid number >"):
         self.message = message
         super().__init__(self.message)
 
@@ -146,7 +146,7 @@ class YNError(Error):
 class EmailInUse(Error):
     """exception raised when email already exist"""
 
-    def __init__(self, message="< Email has already been used >"):
+    def __init__(self, message="< Email has already been used, Please enter a different email >"):
         self.message = message
         super().__init__(self.message)
 
