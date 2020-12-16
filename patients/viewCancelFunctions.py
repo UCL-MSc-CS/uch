@@ -25,6 +25,8 @@ def viewAppointments(nhsNumber):
     if appointments == []:
         print("\nYou currently have no appointments"
               "\n")
+        result = 0
+        return result
     else:
         appointmentID = []
         date = []
@@ -51,6 +53,9 @@ def viewAppointments(nhsNumber):
         print(data.to_string(columns=['Appointment ID', 'Date and Time', 'Doctor',
                                       'Status'], index=False))
         print("********************************************")
+
+def viewPending(nhsNumber):
+    pass
 
 def deleteAppointment(cancel):
     """ Deletes a chosen appointment from the database"""

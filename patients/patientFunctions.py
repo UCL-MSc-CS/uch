@@ -5,10 +5,6 @@ import time
 import calendar
 import pandas as pd
 
-## add exceptions for when no appointment booked and no drs
-## improve docstrings and comments
-## allow user to cancel more than 1 appointment
-## change 'pending' to reserved in display available with explanation for user
 
 class Error(Exception):
     """Error exception class"""
@@ -34,9 +30,6 @@ class dateAfterCurrent(Error):
     """Raised when date chosen is in the past"""
     pass
 
-class monthAfterCurrent(Error):
-    """Raised when month chosen is in the past"""
-    pass
 
 class drChoiceNotValid(Error):
     """Raised when choice of dr not valid"""
@@ -126,8 +119,6 @@ def chooseMonth():
             mm = int(input("Please choose the month would you would like your appointment in 2021: "))
             if not 1 <= mm <= 12:
                 raise monthNotValid
-            # if mm < currentMonth:
-            #     raise monthAfterCurrent
             else:
                 print("----------")
                 print(calendar.month(2021, mm))
@@ -137,8 +128,6 @@ def chooseMonth():
         except monthNotValid:
             print("\n\t< This is not a valid option, please try again >"
                   "\n")
-        # except monthAfterCurrent:
-        #     print("This month has already passed, please try again")
         except ValueError:
             print("\n\t< This is not a valid option, please try again >"
                   "\n")
