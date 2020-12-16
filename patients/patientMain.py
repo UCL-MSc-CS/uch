@@ -22,70 +22,70 @@ class Error(Exception):
     pass
 
 
-class notRegistered(Error):
+class not_registered(Error):
     def __init__(self, message="\n   < A GP needs to confirm your registration before you can access our services - please try logging in tomorrow > \n"):
         self.message = message
         super().__init__(self.message)
 
 
-class emptyAnswer(Error):
+class empty_answer(Error):
     def __init__(self, message="\n   < I'm sorry, this field cannot be left empty, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
-class invalidAnswer(Error):
+class invalid_answer(Error):
     def __init__(self, message="\n   < I'm sorry, this is not a valid answer, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
-class invalidEmail(Error):
+class invalid_email(Error):
     def __init__(self, message="\n   < I'm sorry, that is not a valid email, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
-class emailDoesNotExist(Error):
+class email_does_not_exist(Error):
     def __init__(self, message="\n   < I'm sorry, that email is not in our system, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
-class emailAlreadyExists(Error):
+class email_already_exists(Error):
     def __init__(self, message="\n   < I'm sorry, that email is already in use, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
-class passwordIncorrect(Error):
+class password_incorrect(Error):
     def __init__(self, message="\n   < I'm sorry, that password is not correct, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
-class nhsDoesNotExist(Error):
+class nhs_does_not_exist(Error):
     def __init__(self, message="\n   < I'm sorry, that NHS number is not in our system, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
 
-class invalidTelephone(Error):
-    def __init__(self, message="\n   < I'm sorry, that is not a valid telephone, please try again > \n"):
+class invalid_telephone(Error):
+    def __init__(self, message="\n   < I'm sorry, that is not a valid telephone number, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
-class dateInvalidError(Error):
+class date_invalid_error(Error):
     def __init__(self, message="\n   < I'm sorry, that is not a valid date, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
-class dateInFutureError(Error):
+class date_in_future_error(Error):
     def __init__(self, message="\n   < I'm sorry, your date of birth cannot be in the future, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
-class dateFormatError(Error):
+class date_format_error(Error):
     def __init__(self, message="\n   < I'm sorry, this date in not in the proper YYYY-MM-DD format, with '-'s as separators, please try again > \n"):
         self.message = message
         super().__init__(self.message)
@@ -127,9 +127,9 @@ def checkNHS(nhsNumber):
             "SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
         results = c.fetchall()
         if results[0][11] == 0:
-            raise notRegistered()
-    except notRegistered:
-        error = notRegistered()
+            raise not_registered()
+    except not_registered:
+        error = not_registered()
         print(error)
         exit()
     else:
@@ -145,7 +145,7 @@ def questOptions(nhsNumber):
         print("********************************************")
         action = input("Please select an option: ")
         if action == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif action == '1':
             name = PatientMedical(nhsNumber)
             name.show_profile(nhsNumber)
@@ -167,13 +167,13 @@ def questOptions(nhsNumber):
             x.cancer(nhsNumber)
             options(nhsNumber)
         else:
-            raise invalidAnswer()
-    except invalidAnswer:
-        error = invalidAnswer()
+            raise invalid_answer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         questOptions(nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         questOptions(nhsNumber)
 
@@ -195,7 +195,7 @@ def options(nhsNumber):
         print("Choose [0] to log out")
         action = input("Please select an option: ")
         if action == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif action == '1':
             x = Appointment()
             x.bookAppointment(nhsNumber)
@@ -219,13 +219,13 @@ def options(nhsNumber):
         elif action == '0':
             logout()
         else:
-            raise invalidAnswer()
-    except invalidAnswer:
-        error = invalidAnswer()
+            raise invalid_answer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         options(nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         options(nhsNumber)
 
@@ -243,7 +243,7 @@ def updateOptions(nhsNumber):
         print("********************************************")
         action = input("Please select an option: ")
         if action == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif action == '1':
             updateFirstName(nhsNumber)
         elif action == '2':
@@ -262,13 +262,13 @@ def updateOptions(nhsNumber):
         elif action == '0':
             options(nhsNumber)
         else:
-            raise invalidAnswer()
-    except invalidAnswer:
-        error = invalidAnswer()
+            raise invalid_answer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         updateOptions(nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updateOptions(nhsNumber)
 
@@ -277,24 +277,24 @@ def updateFirstName(nhsNumber):
         firstName = input("Please enter your new first name (press 0 to go back): ")
         firstName = string.capwords(firstName.strip())
         if firstName == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif firstName == '0':
             updateOptions(nhsNumber)
         x = firstName.replace(" ", "")
         if x.isalpha() == False:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (firstName, nhsNumber))
             connection.commit()
             print("Successfully changed first name")
             summary(nhsNumber)
             options(nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updateFirstName(nhsNumber)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         updateFirstName(nhsNumber)
 
@@ -303,24 +303,24 @@ def updateLastName(nhsNumber):
         lastName = input("Please enter your new last name (press 0 to go back): ")
         lastName = string.capwords(lastName.strip())
         if lastName == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif lastName == '0':
             updateOptions(nhsNumber)
         x = lastName.replace(" ", "")
         if x.isalpha() == False:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (lastName, nhsNumber))
             connection.commit()
             print("Successfully changed last name")
             summary(nhsNumber)
             options(nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updateLastName(nhsNumber)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         updateLastName(nhsNumber)
 
@@ -329,20 +329,20 @@ def updateAddressLine1(nhsNumber, updatePatient):
         addressLine1 = input("Please enter your new address line 1 (press 0 to go back): ")
         addressLine1 = string.capwords(addressLine1.strip())
         if addressLine1 == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif addressLine1 == '0':
             updateOptions(nhsNumber)
         elif len(addressLine1) > 100:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             updatePatient["addressLine1"] = addressLine1
             updateAddressLine2(nhsNumber,updatePatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updateAddressLine1(nhsNumber, updatePatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         updateAddressLine1(nhsNumber, updatePatient)
 
@@ -355,12 +355,12 @@ def updateAddressLine2(nhsNumber, updatePatient):
         elif addressLine2 == "1":
             updateAddressLine1(nhsNumber, updatePatient)
         elif len(addressLine2) > 100:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             updatePatient["addressLine2"] = addressLine2
             updateCity(nhsNumber, updatePatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         updateAddressLine2(nhsNumber, updatePatient)
 
@@ -369,26 +369,26 @@ def updateCity(nhsNumber, updatePatient):
         city = input("Please enter your new city (press 0 to go back to update details menu, press 1 to go back): ")
         city = string.capwords(city.strip())
         if city == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif city == '0':
             updateOptions(nhsNumber)
         elif city == "1":
             updateAddressLine2(nhsNumber, updatePatient)
         elif len(city) > 100:
-            raise invalidAnswer()
+            raise invalid_answer()
         x = city.replace(" ", "")
         if x.isalpha() == False:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             addressLine2 = (updatePatient["addressLine2"] + " " + city).strip()
             updatePatient["addressLine2"] = addressLine2
             updatePostcode(nhsNumber, updatePatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updateCity(nhsNumber, updatePatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         updateCity(nhsNumber, updatePatient)
 
@@ -397,13 +397,13 @@ def updatePostcode(nhsNumber, updatePatient):
         postcode = input("Please enter your new postcode (press 0 to go back to update details menu, press 1 to go back): ")
         postcode = postcode.strip().upper()
         if postcode == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif postcode == '0':
             updateOptions(nhsNumber)
         elif postcode == "1":
             updateCity(nhsNumber, updatePatient)
         elif len(postcode) > 100:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             updatePatient["postcode"] = postcode
             c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""", (updatePatient["addressLine1"], nhsNumber))
@@ -415,12 +415,12 @@ def updatePostcode(nhsNumber, updatePatient):
             print("Successfully changed address")
             summary(nhsNumber)
             options(nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updatePostcode(nhsNumber, updatePatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         updatePostcode(nhsNumber, updatePatient)
 
@@ -428,12 +428,12 @@ def updateTelephoneNumber(nhsNumber):
     try:
         telephoneNumber = input("Please enter your new telephone number, including country code (i.e. +447123456789)(press 0 to go back): ")
         if telephoneNumber == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif telephoneNumber == '0':
             updateOptions(nhsNumber)
         telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
         if len(telephoneNumber) > 12 or len(telephoneNumber) < 11:
-            raise invalidTelephone()
+            raise invalid_telephone()
         else:
             telephoneNumber = int(telephoneNumber)
             c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""", (telephoneNumber, nhsNumber))
@@ -441,12 +441,12 @@ def updateTelephoneNumber(nhsNumber):
             print("Successfully changed telephone number")
             summary(nhsNumber)
             options(nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updateTelephoneNumber(nhsNumber)
-    except invalidTelephone:
-        error = invalidTelephone()
+    except invalid_telephone:
+        error = invalid_telephone()
         print(error)
         updateTelephoneNumber(nhsNumber)
 
@@ -454,19 +454,19 @@ def updatePatientEmail(nhsNumber):
     try:
         patientEmail = input("Please enter your new email (press 0 to go back): ")
         if patientEmail == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif patientEmail == '0':
             updateOptions(nhsNumber)
         elif re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
             updatePatientEmailCheck(nhsNumber, patientEmail)
         else:
-            raise invalidEmail()
-    except emptyAnswer:
-        error = emptyAnswer()
+            raise invalid_email()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updatePatientEmail(nhsNumber)
-    except invalidEmail:
-        error = invalidEmail()
+    except invalid_email:
+        error = invalid_email()
         print(error)
         updatePatientEmail(nhsNumber)
 
@@ -476,15 +476,15 @@ def updatePatientEmailCheck(nhsNumber, patientEmail):
               [patientEmail])
         patientEmails = c.fetchall()
         if patientEmails != []:
-            raise emailAlreadyExists()
+            raise email_already_exists()
         else:
             c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (patientEmail, nhsNumber))
             connection.commit()
             print("Successfully changed email address")
             summary(nhsNumber)
             options(nhsNumber)
-    except emailAlreadyExists:
-        error = emailAlreadyExists()
+    except email_already_exists:
+        error = email_already_exists()
         print(error)
         updatePatientEmail(nhsNumber)
 
@@ -495,20 +495,20 @@ def updatePasswordCheck(nhsNumber):
         nhsNumbers = c.fetchall()
         password = input("In order to change your password, please enter your old password (press 0 to go back): ")
         if password == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif password == '0':
             updateOptions(nhsNumber)
         else:
             if password != nhsNumbers[0][10]:
-                raise passwordIncorrect()
+                raise password_incorrect()
             else:
                 updatePassword(nhsNumber)
-    except passwordIncorrect:
-        error = passwordIncorrect()
+    except password_incorrect:
+        error = password_incorrect()
         print(error)
         updatePasswordCheck(nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updatePasswordCheck(nhsNumber)
 
@@ -516,7 +516,7 @@ def updatePassword(nhsNumber):
     try:
         password = input("Please enter your new password (press 0 to go back to update details menu): ")
         if password == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif password == '0':
             updateOptions(nhsNumber)
         else:
@@ -525,8 +525,8 @@ def updatePassword(nhsNumber):
             print("Successfully changed password")
             summary(nhsNumber)
             options(nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         updatePassword(nhsNumber)
 
@@ -537,11 +537,11 @@ def emailPasswordCheck(patientEmail):
         patientEmails = c.fetchall()
         password = input("Password: ")
         if password != patientEmails[0][10]:
-            raise passwordIncorrect()
+            raise password_incorrect()
         else:
             checkNHS(patientEmails[0][0])
-    except passwordIncorrect:
-        error = passwordIncorrect()
+    except password_incorrect:
+        error = password_incorrect()
         print(error)
         emailPasswordCheck(patientEmail)
 
@@ -552,11 +552,11 @@ def emailCheck(patientEmail):
             "SELECT * FROM PatientDetail WHERE patientEmail =?", [patientEmail])
         patientEmails = c.fetchall()
         if patientEmails == []:
-            raise emailDoesNotExist
+            raise email_does_not_exist
         else:
             emailPasswordCheck(patientEmail)
-    except emailDoesNotExist:
-        error = emailDoesNotExist()
+    except email_does_not_exist:
+        error = email_does_not_exist()
         print(error)
         patientEmail = input("Email: ")
         emailCheck(patientEmail)
@@ -568,9 +568,9 @@ def emailLogin():
         if re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
             emailCheck(patientEmail)
         else:
-            raise invalidEmail()
-    except invalidEmail:
-        error = invalidEmail()
+            raise invalid_email()
+    except invalid_email:
+        error = invalid_email()
         print(error)
         emailLogin()
 
@@ -582,11 +582,11 @@ def nhsPasswordCheck(nhsNumber):
         nhsNumbers = c.fetchall()
         password = input("Password: ")
         if password != nhsNumbers[0][10]:
-            raise passwordIncorrect()
+            raise password_incorrect()
         else:
             checkNHS(nhsNumbers[0][0])
-    except passwordIncorrect:
-        error = passwordIncorrect()
+    except password_incorrect:
+        error = password_incorrect()
         print(error)
         nhsPasswordCheck(nhsNumber)
 
@@ -599,11 +599,11 @@ def nhsLogin():
             "SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
         nhsNumbers = c.fetchall()
         if nhsNumbers == []:
-            raise nhsDoesNotExist()
+            raise nhs_does_not_exist()
         else:
             nhsPasswordCheck(nhsNumber)
-    except nhsDoesNotExist:
-        error = nhsDoesNotExist()
+    except nhs_does_not_exist:
+        error = nhs_does_not_exist()
         print(error)
         nhsLogin()
 
@@ -616,19 +616,19 @@ def login():
         print("********************************************")
         action = input("Please select an option: ")
         if action == '':
-            raise emptyAnswer
+            raise empty_answer
         elif action == '1':
             emailLogin()
         elif action == '2':
             nhsLogin()
         else:
-            raise invalidAnswer()
-    except invalidAnswer:
-        error = invalidAnswer()
+            raise invalid_answer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         login()
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         login()
 
@@ -637,21 +637,21 @@ def firstNameQ(newPatient):
         firstName = input("Please enter your first name (press 0 to exit registration): ")
         firstName = string.capwords(firstName.strip())
         if firstName == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif firstName == '0':
             task()
         x = firstName.replace(" ", "")
         if x.isalpha() == False:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             newPatient["firstName"] = firstName
             lastNameQ(newPatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         firstNameQ(newPatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         firstNameQ(newPatient)
 
@@ -660,23 +660,23 @@ def lastNameQ(newPatient):
         lastName = input("Please enter your last name (press 0 to exit registration, press 1 to go back): ")
         lastName = string.capwords(lastName.strip())
         if lastName == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif lastName == '0':
             task()
         elif lastName == '1':
             firstNameQ(newPatient)
         x = lastName.replace(" ", "")
         if x.isalpha() == False:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             newPatient["lastName"] = lastName
             dateOfBirthQ(newPatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         lastNameQ(newPatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         lastNameQ(newPatient)
     
@@ -684,7 +684,7 @@ def dateOfBirthQ(newPatient):
     try:
         dateOfBirth = input('Please enter your birthday in YYYY-MM-DD format (press 0 to exit registration, press 1 to go back): ')
         if dateOfBirth == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif dateOfBirth == '0':
             task()
         elif dateOfBirth == '1':
@@ -692,49 +692,49 @@ def dateOfBirthQ(newPatient):
         x = dateOfBirth.replace(" ", "")
         x = x.replace("-", "")
         if (len(dateOfBirth) != 10) or (dateOfBirth[4] != '-' or dateOfBirth[7] != '-') or (x.isdigit() == False):
-            raise dateFormatError()
+            raise date_format_error()
         day = dateOfBirth[8:10]
         month = dateOfBirth[5:7]
         year = dateOfBirth[0:4]
         if (day.isdigit() == False) or (month.isdigit() == False) or (year.isdigit() == False):
-            raise dateInvalidError()
+            raise date_invalid_error()
         day = int(dateOfBirth[8:10])
         month = int(dateOfBirth[5:7])
         year = int(dateOfBirth[0:4])
         if month > 12 or month < 1:
-            raise dateInvalidError()
+            raise date_invalid_error()
         elif (month == 9 or month == 4 or month == 6 or month == 11) and day > 30:
-            raise dateInvalidError()
+            raise date_invalid_error()
         elif month == 2 and year % 4 != 0 and day > 28:
-            raise dateInvalidError()
+            raise date_invalid_error()
         elif month == 2 and year % 4 == 0 and day > 29:
-            raise dateInvalidError()
+            raise date_invalid_error()
         elif day > 31 or day < 1:
-                raise dateInvalidError()
+                raise date_invalid_error()
         else:
             dateOfBirth = datetime.date(year, month, day)
             today = date.today()
             if dateOfBirth > today:
-                raise dateInFutureError()
+                raise date_in_future_error()
             else:
                 dateOfBirth = uf.tounixtime(dateOfBirth)
                 newPatient["dateOfBirth"] = dateOfBirth
                 print(newPatient)
                 genderQ(newPatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         dateOfBirthQ(newPatient)
-    except dateFormatError:
-        error = dateFormatError()
+    except date_format_error:
+        error = date_format_error()
         print(error)
         dateOfBirthQ(newPatient)
-    except dateInvalidError:
-        error = dateInvalidError()
+    except date_invalid_error:
+        error = date_invalid_error()
         print(error)
         dateOfBirthQ(newPatient)
-    except dateInFutureError:
-        error = dateInFutureError()
+    except date_in_future_error:
+        error = date_in_future_error()
         print(error)
         dateOfBirthQ(newPatient)
 
@@ -749,7 +749,7 @@ def genderQ(newPatient):
         print("********************************************")
         choice = input("Please select an option: ")
         if choice == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif choice == '1':
             gender = "Female"
             newPatient["gender"] = gender
@@ -767,13 +767,13 @@ def genderQ(newPatient):
         elif choice == "5":
             dateOfBirthQ(newPatient)
         else:
-            raise invalidAnswer()
-    except emptyAnswer:
-        error = emptyAnswer()
+            raise invalid_answer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         genderQ(newPatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         genderQ(newPatient)
 
@@ -782,22 +782,22 @@ def addressLine1Q(newPatient):
         addressLine1 = input("Address Line 1 (press 0 to exit registration, press 1 to go back): ")
         addressLine1 = string.capwords(addressLine1.strip())
         if addressLine1 == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif addressLine1 == '0':
             task()
         elif addressLine1 == "1":
             genderQ(newPatient)
         elif len(addressLine1) > 100:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             newPatient["addressLine1"] = addressLine1
             addressLine2Q(newPatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         addressLine1Q(newPatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         addressLine1Q(newPatient)
 
@@ -810,12 +810,12 @@ def addressLine2Q(newPatient):
         elif addressLine2 == "1":
             addressLine1Q(newPatient)
         elif len(addressLine2) > 100:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             newPatient["addressLine2"] = addressLine2
             cityQ(newPatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         addressLine2Q(newPatient)
 
@@ -824,26 +824,26 @@ def cityQ(newPatient):
         city = input("City (press 0 to exit registration, press 1 to go back): ")
         city = string.capwords(city.strip())
         if city == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif city == '0':
             task()
         elif city == "1":
             addressLine2Q(newPatient)
         elif len(city) > 100:
-            raise invalidAnswer()
+            raise invalid_answer()
         x = city.replace(" ", "")
         if x.isalpha() == False:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             addressLine2 = (newPatient["addressLine2"] + " " + city).strip()
             newPatient["addressLine2"] = addressLine2
             postcodeQ(newPatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         cityQ(newPatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         cityQ(newPatient)
 
@@ -852,22 +852,22 @@ def postcodeQ(newPatient):
         postcode = input("Postcode (press 0 to exit registration, press 1 to go back): ")
         postcode = postcode.strip().upper()
         if postcode == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif postcode == '0':
             task()
         elif postcode == "1":
             cityQ(newPatient)
         elif len(postcode) > 100:
-            raise invalidAnswer()
+            raise invalid_answer()
         else:
             newPatient["postcode"] = postcode
             telephoneNumberQ(newPatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         postcodeQ(newPatient)
-    except invalidAnswer:
-        error = invalidAnswer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         postcodeQ(newPatient)
 
@@ -875,24 +875,24 @@ def telephoneNumberQ(newPatient):
     try:
         telephoneNumber = input("Telephone number, including country code (i.e. +447123456789)(press 0 to exit registration, press 1 to go back): ")
         if telephoneNumber == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif telephoneNumber == '0':
             task()
         elif telephoneNumber == "1":
             postcodeQ(newPatient)
         telephoneNumber = re.sub("[^0-9]", "", telephoneNumber)
         if len(telephoneNumber) > 12 or len(telephoneNumber) < 11:
-            raise invalidTelephone()
+            raise invalid_telephone()
         else:
             telephoneNumber = int(telephoneNumber)
             newPatient["telephoneNumber"] = telephoneNumber
             patientEmailQ(newPatient)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         telephoneNumberQ(newPatient)
-    except invalidTelephone:
-        error = invalidTelephone()
+    except invalid_telephone:
+        error = invalid_telephone()
         print(error)
         telephoneNumberQ(newPatient)
 
@@ -900,7 +900,7 @@ def patientEmailQ(newPatient):
     try:
         patientEmail = input("Email (press 0 to exit registration, press 1 to go back): ")
         if patientEmail == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif patientEmail == '0':
             task()
         elif patientEmail == "1":
@@ -908,13 +908,13 @@ def patientEmailQ(newPatient):
         elif re.match(r"[^@]+@[^@]+\.[^@]+", patientEmail):
             patientEmailQCheck(newPatient, patientEmail)
         else:
-            raise invalidEmail()
-    except emptyAnswer:
-        error = emptyAnswer()
+            raise invalid_email()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         patientEmailQ(newPatient)
-    except invalidEmail:
-        error = invalidEmail()
+    except invalid_email:
+        error = invalid_email()
         print(error)
         patientEmailQ(newPatient)
 
@@ -924,12 +924,12 @@ def patientEmailQCheck(newPatient, patientEmail):
               [patientEmail])
         patientEmails = c.fetchall()
         if patientEmails != []:
-            raise emailAlreadyExists()
+            raise email_already_exists()
         else:
             newPatient["patientEmail"] = patientEmail
             passwordQ(newPatient)
-    except emailAlreadyExists:
-        error = emailAlreadyExists()
+    except email_already_exists:
+        error = email_already_exists()
         print(error)
         patientEmailQ(newPatient)
 
@@ -937,7 +937,7 @@ def passwordQ(newPatient):
     try:
         password = input("Password (press 0 to exit registration, press 1 to go back): ")
         if password == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif password == '0':
             task()
         elif password == "1":
@@ -948,8 +948,8 @@ def passwordQ(newPatient):
             x.register()
             ps.summary(x.nhsNumber)
             options(x.nhsNumber)
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         passwordQ(newPatient)
 
@@ -978,7 +978,7 @@ def task():
         print("********************************************")
         action = input("Please select an option: ")
         if action == '':
-            raise emptyAnswer()
+            raise empty_answer()
         elif action == '1':
             register()
         elif action == '2':
@@ -989,12 +989,12 @@ def task():
             print("Thank you for using the UCH e-health system! Goodbye for now!")
             exit()
         else:
-            raise invalidAnswer()
-    except invalidAnswer:
-        error = invalidAnswer()
+            raise invalid_answer()
+    except invalid_answer:
+        error = invalid_answer()
         print(error)
         task()
-    except emptyAnswer:
-        error = emptyAnswer()
+    except empty_answer:
+        error = empty_answer()
         print(error)
         task()
