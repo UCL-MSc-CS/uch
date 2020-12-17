@@ -135,6 +135,23 @@ c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
                     checkOut integer NULL)""")
 connection.commit()
 
+c.execute("""INSERT OR IGNORE INTO Appointment VALUES (NULL,
+                    'm.shorvon@gmail.com',
+                    'Shorvon',
+                    '',
+                    1609977600,
+                    1610063999,
+                    'Holiday',
+                    '',
+                    1609977600,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    0,
+                    0)""")
+
 c.execute("DROP TABLE IF EXISTS Medicine")
 connection.commit()
 

@@ -182,26 +182,54 @@ def generateStartTime(date):
     start = tounixtime(start_obj)
     return start
 
-
 def displayAvailable(start, end, gpDetails):
     """ Displays appointments from date and time chosen by user
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-    c.execute("SELECT start, appointmentStatus FROM Appointment WHERE start >=? and end <? and gpEmail =?",
+    c.execute("SELECT start, appointmentStatus, end FROM Appointment WHERE start >=? and end <? and gpEmail =?",
               [start, end, gpDetails[0]])
     appointments = c.fetchall()
     times = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
              "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"]
+    
+    print("appointments")
+    print(appointments)
+
+    dict_time_status = {}
+    for index, time in enumerate(times):
+        print("in first loop")
+        for appointment in appointments:
+            print("in second loops")
+            apt_start_time = toregulartime(start) + datetime.strptime(time,"%H:%M")
+            apt_end_time = toregulartime(start) + datetime.strptime(times[index + 1],"%H:%M")
+            print("apt_start_time, apt_end_time")
+            print(apt_start_time, apt_end_time)
+            pre_exist_start = toregulartime(appointment[0]).x()
+            pre_exist_end = toregulartime(appointment[2]).x()
+            print("pre_exist_start, pre_exist_end")
+            print(pre_exist_start, pre_exist_end)
+            pre_exist_status = appointment[1]
+            print("pre_exist_status")
+            print(pre_exist_status)
+            if pre_exist_status == '':
+                condition_1 = pre_exist_start <= apt_start_time < pre_exist_end
+                condition_2 = pre_exist_start <= apt_end_time < pre_exist_end
+                condition_3 = pre_exist_start < apt_start_time and pre_exist_end > apt_end_time
+                print(condition_1,condition_2,condition_3)
+                if condition_1 or condition_2 or condition_3:
+                    dict_time_status[time] = " unavailable"
+    print("************")
+    print(dict_time_status)
+    print("************")
     if not appointments:
         for i in times:
             print(i + " available")
     else:
-        dict_time_status = {}
-        for items in appointments:
-            ts = toregulartime(items[0])
-            string_time = ts.strftime("%H:%M")
-            dict_time_status[string_time] = items[1]
+        # for items in appointments:
+        #     ts = toregulartime(items[0])
+        #     string_time = ts.strftime("%H:%M")
+        #     dict_time_status[string_time] = items[1]
         for time in times:
             if time in dict_time_status:
                 print(time + ' ' + dict_time_status[time])
