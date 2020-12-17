@@ -160,14 +160,15 @@ class Appointment:
         User then presented with a list of all appointments on that day by time
         User can then choose which time they would like the appointment
         appointment details inserted into the database for chosen date and time for this user"""
+        year = pf.chooseYear()
         print("********************************************"
               "\n [1] January     \t[2] February      \t[3] March"
               "\n [4] April     \t\t[5] May           \t[6] June"
               "\n [7] July      \t\t[8] August        \t[9] September "
               "\n [10] October    \t[11] November     \t[12] December"
               "\n********************************************")
-        month = pf.chooseMonth()
-        date = pf.chooseDate(month)
+        month = pf.chooseMonth(year)
+        date = pf.chooseDate(month, year)
         print("\nThis is the current availability for Dr {} on your chosen date: ".format(gpDetails[1]))
         start = pf.generateStartTime(date)
         end = pf.generateEndTime(date)
@@ -214,7 +215,7 @@ class Appointment:
         print("********************************************"
               "\nThese are your confirmed/pending appointments: ")
         vc.viewAppointments(nhsNumber)
-        pf.returnToMain()
+        # pf.returnToMain()
 
 #
 # Ari = Appointment()

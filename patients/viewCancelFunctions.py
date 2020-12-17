@@ -18,15 +18,13 @@ def viewAppointments(nhsNumber):
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-
-    c.execute("SELECT appointmentID, start, gpLastName, appointmentStatus FROM Appointment "
-              "WHERE nhsNumber =? ", [nhsNumber])
+    c.execute( """SELECT A.appointmentID, A.start, P.lastname, A.appointmentStatus FROM Appointment A, GP P 
+    WHERE nhsNumber =?""", [nhsNumber])
     appointments = c.fetchall()
     if appointments == []:
         print("\nYou currently have no appointments"
               "\n")
-        result = 0
-        return result
+        pf.returnToMain()
     else:
         appointmentID = []
         date = []
@@ -41,10 +39,14 @@ def viewAppointments(nhsNumber):
             status.append(appoint[3])
         new_status = []
         for item in status:
-            if item == 'Unavailable':
-                item = 'Confirmed Booking'
+            if item == 'Accepted':
+                item = 'Booking Confirmed'
                 new_status.append(item)
-            else:
+            elif item == 'Pending':
+                item = 'Appointment Pending Approval'
+                new_status.append(item)
+            elif item == 'Declined':
+                item = 'The appointment has been declined'
                 new_status.append(item)
 
         data = pd.DataFrame({'Appointment ID': appointmentID, 'Date and Time': date,
@@ -54,8 +56,6 @@ def viewAppointments(nhsNumber):
                                       'Status'], index=False))
         print("********************************************")
 
-def viewPending(nhsNumber):
-    pass
 
 def deleteAppointment(cancel):
     """ Deletes a chosen appointment from the database"""
@@ -64,6 +64,7 @@ def deleteAppointment(cancel):
     c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
     connection.commit()
     print("You have cancelled your appointment")
+
 
 def checkAppID(nhsNumber):
     connection = sql.connect('UCH.db')
