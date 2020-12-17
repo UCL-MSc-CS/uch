@@ -1,8 +1,4 @@
-import pandas as pd
 import Admins
-import sqlite3 as sql
-from datetime import datetime as dt
-import time
 import patients.patientMain as pm
 import GPs.GPMain as gpm
 import sys
@@ -57,11 +53,6 @@ while True:
 
 
         selection1 = int(input("Please select an option: "))
-        if selection1 > 3 or selection1 < 0:
-            try:
-                raise Admins.OutOfBounds()
-            except Admins.OutOfBounds as e:
-                print(e)
 
         while selection1 != 0:
             if selection1 == 2:

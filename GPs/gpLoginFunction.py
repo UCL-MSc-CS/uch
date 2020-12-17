@@ -1,10 +1,16 @@
 import sqlite3 as sql
 import time
 
-def login(gpEmail):
+def login():
+
+    print("\n--------------------------------------------")
+    print("\t Doctor Login")
+    print("--------------------------------------------\n")
+
     while True:
-        email = input("Email (press 0 to go back): ")
+        email = input("Email (press 0 to exit): ")
         if email == '0':
+            print("Returning to main menu.....\n\n")
             return ("exitGPLogin")
         db = sql.connect("UCH.db")
         c = db.cursor()
@@ -19,13 +25,15 @@ def login(gpEmail):
             break
 
     while True:
-        inputPassword = input("Password (press 0 to go back): ")
+        inputPassword = input("Password (press 0 to exit): ")
         if inputPassword == '0':
+            print("\n\n")
+            db.close()
             return ("exitGPLogin")
         if inputPassword != password:
             print("Sorry, you have entered the incorrect password.")
         else:
-            gpEmail.append(email)
             db.close()
+            return email
             break
     print("\nWelcome Doctor " + results[0][2] + " " + results[0][3])

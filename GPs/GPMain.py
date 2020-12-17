@@ -2,10 +2,9 @@ from GPs.gpLoginFunction import login
 from GPs.Doctormenu import mainmenu
 
 def gpStart():
-    email = []
-    choice = login(email)
-    if choice == "exitGPLogin":
-        return choice
+    email = login()
+    if email == "exitGPLogin":
+        return email
     if email:
-        mainmenu(email[0])
+        mainmenu(email)
     return "exitGPLogin"
