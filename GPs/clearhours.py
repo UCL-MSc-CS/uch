@@ -10,6 +10,8 @@ def clearhours(doctoremail):
     print("\t Doctor Cancel Appointments")
     print("--------------------------------------------")
     date = uf.validatedate("Enter a date you would like to cancel an appointment.")
+    if date == 'exit':
+        return
     printday(date,doctoremail)
     datestring = datetime.strftime(date,dateformatstring)
     appointments = []
