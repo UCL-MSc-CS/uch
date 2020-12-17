@@ -34,3 +34,15 @@ BMI:                        23.15
 Smoker:                     1
 Units of Alcohol/Week):     3
 Drug user:                  1
+--------------------------------------------
+MEDICATION: 
+--------------------------------------------
+Morphine Sulfate         2/day        2020-12-14
+Morphine Sulfate         2/day        2020-12-13
+Morphine Sulfate         2/day        2020-12-16
+Morphine Sulfate         2/day        2020-12-11
+Morphine Sulfate         2/day        2020-12-18
+Morphine Sulfate         2/day        2020-12-19
+Morphine Sulfate         2/day        2020-12-20
+Morphine Sulfate         2/day        2020-12-14
+Morphine Sulfate         2/day        2020-12-21

@@ -51,3 +51,18 @@ with open('PatientSummary.txt','w') as f:
     f.write("Smoker: " + "                    " + str(items[0][3]) + '\n')
     f.write("Units of Alcohol/Week): " + "    " + str(items[0][4]) + '\n')
     f.write("Drug user: " + "                 " + str(items[0][5]) + '\n')
+
+    f.write("--------------------------------------------\n")
+    f.write("MEDICATION: \n")
+    f.write("--------------------------------------------\n")
+    c.execute("""SELECT Medicine.medicineName, Prescription.dosage, Appointment.dateRequested, Appointment.appointmentID
+    FROM Medicine, Prescription, Appointment
+    WHERE Appointment.appointmentID = Prescription.appointmentID
+    AND Medicine.medicineID = Prescription.medicineID
+    AND Appointment.nhsNumber = ?""", (nhsNumber,))
+    items = c.fetchall()
+    for i in range(0,len(items)):
+        f.write(str(items[i][0]) + "        " + str(items[i][1]) + "        " + str(items[i][2] + "\n"))
+
+    
+    

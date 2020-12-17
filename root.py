@@ -10,10 +10,14 @@ import usefulfunctions as uf
 
 class Menus():
     def MasterMenu(self):
+        print("--------------------------------------------")
+        print("         UCH Management System   ")
+        print("--------------------------------------------")
         print("Welcome, please login")
         print("Choose [1] for Admin")
         print("Choose [2] for Patient")
         print("Choose [3] for GP")
+        print("Choose [0] to close the program")
 
     def adminmenu(self):
         uf.banner('Admin')
@@ -57,7 +61,7 @@ while True:
 
 
         selection1 = int(input("Please select an option: "))
-        while selection1 != 0:
+        while selection1 == 0 or selection1 == 1 or selection1 == 2 or selection1 == 3:
             if selection1 == 2:
                 selection1 = pm.task()
             elif selection1 == 3:
@@ -213,6 +217,12 @@ while True:
                     ad.commit_and_close()
                     masterlogin.MasterMenu()
                     selection1 = int(input("please select an option: "))
+            if selection1 == 0:
+                raise KeyboardInterrupt
+        if selection1 != 0 or selection1 != 1 or selection1 != 2 or selection1 != 3:
+            print("\n   < Please enter a number between 0 and 3 >\n")
+            continue
+        
     except ValueError:
         print("\n   < Please enter a number >\n")
     except KeyboardInterrupt:

@@ -163,7 +163,7 @@ if numrows < 1:
 
 
 c.execute("""CREATE TABLE IF NOT EXISTS Prescription (
-                    appointmentID integer,
+                    appointmentID integer PRIMARY KEY,
                     medicineID integer,
                     dosage text,
                     dosageMultiplier integer,
@@ -254,7 +254,7 @@ for i in items:
 #                     checkIn integer NULL,
 #                     checkOut integer NULL)""")
 
-c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
+c.execute(""" INSERT OR IGNORE INTO Appointment VALUES(
                     12,
                     'matthew.shorvon@ucl.ac.uk',
                     'Shorvon',
@@ -274,7 +274,7 @@ c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
 )""")
 connection.commit()
 
-c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
+c.execute(""" INSERT OR IGNORE INTO Appointment VALUES(
                     13,
                     'matthew.shorvon@ucl.ac.uk',
                     'Shorvon',
@@ -294,7 +294,7 @@ c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
 )""")
 connection.commit()
 
-c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
+c.execute(""" INSERT OR IGNORE INTO Appointment VALUES(
                     14,
                     'matthew.shorvon@ucl.ac.uk',
                     'Shorvon',
@@ -314,7 +314,7 @@ c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
 )""")
 connection.commit()
 
-c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
+c.execute(""" INSERT OR IGNORE INTO Appointment VALUES(
                     15,
                     'matthew.shorvon@ucl.ac.uk',
                     'Shorvon',
@@ -334,7 +334,7 @@ c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
 )""")
 connection.commit()
 
-c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
+c.execute(""" INSERT OR IGNORE INTO Appointment VALUES(
                     16,
                     'matthew.shorvon@ucl.ac.uk',
                     'Shorvon',
@@ -354,7 +354,7 @@ c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
 )""")
 connection.commit()
 
-c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
+c.execute(""" INSERT OR IGNORE INTO Appointment VALUES(
                     17,
                     'matthew.shorvon@ucl.ac.uk',
                     'Shorvon',
@@ -374,7 +374,7 @@ c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
 )""")
 connection.commit()
 
-c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
+c.execute(""" INSERT OR IGNORE INTO Appointment VALUES(
                     18,
                     'matthew.shorvon@ucl.ac.uk',
                     'Shorvon',
@@ -394,7 +394,7 @@ c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
 )""")
 connection.commit()
 
-c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
+c.execute(""" INSERT OR IGNORE INTO Appointment VALUES(
                     19,
                     'matthew.shorvon@ucl.ac.uk',
                     'Shorvon',
@@ -414,7 +414,7 @@ c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
 )""")
 connection.commit()
 
-c.execute(""" INSERT OR IGNORE INTO APPOINTMENT VALUES(
+c.execute(""" INSERT OR IGNORE INTO Appointment VALUES(
                     20,
                     'matthew.shorvon@ucl.ac.uk',
                     'Shorvon',
@@ -446,6 +446,179 @@ items = c.fetchall()
 print(items)
 print(len(items))
 print(len(items) != 0)
+
+c.execute("""INSERT OR IGNORE INTO questionnaireTable VALUES(
+            1234567890,
+            '1',
+            'justdance on the nintendo switch Xddd',
+            7,
+            300,
+            'idk',
+            1.8,
+            75,
+            23.15,
+            '1',
+            '1',
+            'molly',
+            '1',
+            '3',
+            '2',
+            '5',
+            '1'
+)""")
+
+c.execute("""CREATE TABLE IF NOT EXISTS Prescription (
+                    appointmentID integer PRIMARY KEY ,
+                    medicineID integer,
+                    dosage text,
+                    dosageMultiplier integer,
+                    furtherInformation text
+)""")
+
+c.execute("""INSERT OR IGNORE INTO Prescription VALUES(
+                    12,
+                    4124,
+                    '2/day',
+                    1,
+                    'enjoy ;)' 
+)""")
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO Prescription VALUES(
+                    13,
+                    4124,
+                    '2/day',
+                    1,
+                    'enjoy ;)' 
+)""")
+
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO Prescription VALUES(
+                    14,
+                    4124,
+                    '2/day',
+                    1,
+                    'enjoy ;)' 
+)""")
+
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO Prescription VALUES(
+                    15,
+                    4124,
+                    '2/day',
+                    1,
+                    'enjoy ;)' 
+)""")
+
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO Prescription VALUES(
+                    16,
+                    4124,
+                    '2/day',
+                    1,
+                    'enjoy ;)' 
+)""")
+
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO Prescription VALUES(
+                    17,
+                    4124,
+                    '2/day',
+                    1,
+                    'enjoy ;)' 
+)""")
+
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO Prescription VALUES(
+                    18,
+                    4124,
+                    '2/day',
+                    1,
+                    'enjoy ;)' 
+)""")
+
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO Prescription VALUES(
+                    19,
+                    4124,
+                    '2/day',
+                    1,
+                    'enjoy ;)' 
+)""")
+
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO Prescription VALUES(
+                    20,
+                    4124,
+                    '2/day',
+                    1,
+                    'enjoy ;)' 
+)""")
+
+connection.commit()
+
+# c.execute("""CREATE TABLE IF NOT EXISTS Medicine (
+#                     medicineID integer primary key,
+#                     medicineName text,
+#                     medicineType text,
+#                     dosageType text,
+#                     drugRoute text,
+#                     company text,
+#                     drug text,
+#                     dosages text,
+#                     activeIngredientUnit text,
+#                     pharmacologicalClasses text,
+#                     category text)""")
+# connection.commit()
+
+# c.execute("""CREATE TABLE IF NOT EXISTS Prescription (
+#                     appointmentID integer,
+#                     medicineID integer,
+#                     dosage text,
+#                     dosageMultiplier integer,
+#                     furtherInformation text
+# )""")
+
+# c.execute("""CREATE TABLE IF NOT EXISTS Appointment (
+#                     appointmentID integer primary key,
+#                     gpEmail text,
+#                     gpLastName text,
+#                     nhsNumber integer,
+#                     start integer,
+#                     end integer,
+#                     reason text,
+#                     appointmentStatus text,
+#                     dateRequested integer,
+#                     patientComplaints text,
+#                     doctorFindings text,
+#                     diagnosis text,
+#                     furtherInspections text,
+#                     doctorAdvice text,
+#                     checkIn integer NULL,
+#                     checkOut integer NULL)""")
+
+# c.execute("""SELECT Medicine.medicineName, Prescription.dosage, Appointment.dateRequested
+# FROM Medicine
+# INNER JOIN Appointment ON Appointment.appointmentID = Prescription.appointmentID
+# INNER JOIN Prescription ON Prescription.medicineID = Medicine.medicineID""")
+
+c.execute("""SELECT Medicine.medicineName, Prescription.dosage, Appointment.dateRequested, Appointment.appointmentID
+FROM Medicine, Prescription, Appointment
+WHERE Appointment.appointmentID = Prescription.appointmentID
+AND Medicine.medicineID = Prescription.medicineID
+AND Appointment.nhsNumber = 1234567890""")
+
+
+items = c.fetchall()
+for i in items:
+    print(i)
 
 connection.close()
 
