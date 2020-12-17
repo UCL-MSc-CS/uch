@@ -71,7 +71,7 @@ with open('PatientSummary.txt','w') as f:
             nhsNumber = ?""", (nhsNumber,))
     items = c.fetchall()
     for i in range(0, len(items)):
-        f.write(str(items[i][2]) + "        " + str(items[i][0]) + "        " + str(items[i][1] + "\n"))
+        f.write(str(items[i][2]).ljust(20, ' ') + str(items[i][0]).ljust(20, ' ') + str(items[i][1] + "\n"))
 
     f.write("--------------------------------------------\n")
     f.write("PRE-EXISTING CONDITIONS: \n")
