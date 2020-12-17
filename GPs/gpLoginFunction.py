@@ -11,7 +11,7 @@ def login():
         email = input("Email (press 0 to exit): ")
         if email == '0':
             print("Returning to main menu.....\n\n")
-            return ("exitGPLogin")
+            return "exitGPLogin",''
         db = sql.connect("UCH.db")
         c = db.cursor()
         find_email = ("SELECT * FROM GP WHERE gpEmail =?")
@@ -27,13 +27,12 @@ def login():
     while True:
         inputPassword = input("Password (press 0 to exit): ")
         if inputPassword == '0':
-            print("\n\n")
+            print("Returning to main menu.....\n\n")
             db.close()
-            return ("exitGPLogin")
+            return "exitGPLogin",''
         if inputPassword != password:
             print("Sorry, you have entered the incorrect password.")
         else:
             db.close()
-            return email
-            break
-    print("\nWelcome Doctor " + results[0][2] + " " + results[0][3])
+            doctorname = results[0][2] + " " + results[0][3]
+            return email,doctorname

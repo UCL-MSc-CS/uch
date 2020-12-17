@@ -46,7 +46,6 @@ def openappointment(doctoremail):
 
 
 def printtodayappointments(doctoremail):
-    # Todo disallow user to 'stay within appointment' if they have entered wrong invalid id
     day = datetime.today()
 
     print("--------------------------------------------")
