@@ -62,7 +62,8 @@ with open('PatientSummary.txt','w') as f:
     AND Appointment.nhsNumber = ?""", (nhsNumber,))
     items = c.fetchall()
     for i in range(0,len(items)):
-        f.write(str(items[i][0]) + "        " + str(items[i][1]) + "        " + str(items[i][2] + "\n"))
+        dose = str(items[i][1]).ljust(20,' ')
+        f.write(str(items[i][0]) + dose + "        " + str(items[i][2] + "\n"))
 
     
     
