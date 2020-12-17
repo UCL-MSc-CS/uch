@@ -50,7 +50,7 @@ class EmailInvalid(Error):
 
 class nhsNotExists(Error):
     """Exception raised when email does not exist in list"""
-    def __init__(self, message = "please enter an existing NHS number"):
+    def __init__(self, message = "\n   < Please enter an existing NHS number > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -127,13 +127,13 @@ class InvalidAgeRange(Error):
 
 class InvalidAdd(Error):
     """exception raised when address is not valid"""
-    def __init__(self, message = "please input address containing number and street"):
+    def __init__(self, message = "\n   < Please input an address containing number and street > \n"):
         self.message = message
         super().__init__(self.message)
 
 class IntegerError(Error):
     """exception raised when integer is not in choice range"""
-    def __init__(self, message = "please input a valid number"):
+    def __init__(self, message = "\n   < Please input a valid number > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -146,7 +146,7 @@ class YNError(Error):
 class EmailInUse(Error):
     """exception raised when email already exist"""
 
-    def __init__(self, message="< Email has already been used >"):
+    def __init__(self, message="\n   < Email has already been used, Please enter a different email > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -533,10 +533,10 @@ class adminFunctions():
             if len(items) == 0:
                 print("No record exists with this appointmentID")
                 return 2
-            self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (In,))
+            self.c.execute("SELECT checkOut FROM Appointment WHERE appointmentID = ?", (Out,))
             items = self.c.fetchall()
             if len(items) != 0:
-                print("A check-in time has already been provided for that appointment")
+                print("A check-out time has already been provided for that appointment")
                 return 2
             else:
                 unixd = dt.utcnow().timestamp()

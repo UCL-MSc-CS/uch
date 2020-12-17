@@ -157,43 +157,55 @@ while True:
 
                             if selection == 4:
                                 AdminM.admin_submenuCheckIO()
-                                CheckOpt = int(input("choice: "))
-                                if CheckOpt == 1:
-                                    ad.cin()
-                                elif CheckOpt == 2:
-                                    ad.cout()
-                                    print("successfully checked patient out")
-                                elif CheckOpt == 0:
-                                    selection = 0
-                                else:
-                                    print("not a valid option")
+                                try:
+                                    CheckOpt = int(input("choice: "))
+                                    if CheckOpt == 1:
+                                        ad.cin()
+                                    elif CheckOpt == 2:
+                                        ad.cout()
+                                        print("successfully checked patient out")
+                                    elif CheckOpt == 0:
+                                        selection = 0
+                                    else:
+                                        print("< Not a valid option >")
+                                except ValueError:
+                                    print("< Not a valid choice >")
 
                             #updating/deleting patient details
                             elif selection == 5:
                                 print("********************************************")
                                 AdminM.managedetails()
-                                detchoice = int(input("choice: "))
-                                backvar = 0
-                                if detchoice == 1:
-                                    while backvar == 0:
-                                        print("********************************************")
-                                        AdminM.managedetails2()
-                                        detchoice2 = int(input("choice: "))
-                                        if detchoice2 == 1:
-                                            ad.managedet()
-                                        elif detchoice2 == 2:
-                                            ad.manIndDet()
-                                        elif detchoice2 == 0:
-                                            backvar == 1
-                                            break
-                                        elif detchoice2 != 1 and detchoice2 != 2 and detchoice2 != 0:
-                                            print("Not a valid choice")
-                                elif detchoice == 2:
-                                    ad.delpatdet()
-                                elif detchoice == 0:
-                                    selection = 0
-                                elif detchoice != 0 and detchoice != 1 and detchoice != 2:
-                                    print("Not a valid option")
+                                print("********************************************")
+                                try:
+                                    detchoice = int(input("choice: "))
+                                    backvar = 0
+                                    if detchoice == 1:
+                                        while backvar == 0:
+                                            try:
+                                                print("********************************************")
+                                                AdminM.managedetails2()
+                                                print("********************************************")
+                                                detchoice2 = int(input("choice: "))
+                                                if detchoice2 == 1:
+                                                    ad.managedet()
+                                                elif detchoice2 == 2:
+                                                    ad.manIndDet()
+                                                elif detchoice2 == 0:
+                                                    backvar = 1
+                                                    break
+                                                elif detchoice2 != 1 and detchoice2 != 2 and detchoice2 != 0:
+                                                    raise ValueError
+                                            except ValueError:
+                                                print("< Not a valid choice >")
+                                    elif detchoice == 2:
+                                        ad.delpatdet()
+                                    elif detchoice == 0:
+                                        selection = 0
+                                    elif detchoice != 0 and detchoice != 1 and detchoice != 2:
+                                        print("< Not a valid option >")
+                                except ValueError:
+                                    print("< Not a valid option >")
+
                             elif selection > 5 or selection < 0:
                                 print("Not a valid selection, please enter a number between 0 and 5")
                                 AdminM.adminmenu()
