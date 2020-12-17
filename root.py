@@ -3,6 +3,8 @@ import patients.patientMain as pm
 import GPs.GPMain as gpm
 import sys
 import usefulfunctions as uf
+import os.path
+from database import initialise_database
 
 class Menus():
     def MasterMenu(self):
@@ -48,6 +50,13 @@ class Menus():
 """ This is the main loop"""
 while True:
     try:
+
+        if os.path.isfile('UCH.db') and os.path.getsize('UCH.db') > 0:
+            pass
+        else:
+            print("Initializing the Database please allow a few seconds before login begins...")
+            initialise_database()
+
         masterlogin = Menus()
         masterlogin.MasterMenu()
 
