@@ -70,7 +70,7 @@ with open('PatientSummary.txt','w') as f:
     c.execute("""SELECT cancerRelation, cancerType, cancerAge FROM cancer WHERE
             nhsNumber = ?""", (nhsNumber,))
     items = c.fetchall()
-    f.write("Cancer Relation" + "        " + "Cancer Type" + "        " + "Age")
+    f.write("Cancer Relation" + "        " + "Cancer Type" + "        " + "Age" + "\n")
     for i in range(0, len(items)):
         f.write(str(items[i][0]) + "        " + str(items[i][1]) + "        " + str(items[i][2] + "\n"))
 
