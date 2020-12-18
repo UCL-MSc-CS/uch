@@ -517,8 +517,9 @@ class adminFunctions():
                 firstsel = self.c.fetchall()
                 self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unixd, check_number))
                 self.connection.commit()
-                x = dt.now().time()
-                print("Successfully checked in {} at {a}".format(firstsel[0][0], a=x))
+                x = dt.now().hour
+                y = dt.now().minute
+                print("Successfully checked in {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
                 return 0
 
     def cout(self):
@@ -556,8 +557,9 @@ class adminFunctions():
                 firstsel = self.c.fetchall()
                 self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, check_number))
                 self.connection.commit()
-                x = dt.now().time()
-                print("Successfully checked out {} at {a}".format(firstsel[0][0], a = x))
+                x = dt.now().hour
+                y = dt.now().minute
+                print("Successfully checked out {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
                 return 0
 
     def managedet(self):
