@@ -494,7 +494,7 @@ class PatientMedical:
                     error_message = pf.EmptyFieldError()
                     print(error_message)
                 except pf.InvalidMenuSelectionError:
-                    print("    <You entered an invalid value. Please type 1, 2, or 0 based on the menu>")
+                    print("\n    <You entered an invalid value. Please type 1, 2, or 0 based on the menu>\n")
                 else:
                     break
             count = 0
@@ -506,7 +506,10 @@ class PatientMedical:
                     print("\n    Your vaccination record begins:\n")
                     for vac in your_query:
                         for answers in vac:
-                            print(self.vaccination_history[count], ":", answers)
+                            if answers == 1:
+                                print(self.vaccination_history[count], ": Yes")
+                            else:
+                                print(self.vaccination_history[count], ": No")
                             count += 1
 
                     print('\n    Vaccination record ends\n')
@@ -522,11 +525,15 @@ class PatientMedical:
                         print("Please use space to separate first and last names.")
                         child_name = input("Please enter the full name of your child whose profile you would like to see: ")
                         full_name = child_name.split(' ')
+                        if child_name == "0":
+                            return 1
                         if not child_name:
                             raise pf.EmptyFieldError()
                         if len(full_name) <= 1:
                             raise pf.InvalidNameFormatError()
                         self.nhs_number_child = input("Please enter {}'s nhs number: ".format(child_name))
+                        if self.nhs_number_child == "0":
+                            return 1
                         if not self.nhs_number_child:
                             raise pf.EmptyFieldError()
                     except pf.EmptyFieldError:
@@ -540,12 +547,15 @@ class PatientMedical:
                                "FROM vaccineHistory WHERE nhsNumber = ? AND status = ?", [self.nhs_number_child, child_name])
                 child_query = self.a.fetchall()
                 if child_query:
-                    print('\\    Vaccination record begins:\n')
+                    print('\n    <<Vaccination record begins>>\n')
                     for vac in child_query:
                         for answers in vac:
-                            print(self.vaccination_history[count], ":", answers)
+                            if answers == 1:
+                                print(self.vaccination_history[count], ": Yes")
+                            else:
+                                print(self.vaccination_history[count], ": No")
                             count += 1
-                    print('\n    Vaccination record ends\n')
+                    print('\n    <<Vaccination record ends>>\n')
                 else:
                     print("\nVaccination history is empty/Records do not exist\n")
                 print("{}'s medical history:".format(child_name))
