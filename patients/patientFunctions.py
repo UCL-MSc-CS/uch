@@ -218,27 +218,6 @@ def chooseDate(month, year):
             for mm in days_28:
                 if mm == month:
                     if (year % 4) == 0:
-<<<<<<< HEAD
-                        if (year % 100) == 0:
-                            if (year % 400) == 0:
-                                if not 1 <= day <= 29:
-                                    raise leapYear
-                                else:
-                                    if not 1 <= day <= 28:
-                                        raise leapYear
-                            else:
-                                if not 1 <= day <= 29:
-                                    raise leapYear
-                        else:
-                            if not 1 <= day <= 28:
-                                raise leapYear
-            if date_obj < current:
-                raise dateAfterCurrent
-            else:
-                return date
-        except dayNotValid:
-=======
-                        if not 1 <= day <= 29:
                             raise LeapYear
                     if (year % 100) == 0:
                         if not 1 <= day <= 28:
@@ -251,28 +230,12 @@ def chooseDate(month, year):
             else:
                 return date
         except DayNotValid:
->>>>>>> 9a1460524c530f0a37ef4591680ef1a1e3a4529e
             print("\n\t< Invalid date entered, please enter a date in the correct format >"
                   "\n")
         except LeapYear:
             print("\n\t< Invalid date entered, please enter the correct date >"
                   "\n")
         except DateAfterCurrent:
-            print("\n\t< This date has already passed, please choose another >"
-                  "\n")
-        except ValueError:
-            print("\n\t< This is not a valid option, please try again >"
-                  "\n")
-
-
-def generateStartTime(date):
-    """ Generates a unix start time stamp from the date input from the user
-    """
-    start_obj = toDateObjApp00(date)
-    start = tounixtime(start_obj)
-    return start
-
-
 def displayAvailable(start, end, gpDetails):
     """ Displays appointments from date and time chosen by user
     """
