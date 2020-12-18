@@ -58,7 +58,7 @@ def display_cancer_history(nhs_number):
         print('No family cancer history\n')  # Show patient's cancer record
         rows = 0
         record = 0
-        cancer_table = [nhs_number, 'Patient or family', 'cancer type', 'age']
+        cancer_table = [nhs_number, 'Patient or family', 'Cancer type', 'Age']
         while rows < len(patient_med_record):
             count = 0
             for column in cancer_table:
@@ -96,7 +96,7 @@ def display_cancer_history(nhs_number):
     else:
         rows = 0
         record = 0
-        cancer_table = [nhs_number, 'Patient or family', 'cancer type', 'age']
+        cancer_table = [nhs_number, 'Patient or family', 'Cancer type', 'Age']
         while rows < len(patient_med_record):
             count = 0
             for column in cancer_table:
@@ -157,3 +157,8 @@ def display_preexisting_condition_history(nhs_number):  # Display for pre-existi
         else:
             print('\n    <<Pre-existing condition record ends>>\n')
 
+
+def medical_history_menu():
+    print('Choose [1] provide vaccination history for you or your children'
+          '\nChoose [2] provide other medical history for you or your children'
+          '\nChoose [0] exit')
