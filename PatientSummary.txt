@@ -37,7 +37,6 @@ Drug user:                  1
 --------------------------------------------
 MEDICATION: 
 --------------------------------------------
-<<<<<<< HEAD
 Morphine Sulfate                2/day        2020-12-14      
 Morphine Sulfate                2/day        2020-12-13      
 Morphine Sulfate                2/day        2020-12-16      
@@ -47,19 +46,10 @@ Morphine Sulfate                2/day        2020-12-19
 Morphine Sulfate                2/day        2020-12-20      
 Morphine Sulfate                2/day        2020-12-14      
 Morphine Sulfate                2/day        2020-12-21      
-=======
-Morphine Sulfate         2/day        2020-12-14
-Morphine Sulfate         2/day        2020-12-13
-Morphine Sulfate         2/day        2020-12-16
-Morphine Sulfate         2/day        2020-12-11
-Morphine Sulfate         2/day        2020-12-18
-Morphine Sulfate         2/day        2020-12-19
-Morphine Sulfate         2/day        2020-12-20
-Morphine Sulfate         2/day        2020-12-14
-Morphine Sulfate         2/day        2020-12-21
 --------------------------------------------
 CANCER HISTORY: 
 --------------------------------------------
+Age:                Relation:                Type:
 --------------------------------------------
 PRE-EXISTING CONDITIONS: 
 --------------------------------------------
@@ -69,4 +59,3 @@ MEDICINE ALLERGIES:
 --------------------------------------------
 Vaccine History: 
 --------------------------------------------
->>>>>>> 77ef8796f1d22d18b01ee44188fd82ae52995877
