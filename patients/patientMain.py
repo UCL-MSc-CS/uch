@@ -5,9 +5,8 @@ from patients.patient import Patient
 from patients.PatientRiskProfile import PatientMedical
 from patients.lifeStyleQuestionnaire import RiskProfile
 from patients.appointment import Appointment
-import re
-import string
 import usefulfunctions as uf
+import re
 
 """ This is the main patient menu"""
 
@@ -275,7 +274,7 @@ def update_options(NHS_number):
 def update_first_name(NHS_number):
     try:
         first_name = input("Please enter your new first name (press 0 to go back): ")
-        first_name = string.capwords(first_name.strip())
+        first_name = first_name.strip().title()
         if first_name == '':
             raise EmptyAnswerError()
         elif first_name == '0':
@@ -301,7 +300,7 @@ def update_first_name(NHS_number):
 def update_last_name(NHS_number):
     try:
         last_name = input("Please enter your new last name (press 0 to go back): ")
-        last_name = string.capwords(last_name.strip())
+        last_name = last_name.strip().title()
         if last_name == '':
             raise EmptyAnswerError()
         elif last_name == '0':
@@ -327,7 +326,7 @@ def update_last_name(NHS_number):
 def update_address_line_1(NHS_number, update_patient):
     try:
         address_line_1 = input("Please enter your new address line 1 (press 0 to go back): ")
-        address_line_1 = string.capwords(address_line_1.strip())
+        address_line_1 = address_line_1.strip().title()
         if address_line_1 == '':
             raise EmptyAnswerError()
         elif address_line_1 == '0':
@@ -349,7 +348,7 @@ def update_address_line_1(NHS_number, update_patient):
 def update_address_line_2(NHS_number, update_patient):
     try:
         address_line_2 = input("Please enter your new address line 2 (press 0 to go back to update details menu, press 1 to go back): ")
-        address_line_2 = string.capwords(address_line_2.strip())
+        address_line_2 = address_line_2.strip().title()
         if address_line_2 == '0':
             update_options(NHS_number)
         elif address_line_2 == "1":
@@ -367,7 +366,7 @@ def update_address_line_2(NHS_number, update_patient):
 def update_city(NHS_number, update_patient):
     try:
         city = input("Please enter your new city (press 0 to go back to update details menu, press 1 to go back): ")
-        city = string.capwords(city.strip())
+        city = city.strip().title()
         if city == '':
             raise EmptyAnswerError()
         elif city == '0':
@@ -635,7 +634,7 @@ def login():
 def first_name_q(new_patient):
     try:
         first_name = input("Please enter your first name (press 0 to exit registration): ")
-        first_name = string.capwords(first_name.strip())
+        first_name = first_name.strip().title()
         if first_name == '':
             raise EmptyAnswerError()
         elif first_name == '0':
@@ -658,7 +657,7 @@ def first_name_q(new_patient):
 def last_name_q(new_patient):
     try:
         last_name = input("Please enter your last name (press 0 to exit registration, press 1 to go back): ")
-        last_name = string.capwords(last_name.strip())
+        last_name = last_name.strip().title()
         if last_name == '':
             raise EmptyAnswerError()
         elif last_name == '0':
@@ -719,7 +718,6 @@ def date_of_birth_q(new_patient):
             else:
                 date_of_birth = uf.tounixtime(date_of_birth)
                 new_patient["date_of_birth"] = date_of_birth
-                print(new_patient)
                 gender_q(new_patient)
     except EmptyAnswerError:
         error = EmptyAnswerError()
@@ -780,7 +778,7 @@ def gender_q(new_patient):
 def address_line_1_q(new_patient):
     try:
         address_line_1 = input("Address Line 1 (press 0 to exit registration, press 1 to go back): ")
-        address_line_1 = string.capwords(address_line_1.strip())
+        address_line_1 = address_line_1.strip().title()
         if address_line_1 == '':
             raise EmptyAnswerError()
         elif address_line_1 == '0':
@@ -804,7 +802,7 @@ def address_line_1_q(new_patient):
 def address_line_2_q(new_patient):
     try:
         address_line_2 = input("Address Line 2 (press 0 to exit registration, press 1 to go back): ")
-        address_line_2 = string.capwords(address_line_2.strip())
+        address_line_2 = address_line_2.strip().title()
         if address_line_2 == '0':
             task()
         elif address_line_2 == "1":
@@ -822,7 +820,7 @@ def address_line_2_q(new_patient):
 def city_q(new_patient):
     try:
         city = input("City (press 0 to exit registration, press 1 to go back): ")
-        city = string.capwords(city.strip())
+        city = city.strip().title()
         if city == '':
             raise EmptyAnswerError()
         elif city == '0':
@@ -946,7 +944,7 @@ def password_q(new_patient):
             new_patient["password"] = password
             x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"], new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
             x.register()
-            ps.summary(x.NHS_number)
+            summary(x.NHS_number)
             options(x.NHS_number)
     except EmptyAnswerError:
         error = EmptyAnswerError()
