@@ -5,7 +5,7 @@ from functools import partial
 from GPs.prescription import prescription
 
 
-def appointmentnotes(doctoremail, appointmentid):
+def appointmentnotes(doctoremail, appointmentid,nhsNumber):
     # todo (longterm) use classes to display a label
     # todo make sure doctor email is used to ensure patient confidentiality
 
@@ -118,7 +118,7 @@ def appointmentnotes(doctoremail, appointmentid):
     saveButton.grid(row=0, column=0)
 
     saveButton = Button(buttonFrame, text='Open prescription', font=('arial', 12, 'bold'), width=20,
-                        command=partial(prescription, doctoremail, appointmentid), background='SlateGray1')
+                        command=partial(prescription, doctoremail, appointmentid,nhsNumber), background='SlateGray1')
     saveButton.grid(row=0, column=1)
 
     # ------------------------- Patient Information -------------------------

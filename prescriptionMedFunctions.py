@@ -1,5 +1,6 @@
 import sqlite3
 from pathlib import Path
+import re
 
 
 # connect to your database
@@ -157,3 +158,31 @@ def deleteMedRecord(appointmentID):
             appointmentID = ?
         """, (appointmentID,))
     closeconn(conn["connection"])
+
+def allergyhandler(nhsNumber,medicine):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+                SELECT medName 
+                FROM medAllergy
+                WHERE nhsNumber = ?
+            """, (nhsNumber,))
+
+    results = conn['cursor'].fetchall()
+    allergies = []
+    for result in results:
+        allergies.append(result[0])
+
+    for allergy in allergies:
+        searchpattern = r"\b{}\b".format(allergy)
+        results = re.search(searchpattern,medicine,re.IGNORECASE)
+        if results:
+            warningmsg = "Warning! The patient has listed '" + allergy +\
+                         "' as a medical allergy. Please consider carefully before adding this medicine"
+            return warningmsg
+
+    closeconn(conn["connection"])
+
+
+if __name__=="__main__":
+    #print(allergyhandler(1234567890,"The ultimate ibuprofen coma"))

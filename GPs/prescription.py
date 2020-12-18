@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox, ttk
 import prescriptionMedFunctions as ms
 
-def prescription(doctoremail,appointmentID):
+def prescription(doctoremail,appointmentID,nhsNumber):
 
 
     # Pull all saved prescription records from the database
@@ -132,7 +132,7 @@ def prescription(doctoremail,appointmentID):
             addvalues = (
                             medid.get(),
                             medname.get(),
-                            str(chosendose.get()) + " " + doseUnit[0], #todo concatenate activeIngredientUnit where medicineID = ?,
+                            str(chosendose.get()) + " " + doseUnit[0],
                             str(multiplier.get()) + 'x',
                             doseType.get(),
                             furtherInformation.get()
@@ -156,6 +156,10 @@ def prescription(doctoremail,appointmentID):
             medname.config(state=DISABLED)
             doseType.config(state=DISABLED)
             multiplier.config(state='readonly')
+            potential_allergy = ms.allergyhandler(nhsNumber,addvalues[1])
+            if potential_allergy:
+                messagebox.showerror("Warning!", potential_allergy)
+
         elif not medid.get():
             messagebox.showerror("Error", "Please choose a medicine before you click 'Add Medicine'")
         elif int(medid.get()) in treeviewMedID:

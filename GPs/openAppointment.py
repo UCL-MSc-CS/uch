@@ -26,12 +26,12 @@ def openappointment(doctoremail):
             option = input(":")
             if option == "1":
                 print("\n Opening your notes for this appointment in a separate window.... \n")
-                appointmentnotes(doctoremail,appointmentid)
+                appointmentnotes(doctoremail,appointmentid, nhsNumber)
             elif option == "2":
                 patienthistory(doctoremail,appointmentid, nhsNumber)
             elif option == "3":
                 print("\n Opening the prescription editor in a separate window... \n")
-                prescription(doctoremail,appointmentid)
+                prescription(doctoremail,appointmentid, nhsNumber)
             elif option == "4":
                 print("\n Switching appointments... \n")
                 openappointment(doctoremail)
