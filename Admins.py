@@ -495,10 +495,10 @@ class adminFunctions():
         except FieldEmpty:
             error = FieldEmpty()
             print(error)
-            return 1
+            return adminFunctions.cin(self)
         except ValueError:
             print("< Please provide a numerical input >")
-            return 1
+            return adminFunctions.cin(self)
         else:
             self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
@@ -535,10 +535,10 @@ class adminFunctions():
         except FieldEmpty:
             error = FieldEmpty()
             print(error)
-            return 1
+            return adminFunctions.cout(self)
         except ValueError:
             print("< Please provide a numerical input >")
-            return 1
+            return adminFunctions.cout(self)
         else:
             self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
