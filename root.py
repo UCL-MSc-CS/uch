@@ -116,7 +116,7 @@ while True:
                                     try:
                                         ipt = int(input("Please select an option: "))
                                     except ValueError:
-                                        print("   < Please provide a numerical input >")
+                                        print("\n   < Please provide a numerical input >\n")
 
                                 while ipt != 1 and ipt != 2 and ipt != 0:
                                     try:

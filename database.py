@@ -203,12 +203,42 @@ c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
                     'Shorvon',
                     '1998-07-16',
                     'Male',
-                    '10 Downing Street',
+                    '56 Vincent Square',
                     'London',
-                    'SW1A 0AA',
-                    7758221088,
+                    'SW1P 2NE',
+                    447758221088,
                     '1234',
                     1)""")
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
+                    1234567891,
+                    'andrew.oconnell@gmail.com',
+                    'Andrew',
+                    'Oconnell',
+                    '1998-07-16',
+                    'Male',
+                    '56 Vincent Square',
+                    'London',
+                    'SW1P 2NE',
+                    447758221088,
+                    '1234',
+                    0)""")
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
+                    1234567892,
+                    'andrew.oconnell@gmail.com',
+                    'Jacob',
+                    'Lapkin',
+                    '1998-07-16',
+                    'Male',
+                    '56 Vincent Square',
+                    'London',
+                    'SW1P 2NE',
+                    447758221088,
+                    '1234',
+                    0)""")
 connection.commit()
 
 c.execute("""INSERT OR IGNORE INTO GP VALUES(
@@ -216,6 +246,34 @@ c.execute("""INSERT OR IGNORE INTO GP VALUES(
             '1234',
             'Matthew',
             'Shorvon',
+            'male',
+            '1998-07-16',
+            '10 Beverly Hills',
+            'LA',
+            '447758221088',
+            'Plastic Surgery',
+            1)""")
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO GP VALUES(
+            'andrew.oconnell@ucl.ac.uk',
+            '1234',
+            'Andrew',
+            'Oconnell',
+            'male',
+            '1998-07-16',
+            '10 Beverly Hills',
+            'LA',
+            '447758221088',
+            'Plastic Surgery',
+            1)""")
+connection.commit()
+
+c.execute("""INSERT OR IGNORE INTO GP VALUES(
+            'jacob.lapkin@ucl.ac.uk',
+            '1234',
+            'Jacob',
+            'Lapkin',
             'male',
             '1998-07-16',
             '10 Beverly Hills',

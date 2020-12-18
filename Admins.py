@@ -172,6 +172,7 @@ class adminFunctions():
 
     def add_doctor(self):
         question_num = 0
+        print("Press 0 to return to the main menu at any stage")
         while True:
             try:
                 while question_num == 0:
@@ -309,7 +310,7 @@ class adminFunctions():
                 error = EmailInUse(a)
                 print(error)
             except ValueError:
-                print("   < Please provide a numerical input >")
+                print("\n   < Please provide a numerical input > \n")
             except TeleNoFormatError:
                 error = TeleNoFormatError()
                 print(error)
@@ -357,9 +358,9 @@ class adminFunctions():
                 print("Email: {}".format(i[1]))
                 print("First name: {}".format(i[2]))
                 print("Last name: {}".format(i[3]))
-                date = uf.toregulartime(i[4])
-                date = date.strftime("%Y-%m-%d") 
-                print("Date of birth: {}".format(date))
+                # date = uf.toregulartime(i[4])
+                # date = date.strftime("%Y-%m-%d") 
+                print("Date of birth: {}".format(i[4]))
                 print("Gender: {}".format(i[5]))
                 print("Address line 1: {}".format(i[6]))
                 print("Addresss line 2: {}".format(i[7]))
@@ -372,15 +373,17 @@ class adminFunctions():
                     try:
                         change = input("Do you want to confirm this registration?: (Y/N) ")
                         if change == 'Y':
-                            self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 1 WHERE patientEmail = ? """,
-                                        (i[1],))
+                            self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 1 WHERE nhsNumber = ? """,
+                                        (i[0],))
                             print("Registration confirmed successfully")
+                            print(" ")
                             # self.c.execute("SELECT * FROM PatientDetail WHERE registrationConfirm = 1")
                             # items = self.c.fetchall()
                             # for i in items:
                             #     print(i)
                         elif change == 'N':
                             print("Registration not confirmed")
+                            print(" ")
                         else:
                             raise YNError
                     except YNError:
@@ -437,10 +440,10 @@ class adminFunctions():
                 self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
                 items = self.c.fetchall()
                 if len(items) == 0:
-                    print("No record exists with this email")
+                    print("\n   < No record exists with this email> \n")
                 else:
                     self.c.execute("""UPDATE GP SET active = 0 WHERE gpEmail = ?""", (email,))
-                    self.c.execute("SELECT * FROM GP")
+                    self.connection.commit()
                     print("Record deactivated successfully")
                     return 2
 
@@ -466,10 +469,10 @@ class adminFunctions():
                 self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
                 items = self.c.fetchall()
                 if len(items) == 0:
-                    print("No record exists with this email")
+                    print("\n   < No record exists with this email > \n")
                 else:
                     self.c.execute("DELETE FROM GP WHERE gpEmail = ?", (email,))
-                    self.c.execute("SELECT * FROM GP")
+                    self.connection.commit()
                     print("Record deleted successfully")
                     return 2
 

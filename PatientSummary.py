@@ -62,8 +62,13 @@ with open('PatientSummary.txt','w') as f:
     AND Appointment.nhsNumber = ?""", (nhsNumber,))
     items = c.fetchall()
     for i in range(0,len(items)):
-        dose = str(items[i][1]).ljust(20,' ')
-        f.write(str(items[i][0]) + dose + "        " + str(items[i][2] + "\n"))
+        if len(str(items[i][0])) > 30:
+            f.write('{:<60s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], items[i][2]))
+        else:
+            f.write('{:<30s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], items[i][2]))
+        # promethazine hydrochloride and codeine phosphate 
+        # Losartan Potassium and Hydrochlorothiazide
+        # "Butalbital, Acetaminophen, Caffeine, and Codeine Phosphate " 59 characters long
 
     
     
