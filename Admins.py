@@ -24,6 +24,12 @@ class FieldEmpty(Error):
         self.message = message
         super().__init__(self.message)
 
+class OutOfBounds(Error):
+    """ Exception raised when the input is out of bounds """
+    def __init__(self, message = "\n   < Please enter either 1, 2, or 3 > \n"):
+        self.message = message
+        super().__init__(self.message)
+
 class EmailInUse(Error):
     """
     Exception raised when the email is already in use

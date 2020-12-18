@@ -32,7 +32,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("    <Please enter Y for yes and N for no>")
+                print("\n    <Please enter Y for yes and N for no>\n")
             else:
                 break
         if c_exercise == "y":
@@ -45,7 +45,7 @@ class RiskProfile:
                 try:
                     c_type = input("Please name one example of the regular endurance (cardiovascular) "
                                    "exercise you participate in: ")
-                    if not c_type:
+                    if c_type == '':
                         raise pf.EmptyFieldError()
                 except pf.EmptyFieldError:
                     error = pf.EmptyFieldError()
@@ -57,13 +57,13 @@ class RiskProfile:
             while True:
                 try:
                     c_frequency = int(input("How many times do you engage in " + c_type + " per week" + ": "))
-                    if not c_frequency:
+                    if c_frequency == '':
                         raise pf.EmptyFieldError()
                 except pf.EmptyFieldError:
                     error = pf.EmptyFieldError()
                     print(error)
                 except ValueError:
-                    print("    <You have entered a non-numeric value>")
+                    print("\n    <You have entered a non-numeric value>\n")
                 else:
                     break
             self.questionnaire[2] = str(c_frequency)
@@ -77,10 +77,10 @@ class RiskProfile:
                 except pf.EmptyFieldError:
                     error = pf.EmptyFieldError()
                     print(error)
-                except ValueError:
-                    print("    <You have entered a non-numeric value>")
                 except pf.InvalidAnswerError:
-                    print("    <Please enter a realistic answer for this questions>")
+                    print("\n    <Please enter a realistic answer for this questions>\n")
+                except ValueError:
+                    print("\n    <You have entered a non-numeric value>n")
                 else:
                     break
             self.questionnaire[3] = str(c_time)
@@ -92,7 +92,7 @@ class RiskProfile:
         while True:
             try:
                 d_goals = input("What are your main health goals: ")
-                if not d_goals:
+                if d_goals == '':
                     raise pf.EmptyFieldError()
             except pf.EmptyFieldError:
                 error = pf.EmptyFieldError()
@@ -115,7 +115,9 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("    <Error! The entered height and weight seem to be too large>")
+                print("\n    <Error! The entered height and weight seem to be unrealistic>\n")
+            except ValueError:
+                print('\n    Error! Please enter numeric values for height and weight\n')
             else:
                 break
         bmi_calculation = round(weight/(height ** 2), 2)
@@ -173,7 +175,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("    <Error! Please re-answer the questions with Y for yes and N for no>")
+                print("\n    <Error! Please re-answer the questions with Y for yes and N for no>\n")
             else:
                 break
         if smoking == "y":
@@ -205,7 +207,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("    <Error! Please enter Y for yes and N for no>")
+                print("\n    <Error! Please enter Y for yes and N for no>\n")
             else:
                 break
         if drugs == "y":
@@ -237,7 +239,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("    <Error! Please enter Y for yes and N for no>")
+                print("\n    <Error! Please enter Y for yes and N for no>\n")
             else:
                 break
         if alcohol == "y":
@@ -258,7 +260,7 @@ class RiskProfile:
             while True:
                 try:
                     alcohol_unit = int(input("Please choose a number from the options above: "))
-                    if not alcohol_unit:
+                    if alcohol_unit == '':
                         raise pf.EmptyFieldError()
                     if alcohol_unit not in unit:
                         raise pf.InvalidAnswerError()
@@ -266,11 +268,13 @@ class RiskProfile:
                     error = pf.EmptyFieldError()
                     print(error)
                 except pf.InvalidAnswerError:
-                    print("    <Invalid answer. Please enter your answer based on the menu provided>")
+                    print("\n    <Invalid answer. Please enter your answer based on the menu provided>\n")
+                except ValueError:
+                    print('\n    <Error! Please enter a numeric value from the menu above>\n')
                 else:
                     break
             self.answers.append(alcohol)
-            self.answers.append(alcohol_unit)
+            self.answers.append(str(alcohol_unit))
             if alcohol_unit == 8:
                 print("*" * 20)
                 print("Men and women are advised not to drink more than 14 units"
@@ -291,33 +295,41 @@ class RiskProfile:
         print("The following part of the survey will assess your diet.")
         while True:
             try:
-                meat = input("How many meals a week do you consume red meat: ")
-                diet = input("How many portions of fruit or vegetables do you consume a day: ")
-                if not meat or not diet:
+                meat = int(input("How many meals a week do you consume red meat: "))
+                diet = int(input("How many portions of fruit or vegetables do you consume a day: "))
+                if meat == '' or diet == '':
                     raise pf.EmptyFieldError()
             except pf.EmptyFieldError:
                 error = pf.EmptyFieldError()
                 print(error)
+            except ValueError:
+                print('\n    <Error! Please enter a numeric value>\n')
             else:
                 break
-        if int(diet) < 5:
+        if diet < 5:
             print("The NHS suggests that men and women should consume at least 5 "
                   "portions of fruit or vegetables a day as part of a healthy diet.")
         print("If you would like more advice and support, "
               "\nplease consult your doctor and look at the following NHS webpage: ")
         if input("Type Y for yes to open in browser: ").lower() == "y":
             webbrowser.open("https://www.nhs.uk/live-well/eat-well/meat-nutrition/", new=2)
-        caffeine = input("How many cups of coffee or caffeinated drinks do you consume per day: ")
-        if int(caffeine) > 4:
+        while True:
+            try:
+                caffeine = int(input("How many cups of coffee or caffeinated drinks do you consume per day: "))
+            except ValueError:
+                print('\n    <Error! Please enter a numeric value>\n')
+            else:
+                break
+        if caffeine > 4:
             print("According to the NHS guidelines, drinking up to four cups of coffee a day carries no health risk.",
                   "\nYou might want to cut down your daily caffeine intake.")
             print("If you would like more advice and support, "
                   "\nplease consult your doctor and look at the following NHS webpage: ")
             if input("Type Y for yes to open in browser: ").lower() == "y":
                 webbrowser.open("https://www.nhs.uk/news/genetics-and-stem-cells/four-cups-of-coffee-not-bad-for-health-suggests-review", new=2)
-        self.answers.append(meat)
-        self.answers.append(diet)
-        self.answers.append(caffeine)
+        self.answers.append(str(meat))
+        self.answers.append(str(diet))
+        self.answers.append(str(caffeine))
 
     def insert_to_table(self, nhs_number):
         self.answers.insert(0, nhs_number)

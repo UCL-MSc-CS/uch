@@ -1,5 +1,6 @@
 from datetime import datetime,timedelta
 import time
+from GPs.GPExceptions import *
 
 dateformatstring = "%Y-%m-%d"
 timeformatstring = "%H:%M"
@@ -9,19 +10,31 @@ datetimeformat = dateformatstring + " " + timeformatstring
 def validatedate(string):
     while True:
         try:
-            datestring = input(string + " (YYYY-MM-DD): ")
+            datestring = input(string + " (YYYY-MM-DD) (enter [0]) to exit: ")
+            if datestring == '0':
+                return "exit"
+            if datestring == '':
+                raise EmptyValueError
             date = datetime.strptime(datestring,dateformatstring)
             return date
+        except EmptyValueError:
+            print("\t<You need to enter a value, please try again...>")
         except:
-            print("\t<Invalid date entered,Please try again...>")
+            print("\t<Invalid date entered, please try again...>")
 
 #call this function to validate any time entered by the user
 def validatetime(string):
     while True:
         try:
-            timestring = input(string + " (HH:MM): ")
+            timestring = input(string + " (HH:MM) (enter [0]) to exit: ")
+            if timestring == '0':
+                return "exit"
+            if timestring == '':
+                raise EmptyValueError
             time = datetime.strptime(timestring,timeformatstring)
             return time
+        except EmptyValueError:
+            print("\t<You need to enter a value, please try again...>")
         except:
             print("\t<Invalid time entered, Please try again...>")
 

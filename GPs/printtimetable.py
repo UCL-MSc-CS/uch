@@ -40,6 +40,8 @@ def printtimetable(doctoremail):
                     break
             elif int(option) == 3:
                 selected_date = uf.validatedate("Please enter a date to view its weekly timetable")
+                if selected_date == 'exit':
+                    continue
                 printdays(selected_date, doctoremail)
                 choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
                 if choice == '0':

@@ -5,10 +5,6 @@ import time
 import calendar
 import pandas as pd
 
-## add exceptions for when no appointment booked and no drs
-## improve docstrings and comments
-## allow user to cancel more than 1 appointment
-## change 'pending' to reserved in display available with explanation for user
 
 class Error(Exception):
     """Error exception class"""
@@ -34,9 +30,6 @@ class dateAfterCurrent(Error):
     """Raised when date chosen is in the past"""
     pass
 
-class monthAfterCurrent(Error):
-    """Raised when month chosen is in the past"""
-    pass
 
 class drChoiceNotValid(Error):
     """Raised when choice of dr not valid"""
@@ -92,7 +85,7 @@ def chooseDr(dr_names):
         counts.append(count - 1)
     while True:
         try:
-            dr_options = int(input("**********"
+            dr_options = int(input("********************************************"
                                    "\nPlease choose the doctor you would "
                                    "like to book an appointment with: "))
             if dr_options not in counts:
@@ -104,9 +97,11 @@ def chooseDr(dr_names):
                 print("You have chosen Dr {}".format(gp_chosen_name))
                 return gpDetails
         except drChoiceNotValid:
-            print("This is not a valid choice, please try again")
+            print("\n\t< This is not a valid choice, please try again >"
+                  "\n ")
         except ValueError:
-            print("This is not a valid choice, please try again")
+            print("\n\t< This is not a valid choice, please try again >"
+                  "\n ")
 
 
 def chooseMonth():
@@ -124,8 +119,6 @@ def chooseMonth():
             mm = int(input("Please choose the month would you would like your appointment in 2021: "))
             if not 1 <= mm <= 12:
                 raise monthNotValid
-            # if mm < currentMonth:
-            #     raise monthAfterCurrent
             else:
                 print("----------")
                 print(calendar.month(2021, mm))
@@ -133,11 +126,11 @@ def chooseMonth():
                 month = '{:02}'.format(mm)
                 return month
         except monthNotValid:
-            print("This is not a valid option, please try again")
-        # except monthAfterCurrent:
-        #     print("This month has already passed, please try again")
+            print("\n\t< This is not a valid option, please try again >"
+                  "\n")
         except ValueError:
-            print("This is not a valid option, please try again")
+            print("\n\t< This is not a valid option, please try again >"
+                  "\n")
 
 
 def chooseDate(month):
@@ -151,7 +144,7 @@ def chooseDate(month):
     days_28 = ['02']
     while True:
         try:
-            day = int(input("Please choose a date in your chosen month (as d/dd): "))
+            day = int(input("Please choose a date in your chosen month (as D/DD): "))
             for mm in days_31:
                 if mm == month:
                     if not 1 <= day <= 31:
@@ -172,11 +165,14 @@ def chooseDate(month):
                     raise dateAfterCurrent
             return date
         except dayNotValid:
-            print("Invalid date entered, please enter a date in the correct format")
+            print("\n\t< Invalid date entered, please enter a date in the correct format >"
+                  "\n")
         except dateAfterCurrent:
-            print("This date has already passed, please choose another")
+            print("\n\t< This date has already passed, please choose another >"
+                  "\n")
         except ValueError:
-            print("This is not a valid option, please try again")
+            print("\n\t< This is not a valid option, please try again >"
+                  "\n")
 
 
 def generateStartTime(date):
@@ -217,10 +213,11 @@ def timeMenu(date, times, gpDetails, nhsNumber):
     """ Displays menu for user to select a time, reserves appointment as 'Pending' in the database,
     or allows user to exit to main menu
     """
-    print("**********"
-          "\n[1] to select a time"
-          "\n[2] to exit to the main menu ")
-    options = input("\nPlease choose from the options above: ")
+    print("********************************************"
+          "\nChoose [1] to select a time"
+          "\nChoose [0] to exit to the main menu "
+          "\n********************************************")
+    options = input("\nPlease select an option: ")
     if options == '1':
         time = chooseTime(date, times, gpDetails)
         start = createStart(date, time)
@@ -256,9 +253,11 @@ def chooseTime(date, times, gpDetails):
             else:
                 return time
         except timeNotValid:
-            print("This is not a valid time option, please try again")
+            print("\n\t< This is not a valid time option, please try again >"
+                  "\n")
         except timeBooked:
-            print("This time is unavailable, please try again")
+            print("\n\t< This time is unavailable, please try again >"
+                  "\n")
 
 
 def createStart(date, time):
@@ -276,13 +275,6 @@ def insertAppointment(start, gpDetails, nhsNumber):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
 
-    #remove, switch to nhsNumber?
-    c.execute("SELECT patientEmail FROM patientDetails "
-              "WHERE nhsNumber =?",
-              [nhsNumber])
-    patientEmails = c.fetchall()
-    patientEmail = patientEmails[0]
-
     end = start + (30 * 60)
     gpLastName = gpDetails[1]
     gpEmail = gpDetails[0]
@@ -290,7 +282,7 @@ def insertAppointment(start, gpDetails, nhsNumber):
     appointmentStatus = 'Pending'
     dateRequested = tounixtime(datetime.today())
 
-    chosen = (gpEmail, gpLastName, patientEmail, start, end, reason, appointmentStatus,
+    chosen = (gpEmail, gpLastName, nhsNumber, start, end, reason, appointmentStatus,
               dateRequested, '', '', '', '', '', None, None)
     c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
     connection.commit()
@@ -299,7 +291,7 @@ def insertAppointment(start, gpDetails, nhsNumber):
 def returnToMain():
     """Returns user to main patient menu when typing 'yes'
     If user types anything else, will exit the program with a goodbye message"""
-    if input("Type yes to return to the main menu: ").lower() == 'yes':
+    if input("Type [0] to return to the main menu: ").lower() == '0':
         pass
     else:
         print("Thank you for using the UCH e-health system! Goodbye for now!")

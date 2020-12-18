@@ -1,12 +1,10 @@
-import pandas as pd
 import Admins
-import sqlite3 as sql
-from datetime import datetime as dt
-import time
 import patients.patientMain as pm
 import GPs.GPMain as gpm
 import sys
 import usefulfunctions as uf
+import os.path
+from database import initialise_database
 
 class Menus():
     def MasterMenu(self):
@@ -56,6 +54,13 @@ class Menus():
 """ This is the main loop"""
 while True:
     try:
+
+        if os.path.isfile('UCH.db') and os.path.getsize('UCH.db') > 0:
+            pass
+        else:
+            print("Initializing the Database please allow a few seconds before login begins...")
+            initialise_database()
+
         masterlogin = Menus()
         masterlogin.MasterMenu()
 
@@ -64,33 +69,12 @@ while True:
         while selection1 == 0 or selection1 == 1 or selection1 == 2 or selection1 == 3:
             if selection1 == 2:
                 selection1 = pm.task()
-            elif selection1 == 3:
-                # # todo replace hard code with function call.
-                # email = input("Please enter your email address: ")
-                # password = input("Please enter your password: ")
 
-                # with sql.connect("UCH.db") as db:
-                #     c = db.cursor()
-                # find_doctor = ("SELECT * FROM GP WHERE gpEmail =? AND password =?")
-
-                # # avoid using %s as this is vulnerable to injection attacks.
-                # c.execute(find_doctor, [(email), (password)])
-                # results = c.fetchall()
-
-                # if results:
-                #     for i in results:
-                #         print("Welcome " + i[2])
-                #     selection1 = 0
-
-                # else:
-                #     print("Email and password not recognised")
-                #     again = input("Do you want to try again?(y/n)")
-                #     if again.lower() == "n":
-                #         print("Goodbye")
-                #         time.sleep(1)
-                #         selection1 = 0
-                gpm.gpStart()
-
+            while selection1 == 3:
+                gpChoice = gpm.gpStart()
+                if gpChoice == "exitGPLogin":
+                    masterlogin.MasterMenu()
+                    selection1 = int(input("Please select an option: "))
 
             while selection1 == 1:
                 ad = Admins.adminFunctions()

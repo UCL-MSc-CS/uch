@@ -12,7 +12,7 @@ datetimeformat = dateformatstring + " " + timeformatstring
 
 def openappointment(doctoremail):
 
-    appointmentid = printtodayappointments(doctoremail)
+    appointmentid, nhsNumber = printtodayappointments(doctoremail)
     if appointmentid:
         while True:
             print("--------------------------------------------")
@@ -26,12 +26,12 @@ def openappointment(doctoremail):
             option = input(":")
             if option == "1":
                 print("\n Opening your notes for this appointment in a separate window.... \n")
-                appointmentnotes(doctoremail,appointmentid)
+                appointmentnotes(doctoremail,appointmentid, nhsNumber)
             elif option == "2":
-                patienthistory(doctoremail,appointmentid)
+                patienthistory(doctoremail,appointmentid, nhsNumber)
             elif option == "3":
                 print("\n Opening the prescription editor in a separate window... \n")
-                prescription(doctoremail,appointmentid)
+                prescription(doctoremail,appointmentid, nhsNumber)
             elif option == "4":
                 print("\n Switching appointments... \n")
                 openappointment(doctoremail)
@@ -46,7 +46,6 @@ def openappointment(doctoremail):
 
 
 def printtodayappointments(doctoremail):
-    # Todo disallow user to 'stay within appointment' if they have entered wrong invalid id
     day = datetime.today()
 
     print("--------------------------------------------")
@@ -72,7 +71,10 @@ def printtodayappointments(doctoremail):
             if idNum in appointmentids:
                 print("Opening appointment id: " + id)
                 # todo connect current appointment options
-                return idNum
+                for appointment in appointments:
+                    if idNum == appointment[4]:
+                        chosenNhsNumber = appointment[3]
+                return idNum, chosenNhsNumber
             else:
                 print("\t<You entered an invalid id number!>")
         except:
