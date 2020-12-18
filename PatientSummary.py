@@ -4,7 +4,7 @@ import usefulfunctions as uf
 connection = sql.connect('UCH.db')
 c = connection.cursor()
 
-nhsNumber = 1234567890
+nhsNumber = 5604701515
 
 with open('PatientSummary.txt','w') as f:
     c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", [nhsNumber])
@@ -34,7 +34,7 @@ with open('PatientSummary.txt','w') as f:
     f.write("--------------------------------------------\n")
     f.write("PROBLEMS: \n")
     f.write("--------------------------------------------\n")
-    c.execute("""SELECT dateRequested, diagnosis FROM Appointment WHERE nhsNumber = 1234567890""")
+    c.execute("""SELECT dateRequested, diagnosis FROM Appointment WHERE nhsNumber = ?""", [nhsNumber])
     items = c.fetchall()
     for i in range(0,len(items)):
         f.write(str(items[i][0]) + "       " + str(items[i][1]) + '\n')

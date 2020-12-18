@@ -7,6 +7,7 @@ from patients.lifeStyleQuestionnaire import RiskProfile
 from patients.appointment import Appointment
 import usefulfunctions as uf
 import re
+import patients.patientMedicalFunctions as pf
 
 """ This is the main patient menu"""
 
@@ -162,6 +163,7 @@ def quest_options(NHS_number):
             options(NHS_number)
         elif action == '3':
             x = PatientMedical(NHS_number)
+            # pf.medical_history_menu
             x.vaccination(NHS_number)
             x.cancer(NHS_number)
             options(NHS_number)
@@ -945,7 +947,7 @@ def password_q(new_patient):
             x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"], new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
             x.register()
             summary(x.NHS_number)
-            options(x.NHS_number)
+            check_NHS(x.NHS_number)
     except EmptyAnswerError:
         error = EmptyAnswerError()
         print(error)

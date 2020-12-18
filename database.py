@@ -227,6 +227,20 @@ def initialise_database():
                 1)""")
     connection.commit()
 
+    c.execute("""INSERT OR IGNORE INTO GP VALUES(
+                "apostrophe'@ucl.ac.uk",
+                '1234',
+                'Matthew',
+                'Shorvon',
+                'male',
+                '1998-07-16',
+                '10 Beverly Hills',
+                'LA',
+                '447758221088',
+                'Plastic Surgery',
+                1)""")
+    connection.commit()
+
     connection.close()
 
 if __name__ == "__main__":

@@ -284,7 +284,7 @@ def displayAvailable(start, end, gpDetails):
                 end_time_2 = datetime.time(end_time)
                 if items >= start_time_2 and items <= end_time_2:
                     times_status[items] = ': Unavailable'
-                else:
+                elif items not in times_status:
                     times_status[items] = ": Available"
 
         for key, value in times_status.items():

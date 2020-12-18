@@ -37,8 +37,7 @@ class EmailInUse(Error):
     :param: email - input email which causes the error
             message - explanation of the error to the user
     """
-    def __init__(self, email, message = "\n   < Email already in use > \n"):
-        self.email = email
+    def __init__(self, message = "\n   < Email already in use > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -193,7 +192,7 @@ class adminFunctions():
                     self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (a,))
                     items = self.c.fetchall()
                     if len(items) != 0:
-                        raise EmailInUse(a)
+                        raise EmailInUse()
                     question_num = 1
                 while question_num == 1:
                     pw = input("Password: ")
@@ -313,7 +312,7 @@ class adminFunctions():
                 error = EmailInvalid(a)
                 print(error)
             except EmailInUse:
-                error = EmailInUse(a)
+                error = EmailInUse()
                 print(error)
             except ValueError:
                 print("\n   < Please provide a numerical input > \n")
@@ -339,6 +338,7 @@ class adminFunctions():
                 gp = [a, pw, b, c, gender, dateOfBirth, addressL1, addressL2, teleNo, department, active]
                 self.c.execute("""INSERT INTO GP VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", gp)
                 print("Details entered successfully")
+                self.connection.commit()
                 return 0
 
     def check_registrations(self):
