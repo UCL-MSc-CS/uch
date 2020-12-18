@@ -56,7 +56,7 @@ class EmailInvalid(Error):
 
 class nhsNotExists(Error):
     """Exception raised when email does not exist in list"""
-    def __init__(self, message = "please enter an existing NHS number"):
+    def __init__(self, message = "\n   < Please enter an existing NHS number > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -133,13 +133,13 @@ class InvalidAgeRange(Error):
 
 class InvalidAdd(Error):
     """exception raised when address is not valid"""
-    def __init__(self, message = "please input address containing number and street"):
+    def __init__(self, message = "\n   < Please input an address containing number and street > \n"):
         self.message = message
         super().__init__(self.message)
 
 class IntegerError(Error):
     """exception raised when integer is not in choice range"""
-    def __init__(self, message = "please input a valid number"):
+    def __init__(self, message = "\n   < Please input a valid number > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -152,7 +152,7 @@ class YNError(Error):
 class EmailInUse(Error):
     """exception raised when email already exist"""
 
-    def __init__(self, message="< Email has already been used >"):
+    def __init__(self, message="\n   < Email has already been used, Please enter a different email > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -178,6 +178,7 @@ class adminFunctions():
 
     def add_doctor(self):
         question_num = 0
+        print("Press 0 to return to the main menu at any stage")
         while True:
             try:
                 while question_num == 0:
@@ -315,7 +316,7 @@ class adminFunctions():
                 error = EmailInUse(a)
                 print(error)
             except ValueError:
-                print("   < Please provide a numerical input >")
+                print("\n   < Please provide a numerical input > \n")
             except TeleNoFormatError:
                 error = TeleNoFormatError()
                 print(error)
@@ -363,9 +364,9 @@ class adminFunctions():
                 print("Email: {}".format(i[1]))
                 print("First name: {}".format(i[2]))
                 print("Last name: {}".format(i[3]))
-                date = uf.toregulartime(i[4])
-                date = date.strftime("%Y-%m-%d") 
-                print("Date of birth: {}".format(date))
+                # date = uf.toregulartime(i[4])
+                # date = date.strftime("%Y-%m-%d") 
+                print("Date of birth: {}".format(i[4]))
                 print("Gender: {}".format(i[5]))
                 print("Address line 1: {}".format(i[6]))
                 print("Addresss line 2: {}".format(i[7]))
@@ -378,15 +379,17 @@ class adminFunctions():
                     try:
                         change = input("Do you want to confirm this registration?: (Y/N) ")
                         if change == 'Y':
-                            self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 1 WHERE patientEmail = ? """,
-                                        (i[1],))
+                            self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 1 WHERE nhsNumber = ? """,
+                                        (i[0],))
                             print("Registration confirmed successfully")
+                            print(" ")
                             # self.c.execute("SELECT * FROM PatientDetail WHERE registrationConfirm = 1")
                             # items = self.c.fetchall()
                             # for i in items:
                             #     print(i)
                         elif change == 'N':
                             print("Registration not confirmed")
+                            print(" ")
                         else:
                             raise YNError
                     except YNError:
@@ -443,10 +446,10 @@ class adminFunctions():
                 self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
                 items = self.c.fetchall()
                 if len(items) == 0:
-                    print("No record exists with this email")
+                    print("\n   < No record exists with this email> \n")
                 else:
                     self.c.execute("""UPDATE GP SET active = 0 WHERE gpEmail = ?""", (email,))
-                    self.c.execute("SELECT * FROM GP")
+                    self.connection.commit()
                     print("Record deactivated successfully")
                     return 2
 
@@ -472,10 +475,10 @@ class adminFunctions():
                 self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
                 items = self.c.fetchall()
                 if len(items) == 0:
-                    print("No record exists with this email")
+                    print("\n   < No record exists with this email > \n")
                 else:
                     self.c.execute("DELETE FROM GP WHERE gpEmail = ?", (email,))
-                    self.c.execute("SELECT * FROM GP")
+                    self.connection.commit()
                     print("Record deleted successfully")
                     return 2
 
@@ -500,55 +503,61 @@ class adminFunctions():
             self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
             if len(items) == 0:
-                print("No record exists with this appointmentID")
+                print("< No record exists with this appointmentID >")
                 return 1
             self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
-            if len(items) != 0:
-                print("A check-in time has already been provided for that appointment")
+            if items[0][0] != 0:
+                print("< A check-in time has already been provided for that appointment >")
                 return 1
             else:
                 unixd = dt.utcnow().timestamp()
-                print(unixd)
+                self.c.execute("""SELECT firstName FROM PatientDetail INNER JOIN Appointment
+                                WHERE Appointment.appointmentID = ?""", (check_number,))
+                firstsel = self.c.fetchall()
                 self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unixd, check_number))
                 self.connection.commit()
-                print("successfully checked in patient")
+                x = dt.now().time()
+                print("Successfully checked in {} at {a}".format(firstsel[0][0], a=x))
                 return 0
 
     def cout(self):
         try:
-            outtime = dt.now()
+            intime = dt.now()
             print("********************************************")
-            Out = str(input("Type in appointment id (press 0 to go back): "))
-            if Out == "0":
+            In = str(input("Type in appointment id (press 0 to go back): "))
+            if In == "0":
                 return 0
-            if not Out:
+            if not In:
                 raise FieldEmpty()
-            check_number = int(Out)
+            check_number = int(In)
         except FieldEmpty:
             error = FieldEmpty()
             print(error)
-            return 2
+            return 1
         except ValueError:
             print("< Please provide a numerical input >")
-            return 2
+            return 1
         else:
-            self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (Out,))
+            self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
             if len(items) == 0:
-                print("No record exists with this appointmentID")
-                return 2
-            self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (In,))
+                print("< No record exists with this appointmentID >")
+                return 1
+            self.c.execute("SELECT checkOut FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
-            if len(items) != 0:
-                print("A check-in time has already been provided for that appointment")
-                return 2
+            if items[0][0] != 0:
+                print("< A check-out time has already been provided for that appointment >")
+                return 1
             else:
                 unixd = dt.utcnow().timestamp()
-                print(unixd)
-                self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, Out))
+                self.c.execute("""SELECT firstName FROM PatientDetail INNER JOIN Appointment
+                WHERE Appointment.appointmentID = ?""", (check_number,))
+                firstsel = self.c.fetchall()
+                self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, check_number))
                 self.connection.commit()
-                print("Successfully checked out patient")
+                x = dt.now().time()
+                print("Successfully checked out {} at {a}".format(firstsel[0][0], a = x))
                 return 0
 
     def managedet(self):
@@ -556,7 +565,7 @@ class adminFunctions():
         while masterback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
+                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == '0':
@@ -782,7 +791,7 @@ class adminFunctions():
         while delback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
+                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "0":
@@ -811,7 +820,7 @@ class adminFunctions():
         while masterback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
+                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "0":

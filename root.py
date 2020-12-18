@@ -8,10 +8,14 @@ from database import initialise_database
 
 class Menus():
     def MasterMenu(self):
+        print("--------------------------------------------")
+        print("         UCH Management System   ")
+        print("--------------------------------------------")
         print("Welcome, please login")
         print("Choose [1] for Admin")
         print("Choose [2] for Patient")
         print("Choose [3] for GP")
+        print("Choose [0] to close the program")
 
     def adminmenu(self):
         uf.banner('Admin')
@@ -62,8 +66,7 @@ while True:
 
 
         selection1 = int(input("Please select an option: "))
-
-        while selection1 != 0:
+        while selection1 == 0 or selection1 == 1 or selection1 == 2 or selection1 == 3:
             if selection1 == 2:
                 selection1 = pm.task()
 
@@ -97,11 +100,14 @@ while True:
                                     try:
                                         ipt = int(input("Please select an option: "))
                                     except ValueError:
-                                        print("   < Please provide a numerical input >")
+                                        print("\n   < Please provide a numerical input >\n")
 
                                 while ipt != 1 and ipt != 2 and ipt != 0:
-                                    print('Not a valid input')
-                                    ipt = int(input("please select an option: "))
+                                    try:
+                                        print('\n   < Not a valid input, please enter a number between 0 and 2>\n')
+                                        ipt = int(input("Please select an option: "))
+                                    except ValueError:
+                                        continue
                                 if ipt == 1:
                                     selection = ad.deactivate_doctor()
                                 if ipt == 2:
@@ -134,44 +140,57 @@ while True:
                             #checking patient in or out
 
                             if selection == 4:
+                                print("********************************************")
                                 AdminM.admin_submenuCheckIO()
-                                CheckOpt = int(input("choice: "))
-                                if CheckOpt == 1:
-                                    ad.cin()
-                                elif CheckOpt == 2:
-                                    ad.cout()
-                                    print("successfully checked patient out")
-                                elif CheckOpt == 0:
-                                    selection = 0
-                                else:
-                                    print("not a valid option")
+                                print("********************************************")
+                                try:
+                                    CheckOpt = int(input("choice: "))
+                                    if CheckOpt == 1:
+                                        ad.cin()
+                                    elif CheckOpt == 2:
+                                        ad.cout()
+                                    elif CheckOpt == 0:
+                                        selection = 0
+                                    else:
+                                        print("< Not a valid option >")
+                                except ValueError:
+                                    print("< Not a valid choice >")
 
                             #updating/deleting patient details
                             elif selection == 5:
                                 print("********************************************")
                                 AdminM.managedetails()
-                                detchoice = int(input("choice: "))
-                                backvar = 0
-                                if detchoice == 1:
-                                    while backvar == 0:
-                                        print("********************************************")
-                                        AdminM.managedetails2()
-                                        detchoice2 = int(input("choice: "))
-                                        if detchoice2 == 1:
-                                            ad.managedet()
-                                        elif detchoice2 == 2:
-                                            ad.manIndDet()
-                                        elif detchoice2 == 0:
-                                            backvar == 1
-                                            break
-                                        elif detchoice2 != 1 and detchoice2 != 2 and detchoice2 != 0:
-                                            print("Not a valid choice")
-                                elif detchoice == 2:
-                                    ad.delpatdet()
-                                elif detchoice == 0:
-                                    selection = 0
-                                elif detchoice != 0 and detchoice != 1 and detchoice != 2:
-                                    print("Not a valid option")
+                                print("********************************************")
+                                try:
+                                    detchoice = int(input("choice: "))
+                                    backvar = 0
+                                    if detchoice == 1:
+                                        while backvar == 0:
+                                            try:
+                                                print("********************************************")
+                                                AdminM.managedetails2()
+                                                print("********************************************")
+                                                detchoice2 = int(input("choice: "))
+                                                if detchoice2 == 1:
+                                                    ad.managedet()
+                                                elif detchoice2 == 2:
+                                                    ad.manIndDet()
+                                                elif detchoice2 == 0:
+                                                    backvar = 1
+                                                    break
+                                                elif detchoice2 != 1 and detchoice2 != 2 and detchoice2 != 0:
+                                                    raise ValueError
+                                            except ValueError:
+                                                print("< Not a valid choice >")
+                                    elif detchoice == 2:
+                                        ad.delpatdet()
+                                    elif detchoice == 0:
+                                        selection = 0
+                                    elif detchoice != 0 and detchoice != 1 and detchoice != 2:
+                                        print("< Not a valid option >")
+                                except ValueError:
+                                    print("< Not a valid option >")
+
                             elif selection > 5 or selection < 0:
                                 print("Not a valid selection, please enter a number between 0 and 5")
                                 AdminM.adminmenu()
@@ -194,7 +213,13 @@ while True:
                 if logged_in == "restart":
                     ad.commit_and_close()
                     masterlogin.MasterMenu()
-                    selection1 = int(input("Please select an option: "))
+                    selection1 = int(input("please select an option: "))
+            if selection1 == 0:
+                raise KeyboardInterrupt
+        if selection1 != 0 or selection1 != 1 or selection1 != 2 or selection1 != 3:
+            print("\n   < Please enter a number between 0 and 3 >\n")
+            continue
+        
     except ValueError:
         print("\n   < Please enter a number >\n")
     except KeyboardInterrupt:
