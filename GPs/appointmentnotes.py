@@ -1,11 +1,12 @@
 from tkinter import *
 from timetablefunctions import getDoctorNotes, saveDoctorNotes, getPatientInfo
+from prescriptionMedFunctions import getAllergies
 from tkinter import messagebox, ttk
 from functools import partial
 from GPs.prescription import prescription
 
 
-def appointmentnotes(doctoremail, appointmentid,nhsNumber):
+def appointmentnotes(doctoremail, appointmentid, nhsNumber):
     # todo (longterm) use classes to display a label
     # todo make sure doctor email is used to ensure patient confidentiality
 
@@ -21,8 +22,6 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
 
     # Patient information
     patientInfo = getPatientInfo(appointmentid)
-    print(patientInfo)
-
     global globalPatientInfo
     globalPatientInfo = patientInfo
     nhsNumber = patientInfo[0]
@@ -35,14 +34,18 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
     addressLine2 = patientInfo[7]
     postcode = patientInfo[8]
     telephoneNumber = patientInfo[9]
+    height = patientInfo[11]
+    weight = patientInfo[12]
+    bmi = patientInfo[13]
 
-    firstName = 'Rich'
-    lastName = 'Brian'
+    # Patient Allergies
+    allergyList = getAllergies(nhsNumber)
 
+    # Create tkinter window
     global root
     root = Tk()
     root.title('Appointment ID: ' + str(appointmentid))
-    root.geometry("1350x550+0+0")
+    root.geometry("1300x570+0+0")
     root.configure(background='SlateGray1')
 
     mainFrame = Frame(root)
@@ -56,8 +59,6 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
                              background='SlateGray1')
     appointmentTitle.grid()
 
-    frameDetail = Frame(mainFrame, bd=20, width=1350, height=100, padx=20, relief=RIDGE, background='SlateGray1')
-    frameDetail.pack(side=BOTTOM)
 
     buttonFrame = Frame(mainFrame, bd=20, width=1350, height=50, padx=20, relief=RIDGE, background='SlateGray1')
     buttonFrame.pack(side=BOTTOM)
@@ -77,7 +78,7 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
                            background='SlateGray1')
     complaintLabel.grid(row=0, column=0, sticky=W)
     global patientComplaintTextBox
-    patientComplaintTextBox = Text(dataFrameLeft, width=85, height=4, font=("arial", 12, 'bold'))
+    patientComplaintTextBox = Text(dataFrameLeft, width=85, height=4, bd=1, bg="gray90", font=("arial", 12, 'bold'))
     patientComplaintTextBox.insert(END, patientComplaint)
     patientComplaintTextBox.grid(row=0, column=1)
 
@@ -85,7 +86,7 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
                           background='SlateGray1')
     findingsLabel.grid(row=1, column=0, sticky=W)
     global findingsTextBox
-    findingsTextBox = Text(dataFrameLeft, width=85, height=4, font=("arial", 12, 'bold'))
+    findingsTextBox = Text(dataFrameLeft, width=85, height=4, bd=1, bg="gray90", font=("arial", 12, 'bold'))
     findingsTextBox.insert(END, doctorFindings)
     findingsTextBox.grid(row=1, column=1)
 
@@ -93,7 +94,7 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
                            background='SlateGray1')
     diagnosisLabel.grid(row=2, column=0, sticky=W)
     global diagnosisTextBox
-    diagnosisTextBox = Text(dataFrameLeft, width=85, height=4, font=("arial", 12, 'bold'))
+    diagnosisTextBox = Text(dataFrameLeft, width=85, height=4, bd=1, bg="gray90", font=("arial", 12, 'bold'))
     diagnosisTextBox.insert(END, diagnosis)
     diagnosisTextBox.grid(row=2, column=1)
 
@@ -101,7 +102,7 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
                             background='SlateGray1')
     inspectionLabel.grid(row=3, column=0, sticky=W)
     global inspectionsTextBox
-    inspectionsTextBox = Text(dataFrameLeft, width=85, height=4, font=("arial", 12, 'bold'))
+    inspectionsTextBox = Text(dataFrameLeft, width=85, height=4, bd=1, bg="gray90", font=("arial", 12, 'bold'))
     inspectionsTextBox.insert(END, furtherInspections)
     inspectionsTextBox.grid(row=3, column=1)
 
@@ -109,7 +110,7 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
                         background='SlateGray1')
     adviceLabel.grid(row=4, column=0, sticky=W)
     global adviceTextBox
-    adviceTextBox = Text(dataFrameLeft, width=85, height=4, font=("arial", 12, 'bold'))
+    adviceTextBox = Text(dataFrameLeft, width=85, height=4, bd=1, bg="gray90", font=("arial", 12, 'bold'))
     adviceTextBox.insert(END, doctorAdvice)
     adviceTextBox.grid(row=4, column=1)
 
@@ -127,7 +128,7 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
     my_notebook = ttk.Notebook(dataFrameRight)
     my_notebook.pack()
 
-    # Create blue and red tab
+    # Create tabs
     my_frame1 = Frame(my_notebook, width=300, height=250, bg="SlateGray2")
     my_frame2 = Frame(my_notebook, width=300, height=250, bg="SlateGray2")
 
@@ -137,9 +138,9 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
 
     # Add tabs into notebook
     my_notebook.add(my_frame1, text = 'Basic Information')
-    my_notebook.add(my_frame2, text = 'Questionnaire Answers')
+    my_notebook.add(my_frame2, text = 'Medical Allergies')
 
-
+    # Display basic information
     nhsNoLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="NHS Number:", padx=2, background='SlateGray2')
     nhsNoLabel.grid(row=0, column=0, sticky=W)
     nhsNoInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(nhsNumber), padx=2, background='SlateGray2')
@@ -189,68 +190,66 @@ def appointmentnotes(doctoremail, appointmentid,nhsNumber):
     address2Info = Label(my_frame1, font=('arial', 12, 'bold'), text=addressLine2, padx=2, background='SlateGray2')
     address2Info.grid(row=7, column=1, sticky=W)
 
-    postcodeLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="Postcode", padx=2, background='SlateGray2')
+    postcodeLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="Postcode:", padx=2, background='SlateGray2')
     postcodeLabel.grid(row=8, column=0, sticky=W)
     postcodeInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=postcode, padx=2, background='SlateGray2')
     postcodeInfo.grid(row=8, column=1, sticky=W)
 
-    telephoneLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="Telephone Number", padx=2,
+    telephoneLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="Telephone Number:", padx=2,
                            background='SlateGray2')
     telephoneLabel.grid(row=9, column=0, sticky=W)
     telephoneInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=telephoneNumber, padx=2,
                           background='SlateGray2')
     telephoneInfo.grid(row=9, column=1, sticky=W)
 
-    # firstName = patientInfo[2]
-    #     lastName = patientInfo[3]
-    #     dateOfBirth = patientInfo[4]
-    #     gender = patientInfo[5]
-    #     addressLine1 = patientInfo[6]
-    #     addressLine2 = patientInfo[7]
-    #     postcode = patientInfo[8]
-    #     telephoneNumber = patientInfo[9]
+    heightLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="Height:", padx=2,
+                           background='SlateGray2')
+    heightLabel.grid(row=10, column=0, sticky=W)
+    heightInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(height), padx=2,
+                          background='SlateGray2')
+    heightInfo.grid(row=10, column=1, sticky=W)
 
-    # complaintLabel = Label(root, text="Patient Complaint")
-    # complaintLabel.pack()
-    # global patientComplaintTextBox
-    # patientComplaintTextBox = Text(root, width=30, height=10, font=("Helvetica", 16))
-    # patientComplaintTextBox.insert(END, patientComplaint)
-    # patientComplaintTextBox.pack(pady=20, padx=20)
-    #
-    # findingsLabel = Label(root, text="Doctor Findings")
-    # findingsLabel.pack()
-    # global findingsTextBox
-    # findingsTextBox = Text(root, width=30, height=10, font=("Helvetica", 16))
-    # findingsTextBox.insert(END, doctorFindings)
-    # findingsTextBox.pack(pady=20, padx=20)
-    #
-    # diagnosisLabel = Label(root, text="Diagnosis")
-    # diagnosisLabel.pack()
-    # global diagnosisTextBox
-    # diagnosisTextBox = Text(root, width=30, height=10, font=("Helvetica", 16))
-    # diagnosisTextBox.insert(END, diagnosis)
-    # diagnosisTextBox.pack(pady=20, padx=20)
-    #
-    # inspectionsLabel = Label(root, text="Further Inspections")
-    # inspectionsLabel.pack()
-    # global inspectionsTextBox
-    # inspectionsTextBox = Text(root, width=30, height=10, font=("Helvetica", 16))
-    # inspectionsTextBox.insert(END, furtherInspections)
-    # inspectionsTextBox.pack(pady=20, padx=20)
-    #
-    # adviceLabel = Label(root, text="Doctor's Advice")
-    # adviceLabel.pack()
-    # global adviceTextBox
-    # adviceTextBox = Text(root, width=30, height=10, font=("Helvetica", 16))
-    # adviceTextBox.insert(END, doctorAdvice)
-    # adviceTextBox.pack(pady=20, padx=20)
-    #
-    #
-    # # button_frame = Frame(root)
-    # # button_frame.pack()
-    # save_button = Button(root, text="Save Notes", command=saveNotes)
-    # save_button.pack(pady=20)
-    #
+    weightLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="Weight:", padx=2,
+                           background='SlateGray2')
+    weightLabel.grid(row=11, column=0, sticky=W)
+    weightInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(weight), padx=2,
+                          background='SlateGray2')
+    weightInfo.grid(row=11, column=1, sticky=W)
+
+    bmiLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="BMI:", padx=2,
+                        background='SlateGray2')
+    bmiLabel.grid(row=12, column=0, sticky=W)
+    bmiInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(bmi), padx=2,
+                       background='SlateGray2')
+    bmiInfo.grid(row=12, column=1, sticky=W)
+
+    # Display patient allergies
+
+    # Place allergies treeview in my_frame2
+    allergyTree = ttk.Treeview(my_frame2, height='5')
+
+    # Define our columns
+    allergyTree['columns'] = ("#","Medicine Name")
+
+    # Format our columns
+    allergyTree.column('#0', width=0, stretch=NO)
+    allergyTree.column("#", anchor=CENTER, width=40)
+    allergyTree.column("Medicine Name", anchor=W, width=220)
+
+    # Create headings
+    allergyTree.heading("#0", text="", anchor=W)
+    allergyTree.heading("#", text="#", anchor=CENTER)
+    allergyTree.heading("Medicine Name", text="Medicine Name", anchor=W)
+
+    # Insert data from databse into treeview
+    count = 1
+    for record in allergyList:
+        allergyTree.insert(parent='', index='end', text="",values=(count, record[0]))
+        count += 1
+
+    #Pack to the screen
+    allergyTree.pack(pady=20)
+
     root.mainloop()
 
 
@@ -269,4 +268,4 @@ def saveNotes():
         pass
 
 
-# appointmentnotes('matthew.shorvon@ucl.ac.uk', 1)
+# appointmentnotes('matthew.shorvon@ucl.ac.uk', 3, 1234567890)

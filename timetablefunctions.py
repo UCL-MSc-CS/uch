@@ -288,7 +288,7 @@ def getPatientInfo(appointmentId):
 
     conn['cursor'].execute("""
             SELECT 
-                nhsNumber,
+                Appointment.nhsNumber,
                 patientEmail,
                 firstName,
                 lastName,
@@ -298,11 +298,16 @@ def getPatientInfo(appointmentId):
                 addressLine2,
                 postcode,
                 telephoneNumber,
-                appointmentID
+                appointmentID,
+                height,
+                weight,
+                bmi
             FROM
                 Appointment
             LEFT JOIN
                 PatientDetail
+            LEFT JOIN 
+                questionnaireTable
             USING (nhsNumber)
             WHERE
                 appointmentID = ?

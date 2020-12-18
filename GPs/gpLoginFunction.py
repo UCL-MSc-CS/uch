@@ -18,8 +18,14 @@ def login():
         c.execute(find_email, [email])
         db.commit()
         results = c.fetchall()
+        find_inactive_email = ("SELECT * FROM GP WHERE gpEmail =? AND active = 0")
+        c.execute(find_inactive_email, [email])
+        db.commit()
+        inactiveresults = c.fetchall()
         if not results:
             print("Sorry, this email does not exist.")
+        elif inactiveresults:
+            print("This account has been deactivated. Please speak to an administrator to reactivate.")
         else:
             password = results[0][1]
             break

@@ -247,16 +247,8 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     addRecord = Button(medResultsFrame, text="Add Medicine", command=addRecord)
     addRecord.pack(pady=10)
 
-    # place treeview in prescription frame
+    # Place treeview in prescription frame
     myTree = ttk.Treeview(prescriptionFrame, height='5')
-
-    # trv = ttk.Treeview(
-    #     medResultsFrame,
-    #     columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
-    #     show='headings',
-    #     height='5',
-    #     selectmode="browse"
-    # )
 
     # Define our columns (treeview has a phantom column at the start)
     myTree['columns'] = ("Medicine ID", "Medicine Name", "Dosage", "Dosage Multiplier", "Dosage Method", "Further Information")

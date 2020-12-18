@@ -159,6 +159,24 @@ def deleteMedRecord(appointmentID):
         """, (appointmentID,))
     closeconn(conn["connection"])
 
+def getAllergies(nhsNumber):
+    conn = connecttodb()
+
+    conn['cursor'].execute("""
+                SELECT medName 
+                FROM medAllergy
+                WHERE nhsNumber = ?
+            """, (nhsNumber,))
+
+    results = conn['cursor'].fetchall()
+    allergies = []
+    for result in results:
+        allergies.append(result[0])
+
+    return allergies
+
+    closeconn(conn["connection"])
+
 def allergyhandler(nhsNumber,medicine):
     conn = connecttodb()
 
@@ -184,5 +202,5 @@ def allergyhandler(nhsNumber,medicine):
     closeconn(conn["connection"])
 
 
-if __name__=="__main__":
-    #print(allergyhandler(1234567890,"The ultimate ibuprofen coma"))
+# if __name__=="__main__":
+#     #print(allergyhandler(1234567890,"The ultimate ibuprofen coma"))
