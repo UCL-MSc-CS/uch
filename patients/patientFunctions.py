@@ -10,31 +10,63 @@ class Error(Exception):
     """Error exception class"""
     pass
 
-class timeNotValid(Error):
+
+class TimeNotValid(Error):
     """Raised when time entered by user is not valid"""
     pass
 
-class monthNotValid(Error):
+
+class MonthNotValid(Error):
     """Raised when month entered by user is not valid"""
     pass
 
-class dayNotValid(Error):
+
+class MonthPassed(Error):
+    """Raised when month entered by user is not valid"""
+    pass
+
+
+class YearPassed(Error):
+    """Raised when year entered by user is not valid"""
+    pass
+
+
+class DayNotValid(Error):
     """Raised when day entered by user is not valid"""
     pass
 
-class timeBooked(Error):
+
+class TimeBooked(Error):
     """Raised when appointment is not available to book"""
     pass
 
-class dateAfterCurrent(Error):
+
+class DateAfterCurrent(Error):
     """Raised when date chosen is in the past"""
     pass
 
 
-class drChoiceNotValid(Error):
+class LeapYear(Error):
+    """Raised when date chosen in February is in a leap year"""
+    pass
+
+
+class DrChoiceNotValid(Error):
     """Raised when choice of dr not valid"""
     pass
 
+class EmptyAnswer(Error):
+    def __init__(self, message="\n\t< This field cannot be left empty, please try again >"
+                               "\n"):
+        self.message = message
+        super().__init__(self.message)
+
+
+class InvalidAnswer(Error):
+    def __init__(self, message="\n\t< This is not a valid answer, please try again >"
+                               "\n"):
+        self.message = message
+        super().__init__(self.message)
 
 def toregulartime(unixtimestamp):
     """ Converts unix timestamp to datetime object"""
@@ -89,14 +121,14 @@ def chooseDr(dr_names):
                                    "\nPlease choose the doctor you would "
                                    "like to book an appointment with: "))
             if dr_options not in counts:
-                raise drChoiceNotValid
+                raise DrChoiceNotValid
             else:
                 gp_chosen_email = gp_list[dr_options - 1][2]
                 gp_chosen_name = gp_list[dr_options - 1][1]
                 gpDetails = [gp_chosen_email, gp_chosen_name]
                 print("You have chosen Dr {}".format(gp_chosen_name))
                 return gpDetails
-        except drChoiceNotValid:
+        except DrChoiceNotValid:
             print("\n\t< This is not a valid choice, please try again >"
                   "\n ")
         except ValueError:
@@ -104,7 +136,24 @@ def chooseDr(dr_names):
                   "\n ")
 
 
-def chooseMonth():
+def chooseYear():
+    current_year = datetime.now().year
+    while True:
+        try:
+            year = int(input("Please choose the year you would like your appointment (as YYYY): "))
+            if year < current_year:
+                raise YearPassed
+            else:
+                return year
+        except YearPassed:
+            print("\n\t< This year has already passed, please try again >"
+                  "\n")
+        except ValueError:
+            print("\n\t< This is not a valid option, please try again >"
+                  "\n")
+
+
+def chooseMonth(year):
     """ Checks month entered by user is valid:
         checks:
         if month an int
@@ -113,31 +162,41 @@ def chooseMonth():
         :return:
         prints calendar for the month chosen
         month as string, padded with 0 if month a single number """
-    currentMonth = datetime.now().month
+    currentMonth = xyz.today()
     while True:
         try:
-            mm = int(input("Please choose the month would you would like your appointment in 2021: "))
+            mm = int(input("Please choose the month would you would like your appointment: "))
+            month_str = "{}-{}-31".format(year, str(mm))
+            format_str = '%Y-%m-%d'
+            month_obj = datetime.strptime(month_str, format_str)
+            month_input = month_obj.date()
+            if month_input < currentMonth:
+                raise MonthPassed
             if not 1 <= mm <= 12:
-                raise monthNotValid
+                raise MonthNotValid
             else:
                 print("----------")
-                print(calendar.month(2021, mm))
+                print(calendar.month(year, mm))
                 print("----------")
                 month = '{:02}'.format(mm)
                 return month
-        except monthNotValid:
-            print("\n\t< This is not a valid option, please try again >"
+        except MonthNotValid:
+            print("\n\t< This is not a valid month, please try again >"
+                  "\n")
+        except MonthPassed:
+            print("\n\t< This month has passed, please try again >"
                   "\n")
         except ValueError:
             print("\n\t< This is not a valid option, please try again >"
                   "\n")
 
 
-def chooseDate(month):
+def chooseDate(month, year):
     """ Checks date chosen by user is in a valid form
         Checks: if input is an int
                 if day entered is valid according to the month
                 if date chosen is in the past
+                if date in February is in a leap year
         :return: date string with days padded with 0 for single day number"""
     days_31 = ['01', '03', '05', '07', '08', '10', '12']
     days_30 = ['04', '06', '09', '11']
@@ -145,29 +204,39 @@ def chooseDate(month):
     while True:
         try:
             day = int(input("Please choose a date in your chosen month (as D/DD): "))
+            date = "{}-{}-{:02}".format(year, str(month), day)
+            date_obj = toDateObjApp00(date)
+            current = datetime.now()
             for mm in days_31:
                 if mm == month:
                     if not 1 <= day <= 31:
-                        raise dayNotValid
+                        raise DayNotValid
             for mm in days_30:
                 if mm == month:
                     if not 1 <= day <= 30:
-                        raise dayNotValid
+                        raise DayNotValid
             for mm in days_28:
                 if mm == month:
-                    if not 1 <= day <= 28:
-                        raise dayNotValid
+                    if (year % 4) == 0:
+                        if not 1 <= day <= 29:
+                            raise LeapYear
+                    if (year % 100) == 0:
+                        if not 1 <= day <= 28:
+                            raise LeapYear
+                    if (year % 400) == 0:
+                        if not 1 <= day <= 29:
+                            raise LeapYear
+            if date_obj < current:
+                raise DateAfterCurrent
             else:
-                date = "2021-{}-{:02}".format(str(month), day)
-                date_obj = toDateObjApp00(date)
-                current = datetime.now()
-                if date_obj < current:
-                    raise dateAfterCurrent
-            return date
-        except dayNotValid:
+                return date
+        except DayNotValid:
             print("\n\t< Invalid date entered, please enter a date in the correct format >"
                   "\n")
-        except dateAfterCurrent:
+        except LeapYear:
+            print("\n\t< Invalid date entered, please enter the correct date >"
+                  "\n")
+        except DateAfterCurrent:
             print("\n\t< This date has already passed, please choose another >"
                   "\n")
         except ValueError:
@@ -188,48 +257,76 @@ def displayAvailable(start, end, gpDetails):
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-    c.execute("SELECT start, appointmentStatus FROM Appointment WHERE start >=? and end <? and gpEmail =?",
+    c.execute("SELECT start, appointmentStatus, end FROM Appointment "
+              "WHERE start >=? and end <? and gpEmail =? and appointmentStatus != 'Declined' ",
               [start, end, gpDetails[0]])
     appointments = c.fetchall()
-    times = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
-             "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"]
+    times = [x(9, 0, 0), x(9, 10, 0), x(9, 20, 0), x(9, 30, 0), x(9, 40, 0), x(9, 50, 0),
+             x(10, 0, 0), x(10, 10, 0), x(10, 20, 0), x(10, 30, 0), x(10, 40, 0), x(10, 50, 0),
+             x(11, 0, 0), x(11, 10, 0), x(11, 20, 0), x(11, 30, 0), x(11, 40, 0), x(11, 50, 0),
+             x(12, 0, 0), x(12, 10, 0), x(12, 20, 0), x(12, 30, 0), x(12, 40, 0), x(12, 50, 0),
+             x(13, 0, 0), x(13, 10, 0), x(13, 20, 0), x(13, 30, 0), x(13, 40, 0), x(13, 50, 0),
+             x(14, 0, 0), x(14, 10, 0), x(14, 20, 0), x(14, 30, 0), x(14, 40, 0), x(14, 50, 0),
+             x(15, 0, 0), x(15, 10, 0), x(15, 20, 0), x(15, 30, 0), x(15, 40, 0), x(15, 50, 0),
+             x(16, 0, 0), x(16, 10, 0), x(16, 20, 0), x(16, 30, 0), x(16, 40, 0), x(16, 50, 0),
+             x(17, 0, 0), x(17, 10, 0), x(17, 20, 0), x(17, 30, 0), x(17, 40, 0), x(17, 50, 0)]
+
+    times_status = {}
     if not appointments:
         for i in times:
-            print(i + " available")
+            print(i, ": Available")
     else:
-        dict_time_status = {}
-        for items in appointments:
-            ts = toregulartime(items[0])
-            string_time = ts.strftime("%H:%M")
-            dict_time_status[string_time] = items[1]
-        for time in times:
-            if time in dict_time_status:
-                print(time + ' ' + dict_time_status[time])
-            else:
-                print(time + ' available')
-    return times
+        for items in times:
+            for app in appointments:
+                start_time = toregulartime(app[0])
+                start_time_2 = datetime.time(start_time)
+                end_time = toregulartime(app[2])
+                end_time_2 = datetime.time(end_time)
+                if items >= start_time_2 and items <= end_time_2:
+                    times_status[items] = ': Unavailable'
+                else:
+                    times_status[items] = ": Available"
+
+        for key, value in times_status.items():
+            print(key, value)
+
+
+        return times
+
 
 def timeMenu(date, times, gpDetails, nhsNumber):
     """ Displays menu for user to select a time, reserves appointment as 'Pending' in the database,
     or allows user to exit to main menu
     """
-    print("********************************************"
-          "\nChoose [1] to select a time"
-          "\nChoose [0] to exit to the main menu "
-          "\n********************************************")
-    options = input("\nPlease select an option: ")
-    if options == '1':
-        time = chooseTime(date, times, gpDetails)
-        start = createStart(date, time)
-        insertAppointment(start, gpDetails, nhsNumber)
-        print("You have requested to book an appointment on {} at {}, "
-              "\nYou will receive confirmation of your appointment shortly!".format(date, time))
-        returnToMain()
-    elif options == '2':
-        returnToMain()
-    else:
-        print("This is not a valid option, please try again")
-        timeMenu(date, times, gpDetails, nhsNumber)
+    while True:
+        try:
+            print("********************************************"
+                  "\nChoose [1] to select a time"
+                  "\nChoose [0] to exit to the main menu "
+                  "\n********************************************")
+            options = input("\nPlease select an option: ")
+            if options == '':
+                raise EmptyAnswer
+            if options == '1':
+                time = chooseTime(date, times, gpDetails)
+                start = createStart(date, time)
+                insertAppointment(start, gpDetails, nhsNumber)
+                print("You have requested to book an appointment on {} at {}, "
+                      "\nYou will receive confirmation of your appointment shortly!".format(date, time))
+                return 0
+            if options == '0':
+                return 0
+            else:
+                raise InvalidAnswer()
+        except InvalidAnswer:
+            error = InvalidAnswer()
+            print(error)
+            timeMenu(date, times, gpDetails, nhsNumber)
+        except EmptyAnswer:
+            error = EmptyAnswer()
+            print(error)
+            timeMenu(date, times, gpDetails, nhsNumber)
+
 
 def chooseTime(date, times, gpDetails):
     """ Checks time entered by user is in valid form and present in the list of appointment times
@@ -237,25 +334,34 @@ def chooseTime(date, times, gpDetails):
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
+    times = ["09:00", "09:10", "09:20", "09:30", "09:40", "09:50",
+             "10:00", "10:10", "10:20", "10:30", "10:40", "10:50",
+             "11:00", "11:10", "11:20", "11:30", "11:40", "11:50",
+             "12:00", "12:10", "12:20", "12:30", "12:40", "12:50",
+             "13:00", "13:10", "13:20", "13:30", "13:40", "13:50",
+             "14:00", "14:10", "14:20", "14:30", "14:40", "14:50",
+             "15:00", "15:10", "15:20", "15:30", "15:40", "15:50",
+             "16:00", "16:10", "16:20", "16:30", "16:40", "16:50",
+             "17:00", "17:10", "17:20", "17:30", "17:40", "17:50"]
     while True:
         try:
             time = input("Please choose a time from the available appointments (as HH:MM): ")
             start = createStart(date, time)
             c.execute("SELECT start FROM Appointment "
-                      "WHERE gpEmail =? AND appointmentStatus IN ('Pending', 'Unavailable')",
+                      "WHERE gpEmail =? AND appointmentStatus IN ('', 'Pending', 'Accepted')",
                            [gpDetails[0]])
             booked_times = c.fetchall()
             for item in booked_times:
                 if item[0] == start:
-                    raise timeBooked
+                    raise TimeBooked
             if time not in times:
-                raise timeNotValid
+                raise TimeNotValid
             else:
                 return time
-        except timeNotValid:
+        except TimeNotValid:
             print("\n\t< This is not a valid time option, please try again >"
                   "\n")
-        except timeBooked:
+        except TimeBooked:
             print("\n\t< This time is unavailable, please try again >"
                   "\n")
 
@@ -275,7 +381,7 @@ def insertAppointment(start, gpDetails, nhsNumber):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
 
-    end = start + (30 * 60)
+    end = start + (10 * 60)
     gpLastName = gpDetails[1]
     gpEmail = gpDetails[0]
     reason = 'Appointment'
@@ -283,12 +389,12 @@ def insertAppointment(start, gpDetails, nhsNumber):
     dateRequested = tounixtime(datetime.today())
 
     chosen = (gpEmail, gpLastName, nhsNumber, start, end, reason, appointmentStatus,
-              dateRequested, '', '', '', '', '', None, None)
+              dateRequested, '', '', '', '', '', 0, 0)
     c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
     connection.commit()
 
 
-def returnToMain():
+def return_to_main():
     """Returns user to main patient menu when typing 'yes'
     If user types anything else, will exit the program with a goodbye message"""
     if input("Type [0] to return to the main menu: ").lower() == '0':
@@ -296,5 +402,3 @@ def returnToMain():
     else:
         print("Thank you for using the UCH e-health system! Goodbye for now!")
         exit()
-
-
