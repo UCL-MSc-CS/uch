@@ -551,7 +551,7 @@ class adminFunctions():
         while masterback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
+                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == '0':
@@ -777,7 +777,7 @@ class adminFunctions():
         while delback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
+                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "0":
@@ -806,7 +806,7 @@ class adminFunctions():
         while masterback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
+                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "0":
