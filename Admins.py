@@ -509,7 +509,7 @@ class adminFunctions():
                 self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unixd, check_number))
                 self.connection.commit()
                 x = dt.now()
-                print("Successfully checked out {} at {a}".format(firstsel[0][0], a=x))
+                print("Successfully checked in {} at {a}".format(firstsel[0][0], a=x))
                 return 0
 
     def cout(self):
