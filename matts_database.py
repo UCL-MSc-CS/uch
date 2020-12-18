@@ -82,11 +82,11 @@ c.execute("""CREATE TABLE IF NOT EXISTS questionnaireTable(
 connection.commit()
 
 c.execute("""CREATE TABLE IF NOT EXISTS cancer(
-                    patientEmail DATATYPE text,
+                    nhsNumber DATATYPE integer,
                     cancerRelation DATATYPE text,
                     cancerType DATATYPE text,
                     cancerAge DATATYPE text,
-                    PRIMARY KEY (patientEmail, cancerRelation)
+                    PRIMARY KEY (nhsNumber, cancerRelation)
                     )""")
 connection.commit()
 

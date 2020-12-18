@@ -497,56 +497,61 @@ class adminFunctions():
             self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
             if len(items) == 0:
-                print("No record exists with this appointmentID")
+                print("< No record exists with this appointmentID >")
                 return 1
             self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
-            print(items)
-            if items == 0:
-                print("A check-in time has already been provided for that appointment")
+            if items[0][0] != 0:
+                print("< A check-in time has already been provided for that appointment >")
                 return 1
             else:
                 unixd = dt.utcnow().timestamp()
-                print(unixd)
+                self.c.execute("""SELECT firstName FROM PatientDetail INNER JOIN Appointment
+                                WHERE Appointment.appointmentID = ?""", (check_number,))
+                firstsel = self.c.fetchall()
                 self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unixd, check_number))
                 self.connection.commit()
-                print("successfully checked in patient")
+                x = dt.now().time()
+                print("Successfully checked in {} at {a}".format(firstsel[0][0], a=x))
                 return 0
 
     def cout(self):
         try:
-            outtime = dt.now()
+            intime = dt.now()
             print("********************************************")
-            Out = str(input("Type in appointment id (press 0 to go back): "))
-            if Out == "0":
+            In = str(input("Type in appointment id (press 0 to go back): "))
+            if In == "0":
                 return 0
-            if not Out:
+            if not In:
                 raise FieldEmpty()
-            check_number = int(Out)
+            check_number = int(In)
         except FieldEmpty:
             error = FieldEmpty()
             print(error)
-            return 2
+            return 1
         except ValueError:
             print("< Please provide a numerical input >")
-            return 2
+            return 1
         else:
-            self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (Out,))
+            self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
             if len(items) == 0:
-                print("No record exists with this appointmentID")
-                return 2
-            self.c.execute("SELECT checkOut FROM Appointment WHERE appointmentID = ?", (Out,))
+                print("< No record exists with this appointmentID >")
+                return 1
+            self.c.execute("SELECT checkOut FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
-            if len(items) != 0:
-                print("A check-out time has already been provided for that appointment")
-                return 2
+            if items[0][0] != 0:
+                print("< A check-out time has already been provided for that appointment >")
+                return 1
             else:
                 unixd = dt.utcnow().timestamp()
-                print(unixd)
-                self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, Out))
+                self.c.execute("""SELECT firstName FROM PatientDetail INNER JOIN Appointment
+                WHERE Appointment.appointmentID = ?""", (check_number,))
+                firstsel = self.c.fetchall()
+                self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, check_number))
                 self.connection.commit()
-                print("Successfully checked out patient")
+                x = dt.now().time()
+                print("Successfully checked out {} at {a}".format(firstsel[0][0], a = x))
                 return 0
 
     def managedet(self):
@@ -554,7 +559,7 @@ class adminFunctions():
         while masterback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
+                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == '0':
@@ -780,7 +785,7 @@ class adminFunctions():
         while delback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
+                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "0":
@@ -809,7 +814,7 @@ class adminFunctions():
         while masterback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient nhs number (press 0 to go back): ")
+                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "0":

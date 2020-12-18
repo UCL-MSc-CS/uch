@@ -70,5 +70,48 @@ with open('PatientSummary.txt','w') as f:
         # Losartan Potassium and Hydrochlorothiazide
         # "Butalbital, Acetaminophen, Caffeine, and Codeine Phosphate " 59 characters long
 
-    
-    
+    f.write("--------------------------------------------\n")
+    f.write("CANCER HISTORY: \n")
+    f.write("--------------------------------------------\n")
+    c.execute("""SELECT cancerRelation, cancerType, cancerAge FROM cancer WHERE
+            nhsNumber = ?""", (nhsNumber,))
+    items = c.fetchall()
+    f.write(("Age:").ljust(20, ' ') + ("Relation:").ljust(25, ' ') + ("Type:") + "\n")
+    for i in range(0, len(items)):
+        f.write(str(items[i][2]).ljust(20, ' ') + str(items[i][0]).ljust(25, ' ') + str(items[i][1] + "\n"))
+
+    f.write("--------------------------------------------\n")
+    f.write("PRE-EXISTING CONDITIONS: \n")
+    f.write("--------------------------------------------\n")
+    c.execute("""SELECT conditionType FROM preExistingCondition WHERE
+                nhsNumber = ?""", (nhsNumber,))
+    items = c.fetchall()
+    for i in range(0, len(items)):
+        f.write(str(items[i][0]) + '\n')
+
+    f.write("--------------------------------------------\n")
+    f.write("MEDICINE ALLERGIES: \n")
+    f.write("--------------------------------------------\n")
+    c.execute("""SELECT medName FROM medAllergy WHERE
+                    nhsNumber = ?""", (nhsNumber,))
+    items = c.fetchall()
+    for i in range(0, len(items)):
+        f.write(str(items[i][0]) + '\n')
+
+    f.write("--------------------------------------------\n")
+    f.write("Vaccine History: \n")
+    f.write("--------------------------------------------\n")
+    c.execute("""SELECT Status, DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella FROM vaccineHistory WHERE
+            nhsNumber = ?""", (nhsNumber,))
+    items = c.fetchall()
+    f.write("Status: " + "        " + str(items[0][0]) + '\n')
+    f.write("DTap: " + "          " + str(items[0][1]) + '\n')
+    f.write("HepC: " + "          " + str(items[0][2]) + '\n')
+    f.write("HepB: " + "          " + str(items[0][3]) + '\n')
+    f.write("Measles: " + "       " + str(items[0][4]) + '\n')
+    f.write("Mumps: " + "         " + str(items[0][5]) + '\n')
+    f.write("Rubella: " + "       " + str(items[0][6]) + '\n')
+    f.write("Varicella: " + "     " + str(items[0][7]) + '\n')
+
+
+
