@@ -494,7 +494,7 @@ class adminFunctions():
             self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
             if len(items) == 0:
-                print("No record exists with this appointmentID")
+                print("< No record exists with this appointmentID >")
                 return 1
             self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
@@ -533,7 +533,7 @@ class adminFunctions():
             self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
             if len(items) == 0:
-                print("No record exists with this appointmentID")
+                print("< No record exists with this appointmentID >")
                 return 1
             self.c.execute("SELECT checkOut FROM Appointment WHERE appointmentID = ?", (check_number,))
             items = self.c.fetchall()
