@@ -1,33 +1,44 @@
 import sqlite3 as sql
 import time
 
-def login(gpEmail):
-    while True:
-        email = input("Email (press 0 to go back): ")
-        if email == '0':
-            return ("exit")
-        password = input("Password: ")
+def login():
 
+    print("\n--------------------------------------------")
+    print("\t Doctor Login")
+    print("--------------------------------------------\n")
+
+    while True:
+        email = input("Email (press 0 to exit): ")
+        if email == '0':
+            print("Returning to main menu.....\n\n")
+            return "exitGPLogin",''
         db = sql.connect("UCH.db")
         c = db.cursor()
-        find_doctor = ("SELECT * FROM GP WHERE gpEmail =? AND password =?")
-        # avoid using %s as this is vulnerable to injection attacks.
-        c.execute(find_doctor, [(email), (password)])
+        find_email = ("SELECT * FROM GP WHERE gpEmail =?")
+        c.execute(find_email, [email])
         db.commit()
         results = c.fetchall()
-
-        if results:
-            for i in results:
-                print("Welcome Doctor " + i[2] + " " + i[3])
-                gpEmail.append(email)
-            db.close()
-            return("exit")
-
+        find_inactive_email = ("SELECT * FROM GP WHERE gpEmail =? AND active = 0")
+        c.execute(find_inactive_email, [email])
+        db.commit()
+        inactiveresults = c.fetchall()
+        if not results:
+            print("Sorry, this email does not exist.")
+        elif inactiveresults:
+            print("This account has been deactivated. Please speak to an administrator to reactivate.")
         else:
-            print("\t<Email and password not recognised>")
-            again = input("Would you like to try again? (Y/N):")
-            if again.lower() == "n":
-                print("Goodbye")
-                time.sleep(1)
-                db.close()
-                return("exit")
+            password = results[0][1]
+            break
+
+    while True:
+        inputPassword = input("Password (press 0 to exit): ")
+        if inputPassword == '0':
+            print("Returning to main menu.....\n\n")
+            db.close()
+            return "exitGPLogin",''
+        if inputPassword != password:
+            print("Sorry, you have entered the incorrect password.")
+        else:
+            db.close()
+            doctorname = results[0][2] + " " + results[0][3]
+            return email,doctorname
