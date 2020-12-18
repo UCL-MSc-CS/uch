@@ -24,6 +24,8 @@ class RiskProfile:
             try:
                 c_exercise = input("Are you currently involved in regular endurance (cardiovascular) exercise? "
                                    "Y for yes, N for no: ").lower()
+                if c_exercise == "0":
+                    return 0
                 if not c_exercise:
                     raise pf.EmptyFieldError()
                 if c_exercise != "n" and c_exercise != "y":
@@ -45,6 +47,8 @@ class RiskProfile:
                 try:
                     c_type = input("Please name one example of the regular endurance (cardiovascular) "
                                    "exercise you participate in: ")
+                    if c_type == "0":
+                        return 1
                     if c_type == '':
                         raise pf.EmptyFieldError()
                 except pf.EmptyFieldError:
@@ -57,6 +61,8 @@ class RiskProfile:
             while True:
                 try:
                     c_frequency = int(input("How many times do you engage in " + c_type + " per week" + ": "))
+                    if c_frequency == "0":
+                        return 1
                     if c_frequency == '':
                         raise pf.EmptyFieldError()
                 except pf.EmptyFieldError:
@@ -70,6 +76,8 @@ class RiskProfile:
             while True:
                 try:
                     c_time = int(input("In minutes, how much time per week do you commit to " + c_type + ": "))
+                    if c_time == "0":
+                        return 1
                     if not c_time:
                         raise pf.EmptyFieldError()
                     if c_time >= 10080:
@@ -92,6 +100,8 @@ class RiskProfile:
         while True:
             try:
                 d_goals = input("What are your main health goals: ")
+                if d_goals == "0":
+                    return 1
                 if d_goals == '':
                     raise pf.EmptyFieldError()
             except pf.EmptyFieldError:
@@ -106,7 +116,11 @@ class RiskProfile:
         while True:
             try:
                 height = float(input("What is your height in metres: "))
+                if height == "0":
+                    return 1
                 weight = float(input("What is your weight in kg: "))
+                if weight == "0":
+                    return 1
                 if not height or not weight:
                     raise pf.EmptyFieldError()
                 if height >= 3 or weight >= 400:
@@ -167,6 +181,8 @@ class RiskProfile:
         while True:
             try:
                 smoking = input("Y for yes, N for no. Do you smoke cigarettes regularly: ").lower()
+                if smoking == "0":
+                    return 1
                 if not smoking:
                     raise pf.EmptyFieldError()
                 if smoking != "n" and smoking != "y":
@@ -199,6 +215,8 @@ class RiskProfile:
         while True:
             try:
                 drugs = input("Y for yes, N for no. Do you consume recreational drugs: ").lower()
+                if drugs == "0":
+                    return 1
                 if not drugs:
                     raise pf.EmptyFieldError()
                 if drugs != "n" and drugs != "y":
@@ -231,6 +249,8 @@ class RiskProfile:
         while True:
             try:
                 alcohol = input("Y for yes, N for no. Do you drink alcohol in general: ").lower()
+                if alcohol == "0":
+                    return 1
                 if not alcohol:
                     raise pf.EmptyFieldError()
                 if alcohol != "n" and alcohol != "y":
@@ -260,6 +280,8 @@ class RiskProfile:
             while True:
                 try:
                     alcohol_unit = int(input("Please choose a number from the options above: "))
+                    if alcohol_unit == "0":
+                        return 1
                     if alcohol_unit == '':
                         raise pf.EmptyFieldError()
                     if alcohol_unit not in unit:
@@ -296,7 +318,11 @@ class RiskProfile:
         while True:
             try:
                 meat = int(input("How many meals a week do you consume red meat: "))
+                if meat == "0":
+                    return 1
                 diet = int(input("How many portions of fruit or vegetables do you consume a day: "))
+                if diet == "0":
+                    return 1
                 if meat == '' or diet == '':
                     raise pf.EmptyFieldError()
             except pf.EmptyFieldError:
@@ -316,6 +342,8 @@ class RiskProfile:
         while True:
             try:
                 caffeine = int(input("How many cups of coffee or caffeinated drinks do you consume per day: "))
+                if caffeine == "0":
+                    return 1
             except ValueError:
                 print('\n    <Error! Please enter a numeric value>\n')
             else:
