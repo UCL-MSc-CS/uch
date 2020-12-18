@@ -218,6 +218,7 @@ def chooseDate(month, year):
             for mm in days_28:
                 if mm == month:
                     if (year % 4) == 0:
+                        if not 1 <= day <= 29:
                             raise LeapYear
                     if (year % 100) == 0:
                         if not 1 <= day <= 28:
@@ -236,6 +237,21 @@ def chooseDate(month, year):
             print("\n\t< Invalid date entered, please enter the correct date >"
                   "\n")
         except DateAfterCurrent:
+            print("\n\t< This date has already passed, please choose another >"
+                  "\n")
+        except ValueError:
+            print("\n\t< This is not a valid option, please try again >"
+                  "\n")
+
+
+def generateStartTime(date):
+    """ Generates a unix start time stamp from the date input from the user
+    """
+    start_obj = toDateObjApp00(date)
+    start = tounixtime(start_obj)
+    return start
+
+
 def displayAvailable(start, end, gpDetails):
     """ Displays appointments from date and time chosen by user
     """
@@ -278,7 +294,6 @@ def displayAvailable(start, end, gpDetails):
         return times
 
 
-
 def timeMenu(date, times, gpDetails, nhsNumber):
     """ Displays menu for user to select a time, reserves appointment as 'Pending' in the database,
     or allows user to exit to main menu
@@ -311,7 +326,6 @@ def timeMenu(date, times, gpDetails, nhsNumber):
             error = EmptyAnswer()
             print(error)
             timeMenu(date, times, gpDetails, nhsNumber)
-
 
 
 def chooseTime(date, times, gpDetails):
@@ -371,7 +385,7 @@ def insertAppointment(start, gpDetails, nhsNumber):
     gpLastName = gpDetails[1]
     gpEmail = gpDetails[0]
     reason = 'Appointment'
-    appointmentStatus = ''
+    appointmentStatus = 'Pending'
     dateRequested = tounixtime(datetime.today())
 
     chosen = (gpEmail, gpLastName, nhsNumber, start, end, reason, appointmentStatus,
