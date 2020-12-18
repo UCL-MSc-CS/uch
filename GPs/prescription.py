@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox, ttk
 import prescriptionMedFunctions as ms
 
-def prescription(doctoremail,appointmentID):
+def prescription(doctoremail,appointmentID,nhsNumber):
 
 
     # Pull all saved prescription records from the database
@@ -132,7 +132,7 @@ def prescription(doctoremail,appointmentID):
             addvalues = (
                             medid.get(),
                             medname.get(),
-                            str(chosendose.get()) + " " + doseUnit[0], #todo concatenate activeIngredientUnit where medicineID = ?,
+                            str(chosendose.get()) + " " + doseUnit[0],
                             str(multiplier.get()) + 'x',
                             doseType.get(),
                             furtherInformation.get()
@@ -156,6 +156,10 @@ def prescription(doctoremail,appointmentID):
             medname.config(state=DISABLED)
             doseType.config(state=DISABLED)
             multiplier.config(state='readonly')
+            potential_allergy = ms.allergyhandler(nhsNumber,addvalues[1])
+            if potential_allergy:
+                messagebox.showerror("Warning!", potential_allergy)
+
         elif not medid.get():
             messagebox.showerror("Error", "Please choose a medicine before you click 'Add Medicine'")
         elif int(medid.get()) in treeviewMedID:
@@ -243,16 +247,8 @@ def prescription(doctoremail,appointmentID):
     addRecord = Button(medResultsFrame, text="Add Medicine", command=addRecord)
     addRecord.pack(pady=10)
 
-    # place treeview in prescription frame
+    # Place treeview in prescription frame
     myTree = ttk.Treeview(prescriptionFrame, height='5')
-
-    # trv = ttk.Treeview(
-    #     medResultsFrame,
-    #     columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
-    #     show='headings',
-    #     height='5',
-    #     selectmode="browse"
-    # )
 
     # Define our columns (treeview has a phantom column at the start)
     myTree['columns'] = ("Medicine ID", "Medicine Name", "Dosage", "Dosage Multiplier", "Dosage Method", "Further Information")

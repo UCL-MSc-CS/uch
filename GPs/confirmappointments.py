@@ -8,6 +8,8 @@ timeformatstring = "%H:%M"
 def confirmappointments(doctoremail):
     while True:
         confirmdate = uf.validatedate("Please enter a date for confirming appointments")
+        if confirmdate == 'exit':
+            return
         if confirmdate.date() >= datetime.today().date():
             break
         else:

@@ -22,10 +22,10 @@ def addnonpatienttime(doctoremail):
         choice = input(":")
         if choice == '1':
             addholiday(doctoremail)
-            break
+            continue
         elif choice == '2':
             addnonpatienthours(doctoremail)
-            break
+            continue
         elif choice == '0':
             break
         else:
@@ -34,14 +34,19 @@ def addnonpatienttime(doctoremail):
 
 def addholiday(doctoremail):
     startdate = uf.validatedate("Please enter a start date")
+    if startdate == 'exit':
+        return
+    elif startdate.date() <= datetime.today().date():
+        print("\t<You cannot book a holiday in the past!>")
+        choice = input("Press [0] to try again, or any other entry to return to menu \n:")
+        if choice == '0':
+            addholiday(doctoremail)
+        return
     enddate = uf.validatedate("Please enter an end date")
+    if enddate == 'exit':
+        addholiday(doctoremail)
+        return
     if enddate >= startdate:
-        if startdate.date() <= datetime.today().date():
-            print("\t<You cannot book a holiday in the past!>")
-            choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
-            if choice == '0':
-                addholiday(doctoremail)
-            return
         for single_date in uf.daterange(startdate, enddate):
             datestring = datetime.strftime(single_date,dateformatstring)
             status = db.checkslotavailable(datestring, clinicstart, clinicend, [doctoremail])
@@ -62,18 +67,26 @@ def addholiday(doctoremail):
 
 def addnonpatienthours(doctoremail):
     date = uf.validatedate("Please enter a date")
-    datestring = datetime.strftime(date, dateformatstring)
-    starttime = uf.validatetime("Please enter a start time")
-    starttimestring = datetime.strftime(starttime, timeformatstring)
-    endtime = uf.validatetime("Please enter an end time")
-    endtimestring = datetime.strftime(endtime, timeformatstring)
-    status = db.checkslotavailable(datestring, starttimestring, endtimestring, [doctoremail])
+    if date == 'exit':
+        return
     if date.date() <= datetime.today().date():
         print("\t<You cannot book non-patient hours in the past!>")
         choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
         if choice == '0':
             addnonpatienthours(doctoremail)
         return
+    datestring = datetime.strftime(date, dateformatstring)
+    starttime = uf.validatetime("Please enter a start time")
+    if starttime == 'exit':
+        addnonpatienthours(doctoremail)
+        return
+    starttimestring = datetime.strftime(starttime, timeformatstring)
+    endtime = uf.validatetime("Please enter an end time")
+    if endtime == 'exit':
+        addnonpatienthours(doctoremail)
+        return
+    endtimestring = datetime.strftime(endtime, timeformatstring)
+    status = db.checkslotavailable(datestring, starttimestring, endtimestring, [doctoremail])
     if starttime < endtime and status[0] != 'unavailable':
         reason = selectreason()
         db.book_time(datestring, starttimestring, endtimestring, reason, "", [doctoremail])
