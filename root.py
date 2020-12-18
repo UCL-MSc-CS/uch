@@ -156,7 +156,9 @@ while True:
                             #checking patient in or out
 
                             if selection == 4:
+                                print("********************************************")
                                 AdminM.admin_submenuCheckIO()
+                                print("********************************************")
                                 try:
                                     CheckOpt = int(input("choice: "))
                                     if CheckOpt == 1:
