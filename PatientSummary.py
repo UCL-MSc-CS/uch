@@ -70,9 +70,9 @@ with open('PatientSummary.txt','w') as f:
     c.execute("""SELECT cancerRelation, cancerType, cancerAge FROM cancer WHERE
             nhsNumber = ?""", (nhsNumber,))
     items = c.fetchall()
-    f.write(("Age:").ljust(20, ' ') + ("Relation:").ljust(20, ' ') + ("Type:").ljust(20, ' ') + "\n")
+    f.write(("Age:").ljust(20, ' ') + ("Relation:").ljust(20, ' ') + ("Type:") + "\n")
     for i in range(0, len(items)):
-        f.write(str(items[i][2]).ljust(20, ' ') + str(items[i][0]).ljust(20, ' ') + str(items[i][1] + "\n"))
+        f.write(str(items[i][2]).ljust(20, ' ') + str(items[i][0]).ljust(25, ' ') + str(items[i][1] + "\n"))
 
     f.write("--------------------------------------------\n")
     f.write("PRE-EXISTING CONDITIONS: \n")
