@@ -165,7 +165,6 @@ while True:
                                         ad.cin()
                                     elif CheckOpt == 2:
                                         ad.cout()
-                                        print("successfully checked patient out")
                                     elif CheckOpt == 0:
                                         selection = 0
                                     else:
