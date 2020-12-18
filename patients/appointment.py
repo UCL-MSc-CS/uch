@@ -12,14 +12,14 @@ class Error(Exception):
     pass
 
 
-class emptyAnswer(Error):
+class EmptyAnswer(Error):
     def __init__(self, message="\n\t< This field cannot be left empty, please try again >"
                                "\n"):
         self.message = message
         super().__init__(self.message)
 
 
-class invalidAnswer(Error):
+class InvalidAnswer(Error):
     def __init__(self, message="\n\t< This is not a valid answer, please try again >"
                                "\n"):
         self.message = message
@@ -43,7 +43,7 @@ class Appointment:
                   "\n********************************************")
             dr_options = input("Please select an option: ")
             if dr_options == '':
-                raise emptyAnswer()
+                raise EmptyAnswer()
             elif dr_options == '1':
                 y = self.chooseSpecificDr(nhsNumber)
                 self.chooseAppointment(nhsNumber, y)
@@ -54,15 +54,15 @@ class Appointment:
                 y = self.chooseDrGender(nhsNumber)
                 self.chooseAppointment(nhsNumber, y)
             elif dr_options == '0':
-                pf.returnToMain()
+                pass
             else:
-                raise invalidAnswer()
-        except invalidAnswer:
-            error = invalidAnswer()
+                raise InvalidAnswer()
+        except InvalidAnswer:
+            error = InvalidAnswer()
             print(error)
             self.bookAppointment(nhsNumber)
-        except emptyAnswer:
-            error = emptyAnswer()
+        except EmptyAnswer:
+            error = EmptyAnswer()
             print(error)
             self.bookAppointment(nhsNumber)
 
@@ -76,7 +76,7 @@ class Appointment:
         if dr_names == []:
             print("\nThere are no doctors currently available at the practice"
                   "\n")
-            pf.returnToMain()
+            pf.return_to_main()
         else:
             gpDetails = pf.chooseDr(dr_names)
             return gpDetails
@@ -89,7 +89,7 @@ class Appointment:
         if dr_names == []:
             print("\nThere are no doctors currently available at the practice"
                   "\n")
-            pf.returnToMain()
+            pf.return_to_main()
         else:
             gp_list = []
             for dr in dr_names:
@@ -109,10 +109,11 @@ class Appointment:
                   "\nChoose [1] to book an appointment with a male doctor"
                   "\nChoose [2] to book an appointment with a female doctor"
                   "\nChoose [3] to book an appointment with a non-binary doctor"
+                  "\nChoose [0] to exit to the main menu"
                   "\n********************************************")
             gp_options = input("Please select an option: ")
             if gp_options == '':
-                raise emptyAnswer()
+                raise EmptyAnswer()
             if gp_options == '1':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'male' ")
                 dr_names = self.c.fetchall()
@@ -143,14 +144,16 @@ class Appointment:
                 else:
                     gpDetails = pf.chooseDr(dr_names)
                     return gpDetails
+            elif gp_options == '0':
+                pass
             else:
-                raise invalidAnswer()
-        except invalidAnswer:
-            error = invalidAnswer()
+                raise InvalidAnswer()
+        except InvalidAnswer:
+            error = InvalidAnswer()
             print(error)
             self.chooseDrGender(nhsNumber)
-        except emptyAnswer:
-            error = emptyAnswer()
+        except EmptyAnswer:
+            error = EmptyAnswer()
             print(error)
             self.chooseDrGender(nhsNumber)
 
@@ -173,7 +176,10 @@ class Appointment:
         start = pf.generateStartTime(date)
         end = pf.generateEndTime(date)
         times = pf.displayAvailable(start, end, gpDetails)
-        pf.timeMenu(date, times, gpDetails, nhsNumber)
+        done = pf.timeMenu(date, times, gpDetails, nhsNumber)
+        if done == 0:
+            pass
+
 
     def cancelAppointment(self, nhsNumber):
         """ Presents user with all their appointments and allows them to cancel"""
@@ -182,30 +188,29 @@ class Appointment:
         viewing = vc.viewAppointments(nhsNumber)
         if viewing == 0:
             print("You cannot cancel any appointments at this time")
-            pf.returnToMain()
+            pf.return_to_main()
         else:
             try:
-                print("********************************************"
-                      "\nChoose [1] to cancel an appointment"
+                print("\nChoose [1] to cancel an appointment"
                       "\nChoose [0] to exit to the main menu"
                       "\n********************************************")
                 options = input("Please select an option: ")
                 if options == '':
-                    raise emptyAnswer()
+                    raise EmptyAnswer()
                 elif options == '1':
                     cancel = vc.checkAppID(nhsNumber)
                     vc.deleteAppointment(cancel)
-                    pf.returnToMain()
+                    pf.return_to_main()
                 elif options == '0':
-                    pf.returnToMain()
+                    pass
                 else:
-                    raise invalidAnswer()
-            except invalidAnswer:
-                error = invalidAnswer()
+                    raise InvalidAnswer()
+            except InvalidAnswer:
+                error = InvalidAnswer()
                 print(error)
                 self.cancelAppointment(nhsNumber)
-            except emptyAnswer:
-                error = emptyAnswer()
+            except EmptyAnswer:
+                error = EmptyAnswer()
                 print(error)
                 self.cancelAppointment(nhsNumber)
 
@@ -213,13 +218,9 @@ class Appointment:
     def viewAppConfirmations(self, nhsNumber):
         """ Presents user with all their confirmed booked appointments"""
         print("********************************************"
-              "\nThese are your confirmed/pending appointments: ")
+              "\nThese are your appointments: ")
         vc.viewAppointments(nhsNumber)
-        # pf.returnToMain()
-
-#
-# Ari = Appointment()
-# Ari.bookAppointment(1234567890)
+        pf.return_to_main()
 
 
 

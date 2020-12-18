@@ -18,13 +18,13 @@ def viewAppointments(nhsNumber):
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-    c.execute( """SELECT A.appointmentID, A.start, P.lastname, A.appointmentStatus FROM Appointment A, GP P 
-    WHERE nhsNumber =?""", [nhsNumber])
+    c.execute("""SELECT A.appointmentID, A.start, P.lastname, A.appointmentStatus FROM Appointment A, GP P 
+    WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhsNumber])
     appointments = c.fetchall()
-    if appointments == []:
+    if not appointments:
         print("\nYou currently have no appointments"
               "\n")
-        pf.returnToMain()
+        pf.return_to_main()
     else:
         appointmentID = []
         date = []
@@ -35,7 +35,7 @@ def viewAppointments(nhsNumber):
             dt = appoint[1]
             dt = datetime.utcfromtimestamp(dt).strftime('%Y-%m-%d %H:%M')
             date.append(dt)
-            gp.append(appoint[2])
+            gp.append('Dr ' + appoint[2])
             status.append(appoint[3])
         new_status = []
         for item in status:
@@ -43,10 +43,10 @@ def viewAppointments(nhsNumber):
                 item = 'Booking Confirmed'
                 new_status.append(item)
             elif item == 'Pending':
-                item = 'Appointment Pending Approval'
+                item = 'Pending Approval'
                 new_status.append(item)
             elif item == 'Declined':
-                item = 'The appointment has been declined'
+                item = 'Appointment Declined'
                 new_status.append(item)
 
         data = pd.DataFrame({'Appointment ID': appointmentID, 'Date and Time': date,
