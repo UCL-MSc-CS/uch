@@ -280,7 +280,7 @@ def displayAvailable(start, end, gpDetails):
             for app in appointments:
                 start_time = toregulartime(app[0])
                 start_time_2 = datetime.time(start_time)
-                end_time = toregulartime(app[2])
+                end_time = toregulartime(app[2] - 1)
                 end_time_2 = datetime.time(end_time)
                 if items >= start_time_2 and items <= end_time_2:
                     times_status[items] = ': Unavailable'
@@ -334,7 +334,7 @@ def chooseTime(date, times, gpDetails):
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-    times = ["09:00", "09:10", "09:20", "09:30", "09:40", "09:50",
+    times2 = ["09:00", "09:10", "09:20", "09:30", "09:40", "09:50",
              "10:00", "10:10", "10:20", "10:30", "10:40", "10:50",
              "11:00", "11:10", "11:20", "11:30", "11:40", "11:50",
              "12:00", "12:10", "12:20", "12:30", "12:40", "12:50",
@@ -347,15 +347,18 @@ def chooseTime(date, times, gpDetails):
         try:
             time = input("Please choose a time from the available appointments (as HH:MM): ")
             start = createStart(date, time)
-            c.execute("SELECT start FROM Appointment "
-                      "WHERE gpEmail =? AND appointmentStatus IN ('', 'Pending', 'Accepted')",
-                           [gpDetails[0]])
+            end = start + 599
+            c.execute("SELECT start, appointmentStatus, end FROM Appointment "
+                      "WHERE gpEmail =? and appointmentStatus != 'Declined' ",
+                      [gpDetails[0]])
             booked_times = c.fetchall()
-            for item in booked_times:
-                if item[0] == start:
-                    raise TimeBooked
-            if time not in times:
+            if time not in times2:
                 raise TimeNotValid
+            for app in booked_times:
+                start_time = app[0]
+                end_time = app[2]
+                if start >= start_time and end <= end_time:
+                    raise TimeBooked
             else:
                 return time
         except TimeNotValid:
