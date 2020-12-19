@@ -15,6 +15,10 @@ class TimeNotValid(Error):
     """Raised when time entered by user is not valid"""
     pass
 
+class YearNotValid(Error):
+    """Raised when year entered by user is not valid"""
+    pass
+
 
 class MonthNotValid(Error):
     """Raised when month entered by user is not valid"""
@@ -57,6 +61,7 @@ class DrChoiceNotValid(Error):
 
 
 class EmptyAnswer(Error):
+    """Raised when input left empty"""
     def __init__(self, message="\n\t< This field cannot be left empty, please try again >"
                                "\n"):
         self.message = message
@@ -64,6 +69,7 @@ class EmptyAnswer(Error):
 
 
 class InvalidAnswer(Error):
+    """Raised when input is not valid"""
     def __init__(self, message="\n\t< This is not a valid answer, please try again >"
                                "\n"):
         self.message = message
@@ -113,7 +119,7 @@ def choose_dr(dr_names):
     counts = []
     count = 1
     for dr in dr_names:
-        print("[" + str(count) + "] Dr", dr[0] + ' ' + dr[1])
+        print("Choose [" + str(count) + "] Dr", dr[0] + ' ' + dr[1])
         count += 1
         gp_list.append(dr)
         counts.append(count - 1)
@@ -139,19 +145,32 @@ def choose_dr(dr_names):
 
 
 def choose_year():
+    """ Allows user to choose the year they would like their appointment
+    Checks if the year chosen is not in the past
+    :return: year as an integer
+    """
     current_year = datetime.now().year
     while True:
         try:
-            year = int(input("Please choose the year you would like your appointment (as YYYY): "))
-            if year < current_year:
+            year = int(input("********************************************"
+                             "\nPlease choose the year you would like your appointment as YYYY "
+                             "\nOr type 0 to go back to the appointment menu: "))
+            if year == 0:
+                return 0
+            elif year < current_year:
                 raise YearPassed
+            elif not 2020 <= year <= 2100:
+                raise YearNotValid
             else:
                 return year
         except YearPassed:
             print("\n\t< This year has already passed, please try again >"
                   "\n")
+        except YearNotValid:
+            print("\n\t< This year is not valid, please try again >"
+                  "\n")
         except ValueError:
-            print("\n\t< This is not a valid option, please try again >"
+            print("\n\t< This is not a valid option, please enter a number>"
                   "\n")
 
 
@@ -167,14 +186,23 @@ def choose_month(year):
     current_month = xyz.today()
     while True:
         try:
-            mm = int(input("Please choose the month would you would like your appointment: "))
+            print("********************************************"
+                  "\n [1] January     \t[2] February      \t[3] March"
+                  "\n [4] April     \t\t[5] May           \t[6] June"
+                  "\n [7] July      \t\t[8] August        \t[9] September "
+                  "\n [10] October    \t[11] November     \t[12] December"
+                  "\n********************************************")
+            mm = int(input("Please choose the month would you would like your appointment "
+                           "\nOr type 0 to go back choose another date: "))
+            if mm == 0:
+                return 0
             month_str = "{}-{}-28".format(year, str(mm))
             format_str = '%Y-%m-%d'
             month_obj = datetime.strptime(month_str, format_str)
             month_input = month_obj.date()
             if month_input < current_month:
                 raise MonthPassed
-            if not 1 <= mm <= 12:
+            elif not 1 <= mm <= 12:
                 raise MonthNotValid
             else:
                 print("--------------------------------------------")
@@ -189,7 +217,7 @@ def choose_month(year):
             print("\n\t< This month has passed, please try again >"
                   "\n")
         except ValueError:
-            print("\n\t< This is not a valid option, please try again >"
+            print("\n\t< This is not a valid option, please enter a number >"
                   "\n")
 
 
@@ -205,7 +233,10 @@ def choose_date(month, year):
     days_28 = ['02']
     while True:
         try:
-            day = int(input("Please choose a date in your chosen month (as D/DD): "))
+            day = int(input("Please choose the date in your chosen month (as D/DD)"
+                            "\nOr type 0 to go back and choose another date: "))
+            if day == 0:
+                return 0
             date = "{}-{}-{:02}".format(year, str(month), day)
             date_obj = to_date_time_obj00(date)
             current = datetime.now()
@@ -242,7 +273,7 @@ def choose_date(month, year):
             print("\n\t< This date has already passed, please choose another >"
                   "\n")
         except ValueError:
-            print("\n\t< This is not a valid option, please try again >"
+            print("\n\t< This is not a valid option, please enter a number >"
                   "\n")
 
 
@@ -259,6 +290,7 @@ def display_available(start, end, gp_details):
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
+    print("\nThis is the current availability for Dr {} on your chosen date: ".format(gp_details[1]))
     c.execute("SELECT start, appointmentStatus, end FROM Appointment "
               "WHERE start >=? and end <?"
               "and gpEmail =? and appointmentStatus != 'Declined' ",
@@ -309,20 +341,23 @@ def time_menu(date, times_list, gp_details, nhs_number):
         try:
             print("********************************************"
                   "\nChoose [1] to select a time"
-                  "\nChoose [0] to exit to the main menu "
+                  "\nChoose [2] to select another date"
+                  "\nChoose [0] to exit to the main patient menu "
                   "\n********************************************")
-            options = input("\nPlease select an option: ")
+            options = int(input("\nPlease select an option: "))
             if options == '':
                 raise EmptyAnswer
-            if options == '1':
+            elif options == 0:
+                return 0
+            elif options == 2:
+                return 1
+            elif options == 1:
                 time_select = choose_time(date, times_list, gp_details, nhs_number)
                 start = create_start(date, time_select)
                 insert_appointment(start, gp_details, nhs_number)
                 print("You have requested to book an appointment on {} at {}, "
-                      "\nYou will receive confirmation of your appointment shortly!".format(date, time))
-                return 0
-            if options == '0':
-                return 0
+                      "\nYou will receive confirmation of your appointment shortly!".format(date, time_select))
+                return 2
             else:
                 raise InvalidAnswer()
         except InvalidAnswer:
@@ -333,6 +368,9 @@ def time_menu(date, times_list, gp_details, nhs_number):
             error = EmptyAnswer()
             print(error)
             time_menu(date, times_list, gp_details, nhs_number)
+        except ValueError:
+            print("\n\t< This is not a valid option, please enter a number >"
+                  "\n")
 
 
 def choose_time(date, times_list, gp_details, nhs_number):

@@ -39,16 +39,16 @@ class Appointment:
                   "\nChoose [1] to book an appointment with a specific doctor"
                   "\nChoose [2] to book an appointment with any doctor"
                   "\nChoose [3] to book an appointment with a doctor of a specific gender"
-                  "\nChoose [0] to exit to the main menu"
+                  "\nChoose [0] to exit to the main patient menu"
                   "\n********************************************")
             dr_options = input("Please select an option: ")
             if dr_options == '':
                 raise EmptyAnswer()
             elif dr_options == '1':
-                y = self.choose_specific_dr(nhs_number)
+                y = self.choose_specific_dr()
                 self.choose_appointment(nhs_number, y)
             elif dr_options == '2':
-                y = self.choose_any_dr(nhs_number)
+                y = self.choose_any_dr()
                 self.choose_appointment(nhs_number, y)
             elif dr_options == '3':
                 y = self.choose_dr_gender(nhs_number)
@@ -66,14 +66,14 @@ class Appointment:
             print(error)
             self.book_appointment(nhs_number)
 
-    def choose_specific_dr(self, nhs_number):
+    def choose_specific_dr(self):
         """ Allows user to choose a specific doctor from a list from all doctors registered
         :return: gp_details (list) with gp last name and email address"""
         print("********************************************"
               "\nThe doctors currently available at the practice are: ")
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
         dr_names = self.c.fetchall()
-        if dr_names == []:
+        if not dr_names:
             print("\nThere are no doctors currently available at the practice"
                   "\n")
             pf.return_to_main()
@@ -81,12 +81,12 @@ class Appointment:
             gp_details = pf.choose_dr(dr_names)
             return gp_details
 
-    def choose_any_dr(self, nhs_number):
+    def choose_any_dr(self):
         """ Assigns user any doctor from a list from all doctors registered
         :return: gp_details (list) with gp last name and email address"""
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
         dr_names = self.c.fetchall()
-        if dr_names == []:
+        if not dr_names:
             print("\nThere are no doctors currently available at the practice"
                   "\n")
             pf.return_to_main()
@@ -117,7 +117,7 @@ class Appointment:
             if gp_options == '1':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'male' ")
                 dr_names = self.c.fetchall()
-                if dr_names == []:
+                if not dr_names:
                     print("\nThere are no male doctors currently available at the practice"
                           "\n")
                     self.book_appointment(nhs_number)
@@ -127,7 +127,7 @@ class Appointment:
             elif gp_options == '2':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'female' ")
                 dr_names = self.c.fetchall()
-                if dr_names == []:
+                if not dr_names:
                     print("\nThere are no female doctors currently available at the practice"
                           "\n")
                     self.book_appointment(nhs_number)
@@ -137,7 +137,7 @@ class Appointment:
             elif gp_options == '3':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'non-binary' ")
                 dr_names = self.c.fetchall()
-                if dr_names == []:
+                if not dr_names:
                     print("\nThere are no non-binary doctors currently available at the practice"
                           "\n")
                     self.book_appointment(nhs_number)
@@ -164,20 +164,23 @@ class Appointment:
         User can then choose which time they would like the appointment
         appointment details inserted into the database for chosen date and time for this user"""
         year = pf.choose_year()
-        print("********************************************"
-              "\n [1] January     \t[2] February      \t[3] March"
-              "\n [4] April     \t\t[5] May           \t[6] June"
-              "\n [7] July      \t\t[8] August        \t[9] September "
-              "\n [10] October    \t[11] November     \t[12] December"
-              "\n********************************************")
+        if year == 0:
+            self.book_appointment(nhs_number)
         month = pf.choose_month(year)
+        if month == 0:
+            self.choose_appointment(nhs_number, gp_details)
         date = pf.choose_date(month, year)
-        print("\nThis is the current availability for Dr {} on your chosen date: ".format(gp_details[1]))
+        if date == 0:
+            self.choose_appointment(nhs_number, gp_details)
         start = pf.generate_start_time(date)
         end = pf.generate_end_time(date)
         times = pf.display_available(start, end, gp_details)
-        done = pf.time_menu(date, times, gp_details, nhs_number)
-        if done == 0:
+        time_choice = pf.time_menu(date, times, gp_details, nhs_number)
+        if time_choice == 0:
+            self.book_appointment(nhs_number)
+        elif time_choice == 1:
+            self.choose_appointment(nhs_number, gp_details)
+        elif time_choice == 2:
             pass
 
     def cancel_appointment(self, nhs_number):
