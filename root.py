@@ -20,7 +20,7 @@ class Menus():
     def adminmenu(self):
         uf.banner('Admin')
         print("Choose [1] to add a new doctor")
-        print("Choose [2] to deactivate or delete a profile")
+        print("Choose [2] to deactivate/reactivate or delete a profile")
         print("Choose [3] to confirm/un-confirm patient registrations")
         print("Choose [4] to check in/out a patient")
         print("Choose [5] to change patient details")
@@ -29,7 +29,8 @@ class Menus():
     def admin_submenu2(self):
         print("********************************************")
         print("choose [1] to deactivate a profile")
-        print("choose [2] to delete a profile")
+        print("choose [2] to reactivate a profile")
+        print("choose [3] to delete a profile")
         print("choose [0] when finished navigating menu.")
         print("********************************************")
 
@@ -102,7 +103,7 @@ while True:
                                     except ValueError:
                                         print("\n   < Please provide a numerical input >\n")
 
-                                while ipt != 1 and ipt != 2 and ipt != 0:
+                                while ipt != 1 and ipt != 2 and ipt != 3 and ipt != 0:
                                     try:
                                         print('\n   < Not a valid input, please enter a number between 0 and 2>\n')
                                         ipt = int(input("Please select an option: "))
@@ -111,6 +112,8 @@ while True:
                                 if ipt == 1:
                                     selection = ad.deactivate_doctor()
                                 if ipt == 2:
+                                    selection = ad.reactivate_doctor()
+                                if ipt == 3:
                                     selection = ad.delete_doctor()
                                 if ipt == 0:
                                     selection = 0
@@ -193,9 +196,10 @@ while True:
 
                             elif selection > 5 or selection < 0:
                                 print("Not a valid selection, please enter a number between 0 and 5")
-                                AdminM.adminmenu()
-                                ad.check_registrations()
-                                selection = int(input("please select an option: "))
+                                # AdminM.adminmenu()
+                                # ad.check_registrations()
+                                # selection = int(input("please select an option: "))
+                                break
                             if selection == 0:
                                 AdminM.adminmenu()
                                 ad.check_registrations()

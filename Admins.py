@@ -289,7 +289,7 @@ class adminFunctions():
                         raise FieldEmpty()
                     if gender != 'male' and gender != 'female' and gender != 'non-binary' and gender != 'prefer not to say':
                         raise GenderError()
-                    active = "Y"
+                    active = 1
                     question_num = 8
                 while question_num == 8:
                     addressL1 = input("Address Line 1: ")
@@ -451,6 +451,34 @@ class adminFunctions():
                     self.c.execute("""UPDATE GP SET active = 0 WHERE gpEmail = ?""", (email,))
                     self.connection.commit()
                     print("Record deactivated successfully")
+                    return 2
+
+    def reactivate_doctor(self):
+        while True:
+            try:
+                print("********************************************")
+                email = input("Type in the practitioner's email (press 0 to go back): ")
+                if email == '0':
+                    return 2
+                if not email:
+                    raise FieldEmpty()
+                if "@" not in email or (".co" not in email and ".ac" not in email and ".org" not in email and ".gov" not in email):
+                    raise EmailInvalid(email)
+            except FieldEmpty:
+                error = FieldEmpty()
+                print(error)
+            except EmailInvalid:
+                error = EmailInvalid(email)
+                print(error)
+            else:
+                self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
+                items = self.c.fetchall()
+                if len(items) == 0:
+                    print("\n   < No record exists with this email> \n")
+                else:
+                    self.c.execute("""UPDATE GP SET active = 1 WHERE gpEmail = ?""", (email,))
+                    self.connection.commit()
+                    print("Record reactivated successfully")
                     return 2
 
     def delete_doctor(self):
