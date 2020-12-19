@@ -18,8 +18,8 @@ def viewAppointments(nhsNumber):
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-    c.execute("""SELECT A.appointmentID, A.start, P.lastname, A.appointmentStatus FROM Appointment A, GP P 
-    WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhsNumber])
+    c.execute(""" SELECT A.appointmentID, A.start, P.lastname, A.appointmentStatus FROM Appointment A 
+    LEFT JOIN GP P USING (gpEmail) WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhsNumber])
     appointments = c.fetchall()
     if not appointments:
         print("\nYou currently have no appointments"

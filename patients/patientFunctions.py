@@ -175,9 +175,9 @@ def chooseMonth(year):
             if not 1 <= mm <= 12:
                 raise MonthNotValid
             else:
-                print("----------")
+                print("--------------------------------------------")
                 print(calendar.month(year, mm))
-                print("----------")
+                print("--------------------------------------------")
                 month = '{:02}'.format(mm)
                 return month
         except MonthNotValid:
@@ -380,18 +380,26 @@ def insertAppointment(start, gpDetails, nhsNumber):
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-
-    end = start + (10 * 60)
+    c.execute("SELECT start, end FROM Appointment "
+              "WHERE appointmentStatus = 'Declined' ")
+    declined_times = c.fetchall()
+    end = start + 599
     gpLastName = gpDetails[1]
     gpEmail = gpDetails[0]
     reason = 'Appointment'
     appointmentStatus = 'Pending'
-    dateRequested = tounixtime(datetime.today())
-
-    chosen = (gpEmail, gpLastName, nhsNumber, start, end, reason, appointmentStatus,
-              dateRequested, '', '', '', '', '', 0, 0)
-    c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
-    connection.commit()
+    date_requested = tounixtime(datetime.today())
+    if not declined_times:
+        chosen = (gpEmail, gpLastName, nhsNumber, start, end, reason, appointmentStatus,
+                  date_requested, '', '', '', '', '', 0, 0)
+        c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
+        connection.commit()
+    else:
+        update = (gpEmail, gpLastName, nhsNumber, date_requested)
+        c.execute("UPDATE Appointment "
+                  "SET gpEmail =?, gpLastName =?, nhsNumber =?, appointmentStatus = 'Pending', "
+                  "dateRequested =?", update)
+        connection.commit()
 
 
 def return_to_main():

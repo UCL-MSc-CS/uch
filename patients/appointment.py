@@ -69,7 +69,7 @@ class Appointment:
     def chooseSpecificDr(self, nhsNumber):
         """ Allows user to choose a specific doctor from a list from all doctors registered
         :return: gpDetails (list) with gp last name and email address"""
-        print("**********"
+        print("********************************************"
               "\nThe doctors currently available at the practice are: ")
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
         dr_names = self.c.fetchall()
