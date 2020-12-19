@@ -258,7 +258,8 @@ def displayAvailable(start, end, gpDetails):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute("SELECT start, appointmentStatus, end FROM Appointment "
-              "WHERE start >=? and end <? and gpEmail =? and appointmentStatus != 'Declined' ",
+              "WHERE start >=? and end <?"
+              "and gpEmail =? and appointmentStatus != 'Declined' ",
               [start, end, gpDetails[0]])
     appointments = c.fetchall()
     times = [x(9, 0, 0), x(9, 10, 0), x(9, 20, 0), x(9, 30, 0), x(9, 40, 0), x(9, 50, 0),
@@ -286,13 +287,9 @@ def displayAvailable(start, end, gpDetails):
                     times_status[items] = ': Unavailable'
                 elif items not in times_status:
                     times_status[items] = ": Available"
-
         for key, value in times_status.items():
             print(key, value)
-
-
         return times
-
 
 def timeMenu(date, times, gpDetails, nhsNumber):
     """ Displays menu for user to select a time, reserves appointment as 'Pending' in the database,
@@ -308,7 +305,7 @@ def timeMenu(date, times, gpDetails, nhsNumber):
             if options == '':
                 raise EmptyAnswer
             if options == '1':
-                time = chooseTime(date, times, gpDetails)
+                time = chooseTime(date, times, gpDetails, nhsNumber)
                 start = createStart(date, time)
                 insertAppointment(start, gpDetails, nhsNumber)
                 print("You have requested to book an appointment on {} at {}, "
@@ -328,7 +325,7 @@ def timeMenu(date, times, gpDetails, nhsNumber):
             timeMenu(date, times, gpDetails, nhsNumber)
 
 
-def chooseTime(date, times, gpDetails):
+def chooseTime(date, times, gpDetails, nhsNumber):
     """ Checks time entered by user is in valid form and present in the list of appointment times
         Checks if time entered by user has already been booked
     """
@@ -367,6 +364,7 @@ def chooseTime(date, times, gpDetails):
         except TimeBooked:
             print("\n\t< This time is unavailable, please try again >"
                   "\n")
+            timeMenu(date, times, gpDetails, nhsNumber)
 
 
 def createStart(date, time):
