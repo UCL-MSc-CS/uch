@@ -244,7 +244,7 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
     # Insert data from databse into treeview
     count = 1
     for record in allergyList:
-        allergyTree.insert(parent='', index='end', text="",values=(count, record[0]))
+        allergyTree.insert(parent='', index='end', text="",values=(count, record))
         count += 1
 
     #Pack to the screen

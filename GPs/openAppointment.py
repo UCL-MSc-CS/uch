@@ -52,6 +52,10 @@ def printtodayappointments(doctoremail):
     print(datetime.strftime(day, "%A %d %b %Y"))
     print("--------------------------------------------")
     appointments = db.TodayAppointments(doctoremail)
+    if not appointments:
+        print("\n\t<There are no confirmed appointments available on this day.>")
+        print("\t<Consider confirming some pending appointments if you have any>\n")
+        return "",""
     appointmentids = []
     print("id" + "\t" + "reason")
     for appointment in appointments:
@@ -62,15 +66,16 @@ def printtodayappointments(doctoremail):
         nhsNumber = str(appointment[3]).zfill(10)
         appointmentid = str(appointment[4])
         print(appointmentid + "\t" + reason + "\t" + start + "-" + end + "\t" + nhsNumber)
-    continueSelecting = True
-    while continueSelecting:
-        id = input("Please enter the appointment id you wish to open: \n")
+    while True:
+        id = input("Please enter the appointment id you wish to open (press 'x' to exit): \n")
+
+        if id == 'x':
+            return "",""
 
         try:
             idNum = int(id)
             if idNum in appointmentids:
                 print("Opening appointment id: " + id)
-                # todo connect current appointment options
                 for appointment in appointments:
                     if idNum == appointment[4]:
                         chosenNhsNumber = appointment[3]
@@ -82,10 +87,10 @@ def printtodayappointments(doctoremail):
 
         choosecontinue = input("Would you like to try again y/n ? :")
         if choosecontinue.lower() == 'y':
-            continueSelecting = True
+            pass
         elif choosecontinue.lower() == 'n':
             print("Returning to main menu......")
-            continueSelecting = False
+            return "",""
         else:
             print("\t<Invalid option chosen, exiting today's appointments....>")
-            continueSelecting = False
+            return "",""
