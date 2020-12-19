@@ -1,6 +1,8 @@
 from datetime import datetime,timedelta
 import time
-from GPs.GPExceptions import *
+
+class EmptyValueError(Exception):
+    pass
 
 dateformatstring = "%Y-%m-%d"
 timeformatstring = "%H:%M"
