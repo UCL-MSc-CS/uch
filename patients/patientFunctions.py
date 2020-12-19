@@ -15,6 +15,7 @@ class TimeNotValid(Error):
     """Raised when time entered by user is not valid"""
     pass
 
+
 class YearNotValid(Error):
     """Raised when year entered by user is not valid"""
     pass
@@ -307,8 +308,8 @@ def display_available(start, end, gp_details):
                  "17:00", "17:10", "17:20", "17:30", "17:40", "17:50"]
     times_list = []
     for times in times_str:
-        format = '%H:%M'
-        time_2 = datetime.strptime(times, format).time()
+        format_str = '%H:%M'
+        time_2 = datetime.strptime(times, format_str).time()
         times_list.append(time_2)
 
     times_status = {}
@@ -330,50 +331,10 @@ def display_available(start, end, gp_details):
         for key, value in times_status.items():
             time_i = key.strftime('%H:%M')
             print(time_i, value)
-        return times_str
+    return times_str
 
 
-def time_menu(date, times_list, gp_details, nhs_number):
-    """ Displays menu for user to select a time, reserves appointment as 'Pending' in the database,
-    or allows user to exit to main menu
-    """
-    while True:
-        try:
-            print("********************************************"
-                  "\nChoose [1] to select a time"
-                  "\nChoose [2] to select another date"
-                  "\nChoose [0] to exit to the main patient menu "
-                  "\n********************************************")
-            options = int(input("\nPlease select an option: "))
-            if options == '':
-                raise EmptyAnswer
-            elif options == 0:
-                return 0
-            elif options == 2:
-                return 1
-            elif options == 1:
-                time_select = choose_time(date, times_list, gp_details, nhs_number)
-                start = create_start(date, time_select)
-                insert_appointment(start, gp_details, nhs_number)
-                print("You have requested to book an appointment on {} at {}, "
-                      "\nYou will receive confirmation of your appointment shortly!".format(date, time_select))
-                return 2
-            else:
-                raise InvalidAnswer()
-        except InvalidAnswer:
-            error = InvalidAnswer()
-            print(error)
-            time_menu(date, times_list, gp_details, nhs_number)
-        except EmptyAnswer:
-            error = EmptyAnswer()
-            print(error)
-            time_menu(date, times_list, gp_details, nhs_number)
-        except ValueError:
-            print("\n\t< This is not a valid option, please enter a number >"
-                  "\n")
-
-
-def choose_time(date, times_list, gp_details, nhs_number):
+def choose_time(date, times_str, gp_details):
     """ Checks time entered by user is in valid form and present in the list of appointment times
         Checks if time entered by user has already been booked
     """
@@ -381,15 +342,18 @@ def choose_time(date, times_list, gp_details, nhs_number):
     c = connection.cursor()
     while True:
         try:
-            time_in = input("Please choose a time from the available appointments (as HH:MM): ")
+            time_in = input("\nPlease choose a time from the available appointments (as HH:MM)"
+                            "\nOr type 0 to go back and choose another date: ")
+            if time_in == '0':
+                return 0
+            if time_in not in times_str:
+                raise TimeNotValid
             start = create_start(date, time_in)
             end = start + 599
             c.execute("SELECT start, appointmentStatus, end FROM Appointment "
                       "WHERE gpEmail =? and appointmentStatus != 'Declined' ",
                       [gp_details[0]])
             booked_times = c.fetchall()
-            if time_in not in times_list:
-                raise TimeNotValid
             for app in booked_times:
                 start_time = app[0]
                 end_time = app[2]
@@ -403,7 +367,6 @@ def choose_time(date, times_list, gp_details, nhs_number):
         except TimeBooked:
             print("\n\t< This time is unavailable, please try again >"
                   "\n")
-            time_menu(date, times_list, gp_details, nhs_number)
 
 
 def create_start(date_string, time_string):

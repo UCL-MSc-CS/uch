@@ -78,11 +78,14 @@ def check_app_id(nhs_number):
             c.execute("SELECT appointmentID FROM Appointment "
                       "WHERE nhsNumber =?", [nhs_number])
             app_ids = c.fetchall()
-            for item in app_ids[0]:
-                if item == cancel:
-                    return cancel
-                else:
-                    raise AppNotExist
+            id_list = []
+            for app_id in app_ids:
+                id_list.append(app_id[0])
+            print(id_list)
+            if cancel not in id_list:
+                raise AppNotExist
+            else:
+                return cancel
         except AppNotExist:
             print("\n\t< This appointment does not exist, please try again >"
                   "\n")

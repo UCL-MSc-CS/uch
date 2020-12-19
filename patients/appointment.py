@@ -166,22 +166,29 @@ class Appointment:
         year = pf.choose_year()
         if year == 0:
             self.book_appointment(nhs_number)
-        month = pf.choose_month(year)
-        if month == 0:
-            self.choose_appointment(nhs_number, gp_details)
-        date = pf.choose_date(month, year)
-        if date == 0:
-            self.choose_appointment(nhs_number, gp_details)
-        start = pf.generate_start_time(date)
-        end = pf.generate_end_time(date)
-        times = pf.display_available(start, end, gp_details)
-        time_choice = pf.time_menu(date, times, gp_details, nhs_number)
-        if time_choice == 0:
-            self.book_appointment(nhs_number)
-        elif time_choice == 1:
-            self.choose_appointment(nhs_number, gp_details)
-        elif time_choice == 2:
-            pass
+        else:
+            month = pf.choose_month(year)
+            if month == 0:
+                self.choose_appointment(nhs_number, gp_details)
+            else:
+                date = pf.choose_date(month, year)
+                if date == 0:
+                    self.choose_appointment(nhs_number, gp_details)
+                else:
+                    start = pf.generate_start_time(date)
+                    end = pf.generate_end_time(date)
+                    times_str = pf.display_available(start, end, gp_details)
+                    chosen_time = pf.choose_time(date, times_str, gp_details)
+                    if chosen_time == 0:
+                        self.choose_appointment(nhs_number, gp_details)
+                    else:
+                        start = pf.create_start(date, chosen_time)
+                        pf.insert_appointment(start, gp_details, nhs_number)
+                        print("You have requested to book an appointment on {} at {}, "
+                              "\nYou will receive confirmation of your appointment "
+                              "shortly!".format(date, chosen_time))
+                        self.book_appointment(nhs_number)
+
 
     def cancel_appointment(self, nhs_number):
         """ Presents user with all their appointments and allows them to cancel"""
