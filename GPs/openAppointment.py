@@ -65,7 +65,10 @@ def printtodayappointments(doctoremail):
         end = datetime.strftime(uf.toregulartime(appointment[2]), timeformatstring)
         nhsNumber = str(appointment[3]).zfill(10)
         appointmentid = str(appointment[4])
-        print(appointmentid + "\t" + reason + "\t" + start + "-" + end + "\t" + nhsNumber)
+        patient_details = db.getPatientInfo(appointmentid)
+        patient_email = patient_details[1]
+        full_name = patient_details[2] + " " + patient_details[3]
+        print(appointmentid+"\t"+reason+"\t"+start+"-"+end+"\t"+nhsNumber+"\t"+patient_email+"\t"+full_name)
     while True:
         id = input("Please enter the appointment id you wish to open (press 'x' to exit): \n")
 
