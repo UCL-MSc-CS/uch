@@ -16,8 +16,8 @@ class AppNotExist(Error):
 
 
 def view_appointments(nhs_number):
-    """ Displays all appointments for that user which are pending or confirmed
-    Returns: pandas dataframe
+    """ Displays all appointments for that user which are pending, accepted or declined
+    Returns: pandas dataframe of appointment information including appointment ID, date and time, Dr name and status
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
@@ -61,7 +61,7 @@ def view_appointments(nhs_number):
 
 
 def delete_appointment(cancel):
-    """ Deletes a chosen appointment from the database"""
+    """ Deletes a chosen appointment from the database using appointment ID"""
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
@@ -70,6 +70,8 @@ def delete_appointment(cancel):
 
 
 def check_app_id(nhs_number):
+    """ Checks the appointment ID entered by the user exists in the database
+    :return: appointment ID to cancel (integer) """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     while True:

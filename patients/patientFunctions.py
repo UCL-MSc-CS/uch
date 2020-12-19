@@ -7,7 +7,7 @@ import pandas as pd
 
 
 class Error(Exception):
-    """Error exception class"""
+    """Base class for exceptions in this module"""
     pass
 
 
@@ -57,7 +57,7 @@ class LeapYear(Error):
 
 
 class DrChoiceNotValid(Error):
-    """Raised when choice of dr not valid"""
+    """Raised when choice of doctor not valid"""
     pass
 
 
@@ -176,11 +176,10 @@ def choose_year():
 
 
 def choose_month(year):
-    """ Checks month entered by user is valid:
-        checks:
-        if month an int
-        if month between 1 to 12
-        if month chosen is in the past
+    """ Allows user to choose the month they would like their appointment
+        checks: if month is an integer
+        If month between 1 to 12
+        if month chosen is in not the past
         :return:
         prints calendar for the month chosen
         month as string, padded with 0 if month a single number """
@@ -223,10 +222,11 @@ def choose_month(year):
 
 
 def choose_date(month, year):
-    """ Checks date chosen by user is in a valid form
-        Checks: if input is an int
-                if day entered is valid according to the month
+    """ Allows user to choose the day they would lieke their appointment
+        Checks date chosen by user is in a valid form
+        Checks: if input is an integer
                 if date chosen is in the past
+                if the date chosen is valid for that month
                 if date in February is in a leap year
         :return: date string with days padded with 0 for single day number"""
     days_31 = ['01', '03', '05', '07', '08', '10', '12']
@@ -279,16 +279,16 @@ def choose_date(month, year):
 
 
 def generate_start_time(date):
-    """ Generates a unix start time stamp from the date input from the user
-    """
+    """ Generates a unix start time stamp from the date (string) input from the user
+    :return: unix start time (integer)"""
     start_obj = to_date_time_obj00(date)
     start = to_unix_time(start_obj)
     return start
 
 
 def display_available(start, end, gp_details):
-    """ Displays appointments from date and time chosen by user
-    """
+    """ Displays appointments from the date and time chosen by user
+    Prints a list of the time and availability of the appointment"""
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     print("\nThis is the current availability for Dr {} on your chosen date: ".format(gp_details[1]))
@@ -335,9 +335,10 @@ def display_available(start, end, gp_details):
 
 
 def choose_time(date, times_str, gp_details):
-    """ Checks time entered by user is in valid form and present in the list of appointment times
+    """ Allows user to choose the time they would like their appointment
+        Checks time entered by user is in valid form and present in the list of appointment times
         Checks if time entered by user has already been booked
-    """
+        :return: time (string) """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     while True:
@@ -371,7 +372,7 @@ def choose_time(date, times_str, gp_details):
 
 def create_start(date_string, time_string):
     """ Creates a unix timestamp from the chosen date (string) and appointment start time (string) by the user
-    """
+    :return: unix timestamp (integer)"""
     day_str = date_string + ' ' + time_string
     dt_object = to_date_time_obj(day_str)
     start = to_unix_time(dt_object)
@@ -380,7 +381,8 @@ def create_start(date_string, time_string):
 
 def insert_appointment(start, gp_details, nhs_number):
     """ Inserts the appointment details into the database
-    """
+    Checks if the appointment start and end exist in database and updates record if exists
+    Otherwise, creates new row with appointment booked as 'Pending'"""
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute("SELECT start, end FROM Appointment "
@@ -406,7 +408,7 @@ def insert_appointment(start, gp_details, nhs_number):
 
 
 def return_to_main():
-    """Returns user to main patient menu when typing 'yes'
+    """Returns user to main patient menu when typing '0'
     If user types anything else, will exit the program with a goodbye message"""
     if input("Type [0] to return to the main menu: ").lower() == '0':
         pass

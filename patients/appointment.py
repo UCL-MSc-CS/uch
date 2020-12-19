@@ -13,6 +13,7 @@ class Error(Exception):
 
 
 class EmptyAnswer(Error):
+    """ Raised when input field left empty"""
     def __init__(self, message="\n\t< This field cannot be left empty, please try again >"
                                "\n"):
         self.message = message
@@ -20,6 +21,7 @@ class EmptyAnswer(Error):
 
 
 class InvalidAnswer(Error):
+    """ Raised when input entered is not valid """
     def __init__(self, message="\n\t< This is not a valid answer, please try again >"
                                "\n"):
         self.message = message
@@ -33,7 +35,9 @@ class Appointment:
         self.c = self.connection.cursor()
 
     def book_appointment(self, nhs_number):
-        """ Prints appointment menu for user to choose by doctor type"""
+        """ Prints appointment menu for user to choose a doctor
+        User can choose to book with a specific doctor, any doctor chosen at random by the system
+        or a doctor of a specific gender"""
         try:
             print("********************************************"
                   "\nChoose [1] to book an appointment with a specific doctor"
@@ -82,7 +86,7 @@ class Appointment:
             return gp_details
 
     def choose_any_dr(self):
-        """ Assigns user any doctor from a list from all doctors registered
+        """ Assigns user a doctor at random from a list from all doctors registered
         :return: gp_details (list) with gp last name and email address"""
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
         dr_names = self.c.fetchall()
@@ -102,7 +106,7 @@ class Appointment:
             return gp_details
 
     def choose_dr_gender(self, nhs_number):
-        """ Allows user to choose a doctor by gender from a list from all doctors registered
+        """ Allows user to choose a doctor by gender (male, female, non-binary) from a list from all doctors registered
         :return: gp_details (list) with gp last name and email address"""
         try:
             print("********************************************"
@@ -159,8 +163,8 @@ class Appointment:
 
     def choose_appointment(self, nhs_number, gp_details):
         """ Allows user to to book an appointment
-        User can choose the month and day
-        User then presented with a list of all appointments on that day by time
+        User can choose the year, month and day
+        User then presented with a list of all appointments on that day by time and shows availability
         User can then choose which time they would like the appointment
         appointment details inserted into the database for chosen date and time for this user"""
         year = pf.choose_year()
@@ -189,9 +193,8 @@ class Appointment:
                               "shortly!".format(date, chosen_time))
                         self.book_appointment(nhs_number)
 
-
     def cancel_appointment(self, nhs_number):
-        """ Presents user with all their appointments and allows them to cancel"""
+        """ Presents user with all their appointments and allows them to choose to cancel one"""
         print("********************************************"
               "\nThese are your confirmed booked appointments: ")
         viewing = vc.view_appointments(nhs_number)
@@ -224,7 +227,7 @@ class Appointment:
                 self.cancel_appointment(nhs_number)
 
     def view_app_confirmations(self, nhs_number):
-        """ Presents user with all their confirmed booked appointments"""
+        """ Presents user with all their pending, accepted and declined appointments"""
         print("********************************************"
               "\nThese are your appointments: ")
         vc.view_appointments(nhs_number)
