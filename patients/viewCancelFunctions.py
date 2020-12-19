@@ -4,34 +4,37 @@ import time
 import pandas as pd
 import patients.patientFunctions as pf
 
+
 class Error(Exception):
     """Error exception class"""
     pass
 
-class appNotExist(Error):
+
+class AppNotExist(Error):
     """Raised when appointmentID entered by user does not exist"""
     pass
 
-def viewAppointments(nhsNumber):
+
+def view_appointments(nhs_number):
     """ Displays all appointments for that user which are pending or confirmed
     Returns: pandas dataframe
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute(""" SELECT A.appointmentID, A.start, P.lastname, A.appointmentStatus FROM Appointment A 
-    LEFT JOIN GP P USING (gpEmail) WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhsNumber])
+    LEFT JOIN GP P USING (gpEmail) WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhs_number])
     appointments = c.fetchall()
     if not appointments:
         print("\nYou currently have no appointments"
               "\n")
         pf.return_to_main()
     else:
-        appointmentID = []
+        appointment_id = []
         date = []
         gp = []
         status = []
         for appoint in appointments:
-            appointmentID.append(appoint[0])
+            appointment_id.append(appoint[0])
             dt = appoint[1]
             dt = datetime.utcfromtimestamp(dt).strftime('%Y-%m-%d %H:%M')
             date.append(dt)
@@ -49,15 +52,15 @@ def viewAppointments(nhsNumber):
                 item = 'Appointment Declined'
                 new_status.append(item)
 
-        data = pd.DataFrame({'Appointment ID': appointmentID, 'Date and Time': date,
-            'Doctor': gp, 'Status': new_status})
+        data = pd.DataFrame({'Appointment ID': appointment_id, 'Date and Time': date,
+                             'Doctor': gp, 'Status': new_status})
         print("********************************************")
         print(data.to_string(columns=['Appointment ID', 'Date and Time', 'Doctor',
                                       'Status'], index=False))
         print("********************************************")
 
 
-def deleteAppointment(cancel):
+def delete_appointment(cancel):
     """ Deletes a chosen appointment from the database"""
     connection = sql.connect('UCH.db')
     c = connection.cursor()
@@ -66,21 +69,21 @@ def deleteAppointment(cancel):
     print("You have cancelled your appointment")
 
 
-def checkAppID(nhsNumber):
+def check_app_id(nhs_number):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     while True:
         try:
             cancel = int(input("Please enter the appointment ID you would like to cancel: "))
             c.execute("SELECT appointmentID FROM Appointment "
-                      "WHERE nhsNumber =?", [nhsNumber])
-            appids = c.fetchall()
-            for item in appids[0]:
+                      "WHERE nhsNumber =?", [nhs_number])
+            app_ids = c.fetchall()
+            for item in app_ids[0]:
                 if item == cancel:
                     return cancel
                 else:
-                    raise appNotExist
-        except appNotExist:
+                    raise AppNotExist
+        except AppNotExist:
             print("\n\t< This appointment does not exist, please try again >"
                   "\n")
         except ValueError:

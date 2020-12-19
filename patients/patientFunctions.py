@@ -55,6 +55,7 @@ class DrChoiceNotValid(Error):
     """Raised when choice of dr not valid"""
     pass
 
+
 class EmptyAnswer(Error):
     def __init__(self, message="\n\t< This field cannot be left empty, please try again >"
                                "\n"):
@@ -68,30 +69,31 @@ class InvalidAnswer(Error):
         self.message = message
         super().__init__(self.message)
 
-def toregulartime(unixtimestamp):
+
+def to_regular_time(time_stamp):
     """ Converts unix timestamp to datetime object"""
-    return datetime.utcfromtimestamp(int(unixtimestamp))
+    return datetime.utcfromtimestamp(int(time_stamp))
 
 
-def tounixtime(dt):
+def to_unix_time(date_time):
     """ Converts datetime object to unix timestamp"""
-    result = int(time.mktime(dt.timetuple()))
+    result = int(time.mktime(date_time.timetuple()))
     return result
 
 
-def toDateTimeObj(string):
+def to_date_time_obj(string):
     """ Converts date time string to datetime object"""
     dt_object = datetime.strptime(string, '%Y-%m-%d %H:%M')
     return dt_object
 
 
-def toDateObjApp00(string):
+def to_date_time_obj00(string):
     """ Converts date string to date object with time as 00:00:00"""
     dt_object = datetime.strptime(string, '%Y-%m-%d')
     return dt_object
 
 
-def generateEndTime(date):
+def generate_end_time(date):
     """ Generates end timestamp
     :param date: date string from user input
     :return: unix time stamp with date + 23:59:59 time"""
@@ -99,11 +101,11 @@ def generateEndTime(date):
     dt_str_obj = xyz(year, month, day)
     dt_time = x(23, 59, 59)
     dt_end = datetime.combine(dt_str_obj, dt_time)
-    end = tounixtime(dt_end)
+    end = to_unix_time(dt_end)
     return end
 
 
-def chooseDr(dr_names):
+def choose_dr(dr_names):
     """ Allows user to select a gp from list obtained from database
         returns chosen dr email and last name in a list
         """
@@ -125,9 +127,9 @@ def chooseDr(dr_names):
             else:
                 gp_chosen_email = gp_list[dr_options - 1][2]
                 gp_chosen_name = gp_list[dr_options - 1][1]
-                gpDetails = [gp_chosen_email, gp_chosen_name]
+                gp_details = [gp_chosen_email, gp_chosen_name]
                 print("You have chosen Dr {}".format(gp_chosen_name))
-                return gpDetails
+                return gp_details
         except DrChoiceNotValid:
             print("\n\t< This is not a valid choice, please try again >"
                   "\n ")
@@ -136,7 +138,7 @@ def chooseDr(dr_names):
                   "\n ")
 
 
-def chooseYear():
+def choose_year():
     current_year = datetime.now().year
     while True:
         try:
@@ -153,7 +155,7 @@ def chooseYear():
                   "\n")
 
 
-def chooseMonth(year):
+def choose_month(year):
     """ Checks month entered by user is valid:
         checks:
         if month an int
@@ -162,15 +164,15 @@ def chooseMonth(year):
         :return:
         prints calendar for the month chosen
         month as string, padded with 0 if month a single number """
-    currentMonth = xyz.today()
+    current_month = xyz.today()
     while True:
         try:
             mm = int(input("Please choose the month would you would like your appointment: "))
-            month_str = "{}-{}-31".format(year, str(mm))
+            month_str = "{}-{}-28".format(year, str(mm))
             format_str = '%Y-%m-%d'
             month_obj = datetime.strptime(month_str, format_str)
             month_input = month_obj.date()
-            if month_input < currentMonth:
+            if month_input < current_month:
                 raise MonthPassed
             if not 1 <= mm <= 12:
                 raise MonthNotValid
@@ -191,7 +193,7 @@ def chooseMonth(year):
                   "\n")
 
 
-def chooseDate(month, year):
+def choose_date(month, year):
     """ Checks date chosen by user is in a valid form
         Checks: if input is an int
                 if day entered is valid according to the month
@@ -205,7 +207,7 @@ def chooseDate(month, year):
         try:
             day = int(input("Please choose a date in your chosen month (as D/DD): "))
             date = "{}-{}-{:02}".format(year, str(month), day)
-            date_obj = toDateObjApp00(date)
+            date_obj = to_date_time_obj00(date)
             current = datetime.now()
             for mm in days_31:
                 if mm == month:
@@ -244,15 +246,15 @@ def chooseDate(month, year):
                   "\n")
 
 
-def generateStartTime(date):
+def generate_start_time(date):
     """ Generates a unix start time stamp from the date input from the user
     """
-    start_obj = toDateObjApp00(date)
-    start = tounixtime(start_obj)
+    start_obj = to_date_time_obj00(date)
+    start = to_unix_time(start_obj)
     return start
 
 
-def displayAvailable(start, end, gpDetails):
+def display_available(start, end, gp_details):
     """ Displays appointments from date and time chosen by user
     """
     connection = sql.connect('UCH.db')
@@ -260,38 +262,46 @@ def displayAvailable(start, end, gpDetails):
     c.execute("SELECT start, appointmentStatus, end FROM Appointment "
               "WHERE start >=? and end <?"
               "and gpEmail =? and appointmentStatus != 'Declined' ",
-              [start, end, gpDetails[0]])
+              [start, end, gp_details[0]])
     appointments = c.fetchall()
-    times = [x(9, 0, 0), x(9, 10, 0), x(9, 20, 0), x(9, 30, 0), x(9, 40, 0), x(9, 50, 0),
-             x(10, 0, 0), x(10, 10, 0), x(10, 20, 0), x(10, 30, 0), x(10, 40, 0), x(10, 50, 0),
-             x(11, 0, 0), x(11, 10, 0), x(11, 20, 0), x(11, 30, 0), x(11, 40, 0), x(11, 50, 0),
-             x(12, 0, 0), x(12, 10, 0), x(12, 20, 0), x(12, 30, 0), x(12, 40, 0), x(12, 50, 0),
-             x(13, 0, 0), x(13, 10, 0), x(13, 20, 0), x(13, 30, 0), x(13, 40, 0), x(13, 50, 0),
-             x(14, 0, 0), x(14, 10, 0), x(14, 20, 0), x(14, 30, 0), x(14, 40, 0), x(14, 50, 0),
-             x(15, 0, 0), x(15, 10, 0), x(15, 20, 0), x(15, 30, 0), x(15, 40, 0), x(15, 50, 0),
-             x(16, 0, 0), x(16, 10, 0), x(16, 20, 0), x(16, 30, 0), x(16, 40, 0), x(16, 50, 0),
-             x(17, 0, 0), x(17, 10, 0), x(17, 20, 0), x(17, 30, 0), x(17, 40, 0), x(17, 50, 0)]
+    times_str = ["09:00", "09:10", "09:20", "09:30", "09:40", "09:50",
+                 "10:00", "10:10", "10:20", "10:30", "10:40", "10:50",
+                 "11:00", "11:10", "11:20", "11:30", "11:40", "11:50",
+                 "12:00", "12:10", "12:20", "12:30", "12:40", "12:50",
+                 "13:00", "13:10", "13:20", "13:30", "13:40", "13:50",
+                 "14:00", "14:10", "14:20", "14:30", "14:40", "14:50",
+                 "15:00", "15:10", "15:20", "15:30", "15:40", "15:50",
+                 "16:00", "16:10", "16:20", "16:30", "16:40", "16:50",
+                 "17:00", "17:10", "17:20", "17:30", "17:40", "17:50"]
+    times_list = []
+    for times in times_str:
+        format = '%H:%M'
+        time_2 = datetime.strptime(times, format).time()
+        times_list.append(time_2)
 
     times_status = {}
     if not appointments:
-        for i in times:
-            print(i, ": Available")
+        for i in times_list:
+            time_i = i.strftime('%H:%M')
+            print(time_i, ": Available")
     else:
-        for items in times:
+        for items in times_list:
             for app in appointments:
-                start_time = toregulartime(app[0])
+                start_time = to_regular_time(app[0])
                 start_time_2 = datetime.time(start_time)
-                end_time = toregulartime(app[2] - 1)
+                end_time = to_regular_time(app[2] - 1)
                 end_time_2 = datetime.time(end_time)
                 if items >= start_time_2 and items <= end_time_2:
                     times_status[items] = ': Unavailable'
                 elif items not in times_status:
                     times_status[items] = ": Available"
         for key, value in times_status.items():
-            print(key, value)
-        return times
+            time_i = key.strftime('%H:%M')
+            print(time_i, value)
+        return times_str
 
-def timeMenu(date, times, gpDetails, nhsNumber):
+
+def time_menu(date, times_list, gp_details, nhs_number):
     """ Displays menu for user to select a time, reserves appointment as 'Pending' in the database,
     or allows user to exit to main menu
     """
@@ -305,9 +315,9 @@ def timeMenu(date, times, gpDetails, nhsNumber):
             if options == '':
                 raise EmptyAnswer
             if options == '1':
-                time = chooseTime(date, times, gpDetails, nhsNumber)
-                start = createStart(date, time)
-                insertAppointment(start, gpDetails, nhsNumber)
+                time_select = choose_time(date, times_list, gp_details, nhs_number)
+                start = create_start(date, time_select)
+                insert_appointment(start, gp_details, nhs_number)
                 print("You have requested to book an appointment on {} at {}, "
                       "\nYou will receive confirmation of your appointment shortly!".format(date, time))
                 return 0
@@ -318,38 +328,29 @@ def timeMenu(date, times, gpDetails, nhsNumber):
         except InvalidAnswer:
             error = InvalidAnswer()
             print(error)
-            timeMenu(date, times, gpDetails, nhsNumber)
+            time_menu(date, times_list, gp_details, nhs_number)
         except EmptyAnswer:
             error = EmptyAnswer()
             print(error)
-            timeMenu(date, times, gpDetails, nhsNumber)
+            time_menu(date, times_list, gp_details, nhs_number)
 
 
-def chooseTime(date, times, gpDetails, nhsNumber):
+def choose_time(date, times_list, gp_details, nhs_number):
     """ Checks time entered by user is in valid form and present in the list of appointment times
         Checks if time entered by user has already been booked
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-    times2 = ["09:00", "09:10", "09:20", "09:30", "09:40", "09:50",
-             "10:00", "10:10", "10:20", "10:30", "10:40", "10:50",
-             "11:00", "11:10", "11:20", "11:30", "11:40", "11:50",
-             "12:00", "12:10", "12:20", "12:30", "12:40", "12:50",
-             "13:00", "13:10", "13:20", "13:30", "13:40", "13:50",
-             "14:00", "14:10", "14:20", "14:30", "14:40", "14:50",
-             "15:00", "15:10", "15:20", "15:30", "15:40", "15:50",
-             "16:00", "16:10", "16:20", "16:30", "16:40", "16:50",
-             "17:00", "17:10", "17:20", "17:30", "17:40", "17:50"]
     while True:
         try:
-            time = input("Please choose a time from the available appointments (as HH:MM): ")
-            start = createStart(date, time)
+            time_in = input("Please choose a time from the available appointments (as HH:MM): ")
+            start = create_start(date, time_in)
             end = start + 599
             c.execute("SELECT start, appointmentStatus, end FROM Appointment "
                       "WHERE gpEmail =? and appointmentStatus != 'Declined' ",
-                      [gpDetails[0]])
+                      [gp_details[0]])
             booked_times = c.fetchall()
-            if time not in times2:
+            if time_in not in times_list:
                 raise TimeNotValid
             for app in booked_times:
                 start_time = app[0]
@@ -357,26 +358,26 @@ def chooseTime(date, times, gpDetails, nhsNumber):
                 if start >= start_time and end <= end_time:
                     raise TimeBooked
             else:
-                return time
+                return time_in
         except TimeNotValid:
             print("\n\t< This is not a valid time option, please try again >"
                   "\n")
         except TimeBooked:
             print("\n\t< This time is unavailable, please try again >"
                   "\n")
-            timeMenu(date, times, gpDetails, nhsNumber)
+            time_menu(date, times_list, gp_details, nhs_number)
 
 
-def createStart(date, time):
-    """ Creates a unix timestamp from the chosen date and appointment start time by the user
+def create_start(date_string, time_string):
+    """ Creates a unix timestamp from the chosen date (string) and appointment start time (string) by the user
     """
-    day_str = date + ' ' + time
-    dt_object = toDateTimeObj(day_str)
-    start = tounixtime(dt_object)
+    day_str = date_string + ' ' + time_string
+    dt_object = to_date_time_obj(day_str)
+    start = to_unix_time(dt_object)
     return start
 
 
-def insertAppointment(start, gpDetails, nhsNumber):
+def insert_appointment(start, gp_details, nhs_number):
     """ Inserts the appointment details into the database
     """
     connection = sql.connect('UCH.db')
@@ -385,18 +386,18 @@ def insertAppointment(start, gpDetails, nhsNumber):
               "WHERE appointmentStatus = 'Declined' ")
     declined_times = c.fetchall()
     end = start + 599
-    gpLastName = gpDetails[1]
-    gpEmail = gpDetails[0]
+    gp_last_name = gp_details[1]
+    gp_email = gp_details[0]
     reason = 'Appointment'
-    appointmentStatus = 'Pending'
-    date_requested = tounixtime(datetime.today())
+    appointment_status = 'Pending'
+    date_requested = to_unix_time(datetime.today())
     if not declined_times:
-        chosen = (gpEmail, gpLastName, nhsNumber, start, end, reason, appointmentStatus,
+        chosen = (gp_email, gp_last_name, nhs_number, start, end, reason, appointment_status,
                   date_requested, '', '', '', '', '', 0, 0)
         c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
         connection.commit()
     else:
-        update = (gpEmail, gpLastName, nhsNumber, date_requested)
+        update = (gp_email, gp_last_name, nhs_number, date_requested)
         c.execute("UPDATE Appointment "
                   "SET gpEmail =?, gpLastName =?, nhsNumber =?, appointmentStatus = 'Pending', "
                   "dateRequested =?", update)
@@ -411,3 +412,5 @@ def return_to_main():
     else:
         print("Thank you for using the UCH e-health system! Goodbye for now!")
         exit()
+
+
