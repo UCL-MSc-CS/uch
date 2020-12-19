@@ -36,7 +36,7 @@ def addholiday(doctoremail):
     startdate = uf.validatedate("Please enter a start date")
     if startdate == 'exit':
         return
-    elif startdate.date() <= datetime.today().date():
+    elif startdate.date() < datetime.today().date():
         print("\t<You cannot book a holiday in the past!>")
         choice = input("Press [0] to try again, or any other entry to return to menu \n:")
         if choice == '0':
@@ -66,16 +66,16 @@ def addholiday(doctoremail):
 
 
 def addnonpatienthours(doctoremail):
-    date = uf.validatedate("Please enter a date")
-    if date == 'exit':
+    chosendate = uf.validatedate("Please enter a date")
+    if chosendate == 'exit':
         return
-    if date.date() <= datetime.today().date():
+    if chosendate.date() < datetime.today().date():
         print("\t<You cannot book non-patient hours in the past!>")
         choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
         if choice == '0':
             addnonpatienthours(doctoremail)
         return
-    datestring = datetime.strftime(date, dateformatstring)
+    datestring = datetime.strftime(chosendate, dateformatstring)
     starttime = uf.validatetime("Please enter a start time")
     if starttime == 'exit':
         addnonpatienthours(doctoremail)
