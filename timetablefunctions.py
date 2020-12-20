@@ -175,6 +175,20 @@ def TodayAppointments(gpemail):
     closeconn(conn["connection"])
     return results
 
+#call this function when you want to delete non-patient time/decline an appointment if its a patient appointment
+def clearbookedtime(appointmentId):
+    conn = connecttodb()
+    conn['cursor'].execute("""
+            SELECT reason 
+            FROM Appointment
+            WHERE appointmentID = ?
+        """, (appointmentId,))
+    appointment_type = conn['cursor'].fetchone()[0]
+    closeconn(conn["connection"])
+    if appointment_type == "Appointment":
+        declineappointment(appointmentId)
+    else:
+        deleteappointment(appointmentId)
 
 # call this when you'd like to cancel an appointment
 def deleteappointment(appointmentId):

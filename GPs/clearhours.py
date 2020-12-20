@@ -27,7 +27,7 @@ def clearhours(doctoremail):
         try:
             idnum = int(id)
             if idnum in appointments:
-                db.deleteappointment(idnum)
+                db.clearbookedtime(idnum)
                 print("Successfully deleted Appointment " + str(idnum))
             else:
                 print("\t <Appointment of ID: "+str(idnum)+" doesn't exist on the given date.>")
