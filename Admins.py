@@ -781,7 +781,7 @@ class adminFunctions():
                             date_today = date.today()
                             if date_entered > date_today:
                                 raise DateInFutureError
-                            dateOfBirth = uf.tounixtime(date_entered)
+                            dateOfBirth = date_entered.isoformat()
                             print(dateOfBirth)
                             question_num = 6
 
@@ -1106,7 +1106,7 @@ class adminFunctions():
                                     date_today = date.today()
                                     if date_entered > date_today:
                                         raise DateInFutureError
-                                    dateOfBirth = uf.tounixtime(date_entered)
+                                    dateOfBirth = date_entered.isoformat()
                                     print(dateOfBirth)
                                 except FieldEmpty:
                                     error = FieldEmpty()
