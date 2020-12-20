@@ -39,7 +39,10 @@ class Appointment:
         User can choose to book with a specific doctor, any doctor chosen at random by the system
         or a doctor of a specific gender"""
         try:
-            print("********************************************"
+            print("--------------------------------------------"
+                  "\n         Patient Appointment Menu"
+                  "\n--------------------------------------------"
+                  "\n********************************************"
                   "\nChoose [1] to book an appointment with a specific doctor"
                   "\nChoose [2] to book an appointment with any doctor"
                   "\nChoose [3] to book an appointment with a doctor of a specific gender"
@@ -195,7 +198,9 @@ class Appointment:
 
     def cancel_appointment(self, nhs_number):
         """ Presents user with all their appointments and allows them to choose to cancel one"""
-        print("********************************************"
+        print("--------------------------------------------"
+              "\n         Patient: Cancel Appointments"
+              "\n--------------------------------------------"
               "\nThese are your confirmed booked appointments: ")
         viewing = vc.view_appointments(nhs_number)
         if viewing == 0:
@@ -238,7 +243,9 @@ class Appointment:
 
     def view_app_confirmations(self, nhs_number):
         """ Presents user with all their pending, accepted and declined appointments"""
-        print("********************************************"
+        print("--------------------------------------------"
+              "\n         Patient: View Appointments"
+              "\n--------------------------------------------"
               "\nThese are your appointments: ")
         vc.view_appointments(nhs_number)
         pf.return_to_main()
