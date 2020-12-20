@@ -2,18 +2,8 @@ import sqlite3
 import pandas as pd
 
 def initialise_database():
-    """ This will function as our main database script. Rather than making large changes to this file,
-    set up your own database script to make test changes to, and implement them here when they are
-    finalised. If you want to test out queries and test out features with dummy data, do this in your
-    own scripts too for the time being. """
 
     connection = sqlite3.connect('UCH.db')
-    # parts of sqlite queries are often case sensistive, be mindful of this.
-    # sqlite keeps things simple and only has 5 datatypes you can choose from:
-    # null, integer, real, text, blob
-    # (real is a decimal number)
-    # keep all attribute names in camelCase, and all table names singular with the
-    # first letter of each word capitalised e.g. Doctor, PatientDetail.
 
     c = connection.cursor()
     #create Appointment table
@@ -205,41 +195,91 @@ def initialise_database():
                         'Shorvon',
                         '1998-07-16',
                         'Male',
-                        '10 Downing Street',
+                        '27A Stamford Brook',
                         'London',
-                        'SW1A 0AA',
-                        7758221088,
+                        'W6 0XJ',
+                        447758221088,
                         '1234',
                         1)""")
     connection.commit()
 
+    c.execute("""INSERT OR IGNORE INTO PatientDetail VALUES (
+                        1234567891,
+                        'a.bourke@gmail.com',
+                        'Arianna',
+                        'Bourke',
+                        '1998-07-16',
+                        'Female',
+                        '27A Stamford Brook',
+                        'London',
+                        'W6 0XJ',
+                        447758221088,
+                        '1234',
+                        0)""")
+    connection.commit()
+
+
     c.execute("""INSERT OR IGNORE INTO GP VALUES(
-                'matthew.shorvon@ucl.ac.uk',
+                'andrew.oconnell@ucl.ac.uk',
                 '1234',
-                'Matthew',
-                'Shorvon',
+                'Andrew',
+                "O'Connell",
                 'male',
                 '1998-07-16',
                 '10 Beverly Hills',
-                'LA',
+                'LA 90210',
                 '447758221088',
-                'Plastic Surgery',
+                'GP',
                 1)""")
     connection.commit()
 
     c.execute("""INSERT OR IGNORE INTO GP VALUES(
-                "apostrophe'@ucl.ac.uk",
-                '1234',
-                'Matthew',
-                'Shorvon',
+                "caroline.crandell@ucl.ac.uk",
+                'Caroline',
+                'Crandell',
+                'female',
+                '1998-07-16',
+                '10 Beverly Hills',
+                'LA 90210',
+                '447758221088',
+                'GP',
+                1)""")
+
+    connection.commit()
+
+    c.execute("""INSERT OR IGNORE INTO GP VALUES(
+                "chenuka.ratwatte@ucl.ac.uk",
+                'Chenuka',
+                'Ratwatte',
                 'male',
                 '1998-07-16',
                 '10 Beverly Hills',
-                'LA',
+                'LA 90210',
                 '447758221088',
-                'Plastic Surgery',
+                'GP',
                 1)""")
+
     connection.commit()
+
+    #11th Jan. 12:00 start and 16:00 finish
+    c.execute("""INSERT OR IGNORE INTO Appointment VALUES(
+                        1,
+                        "caroline.crandell@ucl.ac.uk",
+                        'Crandell',
+                        '',
+                        1610366400,
+                        1610380800,
+                        'Holiday',
+                        '',
+                        1609459200,
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        ''
+    )""")
 
     connection.close()
 
