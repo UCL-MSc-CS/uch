@@ -131,7 +131,7 @@ def check_NHS(NHS_number):
     except NotRegisteredError:
         error = NotRegisteredError()
         print(error)
-        exit()
+        logout()
     else:
         options(NHS_number)
 
@@ -280,7 +280,7 @@ def update_first_name(NHS_number):
         elif first_name == '0':
             update_options(NHS_number)
         x = first_name.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (first_name, NHS_number))
@@ -306,7 +306,7 @@ def update_last_name(NHS_number):
         elif last_name == '0':
             update_options(NHS_number)
         x = last_name.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (last_name, NHS_number))
@@ -376,7 +376,7 @@ def update_city(NHS_number, update_patient):
         elif len(city) > 100:
             raise InvalidAnswerError()
         x = city.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             address_line_2 = (update_patient["address_line_2"] + " " + city).strip()
@@ -640,7 +640,7 @@ def first_name_q(new_patient):
         elif first_name == '0':
             task()
         x = first_name.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             new_patient["first_name"] = first_name
@@ -665,7 +665,7 @@ def last_name_q(new_patient):
         elif last_name == '1':
             first_name_q(new_patient)
         x = last_name.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             new_patient["last_name"] = last_name
@@ -830,7 +830,7 @@ def city_q(new_patient):
         elif len(city) > 100:
             raise InvalidAnswerError()
         x = city.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             address_line_2 = (new_patient["address_line_2"] + " " + city).strip()
