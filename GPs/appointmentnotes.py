@@ -45,7 +45,7 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
     global root
     root = Tk()
     root.title('Appointment ID: ' + str(appointmentid))
-    root.geometry("1300x570+0+0")
+    root.geometry("1260x550+0+0")
     root.configure(background='SlateGray1')
 
     mainFrame = Frame(root)
@@ -54,7 +54,7 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
     titleFrame = Frame(mainFrame, bd=20, width=1350, padx=20, relief=RIDGE, background='SlateGray1')
     titleFrame.pack(side=TOP)
 
-    appointmentTitle = Label(titleFrame, font=('arial', 40, 'bold'),
+    appointmentTitle = Label(titleFrame, font=('arial', 20, 'bold'),
                              text='Appointment notes for patient: ' + firstName + ' ' + lastName, padx=2,
                              background='SlateGray1')
     appointmentTitle.grid()
@@ -205,22 +205,37 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
     heightLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="Height:", padx=2,
                            background='SlateGray2')
     heightLabel.grid(row=10, column=0, sticky=W)
-    heightInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(height), padx=2,
-                          background='SlateGray2')
+    if height:
+        heightInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(height), padx=2,
+                              background='SlateGray2')
+    else:
+        heightInfo = Label(my_frame1, font=('arial', 12, 'bold'), text='N/A', padx=2,
+                           background='SlateGray2')
     heightInfo.grid(row=10, column=1, sticky=W)
+
 
     weightLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="Weight:", padx=2,
                            background='SlateGray2')
+
     weightLabel.grid(row=11, column=0, sticky=W)
-    weightInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(weight), padx=2,
-                          background='SlateGray2')
+
+    if weight:
+        weightInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(weight), padx=2,
+                            background='SlateGray2')
+    else:
+        weightInfo = Label(my_frame1, font=('arial', 12, 'bold'), text='N/A', padx=2,
+                        background='SlateGray2')
     weightInfo.grid(row=11, column=1, sticky=W)
 
     bmiLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="BMI:", padx=2,
                         background='SlateGray2')
     bmiLabel.grid(row=12, column=0, sticky=W)
-    bmiInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(bmi), padx=2,
-                       background='SlateGray2')
+    if bmi:
+        bmiInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(bmi), padx=2,
+                        background='SlateGray2')
+    else:
+        bmiInfo = Label(my_frame1, font=('arial', 12, 'bold'), text='N/A', padx=2,
+                        background='SlateGray2')
     bmiInfo.grid(row=12, column=1, sticky=W)
 
     # Display patient allergies
@@ -241,7 +256,7 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
     allergyTree.heading("#", text="#", anchor=CENTER)
     allergyTree.heading("Medicine Name", text="Medicine Name", anchor=W)
 
-    # Insert data from databse into treeview
+    # Insert data from database into treeview
     count = 1
     for record in allergyList:
         allergyTree.insert(parent='', index='end', text="",values=(count, record))
