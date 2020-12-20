@@ -23,7 +23,7 @@ class Error(Exception):
 
 
 class NotRegisteredError(Error):
-    def __init__(self, message="\n   < A GP needs to confirm your registration before you can access our services - please try logging in tomorrow > \n"):
+    def __init__(self, message="\n   < An administrator needs to confirm your registration before you can access our services - please try logging in tomorrow > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -772,8 +772,8 @@ def gender_q(new_patient):
         error = EmptyAnswerError()
         print(error)
         gender_q(new_patient)
-    except EmptyAnswerError:
-        error = EmptyAnswerError()
+    except InvalidAnswerError:
+        error = InvalidAnswerError()
         print(error)
         gender_q(new_patient)
 
@@ -946,8 +946,9 @@ def password_q(new_patient):
             new_patient["password"] = password
             x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"], new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
             x.register()
+            print("Thank you, " + x.first_name + ", for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days.")
             summary(x.NHS_number)
-            check_NHS(x.NHS_number)
+            logout()
     except EmptyAnswerError:
         error = EmptyAnswerError()
         print(error)
