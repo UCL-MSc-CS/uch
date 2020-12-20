@@ -8,9 +8,7 @@ def PatientSummary(nhsNumber):
     with open('PatientSummary.txt','w') as f:
         c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", (nhsNumber,))
         results = c.fetchall()
-        print(results)
         dateOfBirth = results[0][4]
-        print(dateOfBirth)
         f.write("-----------------------------------------------------------------------------------\n")
         f.write("                       Patient Summary of " + str(results[0][2]) + " " + str(results[0][3] + '\n'))
         f.write("-----------------------------------------------------------------------------------\n")

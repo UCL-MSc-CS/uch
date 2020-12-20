@@ -113,7 +113,7 @@ def initialise_database():
                         addressLine2 text,
                         telephoneNumber integer,
                         department text,
-                        active text
+                        active integer
     )""")
     connection.commit()
 
