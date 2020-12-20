@@ -187,7 +187,7 @@ class PatientMedical:
                     try:
                         major_illness = input('Do you have any pre-existing conditions?'
                                                 '\nIf so, please enter the name of the pre-existing condition using comma to '
-                                                'separate different conditions. Otherwise, please enter 0: ').lower().split(',')
+                                                'separate different conditions. Otherwise, please enter N/A: ').lower().split(',')
                         if major_illness == ["0"]:
                             return 1
                         if major_illness == ['']:
@@ -264,7 +264,7 @@ class PatientMedical:
                     try:
                         major_illness = input('Does {} have any pre-existing conditions?'
                         '\nIf so, please enter the name of the pre-existing condition using comma to '
-                        'separate different conditions. Otherwise, please enter 0: '.format(self.child_name)).lower().split(',')
+                        'separate different conditions. Otherwise, please enter N/A: '.format(self.child_name)).lower().split(',')
                         if major_illness == ['0']:
                             return 1
                         if major_illness == ['']:
@@ -337,7 +337,7 @@ class PatientMedical:
                     try:
                         med_allergy = input('Do you have any allergies to any medicines?'
                                                 '\nIf so, please enter the name of the medicine using comma to '
-                                                'separate different types. Otherwise, please enter 0: ').lower().split(',')
+                                                'separate different types. Otherwise, please enter N/A: ').lower().split(',')
                         if med_allergy == ['0']:  # could be a bug. check
                             return 1
                         if med_allergy == ['']:
@@ -566,15 +566,15 @@ class PatientMedical:
                             self.connection.commit()
 
                 else:
-                    self.cancer_relation = "0"  # 0 means the patient has not had cancer before
-                    self.cancer_history = [nhs_number, self.cancer_relation]
+                    self.cancer_relation = "N/A"  # 0 means the patient has not had cancer before
+                    self.cancer_history = [nhs_number, self.cancer_relation, 'N/A', 'N/A']
                     self.a.execute("""
                                     SELECT * FROM cancer WHERE nhsNumber =?
                                     """, [nhs_number])
                     query_result = self.a.fetchall()
                     if not query_result:
-                        self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation) 
-                                          VALUES (?, ?)""", self.cancer_history)
+                        self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge) 
+                                          VALUES (?, ?, ?, ?)""", self.cancer_history)
                         self.connection.commit()
                     else:
                         determinator = []
@@ -584,8 +584,8 @@ class PatientMedical:
                                 determinator.append('1')
                                 break
                         if not determinator:
-                            self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation) 
-                                              VALUES (?, ?)""", self.cancer_history)
+                            self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge) 
+                                              VALUES (?, ?, ?, ?)""", self.cancer_history)
                             self.connection.commit()
             elif menu_choice == "2":
                 self.cancer_history = []
@@ -678,9 +678,7 @@ class PatientMedical:
                     else:  # something is wrong in this else statement
                         determinator = []
                         for each_row in query_result:
-                            print(each_row)
                             for each_record in self.cancer_history:
-                                print(each_record)
                                 if each_record[0] in each_row and each_record[1] in each_row and \
                                         each_record[2] in each_row and str(each_record[3]) in each_row:
                                     print('Sorry, you already updated this information before')
@@ -694,13 +692,13 @@ class PatientMedical:
                     self.cancer_relation = "None"  # None means there is no cancer history in the patient's family
                     print("Wonderful! That means you do not likely have any genetic risk in any specific cancer "
                           "that we know so far based on your family medical history.")
-                    self.cancer_history = [nhs_number, self.cancer_relation]
+                    self.cancer_history = [nhs_number, self.cancer_relation, 'N/A', 'N/A']
                     self.a.execute("""
                                     SELECT * FROM cancer WHERE nhsNumber =?
                                     """, [nhs_number])
                     query_result = self.a.fetchall()
                     if not query_result:
-                        self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation) VALUES (?, ?)""", self.cancer_history)
+                        self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge) VALUES (?, ?, ?, ?)""", self.cancer_history)
                         self.connection.commit()
                     else:
                         determinator = []
@@ -710,8 +708,8 @@ class PatientMedical:
                                 determinator.append('1')
                                 break
                         if determinator == []:
-                            self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation) 
-                                            VALUES (?, ?)""", self.cancer_history)
+                            self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge) 
+                                            VALUES (?, ?, ?, ?)""", self.cancer_history)
                             self.connection.commit()
 
 
