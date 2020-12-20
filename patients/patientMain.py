@@ -163,9 +163,7 @@ def quest_options(NHS_number):
             options(NHS_number)
         elif action == '3':
             x = PatientMedical(NHS_number)
-            # pf.medical_history_menu
-            x.vaccination(NHS_number)
-            x.cancer(NHS_number)
+            pf.medical_history_menu(NHS_number)
             options(NHS_number)
         else:
             raise InvalidAnswerError()
