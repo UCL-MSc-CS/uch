@@ -15,7 +15,7 @@ def mainmenu(dremail,drname):
         print("Choose [3] to add non-patient time (including holidays)")
         print("Choose [4] to view your timetable")
         print("Choose [5] to cancel appointments")
-        print("Choose [0] to exit")
+        print("Choose [0] to logout")
         option = input(":")
         if option == "1":
             openappointment(dremail)
