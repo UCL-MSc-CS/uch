@@ -10,7 +10,7 @@ def mainmenu(dremail,drname):
         print("\t Doctor Main Menu")
         print("--------------------------------------------")
         print("Welcome Dr. " + drname)
-        print("Choose [1] to open appointment")
+        print("Choose [1] to open today's appointments")
         print("Choose [2] to confirm pending appointments")
         print("Choose [3] to add non-patient time (including holidays)")
         print("Choose [4] to view your timetable")
