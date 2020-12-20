@@ -512,8 +512,9 @@ class adminFunctions():
                 return 1
             else:
                 unixd = dt.utcnow().timestamp()
-                self.c.execute("""SELECT firstName FROM PatientDetail INNER JOIN Appointment
-                                WHERE Appointment.appointmentID = ?""", (check_number,))
+                self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
+                                Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
+                                appointmentID = ?""", (check_number,))
                 firstsel = self.c.fetchall()
                 self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unixd, check_number))
                 self.connection.commit()
@@ -552,8 +553,9 @@ class adminFunctions():
                 return 1
             else:
                 unixd = dt.utcnow().timestamp()
-                self.c.execute("""SELECT firstName FROM PatientDetail INNER JOIN Appointment
-                WHERE Appointment.appointmentID = ?""", (check_number,))
+                self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
+                Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
+                appointmentID = ?""", (check_number,))
                 firstsel = self.c.fetchall()
                 self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, check_number))
                 self.connection.commit()
