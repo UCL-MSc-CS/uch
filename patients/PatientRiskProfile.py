@@ -87,18 +87,20 @@ class PatientMedical:
                     try:
                         self.status = input("Please enter the first name and last name "
                                             "of your child whose profile you would like to edit: ")
-                        self.nhs_number_child = input("Please enter {}'s nhs number: ".format(self.status))
                         full_name = self.status.split(' ')
                         if self.status == "0":
                             return 1
                         if not self.status:
                             raise pf.EmptyFieldError()
+                        if len(full_name) > 2 or len(full_name) == 1:
+                            raise pf.InvalidNameFormatError()
+                        self.nhs_number_child = input("Please enter {}'s nhs number: ".format(self.status))
+                        if self.nhs_number_child == '0':
+                            return 1
                         if not self.nhs_number_child:
                             raise pf.EmptyFieldError()
                         if len(self.nhs_number_child) != 10:
                             raise pf.InvalidAnswerError()
-                        if len(full_name) > 2 or len(full_name) == 1:
-                            raise pf.InvalidNameFormatError()
                     except pf.EmptyFieldError:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
@@ -229,18 +231,20 @@ class PatientMedical:
                 while True:
                     try:
                         self.child_name = input("Please enter the full name of your child whose profile you would like to edit: ").lower()
-                        self.nhs_number_child = int(input("Please enter {}'s nhs number: ".format(self.child_name)))
                         full_name = self.child_name.split(' ')
                         if self.child_name == "0":
                             return 1
                         if not self.child_name:
                             raise pf.EmptyFieldError()
+                        if len(full_name) == 1 or len(full_name) < 2:
+                            raise pf.InvalidNameFormatError()
+                        self.nhs_number_child = int(input("Please enter {}'s nhs number: ".format(self.child_name)))
+                        if self.nhs_number_child == 0:
+                            return 1
                         if not self.nhs_number_child:
                             raise pf.EmptyFieldError()
                         if len(str(self.nhs_number_child)) != 10:
                             raise pf.InvalidAnswerError()
-                        if len(full_name) == 1 or len(full_name) < 2:
-                            raise pf.InvalidNameFormatError()
                     except pf.EmptyFieldError:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
@@ -374,18 +378,20 @@ class PatientMedical:
                 while True:
                     try:
                         self.child_name = input("Please enter the full name of your child whose profile you would like to edit: ").lower()
-                        self.nhs_number_child = int(input("Please enter {}'s nhs number: ".format(self.child_name)))
                         full_name = self.child_name.split(' ')
                         if self.child_name == "0":
                             return 1
                         if not self.child_name:
                             raise pf.EmptyFieldError()
+                        if len(full_name) == 1 or len(full_name) < 2:
+                            raise pf.InvalidNameFormatError()
+                        self.nhs_number_child = int(input("Please enter {}'s nhs number: ".format(self.child_name)))
+                        if self.nhs_number_child == 0:
+                            return 1
                         if not self.nhs_number_child:
                             raise pf.EmptyFieldError()
                         if len(str(self.nhs_number_child)) != 10:
                             raise pf.InvalidAnswerError()
-                        if len(full_name) == 1 or len(full_name) < 2:
-                            raise pf.InvalidNameFormatError()
                     except pf.EmptyFieldError:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
@@ -740,7 +746,7 @@ class PatientMedical:
                                "FROM vaccineHistory WHERE nhsNumber = ? """, [nhs_number])
                 your_query = self.a.fetchall()
                 if your_query:
-                    print("\n    Your vaccination record begins:\n")
+                    print("\n    <<Your vaccination record begins>>\n")
                     for vac in your_query:
                         for answers in vac:
                             if answers == 1:
@@ -749,7 +755,7 @@ class PatientMedical:
                                 print(self.vaccination_history[count], ": No")
                             count += 1
 
-                    print('\n    Vaccination record ends\n')
+                    print('\n    <<Vaccination record ends>>\n')
                 else:
                     print("\nYour vaccination history is empty. Please update your vaccination history as soon as possible.\n")
                 print('Your medical history:')
@@ -766,19 +772,24 @@ class PatientMedical:
                             return 1
                         if not child_name:
                             raise pf.EmptyFieldError()
-                        if len(full_name) <= 1:
+                        if len(full_name) == 1 or len(full_name) < 2:
                             raise pf.InvalidNameFormatError()
                         self.nhs_number_child = input("Please enter {}'s nhs number: ".format(child_name))
                         if self.nhs_number_child == "0":
                             return 1
                         if not self.nhs_number_child:
                             raise pf.EmptyFieldError()
+                        if len(str(self.nhs_number_child)) != 10:
+                            raise pf.InvalidAnswerError()
                     except pf.EmptyFieldError:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
                     except pf.InvalidNameFormatError:
-                        print("\n    < Invalid answer. "
-                              "Please only enter your child's first name and last name separated with a space with a space>\n")
+                        print("\n    < Invalid answer."
+                              " Please only enter your child's first name and last name separated with a space with a space>\n")
+                    except pf.InvalidAnswerError:
+                        error_message = "\n    < Invalid NHS number>\n"
+                        print(error_message)
                     else:
                         break
                 self.a.execute("SELECT DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella "
