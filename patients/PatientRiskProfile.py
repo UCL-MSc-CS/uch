@@ -27,7 +27,7 @@ class PatientMedical:
             print("*"*44)
             while True:
                 try:
-                    menu_selection = input("Please select based on the menu: ")
+                    menu_selection = input("Please select an option: ")
                     if menu_selection == "0":
                         return 1
                     if not menu_selection:
@@ -687,7 +687,7 @@ class PatientMedical:
             print("*"*44)
             while True:
                 try:
-                    profile = input("Please choose from the menu: ")
+                    profile = input("Please select an option: ")
                     if profile == "0":
                         return 1
                     if not profile:
