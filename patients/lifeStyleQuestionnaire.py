@@ -34,7 +34,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    <Please enter Y for yes and N for no>\n")
+                print("\n    < Please enter Y for yes and N for no>\n")
             else:
                 break
         if c_exercise == "y":
@@ -69,7 +69,7 @@ class RiskProfile:
                     error = pf.EmptyFieldError()
                     print(error)
                 except ValueError:
-                    print("\n    <You have entered a non-numeric value>\n")
+                    print("\n    < You have entered a non-numeric value>\n")
                 else:
                     break
             self.questionnaire[2] = str(c_frequency)
@@ -86,9 +86,9 @@ class RiskProfile:
                     error = pf.EmptyFieldError()
                     print(error)
                 except pf.InvalidAnswerError:
-                    print("\n    <Please enter a realistic answer for this questions>\n")
+                    print("\n    < Please enter a realistic answer for this questions>\n")
                 except ValueError:
-                    print("\n    <You have entered a non-numeric value>n")
+                    print("\n    < You have entered a non-numeric value>n")
                 else:
                     break
             self.questionnaire[3] = str(c_time)
@@ -116,10 +116,10 @@ class RiskProfile:
         while True:
             try:
                 height = float(input("What is your height in metres: "))
-                if height == "0":
+                if height == 0:
                     return 1
                 weight = float(input("What is your weight in kg: "))
-                if weight == "0":
+                if weight == 0:
                     return 1
                 if not height or not weight:
                     raise pf.EmptyFieldError()
@@ -129,9 +129,9 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    <Error! The entered height and weight seem to be unrealistic>\n")
+                print("\n    < Error! The entered height and weight seem to be unrealistic>\n")
             except ValueError:
-                print('\n    Error! Please enter numeric values for height and weight\n')
+                print('\n    < Error! Please enter numeric values for height and weight>\n')
             else:
                 break
         bmi_calculation = round(weight/(height ** 2), 2)
@@ -191,7 +191,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    <Error! Please re-answer the questions with Y for yes and N for no>\n")
+                print("\n    < Error! Please re-answer the questions with Y for yes and N for no>\n")
             else:
                 break
         if smoking == "y":
@@ -225,7 +225,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    <Error! Please enter Y for yes and N for no>\n")
+                print("\n    < Error! Please enter Y for yes and N for no>\n")
             else:
                 break
         if drugs == "y":
@@ -259,7 +259,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    <Error! Please enter Y for yes and N for no>\n")
+                print("\n    < Error! Please enter Y for yes and N for no>\n")
             else:
                 break
         if alcohol == "y":
@@ -290,9 +290,9 @@ class RiskProfile:
                     error = pf.EmptyFieldError()
                     print(error)
                 except pf.InvalidAnswerError:
-                    print("\n    <Invalid answer. Please enter your answer based on the menu provided>\n")
+                    print("\n    < Invalid answer. Please enter your answer based on the menu provided>\n")
                 except ValueError:
-                    print('\n    <Error! Please enter a numeric value from the menu above>\n')
+                    print('\n    < Error! Please enter a numeric value from the menu above>\n')
                 else:
                     break
             self.answers.append(alcohol)
@@ -329,7 +329,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except ValueError:
-                print('\n    <Error! Please enter a numeric value>\n')
+                print('\n    < Error! Please enter a numeric value>\n')
             else:
                 break
         if diet < 5:
@@ -345,7 +345,7 @@ class RiskProfile:
                 if caffeine == "0":
                     return 1
             except ValueError:
-                print('\n    <Error! Please enter a numeric value>\n')
+                print('\n    < Error! Please enter a numeric value>\n')
             else:
                 break
         if caffeine > 4:
@@ -361,13 +361,18 @@ class RiskProfile:
 
     def insert_to_table(self, nhs_number):
         self.answers.insert(0, nhs_number)
-        question_query = """INSERT INTO questionnaireTable (nhsNumber, exercise, exerciseType, exerciseFrequency,
-        exerciseDuration, goal, height, weight, bmi, smoking, drugs, drugType, alcohol, 
-        alcoholUnit, meat, diet, caffeine)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-        self.a.execute(question_query, self.answers)
-        self.connection.commit()
-        self.connection.close()
+        try:
+            question_query = """INSERT INTO questionnaireTable (nhsNumber, exercise, exerciseType, exerciseFrequency,
+            exerciseDuration, goal, height, weight, bmi, smoking, drugs, drugType, alcohol, 
+            alcoholUnit, meat, diet, caffeine)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+            self.a.execute(question_query, self.answers)
+        except Exception:
+            print('No answers saved. Please remember to come back to finish the questions next time')
+            return 1
+        else:
+            self.connection.commit()
+            self.connection.close()
         # self.a.execute("SELECT * FROM questionnaireTable")
         # result = self.a.fetchall()
         # print(result)
