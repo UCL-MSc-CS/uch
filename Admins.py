@@ -1094,13 +1094,8 @@ class adminFunctions():
                                         break
                                     elif not Cad2:
                                         raise FieldEmpty()
-                                    elif any(chr.isdigit() for chr in Cad2) == False:
-                                        raise InvalidAdd
                                 except FieldEmpty:
                                     error = FieldEmpty()
-                                    print(error)
-                                except InvalidAdd:
-                                    error = InvalidAdd()
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""",
