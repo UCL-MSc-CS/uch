@@ -23,7 +23,7 @@ class Error(Exception):
 
 
 class NotRegisteredError(Error):
-    def __init__(self, message="\n   < A GP needs to confirm your registration before you can access our services - please try logging in tomorrow > \n"):
+    def __init__(self, message="\n   < An administrator needs to confirm your registration before you can access our services - please try logging in tomorrow > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -131,7 +131,7 @@ def check_NHS(NHS_number):
     except NotRegisteredError:
         error = NotRegisteredError()
         print(error)
-        exit()
+        logout()
     else:
         options(NHS_number)
 
@@ -142,6 +142,7 @@ def quest_options(NHS_number):
         print("Choose [1] to see your medical profile")
         print("Choose [2] to take the lifestyle risk questionnaire")
         print("Choose [3] to update your medical history")
+        print("Choose [0] to go back")
         print("********************************************")
         action = input("Please select an option: ")
         if action == '':
@@ -162,10 +163,9 @@ def quest_options(NHS_number):
             x.insert_to_table(NHS_number)
             options(NHS_number)
         elif action == '3':
-            x = PatientMedical(NHS_number)
-            # pf.medical_history_menu
-            x.vaccination(NHS_number)
-            x.cancer(NHS_number)
+            medical_history_menu(NHS_number)
+            options(NHS_number)
+        elif action == '0':
             options(NHS_number)
         else:
             raise InvalidAnswerError()
@@ -178,6 +178,40 @@ def quest_options(NHS_number):
         print(error)
         quest_options(NHS_number)
 
+def medical_history_menu(NHS_number):
+    try:
+        x = PatientMedical(NHS_number)
+        print("********************************************")
+        print("Choose [1] to provide vaccination history for you or your children (if any)")
+        print("Choose [2] to provide cancer related medical history for you or your family (if any)")
+        print("Choose [3] to provide pre-existing conditions for you or your children (if any)")
+        print("Choose [4] to provide medicine allergies for you or your children (if any)")
+        print("Choose [0] to go back")
+        print("********************************************")
+        action = input('Please select an option: ')
+        if action == '':
+            raise EmptyAnswerError()
+        elif action == '1':
+            x.vaccination(NHS_number)
+        elif action == '2':
+            x.cancer(NHS_number)
+        elif action == '3':
+            x.pre_existing_con(NHS_number)
+        elif action == '4':
+            x.med_allergy(NHS_number)
+        elif action == '0':
+            quest_options(NHS_number)
+        else:
+            raise InvalidAnswerError()
+    except InvalidAnswerError:
+        error = InvalidAnswerError()
+        print(error)
+        medical_history_menu(NHS_number)
+    except EmptyAnswerError:
+        error = EmptyAnswerError()
+        print(error)
+        medical_history_menu(NHS_number)
+
 def logout():
     from root.py import Menus
     x = Menu()
@@ -188,7 +222,7 @@ def options(NHS_number):
         uf.banner('Patient')
         print("What would you like to do next?")
         print("Choose [1] to book an appointment")
-        print("Choose [2] to view your confirmed appointments")
+        print("Choose [2] to view your appointments")
         print("Choose [3] to cancel an appointment")
         print("Choose [4] to see your medical profile")
         print("Choose [5] to see your contact details")
@@ -282,7 +316,7 @@ def update_first_name(NHS_number):
         elif first_name == '0':
             update_options(NHS_number)
         x = first_name.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (first_name, NHS_number))
@@ -308,7 +342,7 @@ def update_last_name(NHS_number):
         elif last_name == '0':
             update_options(NHS_number)
         x = last_name.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (last_name, NHS_number))
@@ -378,7 +412,7 @@ def update_city(NHS_number, update_patient):
         elif len(city) > 100:
             raise InvalidAnswerError()
         x = city.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             address_line_2 = (update_patient["address_line_2"] + " " + city).strip()
@@ -642,7 +676,7 @@ def first_name_q(new_patient):
         elif first_name == '0':
             task()
         x = first_name.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             new_patient["first_name"] = first_name
@@ -667,7 +701,7 @@ def last_name_q(new_patient):
         elif last_name == '1':
             first_name_q(new_patient)
         x = last_name.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             new_patient["last_name"] = last_name
@@ -772,8 +806,8 @@ def gender_q(new_patient):
         error = EmptyAnswerError()
         print(error)
         gender_q(new_patient)
-    except EmptyAnswerError:
-        error = EmptyAnswerError()
+    except InvalidAnswerError:
+        error = InvalidAnswerError()
         print(error)
         gender_q(new_patient)
 
@@ -832,7 +866,7 @@ def city_q(new_patient):
         elif len(city) > 100:
             raise InvalidAnswerError()
         x = city.replace(" ", "")
-        if x.isalpha() == False:
+        if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
         else:
             address_line_2 = (new_patient["address_line_2"] + " " + city).strip()
@@ -946,8 +980,9 @@ def password_q(new_patient):
             new_patient["password"] = password
             x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"], new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
             x.register()
+            print("Thank you, " + x.first_name + ", for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days.")
             summary(x.NHS_number)
-            check_NHS(x.NHS_number)
+            logout()
     except EmptyAnswerError:
         error = EmptyAnswerError()
         print(error)
