@@ -36,8 +36,16 @@ with open('PatientSummary.txt','w') as f:
     f.write("--------------------------------------------\n")
     c.execute("""SELECT dateRequested, diagnosis FROM Appointment WHERE nhsNumber = ?""", [nhsNumber])
     items = c.fetchall()
+
     for i in range(0,len(items)):
-        f.write(str(items[i][0]) + "       " + str(items[i][1]) + '\n')
+        print(items[i])
+        date_unix = items[i][0]
+        date_regular = uf.toregulartime(date_unix)
+        date_regular = date_regular.strftime("%Y-%m-%d")
+        diagnosis = items[i][1]
+        if items[i][1] == '':
+            diagnosis = "Diagnosis pending"
+        f.write(str(date_regular) + "       " + str(diagnosis) + '\n')
 
     f.write("--------------------------------------------\n")
     f.write("HEALTH STATUS: \n")
