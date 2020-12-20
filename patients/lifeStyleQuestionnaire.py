@@ -61,7 +61,7 @@ class RiskProfile:
             while True:
                 try:
                     c_frequency = int(input("How many times do you engage in " + c_type + " per week" + ": "))
-                    if c_frequency == "0":
+                    if c_frequency == 0:
                         return 1
                     if c_frequency == '':
                         raise pf.EmptyFieldError()
@@ -76,7 +76,7 @@ class RiskProfile:
             while True:
                 try:
                     c_time = int(input("In minutes, how much time per week do you commit to " + c_type + ": "))
-                    if c_time == "0":
+                    if c_time == 0:
                         return 1
                     if not c_time:
                         raise pf.EmptyFieldError()
@@ -88,7 +88,7 @@ class RiskProfile:
                 except pf.InvalidAnswerError:
                     print("\n    < Please enter a realistic answer for this questions>\n")
                 except ValueError:
-                    print("\n    < You have entered a non-numeric value>n")
+                    print("\n    < You have entered a non-numeric value>\n")
                 else:
                     break
             self.questionnaire[3] = str(c_time)
@@ -233,8 +233,17 @@ class RiskProfile:
         else:
             drugs = 0
         if drugs == 1:
-            drugs_type = input("Please name one type of drugs you regularly "
-                               "consume or leave this field blank if prefer not to disclose: ")
+            while True:
+                try:
+                    drugs_type = input("Please name one type of drugs you regularly "
+                                       "consume or enter N/A if prefer not to disclose: ").lower()
+                    if drugs_type == "":
+                        raise pf.EmptyFieldError()
+                except pf.EmptyFieldError:
+                    error = pf.EmptyFieldError()
+                    print(error)
+                else:
+                    break
             self.answers.append(drugs)
             self.answers.append(drugs_type)
         else:
@@ -318,12 +327,12 @@ class RiskProfile:
         while True:
             try:
                 meat = int(input("How many meals a week do you consume red meat: "))
-                if meat == "0":
-                    return 1
+                if meat == '':
+                    raise pf.EmptyFieldError()
                 diet = int(input("How many portions of fruit or vegetables do you consume a day: "))
-                if diet == "0":
-                    return 1
-                if meat == '' or diet == '':
+                # if diet == "0":
+                #     return 1
+                if diet == '':
                     raise pf.EmptyFieldError()
             except pf.EmptyFieldError:
                 error = pf.EmptyFieldError()
@@ -342,8 +351,8 @@ class RiskProfile:
         while True:
             try:
                 caffeine = int(input("How many cups of coffee or caffeinated drinks do you consume per day: "))
-                if caffeine == "0":
-                    return 1
+                # if caffeine == "0":
+                #     return 1
             except ValueError:
                 print('\n    < Error! Please enter a numeric value>\n')
             else:

@@ -150,9 +150,10 @@ def quest_options(NHS_number):
         elif action == '1':
             name = PatientMedical(NHS_number)
             name.show_profile(NHS_number)
+            quest_options(NHS_number)
             options(NHS_number)
         elif action == '2':
-            print("Please fill out the following risk profile")
+            print("Please fill out the following lifestyle questions to assess any potential health risk")
             x = RiskProfile(NHS_number)
             x.questions(NHS_number)
             x.BMI_calculator(NHS_number)
@@ -161,9 +162,11 @@ def quest_options(NHS_number):
             x.alcohol(NHS_number)
             x.diet(NHS_number)
             x.insert_to_table(NHS_number)
+            quest_options(NHS_number)
             options(NHS_number)
         elif action == '3':
             medical_history_menu(NHS_number)
+            quest_options(NHS_number)
             options(NHS_number)
         elif action == '0':
             options(NHS_number)
@@ -193,12 +196,20 @@ def medical_history_menu(NHS_number):
             raise EmptyAnswerError()
         elif action == '1':
             x.vaccination(NHS_number)
+            medical_history_menu(NHS_number)
+            quest_options(NHS_number)
         elif action == '2':
             x.cancer(NHS_number)
+            medical_history_menu(NHS_number)
+            quest_options(NHS_number)
         elif action == '3':
             x.pre_existing_con(NHS_number)
+            medical_history_menu(NHS_number)
+            quest_options(NHS_number)
         elif action == '4':
             x.med_allergy(NHS_number)
+            medical_history_menu(NHS_number)
+            quest_options(NHS_number)
         elif action == '0':
             quest_options(NHS_number)
         else:
