@@ -107,7 +107,7 @@ class PatientMedical:
                         print(error_message)
                     except pf.InvalidNameFormatError:
                         print("\n    < Wrong name format."
-                              "\nPlease only enter your child's first name and last name "
+                              " Please only enter your child's first name and last name separated by a space "
                               "separated with a space>\n")
                     else:
                         break
@@ -249,7 +249,7 @@ class PatientMedical:
                         print(error_message)
                     except pf.InvalidNameFormatError:
                         print("\n    < Wrong name format."
-                              "Please enter your child's first name and last name separated with a space>\n")
+                              " Please enter your child's first name and last name separated with a space>\n")
                     except ValueError:
                         print('\n    < NHS number needs to be 10 - digit numeric values. Please enter again>\n')
                     else:
@@ -394,7 +394,7 @@ class PatientMedical:
                         print(error_message)
                     except pf.InvalidNameFormatError:
                         print("\n    < Wrong name format."
-                              "Please enter your child's first name and last name separated with a space>\n")
+                              " Please enter your child's first name and last name separated with a space>\n")
                     except ValueError:
                         print('\n    < NHS number needs to be 10 - digit numeric values. Please enter again>\n')
                     else:
@@ -760,7 +760,7 @@ class PatientMedical:
                 while True:
                     try:
                         print("Please use space to separate first and last names.")
-                        child_name = input("Please enter the full name of your child whose profile you would like to see: ")
+                        child_name = input("Please only enter the first name and last name of your child separated with a space: ")
                         full_name = child_name.split(' ')
                         if child_name == "0":
                             return 1
@@ -777,7 +777,8 @@ class PatientMedical:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
                     except pf.InvalidNameFormatError:
-                        print("\n    < Invalid answer. Please enter your child's full name with a space separating the first and last name>\n")
+                        print("\n    < Invalid answer. "
+                              "Please only enter your child's first name and last name separated with a space with a space>\n")
                     else:
                         break
                 self.a.execute("SELECT DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella "
