@@ -52,10 +52,16 @@ class Appointment:
                 raise EmptyAnswer()
             elif dr_options == '1':
                 y = self.choose_specific_dr()
-                self.choose_appointment(nhs_number, y)
+                if self.choose_specific_dr() == 0:
+                    pass
+                else:
+                    self.choose_appointment(nhs_number, y)
             elif dr_options == '2':
                 y = self.choose_any_dr()
-                self.choose_appointment(nhs_number, y)
+                if self.choose_any_dr() == 0:
+                    pass
+                else:
+                    self.choose_appointment(nhs_number, y)
             elif dr_options == '3':
                 y = self.choose_dr_gender(nhs_number)
                 self.choose_appointment(nhs_number, y)
@@ -82,7 +88,7 @@ class Appointment:
         if not dr_names:
             print("\nThere are no doctors currently available at the practice"
                   "\n")
-            pf.return_to_main()
+            return 0
         else:
             gp_details = pf.choose_dr(dr_names)
             return gp_details
@@ -95,7 +101,7 @@ class Appointment:
         if not dr_names:
             print("\nThere are no doctors currently available at the practice"
                   "\n")
-            pf.return_to_main()
+            return 0
         else:
             gp_list = []
             for dr in dr_names:

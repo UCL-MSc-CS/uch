@@ -135,13 +135,13 @@ def choose_dr(dr_names):
                 gp_chosen_email = gp_list[dr_options - 1][2]
                 gp_chosen_name = gp_list[dr_options - 1][1]
                 gp_details = [gp_chosen_email, gp_chosen_name]
-                print("You have chosen Dr {}".format(gp_chosen_name))
+                print("\nYou have chosen Dr {}".format(gp_chosen_name))
                 return gp_details
         except DrChoiceNotValid:
             print("\n\t< This is not a valid choice, please try again >"
                   "\n ")
         except ValueError:
-            print("\n\t< This is not a valid choice, please try again >"
+            print("\n\t< This is not a valid choice, please enter a number >"
                   "\n ")
 
 
@@ -412,7 +412,7 @@ def insert_appointment(start, gp_details, nhs_number):
 def return_to_main():
     """Returns user to main patient menu when typing '0'
     If user types anything else, will exit the program with a goodbye message"""
-    if input("Type [0] to return to the main menu: ").lower() == '0':
+    if input("Type [0] to return to the main menu or any other key to exit the UCL e-health system: ").lower() == '0':
         pass
     else:
         print("Thank you for using the UCH e-health system! Goodbye for now!")

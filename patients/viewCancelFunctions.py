@@ -54,10 +54,10 @@ def view_appointments(nhs_number):
 
         data = pd.DataFrame({'Appointment ID': appointment_id, 'Date and Time': date,
                              'Doctor': gp, 'Status': new_status})
-        print("********************************************")
+        print("\n********************************************")
         print(data.to_string(columns=['Appointment ID', 'Date and Time', 'Doctor',
                                       'Status'], index=False))
-        print("********************************************")
+        print("********************************************\n")
 
 
 def delete_appointment(cancel):
@@ -91,6 +91,6 @@ def check_app_id(nhs_number):
             print("\n\t< This appointment does not exist, please try again >"
                   "\n")
         except ValueError:
-            print("\n\t< This is not a valid option, please try again >"
+            print("\n\t< This is not a valid option, please enter a number >"
                   "\n")
 
