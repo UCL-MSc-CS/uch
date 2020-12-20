@@ -565,7 +565,7 @@ class adminFunctions():
                         print("\n   < Please provide a numerical input >\n")
                         #return adminFunctions.cout(self)
                     else:
-                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
+                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?", (check_number, nhsNumber))
                         items = self.c.fetchall()
                         if len(items) == 0:
                             print("< No record exists with this appointmentID >")
@@ -645,7 +645,7 @@ class adminFunctions():
                         print("\n   < Please provide a numerical input >\n")
                         #return adminFunctions.cout(self)
                     else:
-                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
+                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?", (check_number, nhsNumber))
                         items = self.c.fetchall()
                         if len(items) == 0:
                             print("< No record exists with this appointmentID >")
