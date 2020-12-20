@@ -521,7 +521,7 @@ class adminFunctions():
                 x = dt.now().hour
                 y = dt.now().minute
                 if y < 10:
-                    print("Successfully checked in {} at {a}:{c}{b}".format(firstsel[0][0], a=x,c=0, b=y))
+                    print("Successfully checked in {} at {a}:{c}{b}".format(firstsel[0][0], a=x, c=0, b=y))
                 else:
                     print("Successfully checked in {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
                 return 0
