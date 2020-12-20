@@ -302,27 +302,24 @@ def getPatientInfo(appointmentId):
 
     conn['cursor'].execute("""
             SELECT 
-                Appointment.nhsNumber,
-                patientEmail,
-                firstName,
-                lastName,
-                dateOfBirth,
-                gender,
-                addressLine1,
-                addressLine2,
-                postcode,
-                telephoneNumber,
-                appointmentID,
-                height,
-                weight,
-                bmi
+                A.nhsNumber,
+                P.patientEmail,
+                P.firstName,
+                P.lastName,
+                P.dateOfBirth,
+                P.gender,
+                P.addressLine1,
+                P.addressLine2,
+                P.postcode,
+                P.telephoneNumber,
+                A.appointmentID,
+                Q.height,
+                Q.weight,
+                Q.bmi
             FROM
-                Appointment
-            LEFT JOIN
-                PatientDetail
-            LEFT JOIN 
-                questionnaireTable
-            USING (nhsNumber)
+                Appointment A
+            LEFT JOIN PatientDetail P ON A.nhsNumber = P.nhsNumber
+            LEFT JOIN questionnaireTable Q ON P.nhsNumber = A.nhsNumber
             WHERE
                 appointmentID = ?
             """, (appointmentId,))

@@ -343,8 +343,5 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     savePrescription = Button(prescriptionFrame, text="Save Prescription", command=savePrescription)
     savePrescription.pack(pady=5)
 
-
+    root.after(2000, root.focus_force)
     root.mainloop()
-
-
-prescription("matthew.shorvon@ucl.ac.uk",10,"1234567890")

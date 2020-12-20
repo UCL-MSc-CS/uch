@@ -6,7 +6,7 @@ from functools import partial
 from GPs.prescription import prescription
 
 
-def appointmentnotes(doctoremail, appointmentid, nhsNumber):
+def appointmentnotes(doctoremail, appointmentid):
     # todo (longterm) use classes to display a label
     # todo make sure doctor email is used to ensure patient confidentiality
 
@@ -45,7 +45,7 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
     global root
     root = Tk()
     root.title('Appointment ID: ' + str(appointmentid))
-    root.geometry("1260x550+0+0")
+    root.geometry("1280x800")
     root.configure(background='SlateGray1')
 
     mainFrame = Frame(root)
@@ -74,7 +74,7 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
                                 font=('arial', 14, 'bold'), text='Patient information:', background='SlateGray1')
     dataFrameRight.pack(side=RIGHT)
 
-    complaintLabel = Label(dataFrameLeft, font=('arial', 12, 'bold'), text="Patient Complaint:", padx=2,
+    complaintLabel = Label(dataFrameLeft, font=('arial', 12, 'bold'), text="Reason for visit:", padx=2,
                            background='SlateGray1')
     complaintLabel.grid(row=0, column=0, sticky=W)
     global patientComplaintTextBox
@@ -125,6 +125,8 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
     # ------------------------- Patient Information -------------------------
 
     # Create notebook for tabs feature
+    s = ttk.Style()
+    s.configure('TNotebook.Tab', font=('URW Gothic L', '11', 'bold'))
     my_notebook = ttk.Notebook(dataFrameRight)
     my_notebook.pack()
 
@@ -264,6 +266,7 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
 
     #Pack to the screen
     allergyTree.pack(pady=20)
+    root.after(2000, root.focus_force)
 
     root.mainloop()
 
@@ -283,4 +286,4 @@ def saveNotes():
         pass
 
 
-# appointmentnotes('matthew.shorvon@ucl.ac.uk', 3, 1234567890)
+appointmentnotes('matthew.shorvon@ucl.ac.uk', 3, 1234567890)
