@@ -39,8 +39,11 @@ def PatientSummary(nhsNumber):
         for i in range(0,len(items)):
             print(items[i])
             date_unix = items[i][0]
+            print(date_unix)
             date_regular = uf.toregulartime(date_unix)
+            print(date_regular)
             date_regular = date_regular.strftime("%Y-%m-%d")
+            print(date_regular)
             diagnosis = items[i][1]
             if items[i][1] == '':
                 diagnosis = "Diagnosis pending"
@@ -52,12 +55,15 @@ def PatientSummary(nhsNumber):
         c.execute("""SELECT height, weight, bmi, smoking, alcoholUnit, drugs FROM questionnaireTable WHERE
         nhsNumber = ?""", (nhsNumber,))
         items = c.fetchall()
-        f.write("Height: " + "                    " + str(items[0][0]) + '\n')
-        f.write("Weight: " + "                    " + str(items[0][1]) + '\n')
-        f.write("BMI: " + "                       " + str(items[0][2]) + '\n')
-        f.write("Smoker: " + "                    " + str(items[0][3]) + '\n')
-        f.write("Units of Alcohol/Week): " + "    " + str(items[0][4]) + '\n')
-        f.write("Drug user: " + "                 " + str(items[0][5]) + '\n')
+        if items == []:
+            f.write("The patient has not provided this information \n")
+        else:
+            f.write("Height: " + "                    " + str(items[0][0]) + '\n')
+            f.write("Weight: " + "                    " + str(items[0][1]) + '\n')
+            f.write("BMI: " + "                       " + str(items[0][2]) + '\n')
+            f.write("Smoker: " + "                    " + str(items[0][3]) + '\n')
+            f.write("Units of Alcohol/Week): " + "    " + str(items[0][4]) + '\n')
+            f.write("Drug user: " + "                 " + str(items[0][5]) + '\n')
 
         f.write("--------------------------------------------\n")
         f.write("MEDICATION: \n")
@@ -122,3 +128,4 @@ def PatientSummary(nhsNumber):
 
     print("Summary downloaded, check your folder to see the file")
 
+PatientSummary(5604701515)
