@@ -233,15 +233,15 @@ def options(NHS_number):
             raise EmptyAnswerError()
         elif action == '1':
             x = Appointment()
-            x.bookAppointment(NHS_number)
+            x.book_appointment(NHS_number)
             options(NHS_number)
         elif action == '2':
             x = Appointment()
-            x.viewAppConfirmations(NHS_number)
+            x.view_app_confirmations(NHS_number)
             options(NHS_number)
         elif action == '3':
             x = Appointment()
-            x.cancelAppointment(NHS_number)
+            x.cancel_appointment(NHS_number)
             options(NHS_number)
         elif action == '4':
             quest_options(NHS_number)
