@@ -191,7 +191,7 @@ class Appointment:
                         print("You have requested to book an appointment on {} at {}, "
                               "\nYou will receive confirmation of your appointment "
                               "shortly!".format(date, chosen_time))
-                        self.book_appointment(nhs_number)
+                        pass
 
     def cancel_appointment(self, nhs_number):
         """ Presents user with all their appointments and allows them to choose to cancel one"""
@@ -203,7 +203,7 @@ class Appointment:
             pf.return_to_main()
         else:
             try:
-                print("\nChoose [1] to cancel an appointment"
+                print("Choose [1] to cancel an appointment"
                       "\nChoose [0] to exit to the main menu"
                       "\n********************************************")
                 options = input("Please select an option: ")
@@ -212,7 +212,17 @@ class Appointment:
                 elif options == '1':
                     cancel = vc.check_app_id(nhs_number)
                     vc.delete_appointment(cancel)
-                    pf.return_to_main()
+                    print("\nWould you like to cancel another appointment?"
+                          "\nChoose [1] to cancel an appointment"
+                          "\nChoose [0] to exit to the main menu"
+                          "\n********************************************")
+                    choice = input("Please select an option: ")
+                    if choice == '1':
+                        self.cancel_appointment(nhs_number)
+                    elif choice == '0':
+                        pass
+                    else:
+                        raise InvalidAnswer()
                 elif options == '0':
                     pass
                 else:

@@ -260,7 +260,9 @@ def choose_date(month, year):
                     if (year % 400) == 0:
                         if not 1 <= day <= 29:
                             raise LeapYear
-            if date_obj < current:
+            if date_obj == current:
+                return date
+            elif date_obj < current:
                 raise DateAfterCurrent
             else:
                 return date

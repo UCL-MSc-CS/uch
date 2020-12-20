@@ -66,7 +66,7 @@ def delete_appointment(cancel):
     c = connection.cursor()
     c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
     connection.commit()
-    print("You have cancelled your appointment")
+    print("You have cancelled appointment ID {}".format(cancel))
 
 
 def check_app_id(nhs_number):
@@ -83,7 +83,6 @@ def check_app_id(nhs_number):
             id_list = []
             for app_id in app_ids:
                 id_list.append(app_id[0])
-            print(id_list)
             if cancel not in id_list:
                 raise AppNotExist
             else:
