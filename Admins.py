@@ -685,7 +685,7 @@ class adminFunctions():
                             question_num = 6
 
                         while question_num == 6:
-                            gender = input("New gender (enter male/female/non-binary/prefer not to say): ")
+                            gender = input("Gender (enter male/female/non-binary/prefer not to say): ")
                             if gender == '0':
                                 return adminFunctions.managedet(self)
                                 break
@@ -722,8 +722,6 @@ class adminFunctions():
                                 break
                             elif not addl2:
                                 raise FieldEmpty()
-                            elif any(chr.isdigit() for chr in addl1) == False:
-                                raise InvalidAdd
                             question_num = 9
 
                         while question_num == 9:
