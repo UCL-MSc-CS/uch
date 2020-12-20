@@ -142,6 +142,7 @@ def quest_options(NHS_number):
         print("Choose [1] to see your medical profile")
         print("Choose [2] to take the lifestyle risk questionnaire")
         print("Choose [3] to update your medical history")
+        print("Choose [0] to go back")
         print("********************************************")
         action = input("Please select an option: ")
         if action == '':
@@ -162,8 +163,9 @@ def quest_options(NHS_number):
             x.insert_to_table(NHS_number)
             options(NHS_number)
         elif action == '3':
-            x = PatientMedical(NHS_number)
-            pf.medical_history_menu(NHS_number)
+            medical_history_menu(NHS_number)
+            options(NHS_number)
+        elif action == '0':
             options(NHS_number)
         else:
             raise InvalidAnswerError()
@@ -176,6 +178,40 @@ def quest_options(NHS_number):
         print(error)
         quest_options(NHS_number)
 
+def medical_history_menu(NHS_number):
+    try:
+        x = PatientMedical(NHS_number)
+        print("********************************************")
+        print("Choose [1] to provide vaccination history for you or your children (if any)")
+        print("Choose [2] to provide cancer related medical history for you or your family (if any)")
+        print("Choose [3] to provide pre-existing conditions for you or your children (if any)")
+        print("Choose [4] to provide medicine allergies for you or your children (if any)")
+        print("Choose [0] to go back")
+        print("********************************************")
+        action = input('Please select an option: ')
+        if action == '':
+            raise EmptyAnswerError()
+        elif action == '1':
+            x.vaccination(NHS_number)
+        elif action == '2':
+            x.cancer(NHS_number)
+        elif action == '3':
+            x.pre_existing_con(NHS_number)
+        elif action == '4':
+            x.med_allergy(NHS_number)
+        elif action == '0':
+            quest_options(NHS_number)
+        else:
+            raise InvalidAnswerError()
+    except InvalidAnswerError:
+        error = InvalidAnswerError()
+        print(error)
+        medical_history_menu(NHS_number)
+    except EmptyAnswerError:
+        error = EmptyAnswerError()
+        print(error)
+        medical_history_menu(NHS_number)
+
 def logout():
     from root.py import Menus
     x = Menu()
@@ -186,7 +222,7 @@ def options(NHS_number):
         uf.banner('Patient')
         print("What would you like to do next?")
         print("Choose [1] to book an appointment")
-        print("Choose [2] to view your confirmed appointments")
+        print("Choose [2] to view your appointments")
         print("Choose [3] to cancel an appointment")
         print("Choose [4] to see your medical profile")
         print("Choose [5] to see your contact details")
