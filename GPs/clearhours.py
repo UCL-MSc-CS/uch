@@ -7,7 +7,7 @@ dateformatstring = "%Y-%m-%d"
 
 def clearhours(doctoremail):
     print("--------------------------------------------")
-    print("\t Doctor Cancel Appointments")
+    print("\t Doctor Cancel/Decline Appointments")
     print("--------------------------------------------")
     date = uf.validatedate("Enter a date you would like to cancel an appointment.")
     if date == 'exit':

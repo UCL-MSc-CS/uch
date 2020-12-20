@@ -83,9 +83,9 @@ def printtodayappointments(doctoremail):
                         chosenNhsNumber = appointment[3]
                 return idNum, chosenNhsNumber
             else:
-                print("\t<You entered an invalid id number!>")
+                print("\n\t<You entered an invalid id number!>\n")
         except:
-            print("\t<That is not a integer value>")
+            print("\n\t<That is not a integer value>\n")
 
         choosecontinue = input("Would you like to try again y/n ? :")
         if choosecontinue.lower() == 'y':
@@ -94,5 +94,5 @@ def printtodayappointments(doctoremail):
             print("Returning to main menu......")
             return "",""
         else:
-            print("\t<Invalid option chosen, exiting today's appointments....>")
+            print("\n\t<Invalid option chosen, exiting today's appointments....>\n")
             return "",""

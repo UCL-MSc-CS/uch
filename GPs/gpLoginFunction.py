@@ -23,9 +23,9 @@ def login():
         db.commit()
         inactiveresults = c.fetchall()
         if not results:
-            print("Sorry, this email does not exist.")
+            print("\n\t<Sorry, this email does not exist>\n")
         elif inactiveresults:
-            print("This account has been deactivated. Please speak to an administrator to reactivate.")
+            print("\n\t<This account has been deactivated. Please speak to an administrator to reactivate>\n")
         else:
             password = results[0][1]
             break
@@ -37,7 +37,7 @@ def login():
             db.close()
             return "exitGPLogin",''
         if inputPassword != password:
-            print("Sorry, you have entered the incorrect password.")
+            print("\n\t<Sorry, you have entered the incorrect password>\n")
         else:
             db.close()
             doctorname = results[0][2] + " " + results[0][3]

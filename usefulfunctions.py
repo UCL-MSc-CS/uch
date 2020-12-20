@@ -1,5 +1,6 @@
 from datetime import datetime,timedelta
 import time
+import sys
 
 class EmptyValueError(Exception):
     pass
@@ -21,6 +22,9 @@ def validatedate(string):
             return date
         except EmptyValueError:
             print("\t<You need to enter a value, please try again...>")
+        except KeyboardInterrupt:
+            print("Closing program")
+            sys.exit()
         except:
             print("\t<Invalid date entered, please try again...>")
 
@@ -37,6 +41,9 @@ def validatetime(string):
             return time
         except EmptyValueError:
             print("\t<You need to enter a value, please try again...>")
+        except KeyboardInterrupt:
+            print("Closing program")
+            sys.exit()
         except:
             print("\t<Invalid time entered, Please try again...>")
 

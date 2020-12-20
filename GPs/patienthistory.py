@@ -18,5 +18,5 @@ def patienthistory(doctoremail,appointmentid,nhsNumber):
             print("********************************************")
             break
         else:
-            print("\t<Invalid option chosen. Please try again>")
+            print("\n\t<Invalid option chosen. Please try again>\n")
         print("********************************************")

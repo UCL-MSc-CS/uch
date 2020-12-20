@@ -51,6 +51,6 @@ def printtimetable(doctoremail):
             elif int(option) == 0:
                 break
             else:
-                print("\t<Invalid option choice, please try again>")
+                print("\n\t<Invalid option choice, please try again>\n")
         except:
-            print("\t<You didn't enter a number please try again>")
+            print("\n\t<You didn't enter a number please try again>\n")

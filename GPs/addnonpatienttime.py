@@ -29,7 +29,7 @@ def addnonpatienttime(doctoremail):
         elif choice == '0':
             break
         else:
-            print("\t <Invalid option chosen, Please try again>")
+            print("\n\t<Invalid option chosen, Please try again>\n")
         print("********************************************")
 
 def addholiday(doctoremail):
@@ -37,7 +37,7 @@ def addholiday(doctoremail):
     if startdate == 'exit':
         return
     elif startdate.date() < datetime.today().date():
-        print("\t<You cannot book a holiday in the past!>")
+        print("\n\t<You cannot book a holiday in the past!>\n")
         choice = input("Press [0] to try again, or any other entry to return to menu \n:")
         if choice == '0':
             addholiday(doctoremail)
@@ -51,7 +51,7 @@ def addholiday(doctoremail):
             datestring = datetime.strftime(single_date,dateformatstring)
             status = db.checkslotavailable(datestring, clinicstart, clinicend, [doctoremail])
             if status[0] == "unavailable":
-                print("\t<Sorry, you are busy during this period and cannot book your holiday>")
+                print("\n\t<Sorry, you are busy during this period and cannot book your holiday>\n")
                 choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
                 if choice == '0':
                     addholiday(doctoremail)
@@ -62,7 +62,7 @@ def addholiday(doctoremail):
             db.book_time(datestring, clinicstart, clinicend, reason, "", [doctoremail])
         print("Successfully booked holiday!!!")
     else:
-        print("\t <You have entered an end date that is before a start date. Please try again>")
+        print("\n\t<You have entered an end date that is before a start date. Please try again>\n")
 
 
 def addnonpatienthours(doctoremail):
@@ -70,7 +70,7 @@ def addnonpatienthours(doctoremail):
     if chosendate == 'exit':
         return
     if chosendate.date() < datetime.today().date():
-        print("\t<You cannot book non-patient hours in the past!>")
+        print("\n\t<You cannot book non-patient hours in the past!>\n")
         choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
         if choice == '0':
             addnonpatienthours(doctoremail)
@@ -92,13 +92,13 @@ def addnonpatienthours(doctoremail):
         db.book_time(datestring, starttimestring, endtimestring, reason, "", [doctoremail])
         print("Successfully booked in non patient hours for " + datestring)
     elif starttime < endtime and status[0] == 'unavailable':
-        print("\t <You already have booked time during this period, please check your timetable>")
+        print("\n\t<You already have booked time during this period, please check your timetable>\n")
         choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
         if choice == '0':
             addnonpatienthours(doctoremail)
         return
     else:
-        print("\t <You've entered an end time before a start time, please try again>")
+        print("\n\t<You've entered an end time before a start time, please try again>\n")
 
 def selectreason():
     while True:
@@ -112,6 +112,6 @@ def selectreason():
                 reason = reasondict[int(option)]
                 return reason
             else:
-                print("\t <You need to enter a value between 1 and " + len(reasondict) + ", Please try again!>")
+                print("\n\t<You need to enter a value between 1 and " + len(reasondict) + ", Please try again!>\n")
         except:
-            print("\t<You failed to enter  number try again>")
+            print("\n\t<You failed to enter  number try again>\n")
