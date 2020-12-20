@@ -239,8 +239,8 @@ def choose_date(month, year):
             if day == 0:
                 return 0
             date = "{}-{}-{:02}".format(year, str(month), day)
-            date_obj = to_date_time_obj00(date)
-            current = datetime.now()
+            date_obj = to_date_time_obj00(date).date()
+            current = datetime.now().date()
             for mm in days_31:
                 if mm == month:
                     if not 1 <= day <= 31:

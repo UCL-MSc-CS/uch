@@ -42,7 +42,6 @@ class Appointment:
             print("--------------------------------------------"
                   "\n         Patient Appointment Menu"
                   "\n--------------------------------------------"
-                  "\n********************************************"
                   "\nChoose [1] to book an appointment with a specific doctor"
                   "\nChoose [2] to book an appointment with any doctor"
                   "\nChoose [3] to book an appointment with a doctor of a specific gender"
@@ -191,7 +190,7 @@ class Appointment:
                     else:
                         start = pf.create_start(date, chosen_time)
                         pf.insert_appointment(start, gp_details, nhs_number)
-                        print("You have requested to book an appointment on {} at {}, "
+                        print("\nYou have requested to book an appointment on {} at {}, "
                               "\nYou will receive confirmation of your appointment "
                               "shortly!".format(date, chosen_time))
                         pass
