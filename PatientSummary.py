@@ -128,4 +128,5 @@ def PatientSummary(nhsNumber):
 
     print("Summary downloaded, check your folder to see the file")
 
-PatientSummary(5604701515)
+if __name__ == "__main__":
+    PatientSummary(5604701515)
