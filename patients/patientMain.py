@@ -86,7 +86,7 @@ class DateInFutureError(Error):
         super().__init__(self.message)
 
 class DateFormatError(Error):
-    def __init__(self, message="\n   < I'm sorry, this date in not in the proper YYYY-MM-DD format, with '-'s as separators, please try again > \n"):
+    def __init__(self, message="\n   < I'm sorry, this date is not in the proper YYYY-MM-DD format, with '-'s as separators, please try again > \n"):
         self.message = message
         super().__init__(self.message)
 
@@ -131,7 +131,7 @@ def check_NHS(NHS_number):
     except NotRegisteredError:
         error = NotRegisteredError()
         print(error)
-        logout()
+        task('logout')
     else:
         options(NHS_number)
 
@@ -212,10 +212,10 @@ def medical_history_menu(NHS_number):
         print(error)
         medical_history_menu(NHS_number)
 
-def logout():
-    from root.py import Menus
-    x = Menu()
-    x.MasterMenu()
+# def logout():
+#     from root.py import Menus
+#     x = Menu()
+#     x.MasterMenu()
 
 def options(NHS_number):
     try:
@@ -252,7 +252,7 @@ def options(NHS_number):
             summary(NHS_number)
             update_options(NHS_number)
         elif action == '0':
-            logout()
+            task('logout')
         else:
             raise InvalidAnswerError()
     except InvalidAnswerError:
@@ -467,7 +467,7 @@ def update_telephone_number(NHS_number):
         elif telephone_number == '0':
             update_options(NHS_number)
         telephone_number = re.sub("[^0-9]", "", telephone_number)
-        if len(telephone_number) > 12 or len(telephone_number) < 11:
+        if len(telephone_number) > 17 or len(telephone_number) < 11:
             raise InvalidTelephoneError()
         else:
             telephone_number = int(telephone_number)
@@ -674,7 +674,7 @@ def first_name_q(new_patient):
         if first_name == '':
             raise EmptyAnswerError()
         elif first_name == '0':
-            task()
+            task("start")
         x = first_name.replace(" ", "")
         if (any(str.isdigit(y) for y in x)) == True:
             raise InvalidAnswerError()
@@ -697,7 +697,7 @@ def last_name_q(new_patient):
         if last_name == '':
             raise EmptyAnswerError()
         elif last_name == '0':
-            task()
+            task("start")
         elif last_name == '1':
             first_name_q(new_patient)
         x = last_name.replace(" ", "")
@@ -721,7 +721,7 @@ def date_of_birth_q(new_patient):
         if date_of_birth == '':
             raise EmptyAnswerError()
         elif date_of_birth == '0':
-            task()
+            task("start")
         elif date_of_birth == '1':
             last_name_q(new_patient)
         x = date_of_birth.replace(" ", "")
@@ -797,7 +797,7 @@ def gender_q(new_patient):
             new_patient["gender"] = gender
             address_line_1_q(new_patient)
         elif choice == "4":
-            task()
+            task("start")
         elif choice == "5":
             date_of_birth_q(new_patient)
         else:
@@ -818,7 +818,7 @@ def address_line_1_q(new_patient):
         if address_line_1 == '':
             raise EmptyAnswerError()
         elif address_line_1 == '0':
-            task()
+            task("start")
         elif address_line_1 == "1":
             gender_q(new_patient)
         elif len(address_line_1) > 100:
@@ -840,7 +840,7 @@ def address_line_2_q(new_patient):
         address_line_2 = input("Address Line 2 (press 0 to exit registration, press 1 to go back): ")
         address_line_2 = address_line_2.strip().title()
         if address_line_2 == '0':
-            task()
+            task("start")
         elif address_line_2 == "1":
             address_line_1_q(new_patient)
         elif len(address_line_2) > 100:
@@ -860,7 +860,7 @@ def city_q(new_patient):
         if city == '':
             raise EmptyAnswerError()
         elif city == '0':
-            task()
+            task("start")
         elif city == "1":
             address_line_2_q(new_patient)
         elif len(city) > 100:
@@ -888,7 +888,7 @@ def postcode_q(new_patient):
         if postcode == '':
             raise EmptyAnswerError()
         elif postcode == '0':
-            task()
+            task("start")
         elif postcode == "1":
             city_q(new_patient)
         elif len(postcode) > 100:
@@ -911,11 +911,11 @@ def telephone_number_q(new_patient):
         if telephone_number == '':
             raise EmptyAnswerError()
         elif telephone_number == '0':
-            task()
+            task("start")
         elif telephone_number == "1":
             postcode_q(new_patient)
         telephone_number = re.sub("[^0-9]", "", telephone_number)
-        if len(telephone_number) > 12 or len(telephone_number) < 11:
+        if len(telephone_number) > 17 or len(telephone_number) < 11:
             raise InvalidTelephoneError()
         else:
             telephone_number = int(telephone_number)
@@ -926,7 +926,7 @@ def telephone_number_q(new_patient):
         print(error)
         telephone_number_q(new_patient)
     except InvalidTelephoneError:
-        error = InvalidTelephone()
+        error = InvalidTelephoneError()
         print(error)
         telephone_number_q(new_patient)
 
@@ -936,7 +936,7 @@ def patient_email_q(new_patient):
         if patient_email == '':
             raise EmptyAnswerError()
         elif patient_email == '0':
-            task()
+            task("start")
         elif patient_email == "1":
             telephone_number_q(new_patient)
         elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
@@ -973,7 +973,7 @@ def password_q(new_patient):
         if password == '':
             raise EmptyAnswerError()
         elif password == '0':
-            task()
+            task("start")
         elif password == "1":
             patient_email_q(new_patient)
         else:
@@ -982,7 +982,7 @@ def password_q(new_patient):
             x.register()
             print("Thank you, " + x.first_name + ", for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days.")
             summary(x.NHS_number)
-            logout()
+            task('logout')
     except EmptyAnswerError:
         error = EmptyAnswerError()
         print(error)
@@ -1003,33 +1003,36 @@ def register():
 
 
 # Main Patient Function
-def task():
+def task(ipt):
     try:
-        print("********************************************")
-        print("Choose [1] to register for a new account")
-        print("Choose [2] to login")
-        print("Choose [3] to go back to the main menu")
-        print("Choose [0] to exit")
-        print("********************************************")
-        action = input("Please select an option: ")
-        if action == '':
-            raise EmptyAnswerError()
-        elif action == '1':
-            register()
-        elif action == '2':
-            login()
-        elif action == '3':
-            logout()
-        elif action == '0':
-            print("Thank you for using the UCH e-health system! Goodbye for now!")
-            exit()
-        else:
-            raise InvalidAnswerError()
+        if ipt == 'logout':
+            return 0
+        if ipt == "start":
+            print("********************************************")
+            print("Choose [1] to register for a new account")
+            print("Choose [2] to login")
+            print("Choose [3] to go back to the main menu")
+            print("Choose [0] to exit")
+            print("********************************************")
+            action = input("Please select an option: ")
+            if action == '':
+                raise EmptyAnswerError()
+            elif action == '1':
+                register()
+            elif action == '2':
+                login()
+            elif action == '3':
+                return 0
+            elif action == '0':
+                print("Thank you for using the UCH e-health system! Goodbye for now!")
+                exit()
+            else:
+                raise InvalidAnswerError()
     except InvalidAnswerError:
         error = InvalidAnswerError()
         print(error)
-        task()
+        task("start")
     except EmptyAnswerError:
         error = EmptyAnswerError()
         print(error)
-        task()
+        task("start")
