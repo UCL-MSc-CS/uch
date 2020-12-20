@@ -2,6 +2,7 @@ import sqlite3 as sql
 from datetime import datetime as dt
 from datetime import date 
 import usefulfunctions as uf
+import pandas as pd
 
 """exceptions under here"""
 # still need to come up with UK postcode validity check - make user input space separated post code,
@@ -483,92 +484,164 @@ class adminFunctions():
                     return 2
 
     def cin(self):
-        try:
-            intime = dt.now()
-            print("********************************************")
-            In = str(input("Type in appointment id (press 0 to go back): "))
-            if In == "0":
-                return 0
-            if not In:
-                raise FieldEmpty()
-            check_number = int(In)
-        except FieldEmpty:
-            error = FieldEmpty()
-            print(error)
-            return adminFunctions.cin(self)
-        except ValueError:
-            print("\n   < Please provide a numerical input >\n")
-            return adminFunctions.cin(self)
-        else:
-            self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
-            items = self.c.fetchall()
-            if len(items) == 0:
-                print("< No record exists with this appointmentID >")
-                return 1
-            self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (check_number,))
-            items = self.c.fetchall()
-            if items[0][0] != 0:
-                print("< A check-in time has already been provided for that appointment >")
-                return 1
+        masterback = 1
+        while masterback == 1:
+            try:
+                print("********************************************")
+                nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
+                self.c.execute("""SELECT appointmentID, start FROM Appointment 
+                    WHERE nhsNumber =? ORDER BY appointmentID ASC""", [nhsNumber])
+                appointments = self.c.fetchall()
+                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
+                nhsq = self.c.fetchall()
+                if nhsNumber == "0":
+                    masterback = 2
+                    break
+                elif not nhsNumber:
+                    raise FieldEmpty()
+                elif len(nhsq) < 1:
+                    raise nhsNotExists
+                elif len(appointments) == 0:
+                    raise DateInvalidError
+            except FieldEmpty:
+                error = FieldEmpty()
+                print(error)
+            except DateInvalidError:
+                print("\n   <This person has no booked appointments> \n")
+            except nhsNotExists:
+                error = nhsNotExists()
+                print(error)
             else:
-                unixd = dt.utcnow().timestamp()
-                self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
-                                Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
-                                appointmentID = ?""", (check_number,))
-                firstsel = self.c.fetchall()
-                self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unixd, check_number))
-                self.connection.commit()
-                x = dt.now().hour
-                y = dt.now().minute
-                if y < 10:
-                    print("Successfully checked in {} at {a}:{c}{b}".format(firstsel[0][0], a=x, c=0, b=y))
-                else:
-                    print("Successfully checked in {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
-                return 0
+                print("********************************************")
+                print("AppointmentID".ljust(15, ' '), "Start Time")
+                for i in appointments:
+                    print(str(i[0]).ljust(15, " "), uf.toregulartime(i[1]))
+                back1 = 1
+                while back1 == 1:
+                    try:
+                        intime = dt.now()
+                        print("********************************************")
+                        In = str(input("Type in appointment id to check in (press 0 to go back): "))
+                        if In == "0":
+                            back1 = 2
+                            break
+                            #return 0
+                        if not In:
+                            raise FieldEmpty()
+                        check_number = int(In)
+                    except FieldEmpty:
+                        error = FieldEmpty()
+                        print(error)
+                        #return adminFunctions.cout(self)
+                    except ValueError:
+                        print("\n   < Please provide a numerical input >\n")
+                        #return adminFunctions.cout(self)
+                    else:
+                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
+                        items = self.c.fetchall()
+                        if len(items) == 0:
+                            print("< No record exists with this appointmentID >")
+                            return 1
+                        self.c.execute("SELECT checkIn FROM Appointment WHERE appointmentID = ?", (check_number,))
+                        items = self.c.fetchall()
+                        if items[0][0] != 0:
+                            print("< A check-in time has already been provided for that appointment >")
+                            return 1
+                        else:
+                            unixd = dt.utcnow().timestamp()
+                            self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
+                            Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
+                            appointmentID = ?""", (check_number,))
+                            firstsel = self.c.fetchall()
+                            self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unixd, check_number))
+                            self.connection.commit()
+                            x = dt.now().hour
+                            y = dt.now().minute
+                            if y < 10:
+                                print("Successfully checked in {} at {a}:{c}{b}".format(firstsel[0][0], a=x,c=0, b=y))
+                            else:
+                                print("Successfully checked in {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
+                            return 0
 
     def cout(self):
-        try:
-            intime = dt.now()
-            print("********************************************")
-            In = str(input("Type in appointment id (press 0 to go back): "))
-            if In == "0":
-                return 0
-            if not In:
-                raise FieldEmpty()
-            check_number = int(In)
-        except FieldEmpty:
-            error = FieldEmpty()
-            print(error)
-            return adminFunctions.cout(self)
-        except ValueError:
-            print("\n   < Please provide a numerical input >\n")
-            return adminFunctions.cout(self)
-        else:
-            self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
-            items = self.c.fetchall()
-            if len(items) == 0:
-                print("< No record exists with this appointmentID >")
-                return 1
-            self.c.execute("SELECT checkOut FROM Appointment WHERE appointmentID = ?", (check_number,))
-            items = self.c.fetchall()
-            if items[0][0] != 0:
-                print("< A check-out time has already been provided for that appointment >")
-                return 1
+        masterback = 1
+        while masterback == 1:
+            try:
+                print("********************************************")
+                nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
+                self.c.execute("""SELECT appointmentID, start FROM Appointment 
+                    WHERE nhsNumber =? ORDER BY appointmentID ASC""", [nhsNumber])
+                appointments = self.c.fetchall()
+                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
+                nhsq = self.c.fetchall()
+                if nhsNumber == "0":
+                    masterback = 2
+                    break
+                elif not nhsNumber:
+                    raise FieldEmpty()
+                elif len(nhsq) < 1:
+                    raise nhsNotExists
+                elif len(appointments) == 0:
+                    raise DateInvalidError
+            except FieldEmpty:
+                error = FieldEmpty()
+                print(error)
+            except DateInvalidError:
+                print("\n   <This person has no booked appointments> \n")
+            except nhsNotExists:
+                error = nhsNotExists()
+                print(error)
             else:
-                unixd = dt.utcnow().timestamp()
-                self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
-                Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
-                appointmentID = ?""", (check_number,))
-                firstsel = self.c.fetchall()
-                self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, check_number))
-                self.connection.commit()
-                x = dt.now().hour
-                y = dt.now().minute
-                if y < 10:
-                    print("Successfully checked out {} at {a}:{c}{b}".format(firstsel[0][0], a=x,c=0, b=y))
-                else:
-                    print("Successfully checked out {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
-                return 0
+                print("********************************************")
+                print("AppointmentID".ljust(15, ' '), "Start Time")
+                for i in appointments:
+                    print(str(i[0]).ljust(15, " "), uf.toregulartime(i[1]))
+                back1 = 1
+                while back1 == 1:
+                    try:
+                        intime = dt.now()
+                        print("********************************************")
+                        In = str(input("Type in appointment id to check out (press 0 to go back): "))
+                        if In == "0":
+                            back1 = 2
+                            break
+                            #return 0
+                        if not In:
+                            raise FieldEmpty()
+                        check_number = int(In)
+                    except FieldEmpty:
+                        error = FieldEmpty()
+                        print(error)
+                        #return adminFunctions.cout(self)
+                    except ValueError:
+                        print("\n   < Please provide a numerical input >\n")
+                        #return adminFunctions.cout(self)
+                    else:
+                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
+                        items = self.c.fetchall()
+                        if len(items) == 0:
+                            print("< No record exists with this appointmentID >")
+                            return 1
+                        self.c.execute("SELECT checkOut FROM Appointment WHERE appointmentID = ?", (check_number,))
+                        items = self.c.fetchall()
+                        if items[0][0] != 0:
+                            print("< A check-out time has already been provided for that appointment >")
+                            return 1
+                        else:
+                            unixd = dt.utcnow().timestamp()
+                            self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
+                            Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
+                            appointmentID = ?""", (check_number,))
+                            firstsel = self.c.fetchall()
+                            self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, check_number))
+                            self.connection.commit()
+                            x = dt.now().hour
+                            y = dt.now().minute
+                            if y < 10:
+                                print("Successfully checked out {} at {a}:{c}{b}".format(firstsel[0][0], a=x,c=0, b=y))
+                            else:
+                                print("Successfully checked out {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
+                            return 0
 
     def managedet(self):
         masterback = 0
