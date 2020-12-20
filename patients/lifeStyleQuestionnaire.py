@@ -361,13 +361,18 @@ class RiskProfile:
 
     def insert_to_table(self, nhs_number):
         self.answers.insert(0, nhs_number)
-        question_query = """INSERT INTO questionnaireTable (nhsNumber, exercise, exerciseType, exerciseFrequency,
-        exerciseDuration, goal, height, weight, bmi, smoking, drugs, drugType, alcohol, 
-        alcoholUnit, meat, diet, caffeine)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-        self.a.execute(question_query, self.answers)
-        self.connection.commit()
-        self.connection.close()
+        try:
+            question_query = """INSERT INTO questionnaireTable (nhsNumber, exercise, exerciseType, exerciseFrequency,
+            exerciseDuration, goal, height, weight, bmi, smoking, drugs, drugType, alcohol, 
+            alcoholUnit, meat, diet, caffeine)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+            self.a.execute(question_query, self.answers)
+        except Exception:
+            print('No answers saved. Please remember to come back to finish the questions next time')
+            return 1
+        else:
+            self.connection.commit()
+            self.connection.close()
         # self.a.execute("SELECT * FROM questionnaireTable")
         # result = self.a.fetchall()
         # print(result)

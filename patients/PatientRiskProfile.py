@@ -200,8 +200,8 @@ class PatientMedical:
                     except pf.InvalidConditionFormatError:
                         error_message = pf.InvalidConditionFormatError()
                         print(error_message)
-                    except ValueError:
-                        print('\n    < Please enter a non-numeric value>\n')
+                    # except ValueError:
+                    #     print('\n    < Please enter a non-numeric value>\n')
                     else:
                         break
                 condition = []
@@ -228,7 +228,7 @@ class PatientMedical:
             if menu_choice == "2":
                 while True:
                     try:
-                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit: ")
+                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit: ").lower()
                         self.nhs_number_child = int(input("Please enter {}'s nhs number: ".format(self.child_name)))
                         full_name = self.child_name.split(' ')
                         if self.child_name == "0":
@@ -249,7 +249,7 @@ class PatientMedical:
                         print(error_message)
                     except pf.InvalidNameFormatError:
                         print("\n    < Wrong name format."
-                              "Please enter your child's full name with a space separating the first and last name>\n")
+                              "Please enter your child's first name and last name separated with a space>\n")
                     except ValueError:
                         print('\n    < NHS number needs to be 10 - digit numeric values. Please enter again>\n')
                     else:
@@ -260,7 +260,7 @@ class PatientMedical:
                     try:
                         major_illness = input('Does {} have any pre-existing conditions?'
                         '\nIf so, please enter the name of the pre-existing condition using comma to '
-                        'separate different conditions. Otherwise, please enter 0: '.format(self.child_name)).split(',')
+                        'separate different conditions. Otherwise, please enter 0: '.format(self.child_name)).lower().split(',')
                         if major_illness == ['0']:
                             return 1
                         if major_illness == ['']:
@@ -275,8 +275,8 @@ class PatientMedical:
                     except pf.InvalidConditionFormatError:
                         error_message = pf.InvalidConditionFormatError()
                         print(error_message)
-                    except ValueError:
-                        print('\n    < Please enter a non-numeric value or 0>\n')
+                    # except ValueError:
+                    #     print('\n    < Please enter a non-numeric value or 0>\n')
                     else:
                         break
                 condition = []
@@ -334,7 +334,7 @@ class PatientMedical:
                         med_allergy = input('Do you have any allergies to any medicines?'
                                                 '\nIf so, please enter the name of the medicine using comma to '
                                                 'separate different types. Otherwise, please enter 0: ').lower().split(',')
-                        if med_allergy == ['0']:
+                        if med_allergy == ['0']:  # could be a bug. check
                             return 1
                         if med_allergy == ['']:
                             raise pf.EmptyFieldError()
@@ -348,8 +348,8 @@ class PatientMedical:
                     except pf.InvalidAllergyFormatError:
                         error_message = pf.InvalidAllergyFormatError()
                         print(error_message)
-                    except ValueError:
-                        print('\n    < Please enter a non-numeric value>\n')
+                    # except ValueError:
+                    #     print('\n    < Please enter a non-numeric value>\n')
                     else:
                         break
                 allergy = []
@@ -373,7 +373,7 @@ class PatientMedical:
             if menu_choice == "2":
                 while True:
                     try:
-                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit: ")
+                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit: ").lower()
                         self.nhs_number_child = int(input("Please enter {}'s nhs number: ".format(self.child_name)))
                         full_name = self.child_name.split(' ')
                         if self.child_name == "0":
@@ -394,7 +394,7 @@ class PatientMedical:
                         print(error_message)
                     except pf.InvalidNameFormatError:
                         print("\n    < Wrong name format."
-                              "Please enter your child's full name with a space separating the first and last name>\n")
+                              "Please enter your child's first name and last name separated with a space>\n")
                     except ValueError:
                         print('\n    < NHS number needs to be 10 - digit numeric values. Please enter again>\n')
                     else:
@@ -406,7 +406,7 @@ class PatientMedical:
                         med_allergy = input('Does {} have any allergies to any medicines?'
                                             '\nIf so, please enter the name of the medicine using comma to '
                                             'separate different types. Otherwise, please enter 0: '.format(self.child_name)).lower().split(',')
-                        if med_allergy == ['0']:
+                        if med_allergy == ['0']:  # could be a bug if. check
                             return 1
                         if med_allergy == ['']:
                             raise pf.EmptyFieldError()
@@ -420,8 +420,8 @@ class PatientMedical:
                     except pf.InvalidAllergyFormatError:
                         error_message = pf.InvalidAllergyFormatError()
                         print(error_message)
-                    except ValueError:
-                        print('\n    < Please enter a non-numeric value>\n')
+                    # except ValueError:
+                    #     print('\n    < Please enter a non-numeric value>\n')
                     else:
                         break
                 allergy = []
@@ -451,7 +451,8 @@ class PatientMedical:
                         # or the family relation (i.e sister, brother, daughter, mother etc.) with whome has had cancer
         # query set up in the future if needed: WHERE cancerRelation != "1" AND != "0" AND != "None" AND cancerAge <50
         print("Thank you! The following questions are concerned with your medical history and "
-              "the medical history of your family to assess the genetic risk of certain hereditary diseases.")
+              "the medical history of your family"
+              "\n These questions are to assess the genetic risk of certain hereditary diseases.")
         while True:
             print("*"*44)
             print("Choose [1] provide your own cancer history"
@@ -476,9 +477,12 @@ class PatientMedical:
                     break
             print('Please enter your answers to the following questions with Y/N.')
             if menu_choice == "1":
+                self.cancer_history = []
                 while True:
                     try:
                         cancer = input('Have you ever been diagnosed with cancer: ').lower()
+                        if cancer == '0':
+                            return 1
                         if not cancer:
                             raise pf.EmptyFieldError()
                         if cancer != "y" and cancer != "n":
@@ -495,15 +499,16 @@ class PatientMedical:
                     print("Please use commas when entering multiple values.")
                     while True:
                         try:
-                            cancer_type = input("Please tell us the type(s) of cancer that was diagnosed: ").split(",")
-                            if not cancer_type:
+                            cancer_type = input("Please tell us the type(s) of cancer that was diagnosed: ").lower().split(",")
+                            if cancer_type == ['0']:
+                                return 1
+                            if cancer_type == ['']:
                                 raise pf.EmptyFieldError()
-                        # what if user enters a numeric value
                         except pf.EmptyFieldError:
                             error_message = pf.EmptyFieldError()
                             print(error_message)
-                        except pf.InvalidAnswerError:
-                            print("\n    < Invalid answer. Please enter a non-numeric value>\n")
+                        # except pf.InvalidAnswerError:
+                        #     print("\n    < Invalid answer. Please enter a non-numeric value>\n")
                         else:
                             break
                     for cancer_name in cancer_type:
@@ -513,23 +518,25 @@ class PatientMedical:
                         while True:
                             try:
                                 cancer_age = int(input('How old were you when you were diagnosed with {} cancer: '.format(c)))
+                                if cancer_age == 0:
+                                    return 1
                                 if not cancer_age:
                                     raise pf.EmptyFieldError()
-                                if type(cancer_age) is not int:
-                                    raise ValueError()
-                                if cancer_age >= 150:
+                                # if type(cancer_age) is not int:
+                                #     raise ValueError()
+                                if cancer_age < 0 or cancer_age >= 150:
                                     raise pf.InvalidAnswerError()
                             except pf.EmptyFieldError:
                                 error_message = pf.EmptyFieldError()
                                 print(error_message)
-                            except ValueError:
-                                print("\n    < Invalid answer. Please enter a numeric value>\n")
                             except pf.InvalidAnswerError:
                                 print("\n    < Invalid answer. Please enter the correct age>\n")
+                            except ValueError:
+                                print("\n    < Invalid answer. Please enter a numeric value>\n")
                             else:
                                 break
                         row_record = [nhs_number, self.cancer_relation, cancer_name, cancer_age]
-                        self.cancer_history.append(tuple(row_record))
+                        self.cancer_history.append(tuple(row_record))  # This is a list of tuples containing patient's cancer info that was just entered
                     self.a.execute("""
                                     SELECT * FROM cancer WHERE nhsNumber =?
                                     """, [nhs_number])
@@ -541,12 +548,13 @@ class PatientMedical:
                     else:  # something is wrong in this else statement
                         determinator = []
                         for each_row in query_result:
-                            if self.cancer_history[0] in each_row and self.cancer_history[1] in each_row and \
-                                    self.cancer_history[2] in each_row and self.cancer_history[3] in each_row:
-                                print('Sorry, you already updated this information before')
-                                determinator.append('1')
-                                break
-                        if determinator == []:
+                            for each_record in self.cancer_history:
+                                if each_record[0] in each_row and each_record[1] in each_row and \
+                                        each_record[2] in each_row and str(each_record[3]) in each_row:
+                                    print('Sorry, you already updated this information before')
+                                    determinator.append('1')
+                                    break
+                        if not determinator:
                             self.a.executemany("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge)
                                                                 VALUES (?, ?, ?, ?)""", self.cancer_history)
                             self.connection.commit()
@@ -558,21 +566,29 @@ class PatientMedical:
                                     SELECT * FROM cancer WHERE nhsNumber =?
                                     """, [nhs_number])
                     query_result = self.a.fetchall()
-                    determinator = []
-                    for each_row in query_result:
-                        if self.cancer_history[0] in each_row and self.cancer_history[1] in each_row:
-                            print('Sorry, you already updated that you have never had cancer before')
-                            determinator.append('1')
-                            break
-                    if determinator == []:
-                        self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation)
-                                                                    VALUES (?, ?)""", self.cancer_history)
+                    if not query_result:
+                        self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation) 
+                                          VALUES (?, ?)""", self.cancer_history)
                         self.connection.commit()
+                    else:
+                        determinator = []
+                        for each_row in query_result:
+                            if self.cancer_history[0] in each_row and self.cancer_history[1] in each_row:
+                                print('Sorry, you already updated that you have never had cancer before')
+                                determinator.append('1')
+                                break
+                        if not determinator:
+                            self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation) 
+                                              VALUES (?, ?)""", self.cancer_history)
+                            self.connection.commit()
             elif menu_choice == "2":
+                self.cancer_history = []
                 while True:
                     try:
                         cancer = input('Has anyone in your immediate family, parents, children, or siblings, '
                                        'ever been diagnosed with cancer: ').lower()
+                        if cancer == '0':
+                            return 1
                         if not cancer:
                             raise pf.EmptyFieldError()
                         if cancer != "y" and cancer != "n":
@@ -587,15 +603,16 @@ class PatientMedical:
                 if cancer == "y":
                     while True:
                         try:
-                            cancer_type = input("Please tell us the type(s) of cancer that was diagnosed: ").split(",")
-                            if not cancer_type:
+                            cancer_type = input("Please tell us the type(s) of cancer that was diagnosed: ").lower().split(",")
+                            if cancer_type == ['0']:
+                                return 1
+                            if cancer_type == ['']:
                                 raise pf.EmptyFieldError()
-                            # what if user enters a numeric value?
                         except pf.EmptyFieldError:
                             error_message = pf.EmptyFieldError()
                             print(error_message)
-                        except pf.InvalidAnswerError:
-                            print("\n    < Invalid answer. Please enter a non-numeric value>\n")
+                        # except pf.InvalidAnswerError:
+                        #     print("\n    < Invalid answer. Please enter a non-numeric value>\n")
                         else:
                             break
                     for cancer_name in cancer_type:
@@ -605,37 +622,47 @@ class PatientMedical:
                         while True:
                             try:
                                 self.cancer_relation = input('What is your relation with this family member who was diagnosed with {} cancer: '.format(c)).lower()
+                                if self.cancer_relation == '0':
+                                    return 1
                                 if self.cancer_relation == "":
                                     raise pf.EmptyFieldError()
-                                # if user enters a numeric value?
                             except pf.EmptyFieldError:
                                 error_message = pf.EmptyFieldError()
                                 print(error_message)
-                            except pf.InvalidAnswerError:
-                                print("\n    < Invalid answer. Please enter a non-numeric value>\n")
-                            except pf.InvalidNameFormatError:
-                                print("\n    < Please do not use any special characters or punctuations in your answer>\n")
+                            # except pf.InvalidAnswerError:
+                            #     print("\n    < Invalid answer. Please enter a non-numeric value>\n")
+                            # except pf.InvalidNameFormatError:
+                            #     print("\n    < Please do not use any special characters or punctuations in your answer>\n")
                             else:
                                 break
                         while True:
                             try:
                                 cancer_age = int(input('How old was the family member diagnosed with {} cancer: '.format(c)))
-                                if cancer_age == "":
-                                    raise pf.EmptyFieldError()
-                                # if user enters a non-numeric value?
-                            except pf.EmptyFieldError:
-                                error_message = pf.EmptyFieldError()
-                                print(error_message)
-                            except pf.InvalidAnswerError:
+                                if cancer_age == 0:
+                                    return 1
+                                if cancer_age < 0 or cancer_age >= 150:
+                                    raise pf.InvalidAnswerError()
+                            #     if cancer_age == "":
+                            #         raise pf.EmptyFieldError()
+                            # except pf.EmptyFieldError:
+                            #     error_message = pf.EmptyFieldError()
+                            #     print(error_message)
+                            except ValueError:
                                 print("\n    < Invalid answer. Please enter a numeric value>\n")
-                            except pf.InvalidNameFormatError:
-                                print("\n    < Please do not use any special characters or punctuations in your answer>\n")
+                            except pf.InvalidAnswerError:
+                                print("\n    < Invalid answer. Please enter a correct>\n")
+                            # except pf.InvalidNameFormatError:
+                            #     print("\n    < Please do not use any special characters or punctuations in your answer>\n")
                             else:
                                 break
                         row_record = [nhs_number, self.cancer_relation, cancer_name, cancer_age]
                         self.cancer_history.append(tuple(row_record))
+                    choice_cancer_relation = [1, 0, 'None']
                     self.a.execute("""
-                                    SELECT * FROM cancer WHERE nhsNumber =?
+                                    SELECT * FROM cancer WHERE nhsNumber =? AND 
+                                    cancerRelation != '1' AND 
+                                    cancerRelation != '0' AND 
+                                    cancerRelation != 'None'
                                     """, [nhs_number])
                     query_result = self.a.fetchall()
                     if not query_result:
@@ -645,12 +672,15 @@ class PatientMedical:
                     else:  # something is wrong in this else statement
                         determinator = []
                         for each_row in query_result:
-                            if self.cancer_history[0] in each_row and self.cancer_history[1] in each_row:
-                                if self.cancer_history[2] in each_row and self.cancer_history[3] in each_row:
+                            print(each_row)
+                            for each_record in self.cancer_history:
+                                print(each_record)
+                                if each_record[0] in each_row and each_record[1] in each_row and \
+                                        each_record[2] in each_row and str(each_record[3]) in each_row:
                                     print('Sorry, you already updated this information before')
                                     determinator.append('1')
                                     break
-                        if determinator == []:
+                        if not determinator:
                             self.a.executemany("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge)
                                                                 VALUES (?, ?, ?, ?)""", self.cancer_history)
                             self.connection.commit()
@@ -663,17 +693,20 @@ class PatientMedical:
                                     SELECT * FROM cancer WHERE nhsNumber =?
                                     """, [nhs_number])
                     query_result = self.a.fetchall()
-                    determinator = []
-                    for each_row in query_result:
-                        if self.cancer_history[0] in each_row and self.cancer_history[1] in each_row:
-                            print('Sorry, you already updated this information before')
-                            determinator.append('1')
-                            break
-                    if determinator == []:
-                        self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation) 
-                                        VALUES (?, ?)""", self.cancer_history)
+                    if not query_result:
+                        self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation) VALUES (?, ?)""", self.cancer_history)
                         self.connection.commit()
-
+                    else:
+                        determinator = []
+                        for each_row in query_result:
+                            if self.cancer_history[0] in each_row and self.cancer_history[1] in each_row:
+                                print('Sorry, you already updated this information before')
+                                determinator.append('1')
+                                break
+                        if determinator == []:
+                            self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation) 
+                                            VALUES (?, ?)""", self.cancer_history)
+                            self.connection.commit()
 
 
 # Display all types of medical related profile for the patient and the patient's children.
