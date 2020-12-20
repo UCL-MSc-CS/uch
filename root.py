@@ -154,7 +154,7 @@ while True:
                                     else:
                                         print("< Not a valid option >")
                                 except ValueError:
-                                    print("< Not a valid choice1 >")
+                                    print("< Not a valid choice >")
 
                             #updating/deleting patient details
                             elif selection == 5:
