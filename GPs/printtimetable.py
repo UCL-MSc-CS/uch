@@ -52,5 +52,5 @@ def printtimetable(doctoremail):
                 break
             else:
                 print("\n\t<Invalid option choice, please try again>\n")
-        except:
+        except ValueError:
             print("\n\t<You didn't enter a number please try again>\n")

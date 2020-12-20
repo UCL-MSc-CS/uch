@@ -84,7 +84,7 @@ def printtodayappointments(doctoremail):
                 return idNum, chosenNhsNumber
             else:
                 print("\n\t<You entered an invalid id number!>\n")
-        except:
+        except ValueError:
             print("\n\t<That is not a integer value>\n")
 
         choosecontinue = input("Would you like to try again y/n ? :")

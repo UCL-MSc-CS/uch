@@ -22,10 +22,7 @@ def validatedate(string):
             return date
         except EmptyValueError:
             print("\t<You need to enter a value, please try again...>")
-        except KeyboardInterrupt:
-            print("Closing program")
-            sys.exit()
-        except:
+        except ValueError:
             print("\t<Invalid date entered, please try again...>")
 
 #call this function to validate any time entered by the user
@@ -41,10 +38,7 @@ def validatetime(string):
             return time
         except EmptyValueError:
             print("\t<You need to enter a value, please try again...>")
-        except KeyboardInterrupt:
-            print("Closing program")
-            sys.exit()
-        except:
+        except ValueError:
             print("\t<Invalid time entered, Please try again...>")
 
 #convert a unix integer time back into a datetime object

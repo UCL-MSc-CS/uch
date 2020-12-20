@@ -31,7 +31,7 @@ def clearhours(doctoremail):
                 print("Successfully deleted Appointment " + str(idnum))
             else:
                 print("\t <Appointment of ID: "+str(idnum)+" doesn't exist on the given date.>")
-        except:
+        except ValueError:
             print("\t< "+ id + " is not a valid number>")
     choice = input("\nPress [0] to return to the Cancel Appointment menu, press any other button for the Main Menu \n:")
     print("********************************************")

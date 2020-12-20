@@ -57,5 +57,5 @@ def confirmappointments(doctoremail):
                 print("Accepted appointment with id " + id)
             else:
                 print("\n\t<You entered an invalid id number!>\n")
-        except:
+        except ValueError:
             print("\n\t<That is not a integer value>\n")
