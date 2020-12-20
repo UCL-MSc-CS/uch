@@ -497,7 +497,7 @@ class adminFunctions():
             print(error)
             return adminFunctions.cin(self)
         except ValueError:
-            print("< Please provide a numerical input >")
+            print("\n   < Please provide a numerical input >\n")
             return adminFunctions.cin(self)
         else:
             self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ?", (check_number,))
