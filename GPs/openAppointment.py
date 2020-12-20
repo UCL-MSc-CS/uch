@@ -40,8 +40,6 @@ def openappointment(doctoremail):
                 break
             elif option == "5":
                 print("\n Downloading patient summary... \n")
-                print(nhsNumber)
-                print(int(nhsNumber))
                 PatientSummary(int(nhsNumber))
             elif option == "0":
                 print("\n Returning to main menu...... \n")
