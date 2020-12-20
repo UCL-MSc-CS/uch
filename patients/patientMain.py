@@ -142,6 +142,7 @@ def quest_options(NHS_number):
         print("Choose [1] to see your medical profile")
         print("Choose [2] to take the lifestyle risk questionnaire")
         print("Choose [3] to update your medical history")
+        print("Choose [0] to exit")
         print("********************************************")
         action = input("Please select an option: ")
         if action == '':
@@ -163,9 +164,18 @@ def quest_options(NHS_number):
             options(NHS_number)
         elif action == '3':
             x = PatientMedical(NHS_number)
-            # pf.medical_history_menu
-            x.vaccination(NHS_number)
-            x.cancer(NHS_number)
+            pf.medical_history_menu()
+            select_medi = input('Please select an option: ')
+            if select_medi == '0':
+                return 0
+            elif select_medi == '1':
+                x.vaccination(NHS_number)
+            elif select_medi == '2':
+                x.cancer(NHS_number)
+            elif select_medi == '3':
+                x.pre_existing_con(NHS_number)
+            elif select_medi == '4':
+                x.med_allergy(NHS_number)
             options(NHS_number)
         else:
             raise InvalidAnswerError()
