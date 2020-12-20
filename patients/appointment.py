@@ -52,13 +52,13 @@ class Appointment:
                 raise EmptyAnswer()
             elif dr_options == '1':
                 y = self.choose_specific_dr()
-                if self.choose_specific_dr() == 0:
+                if y == 0:
                     pass
                 else:
                     self.choose_appointment(nhs_number, y)
             elif dr_options == '2':
                 y = self.choose_any_dr()
-                if self.choose_any_dr() == 0:
+                if y == 0:
                     pass
                 else:
                     self.choose_appointment(nhs_number, y)
@@ -219,22 +219,25 @@ class Appointment:
                 options = input("Please select an option: ")
                 if options == '':
                     raise EmptyAnswer()
-                elif options == '1':
-                    cancel = vc.check_app_id(nhs_number)
-                    vc.delete_appointment(cancel)
-                    print("\nWould you like to cancel another appointment?"
-                          "\nChoose [1] to cancel an appointment"
-                          "\nChoose [0] to exit to the main menu"
-                          "\n********************************************")
-                    choice = input("Please select an option: ")
-                    if choice == '1':
-                        self.cancel_appointment(nhs_number)
-                    elif choice == '0':
-                        pass
-                    else:
-                        raise InvalidAnswer()
                 elif options == '0':
                     pass
+                elif options == '1':
+                    cancel = vc.check_app_id(nhs_number)
+                    if cancel == 0:
+                        pass
+                    else:
+                        vc.delete_appointment(cancel)
+                        print("\nWould you like to cancel another appointment?"
+                              "\nChoose [1] to cancel an appointment"
+                              "\nChoose [0] to exit to the main menu"
+                              "\n********************************************")
+                        choice = input("Please select an option: ")
+                        if choice == '1':
+                            self.cancel_appointment(nhs_number)
+                        elif choice == '0':
+                            pass
+                        else:
+                            raise InvalidAnswer()
                 else:
                     raise InvalidAnswer()
             except InvalidAnswer:

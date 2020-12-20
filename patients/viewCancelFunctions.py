@@ -21,7 +21,7 @@ def view_appointments(nhs_number):
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-    c.execute(""" SELECT A.appointmentID, A.start, P.lastname, A.appointmentStatus FROM Appointment A 
+    c.execute(""" SELECT A.appointmentID, A.start, P.lastName, A.appointmentStatus FROM Appointment A 
     LEFT JOIN GP P USING (gpEmail) WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhs_number])
     appointments = c.fetchall()
     if not appointments:
@@ -76,17 +76,21 @@ def check_app_id(nhs_number):
     c = connection.cursor()
     while True:
         try:
-            cancel = int(input("Please enter the appointment ID you would like to cancel: "))
-            c.execute("SELECT appointmentID FROM Appointment "
-                      "WHERE nhsNumber =?", [nhs_number])
-            app_ids = c.fetchall()
-            id_list = []
-            for app_id in app_ids:
-                id_list.append(app_id[0])
-            if cancel not in id_list:
-                raise AppNotExist
+            cancel = int(input("Please enter the appointment ID you would like to cancel "
+                               "(or 0 to exit to the patient menu): "))
+            if cancel == 0:
+                return 0
             else:
-                return cancel
+                c.execute("SELECT appointmentID FROM Appointment "
+                          "WHERE nhsNumber =?", [nhs_number])
+                app_ids = c.fetchall()
+                id_list = []
+                for app_id in app_ids:
+                    id_list.append(app_id[0])
+                if cancel not in id_list:
+                    raise AppNotExist
+                else:
+                    return cancel
         except AppNotExist:
             print("\n\t< This appointment does not exist, please try again >"
                   "\n")
