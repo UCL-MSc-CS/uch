@@ -60,6 +60,9 @@ def addholiday(doctoremail):
         for single_date in uf.daterange(startdate, enddate):
             datestring = datetime.strftime(single_date, dateformatstring)
             db.book_time(datestring, clinicstart, clinicend, reason, "", [doctoremail])
+            declined = db.auto_decline_pending(datestring, clinicstart, clinicend, doctoremail)
+            if declined:
+                print("Automatically declined any pending appointments on " + datestring)
         print("Successfully booked holiday!!!")
     else:
         print("\n\t<You have entered an end date that is before a start date. Please try again>\n")
@@ -91,6 +94,9 @@ def addnonpatienthours(doctoremail):
         reason = selectreason()
         db.book_time(datestring, starttimestring, endtimestring, reason, "", [doctoremail])
         print("Successfully booked in non patient hours for " + datestring)
+        declined = db.auto_decline_pending(datestring, starttimestring, endtimestring, doctoremail)
+        if declined:
+            print("Automatically declined any conflicting pending appointments during this time")
     elif starttime < endtime and status[0] == 'unavailable':
         print("\n\t<You already have booked time during this period, please check your timetable>\n")
         choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
