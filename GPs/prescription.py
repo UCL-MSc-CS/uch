@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox, ttk
 import prescriptionMedFunctions as ms
-#import GPs.instructionFunction as ins
+from GPs.instructionFunction import instructionFunction
 
 def prescription(doctoremail,appointmentID,nhsNumber):
 
@@ -349,9 +349,9 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     savePrescription.pack(pady=5)
 
     # Load up guide
-    instructionButton = Button(instructionFrame, text='User Guide', font=('arial', 12, 'bold'), width=9, command=instructions,
+    instructionButton = Button(instructionFrame, text='User Guide', command=instructionFunction,
                         background='SlateGray1')
-    instructionButton.grid(row=0, column=0)
+    instructionButton.pack(pady=5)
 
 
     root.after(1000, root.focus_force)
