@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox, ttk
 import prescriptionMedFunctions as ms
-import GPs.instructionFunction as ins
+#import GPs.instructionFunction as ins
 
 def prescription(doctoremail,appointmentID,nhsNumber):
 
