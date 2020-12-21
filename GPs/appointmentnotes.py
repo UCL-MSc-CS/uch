@@ -7,8 +7,6 @@ from GPs.prescription import prescription
 
 
 def appointmentnotes(doctoremail, appointmentid):
-    # todo (longterm) use classes to display a label
-    # todo make sure doctor email is used to ensure patient confidentiality
 
     # Existing doctor's notes
     doctorsNotes = getDoctorNotes(appointmentid)

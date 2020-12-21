@@ -235,6 +235,7 @@ def initialise_database():
 
     c.execute("""INSERT OR IGNORE INTO GP VALUES(
                 "caroline.crandell@ucl.ac.uk",
+                '1234',
                 'Caroline',
                 'Crandell',
                 'female',
@@ -249,6 +250,7 @@ def initialise_database():
 
     c.execute("""INSERT OR IGNORE INTO GP VALUES(
                 "chenuka.ratwatte@ucl.ac.uk",
+                '1234',
                 'Chenuka',
                 'Ratwatte',
                 'male',
