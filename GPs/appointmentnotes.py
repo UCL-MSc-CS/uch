@@ -47,6 +47,7 @@ def appointmentnotes(doctoremail, appointmentid):
     root.title('Appointment ID: ' + str(appointmentid))
     root.geometry("1280x800")
     root.configure(background='SlateGray1')
+    root.after(1000, root.focus_force)
 
     mainFrame = Frame(root)
     mainFrame.grid()
@@ -263,7 +264,6 @@ def appointmentnotes(doctoremail, appointmentid):
 
     #Pack to the screen
     allergyTree.pack(pady=20)
-    root.after(1000, root.focus_force)
 
     root.mainloop()
 
