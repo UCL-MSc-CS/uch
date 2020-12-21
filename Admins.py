@@ -851,9 +851,9 @@ class adminFunctions():
                                 raise TeleNoFormatError()
                             tel = tel.replace('+', '')
                             input_list = [i for i in tel]
-                            if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
+                            if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
                                     input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
-                                correct_length = '12 to 18'
+                                correct_length = '11 to 18'
                                 raise IncorrectInputLength(correct_length)
                             question_num = 11
 
@@ -1246,12 +1246,12 @@ class adminFunctions():
                                         raise TeleNoFormatError()
                                     Ctel = Ctel.replace('+', '')
                                     input_list = [i for i in Ctel]
-                                    if len(input_list) != 12 and len(input_list) != 13 and len(
+                                    if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(
                                             input_list) != 14 and len(
                                             input_list) != 15 and len(input_list) != 16 and len(
                                         input_list) != 17 and len(
                                         input_list) != 18:
-                                        correct_length = '12 to 18'
+                                        correct_length = '11 to 18'
                                         raise IncorrectInputLength(correct_length)
 
                                 except FieldEmpty:
