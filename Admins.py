@@ -171,15 +171,22 @@ class adminFunctions():
         self.c.execute("SELECT * FROM Admin WHERE email = ?", (email,))
         items = self.c.fetchall()
         while len(items) == 0:
-            print("\n   < Email does not exist, please try again >\n")
+            print("\n   < I'm sorry, that email is not in our system, please try again >\n")
             email = input('Email: (press 0 to go back) ')
+            if email == '0':
+                return "restart"
             self.c.execute("SELECT * FROM Admin WHERE email = ?", (email,))
             items = self.c.fetchall()
-        password = input('Password: ')
+        password = input('Password: (press 0 to go back) ')
         self.c.execute("SELECT * FROM Admin WHERE email=? AND password =?", (email, password))
         items = self.c.fetchall()
         while len(items) == 0:
-            return False
+            print("\n   < I'm sorry, that password is not correct, please try again > \n")
+            password = input('Password: (press 0 to go back) ')
+            if password == '0':
+                return "restart"
+            self.c.execute("SELECT * FROM Admin WHERE email=? AND password =?", (email, password))
+            items = self.c.fetchall()
         else:
             return True
 
