@@ -181,9 +181,9 @@ while True:
                                                 print("********************************************")
                                                 detchoice2 = int(input("choice: "))
                                                 if detchoice2 == 1:
-                                                    ad.managedet()
+                                                    ad.manage_det()
                                                 elif detchoice2 == 2:
-                                                    ad.manIndDet()
+                                                    ad.man_ind_det()
                                                 elif detchoice2 == 0:
                                                     backvar = 1
                                                     break
@@ -192,7 +192,7 @@ while True:
                                             except ValueError:
                                                 print("< Not a valid choice >")
                                     elif detchoice == 2:
-                                        ad.delpatdet()
+                                        ad.del_pat()
                                     elif detchoice == 0:
                                         selection = 0
                                     elif detchoice != 0 and detchoice != 1 and detchoice != 2:

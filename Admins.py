@@ -671,7 +671,7 @@ class adminFunctions():
                                 print("Successfully checked out {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
                             return 0
 
-    def managedet(self):
+    def manage_det(self):
         masterback = 0
         while masterback == 0:
             try:
@@ -705,7 +705,7 @@ class adminFunctions():
                             self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (emails,))
                             emailCheck = self.c.fetchall()
                             if emails == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif emails == '1':
                                 return masterback
@@ -721,7 +721,7 @@ class adminFunctions():
                         while question_num == 2:
                             firstn = input("New first name: ")
                             if firstn == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif firstn == '1':
                                 return masterback
@@ -733,7 +733,7 @@ class adminFunctions():
                         while question_num == 3:
                             lastnm = input("New last name: ")
                             if lastnm == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif lastnm == '1':
                                 return masterback
@@ -745,7 +745,7 @@ class adminFunctions():
                         while question_num == 4:
                             dateOfBirth = (input("New date of birth as YYYY-MM-DD: "))
                             if dateOfBirth == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif dateOfBirth == '1':
                                 return masterback
@@ -788,7 +788,7 @@ class adminFunctions():
                         while question_num == 6:
                             gender = input("Gender (enter male/female/non-binary/prefer not to say): ")
                             if gender == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif gender == '1':
                                 return masterback
@@ -802,7 +802,7 @@ class adminFunctions():
                         while question_num == 7:
                             addl1 = input("New address line 1: ")
                             if addl1 == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif addl1 == '1':
                                 return masterback
@@ -816,7 +816,7 @@ class adminFunctions():
                         while question_num == 8:
                             addl2 = input("New address line 2: ")
                             if addl2 == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif addl2 == '1':
                                 return masterback
@@ -828,7 +828,7 @@ class adminFunctions():
                         while question_num == 9:
                             postcode = input("New postcode: ")
                             if postcode == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif postcode == '1':
                                 return masterback
@@ -840,7 +840,7 @@ class adminFunctions():
                         while question_num == 10:
                             tel = (input("New telephone number (no spaces, with country code. E.g. +4471234123123): "))
                             if tel == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif tel == '1':
                                 return masterback
@@ -895,7 +895,7 @@ class adminFunctions():
                         print("Succesfully updated entire patient record")
                         return masterback
 
-    def delpatdet(self):
+    def del_pat(self):
         delback = 0
         while delback == 0:
             try:
@@ -924,7 +924,7 @@ class adminFunctions():
                 delback = 1
 
 
-    def manIndDet(self):
+    def man_ind_det(self):
         masterback = 0
         while masterback == 0:
             try:
