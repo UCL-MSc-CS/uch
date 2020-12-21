@@ -21,9 +21,8 @@ def openappointment(doctoremail):
             print("--------------------------------------------")
             print("Choose [1] for Appointment notes")
             print("Choose [2] for Patient history")
-            print("Choose [3] for editing Patient prescription")
-            print("Choose [4] for selecting a different appointment")
-            print("Choose [5] to download a patient summary")
+            print("Choose [3] for selecting a different appointment")
+            print("Choose [4] to download a patient summary")
             print("Choose [0] to exit this appointment")
             option = input(":")
             if option == "1":
@@ -32,13 +31,10 @@ def openappointment(doctoremail):
             elif option == "2":
                 patienthistory(doctoremail,appointmentid, nhsNumber)
             elif option == "3":
-                print("\n Opening the prescription editor in a separate window... \n")
-                prescription(doctoremail,appointmentid, nhsNumber)
-            elif option == "4":
                 print("\n Switching appointments... \n")
                 openappointment(doctoremail)
                 break
-            elif option == "5":
+            elif option == "4":
                 print("\n Downloading patient summary... \n")
                 PatientSummary(int(nhsNumber))
             elif option == "0":
