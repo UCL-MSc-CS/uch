@@ -27,7 +27,7 @@ def view_appointments(nhs_number):
     if not appointments:
         print("\nYou currently have no appointments"
               "\n")
-        pf.return_to_main()
+        pass
     else:
         appointment_id = []
         date = []
@@ -43,21 +43,21 @@ def view_appointments(nhs_number):
         new_status = []
         for item in status:
             if item == 'Accepted':
-                item = 'Booking Confirmed'
+                item = '    Booking Confirmed'
                 new_status.append(item)
             elif item == 'Pending':
-                item = 'Pending Approval'
+                item = '    Pending Approval'
                 new_status.append(item)
             elif item == 'Declined':
-                item = 'Appointment Declined'
+                item = '    Appointment Declined'
                 new_status.append(item)
 
         data = pd.DataFrame({'Appointment ID': appointment_id, 'Date and Time': date,
                              'Doctor': gp, 'Status': new_status})
-        print("\n********************************************")
+        print("********************************************\n")
         print(data.to_string(columns=['Appointment ID', 'Date and Time', 'Doctor',
                                       'Status'], index=False))
-        print("********************************************\n")
+        print("\n********************************************")
 
 
 def delete_appointment(cancel):

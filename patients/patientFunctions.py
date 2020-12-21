@@ -234,7 +234,7 @@ def choose_date(month, year):
     days_28 = ['02']
     while True:
         try:
-            day = int(input("Please choose the date in your chosen month (as D/DD)"
+            day = int(input("Please choose a day in your chosen month (as D/DD)"
                             "\nOr type 0 to go back and choose another date: "))
             if day == 0:
                 return 0
@@ -288,12 +288,12 @@ def generate_start_time(date):
     return start
 
 
-def display_available(start, end, gp_details):
+def display_available(date, start, end, gp_details):
     """ Displays appointments from the date and time chosen by user
     Prints a list of the time and availability of the appointment"""
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-    print("\nThis is the current availability for Dr {} on your chosen date: ".format(gp_details[1]))
+    print("\nCurrent availability for Dr {} on {}: ".format(gp_details[1], date))
     c.execute("SELECT start, appointmentStatus, end FROM Appointment "
               "WHERE start >=? and end <?"
               "and gpEmail =? and appointmentStatus != 'Declined' ",
@@ -313,12 +313,19 @@ def display_available(start, end, gp_details):
         format_str = '%H:%M'
         time_2 = datetime.strptime(times, format_str).time()
         times_list.append(time_2)
-
+    key_time = []
+    value_status = []
     times_status = {}
     if not appointments:
         for i in times_list:
             time_i = i.strftime('%H:%M')
-            print(time_i, ": Available")
+            key_time.append(time_i)
+            value_status.append("   Available")
+        data = pd.DataFrame({'Time': key_time, 'Status': value_status})
+        print("********************************************\n")
+        print(data.to_string(columns=['Time', 'Status'], index=False))
+        print("\n********************************************")
+
     else:
         for items in times_list:
             for app in appointments:
@@ -327,12 +334,19 @@ def display_available(start, end, gp_details):
                 end_time = to_regular_time(app[2] - 1)
                 end_time_2 = datetime.time(end_time)
                 if items >= start_time_2 and items <= end_time_2:
-                    times_status[items] = ': Unavailable'
+                    times_status[items] = ' Unavailable'
                 elif items not in times_status:
-                    times_status[items] = ": Available"
+                    times_status[items] = " Available"
+        key_time = []
+        value_status = []
         for key, value in times_status.items():
             time_i = key.strftime('%H:%M')
-            print(time_i, value)
+            key_time.append(time_i)
+            value_status.append('   ' + value)
+        data = pd.DataFrame({'Time': key_time, 'Status': value_status})
+        print("********************************************\n")
+        print(data.to_string(columns=['Time', 'Status'], index=False))
+        print("\n********************************************")
     return times_str
 
 
@@ -383,30 +397,19 @@ def create_start(date_string, time_string):
 
 def insert_appointment(start, gp_details, nhs_number):
     """ Inserts the appointment details into the database
-    Checks if the appointment start and end exist in database and updates record if exists
-    Otherwise, creates new row with appointment booked as 'Pending'"""
+    Creates new row with appointment booked as 'Pending'"""
     connection = sql.connect('UCH.db')
     c = connection.cursor()
-    c.execute("SELECT start, end FROM Appointment "
-              "WHERE appointmentStatus = 'Declined' ")
-    declined_times = c.fetchall()
     end = start + 599
     gp_last_name = gp_details[1]
     gp_email = gp_details[0]
     reason = 'Appointment'
     appointment_status = 'Pending'
     date_requested = to_unix_time(datetime.today())
-    if not declined_times:
-        chosen = (gp_email, gp_last_name, nhs_number, start, end, reason, appointment_status,
-                  date_requested, '', '', '', '', '', 0, 0)
-        c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
-        connection.commit()
-    else:
-        update = (gp_email, gp_last_name, nhs_number, date_requested)
-        c.execute("UPDATE Appointment "
-                  "SET gpEmail =?, gpLastName =?, nhsNumber =?, appointmentStatus = 'Pending', "
-                  "dateRequested =?", update)
-        connection.commit()
+    chosen = (gp_email, gp_last_name, nhs_number, start, end, reason, appointment_status,
+              date_requested, '', '', '', '', '', 0, 0)
+    c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
+    connection.commit()
 
 
 def return_to_main():
@@ -417,5 +420,3 @@ def return_to_main():
     else:
         print("Thank you for using the UCH e-health system! Goodbye for now!")
         exit()
-
-

@@ -83,7 +83,7 @@ class Appointment:
         :return: gp_details (list) with gp last name and email address"""
         print("********************************************"
               "\nThe doctors currently available at the practice are: ")
-        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
+        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE active='1'")
         dr_names = self.c.fetchall()
         if not dr_names:
             print("\nThere are no doctors currently available at the practice"
@@ -96,7 +96,7 @@ class Appointment:
     def choose_any_dr(self):
         """ Assigns user a doctor at random from a list from all doctors registered
         :return: gp_details (list) with gp last name and email address"""
-        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
+        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE active='1'")
         dr_names = self.c.fetchall()
         if not dr_names:
             print("\nThere are no doctors currently available at the practice"
@@ -127,7 +127,7 @@ class Appointment:
             if gp_options == '':
                 raise EmptyAnswer()
             if gp_options == '1':
-                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'male' ")
+                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'male' and active='1'")
                 dr_names = self.c.fetchall()
                 if not dr_names:
                     print("\nThere are no male doctors currently available at the practice"
@@ -137,7 +137,7 @@ class Appointment:
                     gp_details = pf.choose_dr(dr_names)
                     return gp_details
             elif gp_options == '2':
-                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'female' ")
+                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'female' and active='1'")
                 dr_names = self.c.fetchall()
                 if not dr_names:
                     print("\nThere are no female doctors currently available at the practice"
@@ -147,7 +147,7 @@ class Appointment:
                     gp_details = pf.choose_dr(dr_names)
                     return gp_details
             elif gp_options == '3':
-                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'non-binary' ")
+                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'non-binary' and active='1'")
                 dr_names = self.c.fetchall()
                 if not dr_names:
                     print("\nThere are no non-binary doctors currently available at the practice"
@@ -189,7 +189,7 @@ class Appointment:
                 else:
                     start = pf.generate_start_time(date)
                     end = pf.generate_end_time(date)
-                    times_str = pf.display_available(start, end, gp_details)
+                    times_str = pf.display_available(date, start, end, gp_details)
                     chosen_time = pf.choose_time(date, times_str, gp_details)
                     if chosen_time == 0:
                         self.choose_appointment(nhs_number, gp_details)
@@ -198,7 +198,9 @@ class Appointment:
                         pf.insert_appointment(start, gp_details, nhs_number)
                         print("\nYou have requested to book an appointment on {} at {}, "
                               "\nYou will receive confirmation of your appointment "
-                              "shortly!".format(date, chosen_time))
+                              "shortly!"
+                              "\nYou can check all of your appointments through "
+                              "'view your appointments' in the main menu\n".format(date, chosen_time))
                         pass
 
     def cancel_appointment(self, nhs_number):
@@ -206,7 +208,7 @@ class Appointment:
         print("--------------------------------------------"
               "\n         Patient: Cancel Appointments"
               "\n--------------------------------------------"
-              "\nThese are your confirmed booked appointments: ")
+              "\nYour appointments: ")
         viewing = vc.view_appointments(nhs_number)
         if viewing == 0:
             print("You cannot cancel any appointments at this time")
@@ -254,7 +256,7 @@ class Appointment:
         print("--------------------------------------------"
               "\n         Patient: View Appointments"
               "\n--------------------------------------------"
-              "\nThese are your appointments: ")
+              "\nYour appointments: ")
         vc.view_appointments(nhs_number)
         pf.return_to_main()
 
