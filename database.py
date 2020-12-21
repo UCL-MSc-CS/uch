@@ -9,14 +9,14 @@ def initialise_database():
     #create Appointment table
 
     c.execute("""CREATE TABLE IF NOT EXISTS Admin(
-                        username text PRIMARY KEY,
+                        email text PRIMARY KEY,
                         password text
     )""")
 
     connection.commit()
 
     c.execute("""INSERT OR IGNORE INTO Admin VALUES(
-                'Matthew',
+                'jacob.lapkin@ucl.ac.uk',
                 '1234'
     )""")
     connection.commit()
@@ -235,6 +235,7 @@ def initialise_database():
 
     c.execute("""INSERT OR IGNORE INTO GP VALUES(
                 "caroline.crandell@ucl.ac.uk",
+                '1234',
                 'Caroline',
                 'Crandell',
                 'female',
@@ -249,6 +250,7 @@ def initialise_database():
 
     c.execute("""INSERT OR IGNORE INTO GP VALUES(
                 "chenuka.ratwatte@ucl.ac.uk",
+                '1234',
                 'Chenuka',
                 'Ratwatte',
                 'male',
@@ -280,6 +282,7 @@ def initialise_database():
                         '',
                         ''
     )""")
+    connection.commit()
 
     connection.close()
 

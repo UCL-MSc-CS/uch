@@ -218,7 +218,7 @@ while True:
                     except ValueError:
                         print("\n   < Please enter a number > \n")
                 while logged_in == False:
-                    print("\n   < Incorrect username/password > \n")
+                    print("\n   < Incorrect password > \n")
                     logged_in = "entering details"
                 if logged_in == "restart":
                     ad.commit_and_close()

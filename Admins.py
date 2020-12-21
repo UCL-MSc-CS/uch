@@ -165,13 +165,20 @@ class adminFunctions():
         self.c = self.connection.cursor()  
 
     def admin_login(self):
-        username = input('Username: (press 0 to go back) ')
-        if username == '0':
+        email = input('Email: (press 0 to go back) ')
+        if email == '0':
             return "restart"
-        password = input('Password: ')
-        self.c.execute("SELECT * FROM Admin WHERE username=? AND password =?", (username, password))
+        self.c.execute("SELECT * FROM Admin WHERE email = ?", (email,))
         items = self.c.fetchall()
-        if len(items) == 0:
+        while len(items) == 0:
+            print("\n   < Email does not exist, please try again >\n")
+            email = input('Email: (press 0 to go back) ')
+            self.c.execute("SELECT * FROM Admin WHERE email = ?", (email,))
+            items = self.c.fetchall()
+        password = input('Password: ')
+        self.c.execute("SELECT * FROM Admin WHERE email=? AND password =?", (email, password))
+        items = self.c.fetchall()
+        while len(items) == 0:
             return False
         else:
             return True
