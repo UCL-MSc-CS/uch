@@ -1,8 +1,6 @@
 import sqlite3 as sql
-from datetime import time as x, date as xyz, datetime, timedelta
-import time
+from datetime import datetime
 import pandas as pd
-import patients.patientFunctions as pf
 
 
 class Error(Exception):
@@ -10,7 +8,7 @@ class Error(Exception):
     pass
 
 
-class AppNotExist(Error):
+class AppNotExistError(Error):
     """Raised when appointmentID entered by user does not exist"""
     pass
 
@@ -25,7 +23,7 @@ def view_appointments(nhs_number):
     LEFT JOIN GP P USING (gpEmail) WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhs_number])
     appointments = c.fetchall()
     if not appointments:
-        print("\nYou currently have no appointments"
+        print("\nYou currently have no appointments booked"
               "\n")
         pass
     else:
@@ -51,7 +49,6 @@ def view_appointments(nhs_number):
             elif item == 'Declined':
                 item = '    Appointment Declined'
                 new_status.append(item)
-
         data = pd.DataFrame({'Appointment ID': appointment_id, 'Date and Time': date,
                              'Doctor': gp, 'Status': new_status})
         print("********************************************\n")
@@ -88,10 +85,10 @@ def check_app_id(nhs_number):
                 for app_id in app_ids:
                     id_list.append(app_id[0])
                 if cancel not in id_list:
-                    raise AppNotExist
+                    raise AppNotExistError
                 else:
                     return cancel
-        except AppNotExist:
+        except AppNotExistError:
             print("\n\t< This appointment does not exist, please try again >"
                   "\n")
         except ValueError:
