@@ -13,9 +13,11 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     for medicine in prescriptionData:
         treeviewMedID.append(medicine[0])
 
-    top = Toplevel()
+    root = Tk()
+    root.title('Appointment ID: ' + str(appointmentID) + ', with Dr. ' + doctoremail)
+    root.geometry("1920x950")
 
-    mainFrame = Frame(top)
+    mainFrame = Frame(root)
     mainFrame.grid()
 
     # titleFrame = Frame(mainFrame, bd=20, width=1350, padx=20, relief=RIDGE)
@@ -326,7 +328,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
 
         exit = messagebox.askyesno("Save Prescription", "Confirm if you want to exit.")
         if exit > 0:
-            top.after(1, top.destroy())
+            root.after(1, root.destroy())
             return
 
     # Remove all
@@ -341,5 +343,5 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     savePrescription = Button(prescriptionFrame, text="Save Prescription", command=savePrescription)
     savePrescription.pack(pady=5)
 
-    top.after(2000, top.focus_force)
-
+    root.after(1000, root.focus_force)
+    root.mainloop()
