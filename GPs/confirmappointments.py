@@ -30,7 +30,7 @@ def confirmappointments(doctoremail):
         print("--------------------------------------------")
         print(datetime.strftime(confirmdate, "%A %d %b %Y"))
         print("--------------------------------------------")
-        print("id" + "\t" + "reason")
+        print("id" + "\t" + "reason" + "\t\t" + "time" + "\t\t" + "nhs number" + "\t" + "patient name")
         for appointment in pendingappointments:
             reason = appointment[0]
             start = datetime.strftime(uf.toregulartime(appointment[1]), timeformatstring)
@@ -38,11 +38,10 @@ def confirmappointments(doctoremail):
             nhsNumber = str(appointment[3]).zfill(10)
             appointmentid = str(appointment[4])
             patient_details = db.getPatientInfo(appointmentid)
-            patient_email = patient_details[1]
             full_name = patient_details[2] + " " + patient_details[3]
             status = db.checkslotavailable(datestring, start, end, [doctoremail])
             if status[0] != 'unavailable':
-                print(appointmentid+"\t"+reason+"\t"+start+"-"+end+"\t"+nhsNumber+"\t"+patient_email+"\t"+full_name)
+                print(appointmentid+"\t"+reason+"\t"+start+"-"+end+"\t"+nhsNumber+"\t"+full_name)
             else:
                 db.declineappointment(appointmentid)
                 pendingids.remove(appointment[4])
