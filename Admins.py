@@ -512,6 +512,8 @@ class adminFunctions():
                     return 2
 
     def cin(self):
+        """Entering patient NHS number allows admin to check-in patient from existing
+                appointments"""
         master_back = 1
         while master_back == 1:
             try:
@@ -592,6 +594,8 @@ class adminFunctions():
                             return 0
 
     def cout(self):
+        """Entering patient NHS number allows admin to check-out patient from existing
+            appointments"""
         master_back = 1
         while master_back == 1:
             try:
@@ -672,6 +676,7 @@ class adminFunctions():
                             return 0
 
     def manage_det(self):
+        """Changing every patient detail of a specific NHS number"""
         master_back = 0
         while master_back == 0:
             try:
@@ -693,9 +698,9 @@ class adminFunctions():
                 error = nhsNotExists()
                 print(error)
             else:
-                patback = 0
+                pat_back = 0
                 question_num = 1
-                while patback == 0:
+                while pat_back == 0:
                     print("********************************************")
                     print("Press [0] to re-enter NHS number: ")
                     print("Press [1] to go back to update patient details menu")
@@ -896,6 +901,7 @@ class adminFunctions():
                         return master_back
 
     def del_pat(self):
+        """Deleting the entire row of a patient record"""
         delback = 0
         while delback == 0:
             try:
@@ -923,8 +929,9 @@ class adminFunctions():
                 print("Successfully deleted patient record")
                 delback = 1
 
-
     def man_ind_det(self):
+        """Entering an NHS number allows admin to navigate menu
+             and choose which patient detail to update individually"""
         master_back = 0
         while master_back == 0:
             try:
