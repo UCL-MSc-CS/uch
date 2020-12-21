@@ -566,7 +566,7 @@ class PatientMedical:
                             self.connection.commit()
 
                 else:
-                    self.cancer_relation = "N/A"  # 0 means the patient has not had cancer before
+                    self.cancer_relation = "N/A"  # N/A means the patient has not had cancer before
                     self.cancer_history = [nhs_number, self.cancer_relation, 'N/A', 'N/A']
                     self.a.execute("""
                                     SELECT * FROM cancer WHERE nhsNumber =?
