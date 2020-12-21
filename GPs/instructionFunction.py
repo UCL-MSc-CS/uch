@@ -46,7 +46,7 @@ def instructionFunction():
 
     #-------------------------------------Step 1----------------------------------------------------#
 
-    image1 = ImageTk.Image.open("Step 1.PNG")
+    image1 = ImageTk.Image.open("GPs/Step 1.PNG")
     image1 = image1.resize((250,300))
     render = ImageTk.PhotoImage(image1)
     img = Label(second_frame,image=render)
@@ -57,7 +57,7 @@ def instructionFunction():
 
     #-------------------------------------Step 2----------------------------------------------------#
 
-    image2 = ImageTk.Image.open("Step 2.PNG")
+    image2 = ImageTk.Image.open("GPs/Step 2.PNG")
     image2 = image2.resize((800,300))
     render = ImageTk.PhotoImage(image2)
     img = Label(second_frame,image=render)
@@ -71,7 +71,7 @@ def instructionFunction():
     step2.grid(row=2,column=2)
 
     #-------------------------------------Step 3----------------------------------------------------#
-    image3 = ImageTk.Image.open("Step 3.PNG")
+    image3 = ImageTk.Image.open("GPs/Step 3.PNG")
     image3 = image3.resize((800,300))
     render = ImageTk.PhotoImage(image3)
     img = Label(second_frame,image=render)
@@ -86,7 +86,7 @@ def instructionFunction():
 
     #-------------------------------------Step 4----------------------------------------------------#
 
-    image4 = ImageTk.Image.open("Step 4.PNG")
+    image4 = ImageTk.Image.open("GPs/Step 4.PNG")
     image4 = image4.resize((800,300))
     render = ImageTk.PhotoImage(image4)
     img = Label(second_frame,image=render)
@@ -101,7 +101,7 @@ def instructionFunction():
 
     #-------------------------------------Step 5----------------------------------------------------#
 
-    image5 = ImageTk.Image.open("Step 5.PNG")
+    image5 = ImageTk.Image.open("GPs/Step 5.PNG")
     image5 = image5.resize((850,300))
     render = ImageTk.PhotoImage(image5)
     img = Label(second_frame,image=render)

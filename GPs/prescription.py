@@ -357,5 +357,4 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     root.after(1000, root.focus_force)
     root.mainloop()
 
-
-prescription('matthew.shorvon@ucl.ac.uk', 3, '1234567890')
+#prescription('matthew.shorvon@ucl.ac.uk', 3, '1234567890')
