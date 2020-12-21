@@ -891,6 +891,15 @@ class adminFunctions():
                         print(error)
                     except ValueError:
                         print("< Please provide a numerical input >")
+                    except DateInvalidError:
+                        error = DateInvalidError()
+                        print(error)
+                    except DateInFutureError:
+                        error = DateInFutureError()
+                        print(error)
+                    except DateFormatError:
+                        error = DateFormatError()
+                        print(error)
                     else:
                         self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?
                         , gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
@@ -1126,6 +1135,9 @@ class adminFunctions():
                                     print(error)
                                 except DateInvalidError:
                                     error = DateInvalidError()
+                                    print(error)
+                                except DateInFutureError:
+                                    error = DateInFutureError()
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (dateOfBirth, nhsnum))
