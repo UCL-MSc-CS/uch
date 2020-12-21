@@ -512,8 +512,8 @@ class adminFunctions():
                     return 2
 
     def cin(self):
-        masterback = 1
-        while masterback == 1:
+        master_back = 1
+        while master_back == 1:
             try:
                 print("********************************************")
                 nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
@@ -523,7 +523,7 @@ class adminFunctions():
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
                 nhsq = self.c.fetchall()
                 if nhsNumber == "0":
-                    masterback = 2
+                    master_back = 2
                     break
                 elif not nhsNumber:
                     raise FieldEmpty()
@@ -592,8 +592,8 @@ class adminFunctions():
                             return 0
 
     def cout(self):
-        masterback = 1
-        while masterback == 1:
+        master_back = 1
+        while master_back == 1:
             try:
                 print("********************************************")
                 nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
@@ -603,7 +603,7 @@ class adminFunctions():
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
                 nhsq = self.c.fetchall()
                 if nhsNumber == "0":
-                    masterback = 2
+                    master_back = 2
                     break
                 elif not nhsNumber:
                     raise FieldEmpty()
@@ -672,15 +672,15 @@ class adminFunctions():
                             return 0
 
     def manage_det(self):
-        masterback = 0
-        while masterback == 0:
+        master_back = 0
+        while master_back == 0:
             try:
                 print("********************************************")
                 nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == '0':
-                    masterback = 1
+                    master_back = 1
                     break
                 elif not nhsnum:
                     raise FieldEmpty()
@@ -708,7 +708,7 @@ class adminFunctions():
                                 return adminFunctions.manage_det(self)
                                 break
                             elif emails == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif len(emailCheck) > 0:
                                 raise EmailInUse
@@ -724,7 +724,7 @@ class adminFunctions():
                                 return adminFunctions.manage_det(self)
                                 break
                             elif firstn == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not firstn:
                                 raise FieldEmpty
@@ -736,7 +736,7 @@ class adminFunctions():
                                 return adminFunctions.manage_det(self)
                                 break
                             elif lastnm == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not lastnm:
                                 raise FieldEmpty
@@ -748,7 +748,7 @@ class adminFunctions():
                                 return adminFunctions.manage_det(self)
                                 break
                             elif dateOfBirth == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not dateOfBirth:
                                 raise FieldEmpty()
@@ -791,7 +791,7 @@ class adminFunctions():
                                 return adminFunctions.manage_det(self)
                                 break
                             elif gender == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not gender:
                                 raise FieldEmpty()
@@ -805,7 +805,7 @@ class adminFunctions():
                                 return adminFunctions.manage_det(self)
                                 break
                             elif addl1 == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not addl1:
                                 raise FieldEmpty()
@@ -819,7 +819,7 @@ class adminFunctions():
                                 return adminFunctions.manage_det(self)
                                 break
                             elif addl2 == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not addl2:
                                 raise FieldEmpty()
@@ -831,7 +831,7 @@ class adminFunctions():
                                 return adminFunctions.manage_det(self)
                                 break
                             elif postcode == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not postcode:
                                 raise FieldEmpty()
@@ -843,7 +843,7 @@ class adminFunctions():
                                 return adminFunctions.manage_det(self)
                                 break
                             elif tel == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not tel:
                                 raise FieldEmpty()
@@ -893,7 +893,7 @@ class adminFunctions():
                         (emails, firstn, lastnm, dateOfBirth, gender, addl1, addl2, postcode, tel, nhsnum))
                         self.connection.commit()
                         print("Succesfully updated entire patient record")
-                        return masterback
+                        return master_back
 
     def del_pat(self):
         delback = 0
@@ -925,15 +925,15 @@ class adminFunctions():
 
 
     def man_ind_det(self):
-        masterback = 0
-        while masterback == 0:
+        master_back = 0
+        while master_back == 0:
             try:
                 print("********************************************")
                 nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "0":
-                    masterback = 1
+                    master_back = 1
                     break
                 if not nhsnum:
                     raise FieldEmpty
@@ -967,7 +967,7 @@ class adminFunctions():
                             Cagain = 1
                             break
                         elif detinp == '1':
-                            masterback = 1
+                            master_back = 1
                             break
                         elif detinp.isdigit() == False:
                             raise IntegerError
