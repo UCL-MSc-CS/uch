@@ -520,7 +520,7 @@ class adminFunctions():
                 print("********************************************")
                 nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("""SELECT appointmentID, start FROM Appointment 
-                    WHERE nhsNumber =? ORDER BY appointmentID ASC""", [nhsNumber])
+                    WHERE nhsNumber =? and AppointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhsNumber])
                 appointments = self.c.fetchall()
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
                 nhsq = self.c.fetchall()
@@ -567,7 +567,8 @@ class adminFunctions():
                         print("\n   < Please provide a numerical input >\n")
                         #return adminFunctions.cout(self)
                     else:
-                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?", (check_number, nhsNumber))
+                        self.c.execute("""SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?
+                                    and appointmentStatus = "Accepted" """, (check_number, nhsNumber))
                         items = self.c.fetchall()
                         if len(items) == 0:
                             print("< No record exists with this appointmentID >")
@@ -602,7 +603,7 @@ class adminFunctions():
                 print("********************************************")
                 nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("""SELECT appointmentID, start FROM Appointment 
-                    WHERE nhsNumber =? ORDER BY appointmentID ASC""", [nhsNumber])
+                    WHERE nhsNumber =? and appointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhsNumber])
                 appointments = self.c.fetchall()
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
                 nhsq = self.c.fetchall()
@@ -649,7 +650,8 @@ class adminFunctions():
                         print("\n   < Please provide a numerical input >\n")
                         #return adminFunctions.cout(self)
                     else:
-                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?", (check_number, nhsNumber))
+                        self.c.execute("""SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?
+                         and appointmentStatus = "Accepted" """, (check_number, nhsNumber))
                         items = self.c.fetchall()
                         if len(items) == 0:
                             print("< No record exists with this appointmentID >")
