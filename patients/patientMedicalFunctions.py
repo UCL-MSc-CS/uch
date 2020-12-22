@@ -19,19 +19,19 @@ class InvalidAnswerError(Exception):
 
 class EmptyFieldError(Exception):
     def __init__(self):
-        self.message = '\n    < Please enter a value>\n'
+        self.message = '\n    < Please enter a value >\n'
         super().__init__(self.message)
 
 
 class InvalidConditionFormatError(Exception):
     def __init__(self):
-        self.message = '\n    < Please enter N for no or the name of the condition>\n'
+        self.message = '\n    < Please enter N for no or the name of the condition >\n'
         super().__init__(self.message)
 
 
 class InvalidAllergyFormatError(Exception):
     def __init__(self):
-        self.message = '\n    < Please enter N for no or the name of the medicine>\n'
+        self.message = '\n    < Please enter N for no or the name of the medicine >\n'
         super().__init__(self.message)
 
 
@@ -65,9 +65,9 @@ def update_patient_medical(name, nhs_number):
                 if menu not in range(1, 8):
                     raise InvalidMenuSelectionError()
             except InvalidMenuSelectionError:
-                print('\n    < Please enter a single number from the above menu>\n')
+                print('\n    < Please enter a single number from the above menu >\n')
             except ValueError:
-                print('\n    < Please enter a single numeric value>\n')
+                print('\n    < Please enter a single numeric value >\n')
             else:
                 break
 
