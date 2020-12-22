@@ -150,7 +150,7 @@ while True:
                                 AdminM.admin_submenuCheckIO()
                                 print("********************************************")
                                 try:
-                                    CheckOpt = int(input("choice: "))
+                                    CheckOpt = int(input("Choice: "))
                                     if CheckOpt == 1:
                                         ad.cin()
                                     elif CheckOpt == 2:
