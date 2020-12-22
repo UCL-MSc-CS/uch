@@ -720,14 +720,14 @@ class adminFunctions():
                         while question_num == 1:
                             emails = input("New email: ")
                             self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (emails,))
-                            emailCheck = self.c.fetchall()
+                            email_check = self.c.fetchall()
                             if emails == '0':
                                 return adminFunctions.manage_det(self)
                                 break
                             elif emails == '1':
                                 return master_back
                                 break
-                            elif len(emailCheck) > 0:
+                            elif len(email_check) > 0:
                                 raise EmailInUse
                             elif "@" not in emails or ".com" not in emails:
                                 raise EmailInvalid(emails)
@@ -1020,14 +1020,14 @@ class adminFunctions():
                                 try:
                                     CEmail = input("New email: ")
                                     self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (CEmail,))
-                                    emailCheck = self.c.fetchall()
+                                    email_check = self.c.fetchall()
                                     if CEmail == '0':
                                         Cagain = 1
                                         break
                                     elif CEmail == '1':
                                         back = 0
                                         break
-                                    elif len(emailCheck) > 0:
+                                    elif len(email_check) > 0:
                                         raise EmailInUse
                                     elif "@" not in CEmail or ".com" not in CEmail:
                                         raise EmailInvalid(CEmail)
