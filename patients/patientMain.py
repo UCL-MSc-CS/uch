@@ -733,8 +733,8 @@ def register():
                   "telephone_number": "",
                   "patient_email": "",
                   "password": ""}
+    count = 0
     while True:
-        count = 0
         try:
             while count == 0:
                 first_name = input("Please enter your first name (press 0 to exit registration): ")
@@ -802,6 +802,36 @@ def register():
                         raise DateInFutureError()
                     else:
                         new_patient["date_of_birth"] = date_of_birth
+                        count = 3
+            while count == 3:
+                print("********************************************")
+                print("Choose [1] for female")
+                print("Choose [2] for male")
+                print("Choose [3] for non-binary")
+                print("Choose [4] to exit registration")
+                print("Choose [5] to go back")
+                print("********************************************")
+                choice = input("Please select an option: ")
+                if choice == '':
+                    raise EmptyAnswerError()
+                elif choice == '1':
+                    gender = "Female"
+                    new_patient["gender"] = gender
+                    count = 4
+                elif choice == "2":
+                    gender = "Male"
+                    new_patient["gender"] = gender
+                    count = 4
+                elif choice == "3":
+                    gender = "Non-Binary"
+                    new_patient["gender"] = gender
+                    count = 4
+                elif choice == "4":
+                    return 0
+                elif choice == "5":
+                    count = 2
+                else:
+                    raise InvalidAnswerError()
         except EmptyAnswerError:
             error = EmptyAnswerError()
             print(error)
