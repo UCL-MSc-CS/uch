@@ -95,8 +95,6 @@ class DateFormatError(Error):
 def summary(NHS_number):
     c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
     results = c.fetchall()
-    date_of_birth = uf.toregulartime(results[0][4])
-    date_of_birth = str(date_of_birth)[0:10]
     hash = ""
     for i in results[0][10]:
         hash += "*"
@@ -112,7 +110,7 @@ def summary(NHS_number):
     print("First Name: " + str(results[0][2]))
     print("Last Name: " + str(results[0][3]))
     print("Email: " + str(results[0][1]))
-    print("Date of Birth: " + str(date_of_birth))
+    print("Date of Birth: " + str(results[0][4]))
     print("Gender: " + str(results[0][5]))
     print("Address: ")
     print(str(results[0][6]))
@@ -763,7 +761,6 @@ def date_of_birth_q(new_patient):
             if date_of_birth > today:
                 raise DateInFutureError()
             else:
-                date_of_birth = uf.tounixtime(date_of_birth)
                 new_patient["date_of_birth"] = date_of_birth
                 gender_q(new_patient)
     except EmptyAnswerError:
