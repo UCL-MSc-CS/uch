@@ -526,18 +526,20 @@ class adminFunctions():
                     return 2
 
     def cin(self):
-        masterback = 1
-        while masterback == 1:
+        """Entering patient NHS number allows admin to check-in patient from existing
+                appointments"""
+        master_back = 1
+        while master_back == 1:
             try:
                 print("********************************************")
                 nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("""SELECT appointmentID, start FROM Appointment 
-                    WHERE nhsNumber =? ORDER BY appointmentID ASC""", [nhsNumber])
+                    WHERE nhsNumber =? and AppointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhsNumber])
                 appointments = self.c.fetchall()
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
                 nhsq = self.c.fetchall()
                 if nhsNumber == "0":
-                    masterback = 2
+                    master_back = 2
                     break
                 elif not nhsNumber:
                     raise FieldEmpty()
@@ -579,7 +581,8 @@ class adminFunctions():
                         print("\n   < Please provide a numerical input >\n")
                         #return adminFunctions.cout(self)
                     else:
-                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?", (check_number, nhsNumber))
+                        self.c.execute("""SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?
+                                    and appointmentStatus = "Accepted" """, (check_number, nhsNumber))
                         items = self.c.fetchall()
                         if len(items) == 0:
                             print("< No record exists with this appointmentID >")
@@ -606,18 +609,20 @@ class adminFunctions():
                             return 0
 
     def cout(self):
-        masterback = 1
-        while masterback == 1:
+        """Entering patient NHS number allows admin to check-out patient from existing
+            appointments"""
+        master_back = 1
+        while master_back == 1:
             try:
                 print("********************************************")
                 nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("""SELECT appointmentID, start FROM Appointment 
-                    WHERE nhsNumber =? ORDER BY appointmentID ASC""", [nhsNumber])
+                    WHERE nhsNumber =? and appointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhsNumber])
                 appointments = self.c.fetchall()
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
                 nhsq = self.c.fetchall()
                 if nhsNumber == "0":
-                    masterback = 2
+                    master_back = 2
                     break
                 elif not nhsNumber:
                     raise FieldEmpty()
@@ -659,7 +664,8 @@ class adminFunctions():
                         print("\n   < Please provide a numerical input >\n")
                         #return adminFunctions.cout(self)
                     else:
-                        self.c.execute("SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?", (check_number, nhsNumber))
+                        self.c.execute("""SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?
+                         and appointmentStatus = "Accepted" """, (check_number, nhsNumber))
                         items = self.c.fetchall()
                         if len(items) == 0:
                             print("< No record exists with this appointmentID >")
@@ -685,16 +691,17 @@ class adminFunctions():
                                 print("Successfully checked out {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
                             return 0
 
-    def managedet(self):
-        masterback = 0
-        while masterback == 0:
+    def manage_det(self):
+        """Changing every patient detail of a specific NHS number"""
+        master_back = 0
+        while master_back == 0:
             try:
                 print("********************************************")
                 nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == '0':
-                    masterback = 1
+                    master_back = 1
                     break
                 elif not nhsnum:
                     raise FieldEmpty()
@@ -707,9 +714,9 @@ class adminFunctions():
                 error = nhsNotExists()
                 print(error)
             else:
-                patback = 0
+                pat_back = 0
                 question_num = 1
-                while patback == 0:
+                while pat_back == 0:
                     print("********************************************")
                     print("Press [0] to re-enter NHS number: ")
                     print("Press [1] to go back to update patient details menu")
@@ -719,10 +726,10 @@ class adminFunctions():
                             self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (emails,))
                             emailCheck = self.c.fetchall()
                             if emails == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif emails == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif len(emailCheck) > 0:
                                 raise EmailInUse
@@ -735,10 +742,10 @@ class adminFunctions():
                         while question_num == 2:
                             firstn = input("New first name: ")
                             if firstn == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif firstn == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not firstn:
                                 raise FieldEmpty
@@ -747,10 +754,10 @@ class adminFunctions():
                         while question_num == 3:
                             lastnm = input("New last name: ")
                             if lastnm == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif lastnm == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not lastnm:
                                 raise FieldEmpty
@@ -759,10 +766,10 @@ class adminFunctions():
                         while question_num == 4:
                             dateOfBirth = (input("New date of birth as YYYY-MM-DD: "))
                             if dateOfBirth == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif dateOfBirth == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not dateOfBirth:
                                 raise FieldEmpty()
@@ -802,10 +809,10 @@ class adminFunctions():
                         while question_num == 6:
                             gender = input("Gender (enter male/female/non-binary/prefer not to say): ")
                             if gender == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif gender == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not gender:
                                 raise FieldEmpty()
@@ -816,10 +823,10 @@ class adminFunctions():
                         while question_num == 7:
                             addl1 = input("New address line 1: ")
                             if addl1 == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif addl1 == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not addl1:
                                 raise FieldEmpty()
@@ -830,10 +837,10 @@ class adminFunctions():
                         while question_num == 8:
                             addl2 = input("New address line 2: ")
                             if addl2 == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif addl2 == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not addl2:
                                 raise FieldEmpty()
@@ -842,10 +849,10 @@ class adminFunctions():
                         while question_num == 9:
                             postcode = input("New postcode: ")
                             if postcode == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif postcode == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not postcode:
                                 raise FieldEmpty()
@@ -854,10 +861,10 @@ class adminFunctions():
                         while question_num == 10:
                             tel = (input("New telephone number (no spaces, with country code. E.g. +4471234123123): "))
                             if tel == '0':
-                                return adminFunctions.managedet(self)
+                                return adminFunctions.manage_det(self)
                                 break
                             elif tel == '1':
-                                return masterback
+                                return master_back
                                 break
                             elif not tel:
                                 raise FieldEmpty()
@@ -865,9 +872,9 @@ class adminFunctions():
                                 raise TeleNoFormatError()
                             tel = tel.replace('+', '')
                             input_list = [i for i in tel]
-                            if len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
+                            if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
                                     input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
-                                correct_length = '12 to 18'
+                                correct_length = '11 to 18'
                                 raise IncorrectInputLength(correct_length)
                             question_num = 11
 
@@ -900,6 +907,15 @@ class adminFunctions():
                         print(error)
                     except ValueError:
                         print("< Please provide a numerical input >")
+                    except DateInvalidError:
+                        error = DateInvalidError()
+                        print(error)
+                    except DateInFutureError:
+                        error = DateInFutureError()
+                        print(error)
+                    except DateFormatError:
+                        error = DateFormatError()
+                        print(error)
                     else:
                         self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?
                         , gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
@@ -907,9 +923,10 @@ class adminFunctions():
                         (emails, firstn, lastnm, dateOfBirth, gender, addl1, addl2, postcode, tel, nhsnum))
                         self.connection.commit()
                         print("Succesfully updated entire patient record")
-                        return masterback
+                        return master_back
 
-    def delpatdet(self):
+    def del_pat(self):
+        """Deleting the entire row of a patient record"""
         delback = 0
         while delback == 0:
             try:
@@ -937,17 +954,18 @@ class adminFunctions():
                 print("Successfully deleted patient record")
                 delback = 1
 
-
-    def manIndDet(self):
-        masterback = 0
-        while masterback == 0:
+    def man_ind_det(self):
+        """Entering an NHS number allows admin to navigate menu
+             and choose which patient detail to update individually"""
+        master_back = 0
+        while master_back == 0:
             try:
                 print("********************************************")
                 nhsnum = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
                 nhsq = self.c.fetchall()
                 if nhsnum == "0":
-                    masterback = 1
+                    master_back = 1
                     break
                 if not nhsnum:
                     raise FieldEmpty
@@ -981,7 +999,7 @@ class adminFunctions():
                             Cagain = 1
                             break
                         elif detinp == '1':
-                            masterback = 1
+                            master_back = 1
                             break
                         elif detinp.isdigit() == False:
                             raise IntegerError
@@ -1134,6 +1152,9 @@ class adminFunctions():
                                 except DateInvalidError:
                                     error = DateInvalidError()
                                     print(error)
+                                except DateInFutureError:
+                                    error = DateInFutureError()
+                                    print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (dateOfBirth, nhsnum))
                                     self.connection.commit()
@@ -1260,12 +1281,12 @@ class adminFunctions():
                                         raise TeleNoFormatError()
                                     Ctel = Ctel.replace('+', '')
                                     input_list = [i for i in Ctel]
-                                    if len(input_list) != 12 and len(input_list) != 13 and len(
+                                    if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(
                                             input_list) != 14 and len(
                                             input_list) != 15 and len(input_list) != 16 and len(
                                         input_list) != 17 and len(
                                         input_list) != 18:
-                                        correct_length = '12 to 18'
+                                        correct_length = '11 to 18'
                                         raise IncorrectInputLength(correct_length)
 
                                 except FieldEmpty:
