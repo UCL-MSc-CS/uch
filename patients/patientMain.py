@@ -734,7 +734,7 @@ def register():
     #               "patient_email": "",
     #               "password": ""}
     # first_name_q(new_patient)
-    new_patient = {"first_name": "Caroline",
+    new_patient = {"first_name": "",
                    "last_name": "Crandell",
                    "date_of_birth": "1993-07-19",
                    "gender": "Female",
@@ -744,13 +744,38 @@ def register():
                    "telephone_number": "+447123456789",
                    "patient_email": "b@b.com",
                    "password": "1234"}
-    x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"],
-                new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
-    x.register()
-    print("Thank you, " + x.first_name +
-          ", for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days.")
-    summary(x.NHS_number)
-    task('logout')
+    while True:
+        count = 0
+        try:
+            while count == 0:
+                first_name = input("Please enter your first name (press 0 to exit registration): ")
+                first_name = first_name.strip().title()
+                if first_name == '':
+                    raise EmptyAnswerError()
+                elif first_name == '0':
+                    return 0
+                x = first_name.replace(" ", "")
+                if (any(str.isdigit(y) for y in x)) == True:
+                    raise InvalidAnswerError()
+                else:
+                    new_patient["first_name"] = first_name
+                    count = 1
+        except EmptyAnswerError:
+            error = EmptyAnswerError()
+            print(error)
+            first_name_q(new_patient)
+        except InvalidAnswerError:
+            error = InvalidAnswerError()
+            print(error)
+            first_name_q(new_patient)
+        else:
+            x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"],
+                        new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
+            x.register()
+            print("Thank you, " + x.first_name +
+                ", for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days.")
+            summary(x.NHS_number)
+            return 0
 
 # Main Patient Function
 
