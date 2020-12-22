@@ -828,10 +828,115 @@ def register():
                     count = 4
                 elif choice == "4":
                     return 0
-                elif choice == "5":
-                    count = 2
+                # elif choice == "5":
+                #     count = 2
                 else:
                     raise InvalidAnswerError()
+            while count == 4:
+                address_line_1 = input("Address Line 1 (press 0 to exit registration, press 1 to go back): ")
+                address_line_1 = address_line_1.strip().title()
+                if address_line_1 == '':
+                    raise EmptyAnswerError()
+                elif address_line_1 == '0':
+                    return 0
+                # elif address_line_1 == "1":
+                #     count = 3
+                elif len(address_line_1) > 100:
+                    raise InvalidAnswerError()
+                else:
+                    new_patient["address_line_1"] = address_line_1
+                    count = 5
+            while count == 5:
+                address_line_2 = input("Address Line 2 (press 0 to exit registration, press 1 to go back): ")
+                address_line_2 = address_line_2.strip().title()
+                if address_line_2 == '0':
+                    return 0
+                # elif address_line_2 == "1":
+                #     count = 4
+                elif len(address_line_2) > 100:
+                    raise InvalidAnswerError()
+                else:
+                    new_patient["address_line_2"] = address_line_2
+                    count = 6
+            while count == 6:
+                city = input("City (press 0 to exit registration, press 1 to go back): ")
+                city = city.strip().title()
+                if city == '':
+                    raise EmptyAnswerError()
+                elif city == '0':
+                    return 0
+                # elif city == "1":
+                #     count = 5
+                elif len(city) > 100:
+                    raise InvalidAnswerError()
+                else:
+                    x = city.replace(" ", "")
+                    if (any(str.isdigit(y) for y in x)) == True:
+                        raise InvalidAnswerError()
+                    else:
+                        address_line_2 = (new_patient["address_line_2"] + " " + city).strip()
+                        new_patient["address_line_2"] = address_line_2
+                        count = 7
+            while count == 7:
+                postcode = input("Postcode (press 0 to exit registration, press 1 to go back): ")
+                postcode = postcode.strip().upper()
+                if postcode == '':
+                    raise EmptyAnswerError()
+                elif postcode == '0':
+                    return 0
+                # elif postcode == "1":
+                #     count = 6
+                elif len(postcode) > 100:
+                    raise InvalidAnswerError()
+                else:
+                    new_patient["postcode"] = postcode
+                    count = 8
+            while count == 8:
+                telephone_number = input("Telephone number, including country code (i.e. +447123456789)(press 0 to exit registration, press 1 to go back): ")
+                if telephone_number == '':
+                    raise EmptyAnswerError()
+                elif telephone_number == '0':
+                    return 0
+                # elif telephone_number == "1":
+                #     count = 7
+                else:
+                    telephone_number = re.sub("[^0-9]", "", telephone_number)
+                    if len(telephone_number) > 17 or len(telephone_number) < 11:
+                        raise InvalidTelephoneError()
+                    else:
+                        telephone_number = int(telephone_number)
+                        new_patient["telephone_number"] = telephone_number
+                        count = 9
+            while count == 9:
+                patient_email = input("Email (press 0 to exit registration, press 1 to go back): ")
+                if patient_email == '':
+                    raise EmptyAnswerError()
+                elif patient_email == '0':
+                    return 0
+                # elif patient_email == "1":
+                #     count = 8
+                elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
+                    c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?",
+                    [patient_email])
+                    patient_emails = c.fetchall()
+                    if patient_emails != []:
+                        raise EmailAlreadyExistsError()
+                    else:
+                        new_patient["patient_email"] = patient_email
+                        count = 10
+                else:
+                    raise InvalidEmailError()
+            while count == 10:
+                password = input("Password (press 0 to exit registration, press 1 to go back): ")
+                if password == '':
+                    raise EmptyAnswerError()
+                elif password == '0':
+                    return 0
+                # elif password == "1":
+                #     count = 9
+                else:
+                    new_patient["password"] = password
+                    count = 11
         except EmptyAnswerError:
             error = EmptyAnswerError()
             print(error)
@@ -846,6 +951,15 @@ def register():
             print(error)
         except DateInFutureError:
             error = DateInFutureError()
+            print(error)
+        except InvalidTelephoneError:
+            error = InvalidTelephoneError()
+            print(error)
+        except InvalidEmailError:
+            error = InvalidEmailError()
+            print(error)
+        except EmailAlreadyExistsError:
+            error = EmailAlreadyExistsError()
             print(error)
         else:
             x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"],
