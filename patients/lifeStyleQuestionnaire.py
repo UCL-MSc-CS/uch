@@ -96,7 +96,8 @@ class RiskProfile:
                 print("The nhs recommends at least 150 minutes of moderate intensity activity a week.")
         else:
             print("Regular exercises are the key to stay healthy.")
-        print("GOALS\n", "*"*10)
+        print("GOALS")
+        print("*"*18)
         while True:
             try:
                 d_goals = input("What are your main health goals: ")
