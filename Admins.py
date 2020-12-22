@@ -760,23 +760,23 @@ class adminFunctions():
                             question_num = 4
 
                         while question_num == 4:
-                            dateOfBirth = (input("New date of birth as YYYY-MM-DD: "))
-                            if dateOfBirth == '0':
+                            date_of_birth = (input("New date of birth as YYYY-MM-DD: "))
+                            if date_of_birth == '0':
                                 return adminFunctions.manage_det(self)
                                 break
-                            elif dateOfBirth == '1':
+                            elif date_of_birth == '1':
                                 return master_back
                                 break
-                            elif not dateOfBirth:
+                            elif not date_of_birth:
                                 raise FieldEmpty()
-                            elif len(dateOfBirth) != 10:
+                            elif len(date_of_birth) != 10:
                                 correct_length = 10
                                 raise IncorrectInputLength(10)
-                            elif dateOfBirth[4] != '-' or dateOfBirth[7] != '-':
+                            elif date_of_birth[4] != '-' or date_of_birth[7] != '-':
                                 raise DateFormatError
-                            day = int(dateOfBirth[8:10])
-                            month = int(dateOfBirth[5:7])
-                            year = int(dateOfBirth[0:4])
+                            day = int(date_of_birth[8:10])
+                            month = int(date_of_birth[5:7])
+                            year = int(date_of_birth[0:4])
                             if month == 9 or month == 4 or month == 6 or month == 11:
                                 if day > 30:
                                     raise DateInvalidError
@@ -798,8 +798,8 @@ class adminFunctions():
                             date_today = date.today()
                             if date_entered > date_today:
                                 raise DateInFutureError
-                            dateOfBirth = date_entered.isoformat()
-                            print(dateOfBirth)
+                            date_of_birth = date_entered.isoformat()
+                            print(date_of_birth)
                             question_num = 6
 
                         while question_num == 6:
@@ -916,7 +916,7 @@ class adminFunctions():
                         self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?
                         , gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
                         telephoneNumber = ? WHERE nhsNumber = ?""",
-                        (emails, firstn, lastnm, dateOfBirth, gender, addl1, addl2, postcode, tel, nhs_num))
+                        (emails, firstn, lastnm, date_of_birth, gender, addl1, addl2, postcode, tel, nhs_num))
                         self.connection.commit()
                         print("Succesfully updated entire patient record")
                         return master_back
@@ -1096,23 +1096,23 @@ class adminFunctions():
                             back4 = 0
                             while back4 == 0:
                                 try:
-                                    dateOfBirth = (input("New date of birth as YYYY-MM-DD: "))
-                                    if dateOfBirth == '0':
+                                    date_of_birth = (input("New date of birth as YYYY-MM-DD: "))
+                                    if date_of_birth == '0':
                                         Cagain = 1
                                         break
-                                    elif dateOfBirth == '1':
+                                    elif date_of_birth == '1':
                                         back4 = 1
                                         break
-                                    elif not dateOfBirth:
+                                    elif not date_of_birth:
                                         raise FieldEmpty()
-                                    elif len(dateOfBirth) != 10:
+                                    elif len(date_of_birth) != 10:
                                         correct_length = 10
                                         raise IncorrectInputLength(10)
-                                    elif dateOfBirth[4] != '-' or dateOfBirth[7] != '-':
+                                    elif date_of_birth[4] != '-' or date_of_birth[7] != '-':
                                         raise DateFormatError
-                                    day = int(dateOfBirth[8:10])
-                                    month = int(dateOfBirth[5:7])
-                                    year = int(dateOfBirth[0:4])
+                                    day = int(date_of_birth[8:10])
+                                    month = int(date_of_birth[5:7])
+                                    year = int(date_of_birth[0:4])
                                     if month == 9 or month == 4 or month == 6 or month == 11:
                                         if day > 30:
                                             raise DateInvalidError
@@ -1134,8 +1134,8 @@ class adminFunctions():
                                     date_today = date.today()
                                     if date_entered > date_today:
                                         raise DateInFutureError
-                                    dateOfBirth = date_entered.isoformat()
-                                    print(dateOfBirth)
+                                    date_of_birth = date_entered.isoformat()
+                                    print(date_of_birth)
                                 except FieldEmpty:
                                     error = FieldEmpty()
                                     print(error)
@@ -1152,7 +1152,7 @@ class adminFunctions():
                                     error = DateInFutureError()
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (dateOfBirth, nhs_num))
+                                    self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (date_of_birth, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed date of birth")
                                     back4 = 1
