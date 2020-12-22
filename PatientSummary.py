@@ -1,5 +1,8 @@
 import sqlite3 as sql
 import usefulfunctions as uf
+from datetime import datetime
+
+datetimeformat = "%Y-%m-%d %H:%M"
 
 def PatientSummary(nhsNumber):
     connection = sql.connect('UCH.db')
@@ -36,13 +39,13 @@ def PatientSummary(nhsNumber):
         items = c.fetchall()
 
         for i in range(0,len(items)):
-            print(items[i])
+            #print(items[i])
             date_unix = items[i][0]
-            print(date_unix)
+            #print(date_unix)
             date_regular = uf.toregulartime(date_unix)
-            print(date_regular)
+            #print(date_regular)
             date_regular = date_regular.strftime("%Y-%m-%d")
-            print(date_regular)
+            #print(date_regular)
             diagnosis = items[i][1]
             if items[i][1] == '':
                 diagnosis = "Diagnosis pending"
@@ -67,20 +70,23 @@ def PatientSummary(nhsNumber):
         f.write("--------------------------------------------\n")
         f.write("MEDICATION: \n")
         f.write("--------------------------------------------\n")
-        c.execute("""SELECT Medicine.medicineName, Prescription.dosage, Appointment.dateRequested, Appointment.appointmentID
-        FROM Medicine, Prescription, Appointment
-        WHERE Appointment.appointmentID = Prescription.appointmentID
-        AND Medicine.medicineID = Prescription.medicineID
-        AND Appointment.nhsNumber = ?""", (nhsNumber,))
+        c.execute("""
+        SELECT M.medicineName, P.dosage, A.start, A.appointmentID
+        FROM Medicine M
+        LEFT JOIN Prescription P ON M.medicineID = P.medicineID 
+        LEFT JOIN Appointment A ON A.appointmentID = P.appointmentID
+        WHERE A.nhsNumber = ?"""
+        , (nhsNumber,))
         items = c.fetchall()
         if items == []:
             f.write("The patient has no medication history \n")
         else:
             for i in range(0,len(items)):
+                time_string = datetime.strftime(uf.toregulartime(items[i][2]),datetimeformat)
                 if len(str(items[i][0])) > 30:
-                    f.write('{:<60s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], items[i][2]))
+                    f.write('{:<60s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], time_string))
                 else:
-                    f.write('{:<30s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], items[i][2]))
+                    f.write('{:<30s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], time_string))
             # promethazine hydrochloride and codeine phosphate
             # Losartan Potassium and Hydrochlorothiazide
             # "Butalbital, Acetaminophen, Caffeine, and Codeine Phosphate " 59 characters long
@@ -140,4 +146,4 @@ def PatientSummary(nhsNumber):
     print("Summary downloaded, check your folder to see the file")
 
 if __name__ == "__main__":
-    PatientSummary(5604701515)
+    PatientSummary(61784222)

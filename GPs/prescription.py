@@ -1,9 +1,9 @@
 from tkinter import *
 from tkinter import messagebox, ttk
 import prescriptionMedFunctions as ms
+from GPs.instructionFunction import instructionFunction
 
 def prescription(doctoremail,appointmentID,nhsNumber):
-
 
     # Pull all saved prescription records from the database
     prescriptionData = ms.getPrescription(appointmentID)
@@ -35,11 +35,15 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     medicineFrame.pack(side=BOTTOM)
 
     # Final medicine section
-    prescriptionFrame = LabelFrame(bottomFrame, bd=10, width=450, height=300, padx=20, relief=RIDGE, font=('arial', 12, 'bold'), text="Final Prescription:")
-    prescriptionFrame.pack(side=BOTTOM)
+    prescriptionFrame = LabelFrame(bottomFrame, bd=10, width=450, height=300, padx=20, relief=RIDGE, font=('arial', 12, 'bold'), text="Step 3. Confirm Final Prescription:")
+    prescriptionFrame.pack(side=TOP)
+
+    # Load instructions section
+    instructionFrame = LabelFrame(bottomFrame, bd=10, width=225, height=50, padx=20, relief=RIDGE, font=('arial', 12, 'bold'), text="Need help? Here is a guide:")
+    instructionFrame.pack(side=BOTTOM)
 
     # Select medicine section --------------------------------------------
-    medSelectFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=10, relief=RIDGE, font=('arial', 12, 'bold'), text="Select Medicine:")
+    medSelectFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=10, relief=RIDGE, font=('arial', 12, 'bold'), text="Step 1. Search Medicine:")
     medSelectFrame.pack(side=LEFT)
 
 
@@ -60,43 +64,51 @@ def prescription(doctoremail,appointmentID,nhsNumber):
 
 
     dosage_types = ms.alldosagetypes()
+    dosage_types.insert(0,"-")
     medicine_types = ms.allmedtypes()
+    medicine_types.insert(0,"-")
     categories = ms.allcategories()
+    categories.insert(0,"-")
 
-    chosendosetype = StringVar()
-    chosenmedtype = StringVar()
-    chosencategory = StringVar()
+    chosendosetype = StringVar(value="-")
+    chosenmedtype = StringVar(value="-")
+    chosencategory = StringVar(value="-")
 
-    mednamelabel = Label(medSelectFrame, text="Type name of Medicine")
+    mednamelabel = Label(medSelectFrame, text="Medicine name/Brand name")
     mednamelabel.pack()
     mednamesearch = Entry(medSelectFrame)
+    mednamesearch.config(width = 25)
     mednamesearch.pack()
 
-    drugnamelabel = Label(medSelectFrame, text="Type name of Drug")
+    drugnamelabel = Label(medSelectFrame, text="Drug name/Active Ingredient")
     drugnamelabel.pack()
     drugnamesearch = Entry(medSelectFrame)
+    drugnamesearch.config(width = 25)
     drugnamesearch.pack()
 
-    dtlabel = Label(medSelectFrame, text="Select your dosage type")
+    dtlabel = Label(medSelectFrame, text="Dosage type")
     dtlabel.pack()
     dosetypedropmenu = OptionMenu(medSelectFrame, chosendosetype, *dosage_types)
+    dosetypedropmenu.config(width = 20)
     dosetypedropmenu.pack()
 
-    mtlabel = Label(medSelectFrame, text="Select your medicine type")
+    mtlabel = Label(medSelectFrame, text="Medicine type")
     mtlabel.pack()
     medtypedropmenu = OptionMenu(medSelectFrame, chosenmedtype, *medicine_types)
+    medtypedropmenu.config(width = 20)
     medtypedropmenu.pack()
 
-    catlabel = Label(medSelectFrame, text="Select your categories")
+    catlabel = Label(medSelectFrame, text="Categories")
     catlabel.pack()
     catdropmenu = OptionMenu(medSelectFrame, chosencategory, *categories)
+    catdropmenu.config(width = 20)
     catdropmenu.pack()
 
     medsearchsubmit = Button(medSelectFrame, text="Search Medicine", command=submitmedsearch)
     medsearchsubmit.pack(pady=10)
 
     # Print search medicine section --------------------------------------------
-    medResultsFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=5, relief=RIDGE, font=('arial', 12, 'bold'), text="Medicine Results:")
+    medResultsFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=5, relief=RIDGE, font=('arial', 12, 'bold'), text="Step 2. Choose Medicine Search Results:")
     medResultsFrame.pack(side=RIGHT)
 
     def enterintodisabled(textbox, string):
@@ -119,6 +131,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             chosendose.set(dosages[0])
             global dosagedropdown
             dosagedropdown = OptionMenu(chosenmedframe, chosendose, *dosages)
+            dosagedropdown.config(width = 10)
             dosagedropdown.grid(row=2, column=3)
 
     # Add record
@@ -319,7 +332,8 @@ def prescription(doctoremail,appointmentID,nhsNumber):
 
         exit = messagebox.askyesno("Save Prescription", "Confirm if you want to exit.")
         if exit > 0:
-            root.destroy()
+            root.after(1, root.destroy())
+
             return
 
     # Remove all
@@ -334,5 +348,13 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     savePrescription = Button(prescriptionFrame, text="Save Prescription", command=savePrescription)
     savePrescription.pack(pady=5)
 
+    # Load up guide
+    instructionButton = Button(instructionFrame, text='User Guide', command=instructionFunction,
+                        background='SlateGray1')
+    instructionButton.pack(pady=5)
 
+
+    root.after(1000, root.focus_force)
     root.mainloop()
+
+#prescription('matthew.shorvon@ucl.ac.uk', 3, '1234567890')

@@ -302,27 +302,24 @@ def getPatientInfo(appointmentId):
 
     conn['cursor'].execute("""
             SELECT 
-                Appointment.nhsNumber,
-                patientEmail,
-                firstName,
-                lastName,
-                dateOfBirth,
-                gender,
-                addressLine1,
-                addressLine2,
-                postcode,
-                telephoneNumber,
-                appointmentID,
-                height,
-                weight,
-                bmi
+                A.nhsNumber,
+                P.patientEmail,
+                P.firstName,
+                P.lastName,
+                P.dateOfBirth,
+                P.gender,
+                P.addressLine1,
+                P.addressLine2,
+                P.postcode,
+                P.telephoneNumber,
+                A.appointmentID,
+                Q.height,
+                Q.weight,
+                Q.bmi
             FROM
-                Appointment
-            LEFT JOIN
-                PatientDetail
-            LEFT JOIN 
-                questionnaireTable
-            USING (nhsNumber)
+                Appointment A
+            LEFT JOIN PatientDetail P ON A.nhsNumber = P.nhsNumber
+            LEFT JOIN questionnaireTable Q ON P.nhsNumber = A.nhsNumber
             WHERE
                 appointmentID = ?
             """, (appointmentId,))
@@ -331,7 +328,48 @@ def getPatientInfo(appointmentId):
     closeconn(conn["connection"])
     return results
 
+#call this function to autodecline any pending appointments when a doctor wants to book non-patient time
+def auto_decline_pending(datestring, startstring, endstring, doctoremail):
+    conn = connecttodb()
 
+    start = str(uf.tounixtime(datetime.strptime(datestring + " " + startstring, datetimeformat)))
+    end = str(uf.tounixtime(datetime.strptime(datestring + " " + endstring, datetimeformat)))
+
+    conn['cursor'].execute(
+        """
+     SELECT appointmentID 
+     FROM Appointment 
+     WHERE
+        reason = "Appointment" AND
+        appointmentStatus = 'Pending' AND
+        (
+                (start <= ? AND end > ? ) OR
+                (start < ? AND end >= ?) OR
+                (start > ? AND end < ?)
+        ) AND
+        gpEmail = ?
+     """
+        , (start, start, end, end, start, end, doctoremail))
+
+    results = conn['cursor'].fetchall()
+    closeconn(conn["connection"])
+
+    conflicting_appointments = []
+    for result in results:
+        conflicting_appointments.append(result[0])
+
+    for appointmentID in conflicting_appointments:
+        declineappointment(appointmentID)
+
+    if conflicting_appointments:
+        #You HAVE auto-declined appointments
+        return True
+    else:
+        #You HAVE NOT declined anything
+        return False
+
+
+# used only for testing
 if __name__ == "__main__":
     today = datetime.strftime(datetime.today(),"%Y-%m-%d")
     book_appointment(today, "15:00", "16:30", "1234567890", ["matthew.shorvon@ucl.ac.uk"])

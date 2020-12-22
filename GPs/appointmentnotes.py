@@ -6,9 +6,7 @@ from functools import partial
 from GPs.prescription import prescription
 
 
-def appointmentnotes(doctoremail, appointmentid, nhsNumber):
-    # todo (longterm) use classes to display a label
-    # todo make sure doctor email is used to ensure patient confidentiality
+def appointmentnotes(doctoremail, appointmentid):
 
     # Existing doctor's notes
     doctorsNotes = getDoctorNotes(appointmentid)
@@ -45,8 +43,9 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
     global root
     root = Tk()
     root.title('Appointment ID: ' + str(appointmentid))
-    root.geometry("1260x550+0+0")
+    root.geometry("1280x800")
     root.configure(background='SlateGray1')
+    root.after(1000, root.focus_force)
 
     mainFrame = Frame(root)
     mainFrame.grid()
@@ -74,7 +73,7 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
                                 font=('arial', 14, 'bold'), text='Patient information:', background='SlateGray1')
     dataFrameRight.pack(side=RIGHT)
 
-    complaintLabel = Label(dataFrameLeft, font=('arial', 12, 'bold'), text="Patient Complaint:", padx=2,
+    complaintLabel = Label(dataFrameLeft, font=('arial', 12, 'bold'), text="Reason for visit:", padx=2,
                            background='SlateGray1')
     complaintLabel.grid(row=0, column=0, sticky=W)
     global patientComplaintTextBox
@@ -118,13 +117,12 @@ def appointmentnotes(doctoremail, appointmentid, nhsNumber):
                         background='SlateGray1')
     saveButton.grid(row=0, column=0)
 
-    saveButton = Button(buttonFrame, text='Open prescription', font=('arial', 12, 'bold'), width=20,
-                        command=partial(prescription, doctoremail, appointmentid,nhsNumber), background='SlateGray1')
-    saveButton.grid(row=0, column=1)
 
     # ------------------------- Patient Information -------------------------
 
     # Create notebook for tabs feature
+    s = ttk.Style()
+    s.configure('TNotebook.Tab', font=('URW Gothic L', '11', 'bold'))
     my_notebook = ttk.Notebook(dataFrameRight)
     my_notebook.pack()
 
@@ -278,9 +276,9 @@ def saveNotes():
     response = messagebox.askyesno("Your notes have been saved!",
                                    "Your notes have been saved. Are you finished editing your notes?")
     if response == 1:
-        root.destroy()
+        root.after(1, root.destroy())
     else:
         pass
 
 
-# appointmentnotes('matthew.shorvon@ucl.ac.uk', 3, 1234567890)
+#appointmentnotes('matthew.shorvon@ucl.ac.uk', 3)

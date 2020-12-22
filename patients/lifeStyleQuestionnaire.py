@@ -19,7 +19,8 @@ class RiskProfile:
         self.answers = []
 
     def questions(self, nhs_number):
-        print("EXERCISE")
+        print('*'*20, '\nEXERCISE\n\nPlease enter 0 to exit exercises related questions.'
+                      '\nENTERING 0 IN ANY OF THE QUESTIONS WILL RESULT IN NONE OF THE ANSWERS PROVIDED BEING SAVED IN THE END!')
         while True:
             try:
                 c_exercise = input("Are you currently involved in regular endurance (cardiovascular) exercise? "
@@ -34,7 +35,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    < Please enter Y for yes and N for no>\n")
+                print("\n    < Please enter Y for yes and N for no >\n")
             else:
                 break
         if c_exercise == "y":
@@ -69,7 +70,7 @@ class RiskProfile:
                     error = pf.EmptyFieldError()
                     print(error)
                 except ValueError:
-                    print("\n    < You have entered a non-numeric value>\n")
+                    print("\n    < You have entered a non-numeric value >\n")
                 else:
                     break
             self.questionnaire[2] = str(c_frequency)
@@ -86,9 +87,9 @@ class RiskProfile:
                     error = pf.EmptyFieldError()
                     print(error)
                 except pf.InvalidAnswerError:
-                    print("\n    < Please enter a realistic answer for this questions>\n")
+                    print("\n    < Please enter a realistic answer for this questions >\n")
                 except ValueError:
-                    print("\n    < You have entered a non-numeric value>\n")
+                    print("\n    < You have entered a non-numeric value >\n")
                 else:
                     break
             self.questionnaire[3] = str(c_time)
@@ -96,7 +97,7 @@ class RiskProfile:
                 print("The nhs recommends at least 150 minutes of moderate intensity activity a week.")
         else:
             print("Regular exercises are the key to stay healthy.")
-        print("GOALS\n", "*"*10)
+        print('*'*20, '\nGOALS\nPlease enter 0 to exit goal related questions.')
         while True:
             try:
                 d_goals = input("What are your main health goals: ")
@@ -113,6 +114,7 @@ class RiskProfile:
         self.questionnaire[4] = d_goals
 
     def BMI_calculator(self, nhs_number):
+        print('*'*20, '\nBMI CALCULATOR\nPlease enter 0 to exit BMI related questions.')
         while True:
             try:
                 height = float(input("What is your height in metres: "))
@@ -129,9 +131,9 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    < Error! The entered height and weight seem to be unrealistic>\n")
+                print("\n    < Error! The entered height and weight seem to be unrealistic >\n")
             except ValueError:
-                print('\n    < Error! Please enter numeric values for height and weight>\n')
+                print('\n    < Error! Please enter numeric values for height and weight >\n')
             else:
                 break
         bmi_calculation = round(weight/(height ** 2), 2)
@@ -146,7 +148,7 @@ class RiskProfile:
             print("Your BMI of {} suggests you are underweight.".format(bmi))
             print("Being underweight could be a sign you're not eating enough or you may be ill."
                   "\nPlease talk to your doctor. You can also find advice on the following NHS webpage: ")
-            if input("Type Y for yes to open in browser: ").lower() == "y":
+            if input("Type Y for yes to open in browser (type anything else means no): ").lower() == "y":
                 webbrowser.open("https://www.nhs.uk/live-well/healthy-weight/advice-for-underweight-adults/", new=2)
 
         if 18.5 < bmi < 24.9:
@@ -160,7 +162,7 @@ class RiskProfile:
                   "\nsuch as lowering your blood pressure and reducing your risk of developing type 2 diabetes."
                   "\nYou should work towards achieving a healthier weight over time. "
                   "\nWe suggest you visit your GP to discuss. You can also find advice on the following NHS webpage: ")
-            if input("Type Y for yes to open in browser: ").lower() == "y":
+            if input("Type Y for yes to open in browser (type anything else means no): ").lower() == "y":
                 webbrowser.open("https://www.nhs.uk/live-well/healthy-weight/start-the-nhs-weight-loss-plan"
                                 "/?tabname=weight-loss-support", new=2)
 
@@ -171,13 +173,12 @@ class RiskProfile:
                   "\nsuch as lowering your blood pressure and reducing your risk of developing type 2 diabetes."
                   "\nYou should work towards achieving a healthier weight over time. "
                   "\nWe suggest you visit your GP to discuss. You can also find advice on the following NHS webpage: ")
-            if input("Type Y for yes to open in browser: ").lower() == "y":
+            if input("Type Y for yes to open in browser (type anything else means no): ").lower() == "y":
                 webbrowser.open("https://www.nhs.uk/live-well/healthy-weight/start-the-nhs-weight-loss-plan"
                                 "/?tabname=weight-loss-support", new=2)
 
     def smoking(self, nhs_number):
-        print("*" * 20)
-        print("This section of the survey will assess smoking.")
+        print('*'*20, '\nSMOKING\nPlease enter 0 to exit smoking related questions.')
         while True:
             try:
                 smoking = input("Y for yes, N for no. Do you smoke cigarettes regularly: ").lower()
@@ -191,7 +192,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    < Error! Please re-answer the questions with Y for yes and N for no>\n")
+                print("\n    < Error! Please re-answer the questions with Y for yes and N for no >\n")
             else:
                 break
         if smoking == "y":
@@ -207,11 +208,11 @@ class RiskProfile:
                   "\nthey start almost immediately!")
             print("If you would like more advice and support, "
                   "\nplease consult your doctor and look at the following NHS webpage: ")
-            if input("Type Y for yes to open in browser: ").lower() == "y":
+            if input("Type Y for yes to open in browser (type anything else means no): ").lower() == "y":
                 webbrowser.open("https://www.nhs.uk/better-health/quit-smoking/", new=2)
 
     def drugs(self, nhs_number):
-        print("*" * 20)
+        print('*'*20, '\nDRUGS\nPlease enter 0 to exit drug related questions.')
         while True:
             try:
                 drugs = input("Y for yes, N for no. Do you consume recreational drugs: ").lower()
@@ -225,7 +226,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    < Error! Please enter Y for yes and N for no>\n")
+                print("\n    < Error! Please enter Y for yes and N for no >\n")
             else:
                 break
         if drugs == "y":
@@ -252,8 +253,7 @@ class RiskProfile:
             self.answers.append(drugs_type)
 
     def alcohol(self, nhs_number):
-        print("*" * 20)
-        print("The following part of the survey will assess your consumption of alcohol.")
+        print('*'*20, '\nALCOHOL\nPlease enter 0 to exit alcohol related questions.')
         print("1 unit of alcohol is around 76ml(~1/2 a glass) of wine or 250ml of beer (~1/2 a pint).")
         while True:
             try:
@@ -268,7 +268,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except pf.InvalidAnswerError:
-                print("\n    < Error! Please enter Y for yes and N for no>\n")
+                print("\n    < Error! Please enter Y for yes and N for no >\n")
             else:
                 break
         if alcohol == "y":
@@ -299,9 +299,9 @@ class RiskProfile:
                     error = pf.EmptyFieldError()
                     print(error)
                 except pf.InvalidAnswerError:
-                    print("\n    < Invalid answer. Please enter your answer based on the menu provided>\n")
+                    print("\n    < Invalid answer. Please enter your answer based on the menu provided >\n")
                 except ValueError:
-                    print('\n    < Error! Please enter a numeric value from the menu above>\n')
+                    print('\n    < Error! Please enter a numeric value from the menu above >\n')
                 else:
                     break
             self.answers.append(alcohol)
@@ -314,7 +314,7 @@ class RiskProfile:
                       "\nIf you want to cut down, try to have several drink-free days each week")
                 print("If you would like more advice and support, "
                       "\nplease consult your doctor and look at the following NHS webpage: ")
-                if input("Type Y for yes to open in browser: ").lower() == "y":
+                if input("Type Y for yes to open in browser (type anything else means no): ").lower() == "y":
                     webbrowser.open("https://www.nhs.uk/live-well/alcohol-support/tips-on-cutting-down-alcohol/", new=2)
         else:
             alcohol_unit = 0
@@ -322,8 +322,7 @@ class RiskProfile:
             self.answers.append(alcohol_unit)
 
     def diet(self, nhs_number):
-        print("*" * 20)
-        print("The following part of the survey will assess your diet.")
+        print('*'*20, '\nDIET\nPlease enter 0 to exit diet related questions.')
         while True:
             try:
                 meat = int(input("How many meals a week do you consume red meat: "))
@@ -338,7 +337,7 @@ class RiskProfile:
                 error = pf.EmptyFieldError()
                 print(error)
             except ValueError:
-                print('\n    < Error! Please enter a numeric value>\n')
+                print('\n    < Error! Please enter a numeric value >\n')
             else:
                 break
         if diet < 5:
@@ -346,7 +345,7 @@ class RiskProfile:
                   "portions of fruit or vegetables a day as part of a healthy diet.")
         print("If you would like more advice and support, "
               "\nplease consult your doctor and look at the following NHS webpage: ")
-        if input("Type Y for yes to open in browser: ").lower() == "y":
+        if input("Type Y for yes to open in browser (type anything else means no): ").lower() == "y":
             webbrowser.open("https://www.nhs.uk/live-well/eat-well/meat-nutrition/", new=2)
         while True:
             try:
@@ -354,7 +353,7 @@ class RiskProfile:
                 # if caffeine == "0":
                 #     return 1
             except ValueError:
-                print('\n    < Error! Please enter a numeric value>\n')
+                print('\n    < Error! Please enter a numeric value >\n')
             else:
                 break
         if caffeine > 4:
@@ -362,7 +361,7 @@ class RiskProfile:
                   "\nYou might want to cut down your daily caffeine intake.")
             print("If you would like more advice and support, "
                   "\nplease consult your doctor and look at the following NHS webpage: ")
-            if input("Type Y for yes to open in browser: ").lower() == "y":
+            if input("Type Y for yes to open in browser (type anything else means no): ").lower() == "y":
                 webbrowser.open("https://www.nhs.uk/news/genetics-and-stem-cells/four-cups-of-coffee-not-bad-for-health-suggests-review", new=2)
         self.answers.append(str(meat))
         self.answers.append(str(diet))
