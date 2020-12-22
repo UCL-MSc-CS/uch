@@ -1,6 +1,7 @@
 import sqlite3 as sql
 from datetime import datetime
 import pandas as pd
+import patients.patientFunctions as pf
 
 
 class Error(Exception):
@@ -10,6 +11,11 @@ class Error(Exception):
 
 class AppNotExistError(Error):
     """Raised when appointmentID entered by user does not exist"""
+    pass
+
+
+class AppointmentPassedError(Error):
+    """Raised when the appointment time has already passed, therefore cannot be cancelled"""
     pass
 
 
@@ -64,11 +70,13 @@ def delete_appointment(cancel):
     c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
     c.execute("DELETE FROM Prescription WHERE appointmentID =?", [cancel])
     connection.commit()
+    connection.close()
     print("You have cancelled appointment ID {}".format(cancel))
 
 
 def check_app_id(nhs_number):
     """ Checks the appointment ID entered by the user exists in the database
+    Checks the time of the appointment is not in the past
     :return: appointment ID to cancel (integer) """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
@@ -87,10 +95,21 @@ def check_app_id(nhs_number):
                     id_list.append(app_id[0])
                 if cancel not in id_list:
                     raise AppNotExistError
+                c.execute("SELECT start FROM Appointment "
+                          "WHERE nhsNumber =? and appointmentID =?", [nhs_number, cancel])
+                app_time = c.fetchone()
+                s_time = app_time[0]
+                start_time = pf.to_regular_time(s_time)
+                current = datetime.now()
+                if start_time < current:
+                    raise AppointmentPassedError
                 else:
                     return cancel
         except AppNotExistError:
             print("\n\t< This appointment does not exist, please try again >"
+                  "\n")
+        except AppointmentPassedError:
+            print("\n\t< This appointment time has already passed and cannot be cancelled, please try again >"
                   "\n")
         except ValueError:
             print("\n\t< This is not a valid option, please enter a number >"

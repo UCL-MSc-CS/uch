@@ -420,6 +420,7 @@ def insert_appointment(start, gp_details, nhs_number):
               date_requested, '', '', '', '', '', 0, 0)
     c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
     connection.commit()
+    connection.close()
 
 
 def return_to_main():
