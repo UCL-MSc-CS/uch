@@ -60,36 +60,44 @@ def prescription(doctoremail,appointmentID,nhsNumber):
 
 
     dosage_types = ms.alldosagetypes()
+    dosage_types.insert(0,"-")
     medicine_types = ms.allmedtypes()
+    medicine_types.insert(0,"-")
     categories = ms.allcategories()
+    categories.insert(0,"-")
 
-    chosendosetype = StringVar()
-    chosenmedtype = StringVar()
-    chosencategory = StringVar()
+    chosendosetype = StringVar(value="-")
+    chosenmedtype = StringVar(value="-")
+    chosencategory = StringVar(value="-")
 
-    mednamelabel = Label(medSelectFrame, text="Type name of Medicine")
+    mednamelabel = Label(medSelectFrame, text="Medicine name/Brand name")
     mednamelabel.pack()
     mednamesearch = Entry(medSelectFrame)
+    mednamesearch.config(width = 25)
     mednamesearch.pack()
 
-    drugnamelabel = Label(medSelectFrame, text="Type name of Drug")
+    drugnamelabel = Label(medSelectFrame, text="Drug name/Active Ingredient")
     drugnamelabel.pack()
     drugnamesearch = Entry(medSelectFrame)
+    drugnamesearch.config(width = 25)
     drugnamesearch.pack()
 
-    dtlabel = Label(medSelectFrame, text="Select your dosage type")
+    dtlabel = Label(medSelectFrame, text="Dosage type")
     dtlabel.pack()
     dosetypedropmenu = OptionMenu(medSelectFrame, chosendosetype, *dosage_types)
+    dosetypedropmenu.config(width = 20)
     dosetypedropmenu.pack()
 
-    mtlabel = Label(medSelectFrame, text="Select your medicine type")
+    mtlabel = Label(medSelectFrame, text="Medicine type")
     mtlabel.pack()
     medtypedropmenu = OptionMenu(medSelectFrame, chosenmedtype, *medicine_types)
+    medtypedropmenu.config(width = 20)
     medtypedropmenu.pack()
 
-    catlabel = Label(medSelectFrame, text="Select your categories")
+    catlabel = Label(medSelectFrame, text="Categories")
     catlabel.pack()
     catdropmenu = OptionMenu(medSelectFrame, chosencategory, *categories)
+    catdropmenu.config(width = 20)
     catdropmenu.pack()
 
     medsearchsubmit = Button(medSelectFrame, text="Search Medicine", command=submitmedsearch)
@@ -119,6 +127,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             chosendose.set(dosages[0])
             global dosagedropdown
             dosagedropdown = OptionMenu(chosenmedframe, chosendose, *dosages)
+            dosagedropdown.config(width = 10)
             dosagedropdown.grid(row=2, column=3)
 
     # Add record
@@ -336,3 +345,6 @@ def prescription(doctoremail,appointmentID,nhsNumber):
 
 
     root.mainloop()
+
+
+prescription("matthew.shorvon@ucl.ac.uk",10,"1234567890")
