@@ -19,19 +19,19 @@ class InvalidAnswerError(Exception):
 
 class EmptyFieldError(Exception):
     def __init__(self):
-        self.message = '\n    < Please enter a value>\n'
+        self.message = '\n    < Please enter a value >\n'
         super().__init__(self.message)
 
 
 class InvalidConditionFormatError(Exception):
     def __init__(self):
-        self.message = '\n    < Please enter N for no or the name of the condition>\n'
+        self.message = '\n    < Please enter N for no or the name of the condition >\n'
         super().__init__(self.message)
 
 
 class InvalidAllergyFormatError(Exception):
     def __init__(self):
-        self.message = '\n    < Please enter N for no or the name of the medicine>\n'
+        self.message = '\n    < Please enter N for no or the name of the medicine >\n'
         super().__init__(self.message)
 
 
@@ -65,9 +65,9 @@ def update_patient_medical(name, nhs_number):
                 if menu not in range(1, 8):
                     raise InvalidMenuSelectionError()
             except InvalidMenuSelectionError:
-                print('\n    < Please enter a single number from the above menu>\n')
+                print('\n    < Please enter a single number from the above menu >\n')
             except ValueError:
-                print('\n    < Please enter a single numeric value>\n')
+                print('\n    < Please enter a single numeric value >\n')
             else:
                 break
 
@@ -210,11 +210,11 @@ def display_preexisting_condition_history(nhs_number):  # Display for pre-existi
             print('\n    <<Pre-existing condition record ends>>\n')
 
 
-def medical_history_menu():
-    print('Choose [1] provide vaccination history for you or your children'
-          '\nChoose [2] provide cancer related medical history for you or your family if any'
-          '\nChoose [3] provide pre-existing conditions for you or your children if any'
-          '\nChoose [4] provide medicine allergies for you or your children if any'
-          '\nChoose [0] exit')
-    print('*'*44)
+# def medical_history_menu():
+#     print('Choose [1] provide vaccination history for you or your children'
+#           '\nChoose [2] provide cancer related medical history for you or your family if any'
+#           '\nChoose [3] provide pre-existing conditions for you or your children if any'
+#           '\nChoose [4] provide medicine allergies for you or your children if any'
+#           '\nChoose [0] exit')
+#     print('*'*44)
 

@@ -1,8 +1,5 @@
 import sqlite3 as sql
-import calendar
 import random
-from datetime import time as x, date as xyz, datetime, timedelta
-import time
 import patients.patientFunctions as pf
 import patients.viewCancelFunctions as vc
 
@@ -12,18 +9,16 @@ class Error(Exception):
     pass
 
 
-class EmptyAnswer(Error):
+class EmptyAnswerError(Error):
     """ Raised when input field left empty"""
-    def __init__(self, message="\n\t< This field cannot be left empty, please try again >"
-                               "\n"):
+    def __init__(self, message="\n\t< This field cannot be left empty, please try again >\n"):
         self.message = message
         super().__init__(self.message)
 
 
-class InvalidAnswer(Error):
+class InvalidAnswerError(Error):
     """ Raised when input entered is not valid """
-    def __init__(self, message="\n\t< This is not a valid answer, please try again >"
-                               "\n"):
+    def __init__(self, message="\n\t< This is not a valid answer, please try again >\n"):
         self.message = message
         super().__init__(self.message)
 
@@ -49,16 +44,16 @@ class Appointment:
                   "\n********************************************")
             dr_options = input("Please select an option: ")
             if dr_options == '':
-                raise EmptyAnswer()
+                raise EmptyAnswerError()
             elif dr_options == '1':
                 y = self.choose_specific_dr()
-                if self.choose_specific_dr() == 0:
+                if y == 0:
                     pass
                 else:
                     self.choose_appointment(nhs_number, y)
             elif dr_options == '2':
                 y = self.choose_any_dr()
-                if self.choose_any_dr() == 0:
+                if y == 0:
                     pass
                 else:
                     self.choose_appointment(nhs_number, y)
@@ -68,13 +63,13 @@ class Appointment:
             elif dr_options == '0':
                 pass
             else:
-                raise InvalidAnswer()
-        except InvalidAnswer:
-            error = InvalidAnswer()
+                raise InvalidAnswerError()
+        except InvalidAnswerError:
+            error = InvalidAnswerError()
             print(error)
             self.book_appointment(nhs_number)
-        except EmptyAnswer:
-            error = EmptyAnswer()
+        except EmptyAnswerError:
+            error = EmptyAnswerError()
             print(error)
             self.book_appointment(nhs_number)
 
@@ -83,11 +78,11 @@ class Appointment:
         :return: gp_details (list) with gp last name and email address"""
         print("********************************************"
               "\nThe doctors currently available at the practice are: ")
-        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
+        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE active='1'")
         dr_names = self.c.fetchall()
         if not dr_names:
-            print("\nThere are no doctors currently available at the practice"
-                  "\n")
+            print("\nI'm sorry, there are no doctors currently available at the practice,"
+                  "\nplease try again another time\n")
             return 0
         else:
             gp_details = pf.choose_dr(dr_names)
@@ -96,10 +91,10 @@ class Appointment:
     def choose_any_dr(self):
         """ Assigns user a doctor at random from a list from all doctors registered
         :return: gp_details (list) with gp last name and email address"""
-        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP")
+        self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE active='1'")
         dr_names = self.c.fetchall()
         if not dr_names:
-            print("\nThere are no doctors currently available at the practice"
+            print("\nI'm sorry, there are no doctors currently available at the practice"
                   "\n")
             return 0
         else:
@@ -125,33 +120,33 @@ class Appointment:
                   "\n********************************************")
             gp_options = input("Please select an option: ")
             if gp_options == '':
-                raise EmptyAnswer()
+                raise EmptyAnswerError()
             if gp_options == '1':
-                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'male' ")
+                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'male' and active='1'")
                 dr_names = self.c.fetchall()
                 if not dr_names:
-                    print("\nThere are no male doctors currently available at the practice"
-                          "\n")
+                    print("\nI'm sorry, there are no male doctors currently available at the practice"
+                          "\nplease try again another time")
                     self.book_appointment(nhs_number)
                 else:
                     gp_details = pf.choose_dr(dr_names)
                     return gp_details
             elif gp_options == '2':
-                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'female' ")
+                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'female' and active='1'")
                 dr_names = self.c.fetchall()
                 if not dr_names:
-                    print("\nThere are no female doctors currently available at the practice"
-                          "\n")
+                    print("\nI'm sorry, there are no female doctors currently available at the practice"
+                          "\nplease try again another time")
                     self.book_appointment(nhs_number)
                 else:
                     gp_details = pf.choose_dr(dr_names)
                     return gp_details
             elif gp_options == '3':
-                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'non-binary' ")
+                self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'non-binary' and active='1'")
                 dr_names = self.c.fetchall()
                 if not dr_names:
-                    print("\nThere are no non-binary doctors currently available at the practice"
-                          "\n")
+                    print("\nI'm sorry, there are no non-binary doctors currently available at the practice"
+                          "\nplease try again another time")
                     self.book_appointment(nhs_number)
                 else:
                     gp_details = pf.choose_dr(dr_names)
@@ -159,13 +154,13 @@ class Appointment:
             elif gp_options == '0':
                 pass
             else:
-                raise InvalidAnswer()
-        except InvalidAnswer:
-            error = InvalidAnswer()
+                raise InvalidAnswerError()
+        except InvalidAnswerError:
+            error = InvalidAnswerError()
             print(error)
             self.choose_dr_gender(nhs_number)
-        except EmptyAnswer:
-            error = EmptyAnswer()
+        except EmptyAnswerError:
+            error = EmptyAnswerError()
             print(error)
             self.choose_dr_gender(nhs_number)
 
@@ -189,7 +184,7 @@ class Appointment:
                 else:
                     start = pf.generate_start_time(date)
                     end = pf.generate_end_time(date)
-                    times_str = pf.display_available(start, end, gp_details)
+                    times_str = pf.display_available(date, start, end, gp_details)
                     chosen_time = pf.choose_time(date, times_str, gp_details)
                     if chosen_time == 0:
                         self.choose_appointment(nhs_number, gp_details)
@@ -198,7 +193,9 @@ class Appointment:
                         pf.insert_appointment(start, gp_details, nhs_number)
                         print("\nYou have requested to book an appointment on {} at {}, "
                               "\nYou will receive confirmation of your appointment "
-                              "shortly!".format(date, chosen_time))
+                              "shortly!"
+                              "\nYou can check all of your appointments through "
+                              "'view your appointments' in the main menu\n".format(date, chosen_time))
                         pass
 
     def cancel_appointment(self, nhs_number):
@@ -206,10 +203,10 @@ class Appointment:
         print("--------------------------------------------"
               "\n         Patient: Cancel Appointments"
               "\n--------------------------------------------"
-              "\nThese are your confirmed booked appointments: ")
+              "\nYour appointments: ")
         viewing = vc.view_appointments(nhs_number)
         if viewing == 0:
-            print("You cannot cancel any appointments at this time")
+            print("You have no appointments booked to cancel at this time")
             pf.return_to_main()
         else:
             try:
@@ -218,31 +215,34 @@ class Appointment:
                       "\n********************************************")
                 options = input("Please select an option: ")
                 if options == '':
-                    raise EmptyAnswer()
-                elif options == '1':
-                    cancel = vc.check_app_id(nhs_number)
-                    vc.delete_appointment(cancel)
-                    print("\nWould you like to cancel another appointment?"
-                          "\nChoose [1] to cancel an appointment"
-                          "\nChoose [0] to exit to the main menu"
-                          "\n********************************************")
-                    choice = input("Please select an option: ")
-                    if choice == '1':
-                        self.cancel_appointment(nhs_number)
-                    elif choice == '0':
-                        pass
-                    else:
-                        raise InvalidAnswer()
+                    raise EmptyAnswerError()
                 elif options == '0':
                     pass
+                elif options == '1':
+                    cancel = vc.check_app_id(nhs_number)
+                    if cancel == 0:
+                        pass
+                    else:
+                        vc.delete_appointment(cancel)
+                        print("\nWould you like to cancel another appointment?"
+                              "\nChoose [1] to cancel an appointment"
+                              "\nChoose [0] to exit to the main menu"
+                              "\n********************************************")
+                        choice = input("Please select an option: ")
+                        if choice == '1':
+                            self.cancel_appointment(nhs_number)
+                        elif choice == '0':
+                            pass
+                        else:
+                            raise InvalidAnswerError()
                 else:
-                    raise InvalidAnswer()
-            except InvalidAnswer:
-                error = InvalidAnswer()
+                    raise InvalidAnswerError()
+            except InvalidAnswerError:
+                error = InvalidAnswerError()
                 print(error)
                 self.cancel_appointment(nhs_number)
-            except EmptyAnswer:
-                error = EmptyAnswer()
+            except EmptyAnswerError:
+                error = EmptyAnswerError()
                 print(error)
                 self.cancel_appointment(nhs_number)
 
@@ -251,7 +251,7 @@ class Appointment:
         print("--------------------------------------------"
               "\n         Patient: View Appointments"
               "\n--------------------------------------------"
-              "\nThese are your appointments: ")
+              "\nYour appointments: ")
         vc.view_appointments(nhs_number)
         pf.return_to_main()
 
