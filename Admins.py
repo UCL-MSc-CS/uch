@@ -525,23 +525,23 @@ class adminFunctions():
                     print("Record deleted successfully")
                     return 2
 
-    def cin(self):
+    def c_in(self):
         """Entering patient NHS number allows admin to check-in patient from existing
                 appointments"""
         master_back = 1
         while master_back == 1:
             try:
                 print("********************************************")
-                nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
+                nhs_number = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("""SELECT appointmentID, start FROM Appointment 
-                    WHERE nhsNumber =? and AppointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhsNumber])
+                    WHERE nhsNumber =? and AppointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhs_number])
                 appointments = self.c.fetchall()
-                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
+                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_number,))
                 nhsq = self.c.fetchall()
-                if nhsNumber == "0":
+                if nhs_number == "0":
                     master_back = 2
                     break
-                elif not nhsNumber:
+                elif not nhs_number:
                     raise FieldEmpty()
                 elif len(nhsq) < 1:
                     raise nhsNotExists
@@ -576,13 +576,11 @@ class adminFunctions():
                     except FieldEmpty:
                         error = FieldEmpty()
                         print(error)
-                        #return adminFunctions.cout(self)
                     except ValueError:
                         print("\n   < Please provide a numerical input >\n")
-                        #return adminFunctions.cout(self)
                     else:
                         self.c.execute("""SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?
-                                    and appointmentStatus = "Accepted" """, (check_number, nhsNumber))
+                                    and appointmentStatus = "Accepted" """, (check_number, nhs_number))
                         items = self.c.fetchall()
                         if len(items) == 0:
                             print("< No record exists with this appointmentID >")
@@ -608,23 +606,23 @@ class adminFunctions():
                                 print("Successfully checked in {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
                             return 0
 
-    def cout(self):
+    def c_out(self):
         """Entering patient NHS number allows admin to check-out patient from existing
             appointments"""
         master_back = 1
         while master_back == 1:
             try:
                 print("********************************************")
-                nhsNumber = input("Enter patient NHS number (press 0 to go back): ")
+                nhs_number = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("""SELECT appointmentID, start FROM Appointment 
-                    WHERE nhsNumber =? and appointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhsNumber])
+                    WHERE nhsNumber =? and appointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhs_number])
                 appointments = self.c.fetchall()
-                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsNumber,))
+                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_number,))
                 nhsq = self.c.fetchall()
-                if nhsNumber == "0":
+                if nhs_number == "0":
                     master_back = 2
                     break
-                elif not nhsNumber:
+                elif not nhs_number:
                     raise FieldEmpty()
                 elif len(nhsq) < 1:
                     raise nhsNotExists
@@ -659,13 +657,11 @@ class adminFunctions():
                     except FieldEmpty:
                         error = FieldEmpty()
                         print(error)
-                        #return adminFunctions.cout(self)
                     except ValueError:
                         print("\n   < Please provide a numerical input >\n")
-                        #return adminFunctions.cout(self)
                     else:
                         self.c.execute("""SELECT * FROM Appointment WHERE appointmentID = ? and nhsNumber = ?
-                         and appointmentStatus = "Accepted" """, (check_number, nhsNumber))
+                         and appointmentStatus = "Accepted" """, (check_number, nhs_number))
                         items = self.c.fetchall()
                         if len(items) == 0:
                             print("< No record exists with this appointmentID >")
@@ -697,13 +693,13 @@ class adminFunctions():
         while master_back == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
-                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
+                nhs_num = input("Enter patient NHS number (press 0 to go back): ")
+                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_num,))
                 nhsq = self.c.fetchall()
-                if nhsnum == '0':
+                if nhs_num == '0':
                     master_back = 1
                     break
-                elif not nhsnum:
+                elif not nhs_num:
                     raise FieldEmpty()
                 elif len(nhsq) < 1:
                     raise nhsNotExists
@@ -920,7 +916,7 @@ class adminFunctions():
                         self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?
                         , gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
                         telephoneNumber = ? WHERE nhsNumber = ?""",
-                        (emails, firstn, lastnm, dateOfBirth, gender, addl1, addl2, postcode, tel, nhsnum))
+                        (emails, firstn, lastnm, dateOfBirth, gender, addl1, addl2, postcode, tel, nhs_num))
                         self.connection.commit()
                         print("Succesfully updated entire patient record")
                         return master_back
@@ -931,13 +927,13 @@ class adminFunctions():
         while delback == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
-                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
+                nhs_num = input("Enter patient NHS number (press 0 to go back): ")
+                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_num,))
                 nhsq = self.c.fetchall()
-                if nhsnum == "0":
+                if nhs_num == "0":
                     delback = 1
                     break
-                elif not nhsnum:
+                elif not nhs_num:
                     raise FieldEmpty
                 elif len(nhsq) < 1:
                     raise nhsNotExists
@@ -949,7 +945,7 @@ class adminFunctions():
                 print(error)
 
             else:
-                self.c.execute("""DELETE FROM PatientDetail WHERE nhsNumber = ?""", (nhsnum,))
+                self.c.execute("""DELETE FROM PatientDetail WHERE nhsNumber = ?""", (nhs_num,))
                 self.connection.commit()
                 print("Successfully deleted patient record")
                 delback = 1
@@ -961,13 +957,13 @@ class adminFunctions():
         while master_back == 0:
             try:
                 print("********************************************")
-                nhsnum = input("Enter patient NHS number (press 0 to go back): ")
-                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhsnum,))
+                nhs_num = input("Enter patient NHS number (press 0 to go back): ")
+                self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_num,))
                 nhsq = self.c.fetchall()
-                if nhsnum == "0":
+                if nhs_num == "0":
                     master_back = 1
                     break
-                if not nhsnum:
+                if not nhs_num:
                     raise FieldEmpty
                 elif len(nhsq) < 1:
                     raise nhsNotExists
@@ -1047,7 +1043,7 @@ class adminFunctions():
                                     error = EmailInvalid(CEmail)
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (CEmail, nhsnum))
+                                    self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (CEmail, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed email")
                                     back = 1
@@ -1069,7 +1065,7 @@ class adminFunctions():
                                     error = FieldEmpty()
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (Cfn, nhsnum))
+                                    self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (Cfn, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed first name")
                                     back2 = 1
@@ -1091,7 +1087,7 @@ class adminFunctions():
                                     error = FieldEmpty()
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (Cln, nhsnum))
+                                    self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (Cln, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed last name")
                                     back3 = 1
@@ -1156,7 +1152,7 @@ class adminFunctions():
                                     error = DateInFutureError()
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (dateOfBirth, nhsnum))
+                                    self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (dateOfBirth, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed date of birth")
                                     back4 = 1
@@ -1184,7 +1180,7 @@ class adminFunctions():
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET gender = ? WHERE nhsNumber = ?""",
-                                                   (Cgen, nhsnum))
+                                                   (Cgen, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed gender")
                                     back6 = 1
@@ -1212,7 +1208,7 @@ class adminFunctions():
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""",
-                                                   (Cad1, nhsnum))
+                                                   (Cad1, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed address line 1")
                                     back7 = 1
@@ -1235,7 +1231,7 @@ class adminFunctions():
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""",
-                                                   (Cad2, nhsnum))
+                                                   (Cad2, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed address line 2")
                                     back8 = 1
@@ -1258,7 +1254,7 @@ class adminFunctions():
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""",
-                                                   (Cpost, nhsnum))
+                                                   (Cpost, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed post code")
                                     back9 = 1
@@ -1304,7 +1300,7 @@ class adminFunctions():
                                 else:
                                     self.c.execute(
                                         """UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""",
-                                        (Ctel, nhsnum))
+                                        (Ctel, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed telephone number")
                                     back10 = 1

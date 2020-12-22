@@ -39,12 +39,12 @@ class Menus():
         print("Choose [2] to check patient out")
         print("Choose [0] to go back")
 
-    def managedetails(self):
+    def manage_details(self):
         print("Choose [1] to change patient record")
         print("Choose [2] to delete patient record")
         print("Choose [0] to go back")
 
-    def managedetails2(self):
+    def manage_details2(self):
         print("Choose [1] to alter entire patient record")
         print("Choose [2] to alter part of patient record")
         print("Choose [0] to go back")
@@ -144,7 +144,6 @@ while True:
                                     selection = 0
                                 
                             #checking patient in or out
-
                             if selection == 4:
                                 print("********************************************")
                                 AdminM.admin_submenuCheckIO()
@@ -152,9 +151,9 @@ while True:
                                 try:
                                     CheckOpt = int(input("Choice: "))
                                     if CheckOpt == 1:
-                                        ad.cin()
+                                        ad.c_in()
                                     elif CheckOpt == 2:
-                                        ad.cout()
+                                        ad.c_out()
                                     elif CheckOpt == 0:
                                         selection = 0
                                     else:
@@ -168,34 +167,34 @@ while True:
                             #updating/deleting patient details
                             elif selection == 5:
                                 print("********************************************")
-                                AdminM.managedetails()
+                                AdminM.manage_details()
                                 print("********************************************")
                                 try:
-                                    detchoice = int(input("choice: "))
+                                    det_choice = int(input("choice: "))
                                     backvar = 0
-                                    if detchoice == 1:
+                                    if det_choice == 1:
                                         while backvar == 0:
                                             try:
                                                 print("********************************************")
-                                                AdminM.managedetails2()
+                                                AdminM.manage_details2()
                                                 print("********************************************")
-                                                detchoice2 = int(input("choice: "))
-                                                if detchoice2 == 1:
+                                                det_choice2 = int(input("choice: "))
+                                                if det_choice2 == 1:
                                                     ad.manage_det()
-                                                elif detchoice2 == 2:
+                                                elif det_choice2 == 2:
                                                     ad.man_ind_det()
-                                                elif detchoice2 == 0:
+                                                elif det_choice2 == 0:
                                                     backvar = 1
                                                     break
-                                                elif detchoice2 != 1 and detchoice2 != 2 and detchoice2 != 0:
+                                                elif det_choice2 != 1 and det_choice2 != 2 and det_choice2 != 0:
                                                     raise ValueError
                                             except ValueError:
                                                 print("< Not a valid choice >")
-                                    elif detchoice == 2:
+                                    elif det_choice == 2:
                                         ad.del_pat()
-                                    elif detchoice == 0:
+                                    elif det_choice == 0:
                                         selection = 0
-                                    elif detchoice != 0 and detchoice != 1 and detchoice != 2:
+                                    elif det_choice != 0 and det_choice != 1 and det_choice != 2:
                                         print("< Not a valid option >")
                                 except ValueError:
                                     print("< Not a valid option >")
