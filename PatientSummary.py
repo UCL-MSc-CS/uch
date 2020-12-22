@@ -1,5 +1,8 @@
 import sqlite3 as sql
 import usefulfunctions as uf
+from datetime import datetime
+
+datetimeformat = "%Y-%m-%d %H:%M"
 
 def PatientSummary(nhsNumber):
     connection = sql.connect('UCH.db')
@@ -32,17 +35,17 @@ def PatientSummary(nhsNumber):
         f.write("--------------------------------------------\n")
         f.write("PROBLEMS: \n")
         f.write("--------------------------------------------\n")
-        c.execute("""SELECT dateRequested, diagnosis FROM Appointment WHERE nhsNumber = ?""", (nhsNumber,))
+        c.execute("""SELECT start, diagnosis FROM Appointment WHERE nhsNumber = ?""", (nhsNumber,))
         items = c.fetchall()
 
         for i in range(0,len(items)):
-            print(items[i])
+            #print(items[i])
             date_unix = items[i][0]
-            print(date_unix)
+            #print(date_unix)
             date_regular = uf.toregulartime(date_unix)
-            print(date_regular)
+            #print(date_regular)
             date_regular = date_regular.strftime("%Y-%m-%d")
-            print(date_regular)
+            #print(date_regular)
             diagnosis = items[i][1]
             if items[i][1] == '':
                 diagnosis = "Diagnosis pending"
@@ -67,17 +70,23 @@ def PatientSummary(nhsNumber):
         f.write("--------------------------------------------\n")
         f.write("MEDICATION: \n")
         f.write("--------------------------------------------\n")
-        c.execute("""SELECT Medicine.medicineName, Prescription.dosage, Appointment.dateRequested, Appointment.appointmentID
-        FROM Medicine, Prescription, Appointment
-        WHERE Appointment.appointmentID = Prescription.appointmentID
-        AND Medicine.medicineID = Prescription.medicineID
-        AND Appointment.nhsNumber = ?""", (nhsNumber,))
+        c.execute("""
+        SELECT M.medicineName, P.dosage, A.dateRequested, A.appointmentID
+        FROM Medicine M
+        LEFT JOIN Prescription P ON M.medicineID = P.medicineID 
+        LEFT JOIN Appointment A ON A.appointmentID = P.appointmentID
+        WHERE A.nhsNumber = ?"""
+        , (nhsNumber,))
         items = c.fetchall()
-        for i in range(0,len(items)):
-            if len(str(items[i][0])) > 30:
-                f.write('{:<60s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], items[i][2]))
-            else:
-                f.write('{:<30s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], items[i][2]))
+        if items == []:
+            f.write("The patient has no medication history \n")
+        else:
+            for i in range(0,len(items)):
+                time_string = datetime.strftime(uf.toregulartime(items[i][2]),datetimeformat)
+                if len(str(items[i][0])) > 30:
+                    f.write('{:<60s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], time_string))
+                else:
+                    f.write('{:<30s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], time_string))
             # promethazine hydrochloride and codeine phosphate
             # Losartan Potassium and Hydrochlorothiazide
             # "Butalbital, Acetaminophen, Caffeine, and Codeine Phosphate " 59 characters long
@@ -98,8 +107,11 @@ def PatientSummary(nhsNumber):
         c.execute("""SELECT conditionType FROM preExistingCondition WHERE
                     nhsNumber = ?""", (nhsNumber,))
         items = c.fetchall()
-        for i in range(0, len(items)):
-            f.write(str(items[i][0]) + '\n')
+        if items == []:
+            f.write("The patient has no recorded pre-existing conditions \n")
+        else:
+            for i in range(0, len(items)):
+                f.write(str(items[i][0]) + '\n')
 
         f.write("--------------------------------------------\n")
         f.write("MEDICINE ALLERGIES: \n")
@@ -107,8 +119,11 @@ def PatientSummary(nhsNumber):
         c.execute("""SELECT medName FROM medAllergy WHERE
                         nhsNumber = ?""", (nhsNumber,))
         items = c.fetchall()
-        for i in range(0, len(items)):
-            f.write(str(items[i][0]) + '\n')
+        if items == []:
+            f.write("The patient has no recorded allergies \n")
+        else:
+            for i in range(0, len(items)):
+                f.write(str(items[i][0]) + '\n')
 
         f.write("--------------------------------------------\n")
         f.write("Vaccine History: \n")
@@ -116,16 +131,19 @@ def PatientSummary(nhsNumber):
         c.execute("""SELECT Status, DTap, HepC, HepB, Measles, Mumps, Rubella, Varicella FROM vaccineHistory WHERE
                 nhsNumber = ?""", (nhsNumber,))
         items = c.fetchall()
-        f.write("Status: " + "        " + str(items[0][0]) + '\n')
-        f.write("DTap: " + "          " + str(items[0][1]) + '\n')
-        f.write("HepC: " + "          " + str(items[0][2]) + '\n')
-        f.write("HepB: " + "          " + str(items[0][3]) + '\n')
-        f.write("Measles: " + "       " + str(items[0][4]) + '\n')
-        f.write("Mumps: " + "         " + str(items[0][5]) + '\n')
-        f.write("Rubella: " + "       " + str(items[0][6]) + '\n')
-        f.write("Varicella: " + "     " + str(items[0][7]) + '\n')
+        if items == []:
+            f.write("The patient has not provided this information \n")
+        else:
+            f.write("Status: " + "        " + str(items[0][0]) + '\n')
+            f.write("DTap: " + "          " + str(items[0][1]) + '\n')
+            f.write("HepC: " + "          " + str(items[0][2]) + '\n')
+            f.write("HepB: " + "          " + str(items[0][3]) + '\n')
+            f.write("Measles: " + "       " + str(items[0][4]) + '\n')
+            f.write("Mumps: " + "         " + str(items[0][5]) + '\n')
+            f.write("Rubella: " + "       " + str(items[0][6]) + '\n')
+            f.write("Varicella: " + "     " + str(items[0][7]) + '\n')
 
     print("Summary downloaded, check your folder to see the file")
 
 if __name__ == "__main__":
-    PatientSummary(5604701515)
+    PatientSummary(61784222)
