@@ -62,6 +62,7 @@ def delete_appointment(cancel):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
+    c.execute("DELETE FROM Prescription WHERE appointmentID =?", [cancel])
     connection.commit()
     print("You have cancelled appointment ID {}".format(cancel))
 
