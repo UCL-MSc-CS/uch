@@ -88,7 +88,7 @@ def search(medname,drugname,dosetype,medtype,category):
     valuearray = [medname, medtype, drugname, dosetype, category]
 
     for key, value in enumerate(valuearray):
-        if not value:
+        if not value or value == "-":
             valuearray[key] = "%"
 
     values = tuple(valuearray)
