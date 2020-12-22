@@ -210,11 +210,11 @@ def display_preexisting_condition_history(nhs_number):  # Display for pre-existi
             print('\n    <<Pre-existing condition record ends>>\n')
 
 
-def medical_history_menu():
-    print('Choose [1] provide vaccination history for you or your children'
-          '\nChoose [2] provide cancer related medical history for you or your family if any'
-          '\nChoose [3] provide pre-existing conditions for you or your children if any'
-          '\nChoose [4] provide medicine allergies for you or your children if any'
-          '\nChoose [0] exit')
-    print('*'*44)
+# def medical_history_menu():
+#     print('Choose [1] provide vaccination history for you or your children'
+#           '\nChoose [2] provide cancer related medical history for you or your family if any'
+#           '\nChoose [3] provide pre-existing conditions for you or your children if any'
+#           '\nChoose [4] provide medicine allergies for you or your children if any'
+#           '\nChoose [0] exit')
+#     print('*'*44)
 
