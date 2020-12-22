@@ -723,27 +723,16 @@ def login():
 
 
 def register():
-    # new_patient = {"first_name": "",
-    #               "last_name": "",
-    #               "date_of_birth": "",
-    #               "gender": "",
-    #               "address_line_1": "",
-    #               "address_line_2": "",
-    #               "postcode": "",
-    #               "telephone_number": "",
-    #               "patient_email": "",
-    #               "password": ""}
-    # first_name_q(new_patient)
     new_patient = {"first_name": "",
-                   "last_name": "Crandell",
-                   "date_of_birth": "1993-07-19",
-                   "gender": "Female",
-                   "address_line_1": "1 Memory Lane",
-                   "address_line_2": "Flat 2 London",
-                   "postcode": "SW1A 0AA",
-                   "telephone_number": "+447123456789",
-                   "patient_email": "b@b.com",
-                   "password": "1234"}
+                  "last_name": "",
+                  "date_of_birth": "",
+                  "gender": "",
+                  "address_line_1": "",
+                  "address_line_2": "",
+                  "postcode": "",
+                  "telephone_number": "",
+                  "patient_email": "",
+                  "password": ""}
     while True:
         count = 0
         try:
@@ -760,14 +749,74 @@ def register():
                 else:
                     new_patient["first_name"] = first_name
                     count = 1
+            while count == 1:
+                last_name = input("Please enter your last name (press 0 to exit registration, press 1 to go back): ")
+                last_name = last_name.strip().title()
+                if last_name == '':
+                    raise EmptyAnswerError()
+                elif last_name == '0':
+                    return 0
+                # elif last_name == '1':
+                #     count = 0
+                else:
+                    x = last_name.replace(" ", "")
+                    if (any(str.isdigit(y) for y in x)) == True:
+                        raise InvalidAnswerError()
+                    else:
+                        new_patient["last_name"] = last_name
+                        count = 2
+            while count == 2:
+                date_of_birth = input('Please enter your birthday in YYYY-MM-DD format (press 0 to exit registration, press 1 to go back): ')
+                if date_of_birth == '':
+                    raise EmptyAnswerError()
+                elif date_of_birth == '0':
+                    return 0
+                # elif date_of_birth == '1':
+                #     count = 1
+                x = date_of_birth.replace(" ", "")
+                x = x.replace("-", "")
+                if (len(date_of_birth) != 10) or (date_of_birth[4] != '-' or date_of_birth[7] != '-') or (x.isdigit() == False):
+                    raise DateFormatError()
+                day = date_of_birth[8:10]
+                month = date_of_birth[5:7]
+                year = date_of_birth[0:4]
+                if (day.isdigit() == False) or (month.isdigit() == False) or (year.isdigit() == False):
+                    raise DateInvalidError()
+                day = int(date_of_birth[8:10])
+                month = int(date_of_birth[5:7])
+                year = int(date_of_birth[0:4])
+                if month > 12 or month < 1:
+                    raise DateInvalidError()
+                elif (month == 9 or month == 4 or month == 6 or month == 11) and day > 30:
+                    raise DateInvalidError()
+                elif month == 2 and year % 4 != 0 and day > 28:
+                    raise DateInvalidError()
+                elif month == 2 and year % 4 == 0 and day > 29:
+                    raise DateInvalidError()
+                elif day > 31 or day < 1:
+                        raise DateInvalidError()
+                else:
+                    date_of_birth = datetime.date(year, month, day)
+                    today = date.today()
+                    if date_of_birth > today:
+                        raise DateInFutureError()
+                    else:
+                        new_patient["date_of_birth"] = date_of_birth
         except EmptyAnswerError:
             error = EmptyAnswerError()
             print(error)
-            first_name_q(new_patient)
         except InvalidAnswerError:
             error = InvalidAnswerError()
             print(error)
-            first_name_q(new_patient)
+        except DateFormatError:
+            error = DateFormatError()
+            print(error)
+        except DateInvalidError:
+            error = DateInvalidError()
+            print(error)
+        except DateInFutureError:
+            error = DateInFutureError()
+            print(error)
         else:
             x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"],
                         new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
