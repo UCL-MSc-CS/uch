@@ -38,7 +38,7 @@ class PatientMedical:
                     error_message = pf.EmptyFieldError()
                     print(error_message)
                 except pf.InvalidMenuSelectionError:
-                    print("\n    < You entered an invalid value. Please type 1, 2, or 0 based on the menu>\n")
+                    print("\n    < You entered an invalid value. Please type 1, 2, or 0 based on the menu >\n")
                 else:
                     break
             if menu_selection == "1":
@@ -50,7 +50,7 @@ class PatientMedical:
                     for name in self.vaccination_history:
                         while True:
                             try:
-                                vaccine = input('Please enter Y/N. Have you had the {} vaccination: '.format(name)).lower()
+                                vaccine = input('Please enter Y/N (or press 0 to exit). Have you had the {} vaccination: '.format(name)).lower()
                                 if vaccine == "0":
                                     return 1
                                 if not vaccine:
@@ -61,7 +61,7 @@ class PatientMedical:
                                 error_message = pf.EmptyFieldError()
                                 print(error_message)
                             except pf.InvalidAnswerError:
-                                print("\n    < You have entered a wrong value. Please type Y as yes and N as no>\n")
+                                print("\n    < You have entered a wrong value. Please type Y as yes and N as no >\n")
                             else:
                                 break
                         if vaccine == "n":
@@ -86,7 +86,7 @@ class PatientMedical:
                 while True:
                     try:
                         self.status = input("Please enter the first name and last name "
-                                            "of your child whose profile you would like to edit: ")
+                                            "of your child whose profile you would like to edit (or press 0 to exit): ")
                         full_name = self.status.split(' ')
                         if self.status == "0":
                             return 1
@@ -94,7 +94,7 @@ class PatientMedical:
                             raise pf.EmptyFieldError()
                         if len(full_name) > 2 or len(full_name) == 1:
                             raise pf.InvalidNameFormatError()
-                        self.nhs_number_child = input("Please enter {}'s nhs number: ".format(self.status))
+                        self.nhs_number_child = input("Please enter {}'s nhs number(or press 0 to exit): ".format(self.status))
                         if self.nhs_number_child == '0':
                             return 1
                         if not self.nhs_number_child:
@@ -105,12 +105,12 @@ class PatientMedical:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
                     except pf.InvalidAnswerError:
-                        error_message = "\n    < Invalid NHS number>\n"
+                        error_message = "\n    < Invalid NHS number >\n"
                         print(error_message)
                     except pf.InvalidNameFormatError:
                         print("\n    < Wrong name format."
                               " Please only enter your child's first name and last name separated by a space "
-                              "separated with a space>\n")
+                              "separated with a space >\n")
                     else:
                         break
                 self.a.execute("SELECT nhsNumber FROM vaccineHistory WHERE nhsNumber = ?", [self.nhs_number_child])
@@ -131,7 +131,7 @@ class PatientMedical:
                                 error_message = pf.EmptyFieldError()
                                 print(error_message)
                             except pf.InvalidAnswerError:
-                                print("\n    < You have entered a wrong value. Please type Y as yes and N as no>\n")
+                                print("\n    < You have entered a wrong value. Please type Y as yes and N as no >\n")
                             else:
                                 break
                         if vaccine == "n":
@@ -174,7 +174,7 @@ class PatientMedical:
                     error_message = pf.EmptyFieldError()
                     print(error_message)
                 except pf.InvalidMenuSelectionError:
-                    print("\n    < You entered an invalid value. Please type 1, 2, 3, or 0 based on the menu>\n")
+                    print("\n    < You entered an invalid value. Please type 1, 2, or 0 based on the menu >\n")
                 else:
                     break
             if menu_choice == "1":
@@ -187,7 +187,8 @@ class PatientMedical:
                     try:
                         major_illness = input('Do you have any pre-existing conditions?'
                                                 '\nIf so, please enter the name of the pre-existing condition using comma to '
-                                                'separate different conditions. Otherwise, please enter N/A: ').lower().split(',')
+                                                'separate different conditions. Otherwise, please enter N/A'
+                                              '\n(or press 0 to exit): ').lower().split(',')
                         if major_illness == ["0"]:
                             return 1
                         if major_illness == ['']:
@@ -230,7 +231,7 @@ class PatientMedical:
             if menu_choice == "2":
                 while True:
                     try:
-                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit: ").lower()
+                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit (or press 0 to exit): ").lower()
                         full_name = self.child_name.split(' ')
                         if self.child_name == "0":
                             return 1
@@ -238,7 +239,7 @@ class PatientMedical:
                             raise pf.EmptyFieldError()
                         if len(full_name) == 1 or len(full_name) < 2:
                             raise pf.InvalidNameFormatError()
-                        self.nhs_number_child = int(input("Please enter {}'s nhs number: ".format(self.child_name)))
+                        self.nhs_number_child = int(input("Please enter {}'s nhs number (or press 0 to exit): ".format(self.child_name)))
                         if self.nhs_number_child == 0:
                             return 1
                         if not self.nhs_number_child:
@@ -249,13 +250,13 @@ class PatientMedical:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
                     except pf.InvalidAnswerError:
-                        error_message = "\n    < Invalid NHS number>\n"
+                        error_message = "\n    < Invalid NHS number >\n"
                         print(error_message)
                     except pf.InvalidNameFormatError:
                         print("\n    < Wrong name format."
-                              " Please enter your child's first name and last name separated with a space>\n")
+                              " Please enter your child's first name and last name separated with a space >\n")
                     except ValueError:
-                        print('\n    < NHS number needs to be 10 - digit numeric values. Please enter again>\n')
+                        print('\n    < NHS number needs to be 10 - digit numeric values. Please enter again >\n')
                     else:
                         break
                 self.a.execute("""SELECT * FROM preExistingCondition WHERE nhsNumber = ?""", [self.nhs_number_child])
@@ -264,7 +265,8 @@ class PatientMedical:
                     try:
                         major_illness = input('Does {} have any pre-existing conditions?'
                         '\nIf so, please enter the name of the pre-existing condition using comma to '
-                        'separate different conditions. Otherwise, please enter N/A: '.format(self.child_name)).lower().split(',')
+                        'separate different conditions. Otherwise, please enter N/A'
+                        '\n(or press 0 to exit): '.format(self.child_name)).lower().split(',')
                         if major_illness == ['0']:
                             return 1
                         if major_illness == ['']:
@@ -327,7 +329,7 @@ class PatientMedical:
                     error_message = pf.EmptyFieldError()
                     print(error_message)
                 except pf.InvalidMenuSelectionError:
-                    print("\n    < You entered an invalid value. Please type 1, 2, or 0 based on the menu>\n")
+                    print("\n    < You entered an invalid value. Please type 1, 2, or 0 based on the menu >\n")
                 else:
                     break
             if menu_choice == "1":
@@ -337,7 +339,8 @@ class PatientMedical:
                     try:
                         med_allergy = input('Do you have any allergies to any medicines?'
                                                 '\nIf so, please enter the name of the medicine using comma to '
-                                                'separate different types. Otherwise, please enter N/A: ').lower().split(',')
+                                                'separate different types. Otherwise, please enter N/A'
+                                            '\n(or press 0 to exit): ').lower().split(',')
                         if med_allergy == ['0']:  # could be a bug. check
                             return 1
                         if med_allergy == ['']:
@@ -377,7 +380,7 @@ class PatientMedical:
             if menu_choice == "2":
                 while True:
                     try:
-                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit: ").lower()
+                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit (or press 0 to exit): ").lower()
                         full_name = self.child_name.split(' ')
                         if self.child_name == "0":
                             return 1
@@ -385,7 +388,7 @@ class PatientMedical:
                             raise pf.EmptyFieldError()
                         if len(full_name) == 1 or len(full_name) < 2:
                             raise pf.InvalidNameFormatError()
-                        self.nhs_number_child = int(input("Please enter {}'s nhs number: ".format(self.child_name)))
+                        self.nhs_number_child = int(input("Please enter {}'s nhs number (or press 0 to exit): ".format(self.child_name)))
                         if self.nhs_number_child == 0:
                             return 1
                         if not self.nhs_number_child:
@@ -396,13 +399,13 @@ class PatientMedical:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
                     except pf.InvalidAnswerError:
-                        error_message = "\n    < Invalid NHS number>\n"
+                        error_message = "\n    < Invalid NHS number >\n"
                         print(error_message)
                     except pf.InvalidNameFormatError:
                         print("\n    < Wrong name format."
-                              " Please enter your child's first name and last name separated with a space>\n")
+                              " Please enter your child's first name and last name separated with a space >\n")
                     except ValueError:
-                        print('\n    < NHS number needs to be 10 - digit numeric values. Please enter again>\n')
+                        print('\n    < NHS number needs to be 10 - digit numeric values. Please enter again >\n')
                     else:
                         break
                 self.a.execute("""SELECT * FROM medAllergy WHERE nhsNumber = ?""", [self.nhs_number_child])
@@ -411,7 +414,8 @@ class PatientMedical:
                     try:
                         med_allergy = input('Does {} have any allergies to any medicines?'
                                             '\nIf so, please enter the name of the medicine using comma to '
-                                            'separate different types. Otherwise, please enter 0: '.format(self.child_name)).lower().split(',')
+                                            'separate different types. Otherwise, please enter N/A'
+                                            '\n(or press 0 to exit): '.format(self.child_name)).lower().split(',')
                         if med_allergy == ['0']:  # could be a bug if. check
                             return 1
                         if med_allergy == ['']:
@@ -478,10 +482,10 @@ class PatientMedical:
                     error_message = pf.EmptyFieldError()
                     print(error_message)
                 except pf.InvalidMenuSelectionError:
-                    print("\n    < You entered an invalid value. Please type 1, 2, or 0 based on the menu>\n")
+                    print("\n    < You entered an invalid value. Please type 1, 2, or 0 based on the menu >\n")
                 else:
                     break
-            print('Please enter your answers to the following questions with Y/N.')
+            print('Please enter your answer to the following question with Y/N (or press 0 to exit).')
             if menu_choice == "1":
                 self.cancer_history = []
                 while True:
@@ -497,7 +501,7 @@ class PatientMedical:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
                     except pf.InvalidAnswerError:
-                        print("\n    < Wrong value entered. Please type Y as yes and N as no>\n")
+                        print("\n    < Wrong value entered. Please type Y as yes and N as no >\n")
                     else:
                         break
                 if cancer == "y":
@@ -536,9 +540,9 @@ class PatientMedical:
                                 error_message = pf.EmptyFieldError()
                                 print(error_message)
                             except pf.InvalidAnswerError:
-                                print("\n    < Invalid answer. Please enter the correct age>\n")
+                                print("\n    < Invalid answer. Please enter the correct age >\n")
                             except ValueError:
-                                print("\n    < Invalid answer. Please enter a numeric value>\n")
+                                print("\n    < Invalid answer. Please enter a numeric value >\n")
                             else:
                                 break
                         row_record = [nhs_number, self.cancer_relation, cancer_name, cancer_age]
@@ -566,7 +570,7 @@ class PatientMedical:
                             self.connection.commit()
 
                 else:
-                    self.cancer_relation = "N/A"  # 0 means the patient has not had cancer before
+                    self.cancer_relation = "N/A"  # N/A means the patient has not had cancer before
                     self.cancer_history = [nhs_number, self.cancer_relation, 'N/A', 'N/A']
                     self.a.execute("""
                                     SELECT * FROM cancer WHERE nhsNumber =?
@@ -591,6 +595,7 @@ class PatientMedical:
                 self.cancer_history = []
                 while True:
                     try:
+                        # print('Please enter your answer to the following question with Y/N (or press 0 to exit).')
                         cancer = input('Has anyone in your immediate family, parents, children, or siblings, '
                                        'ever been diagnosed with cancer: ').lower()
                         if cancer == '0':
@@ -603,7 +608,7 @@ class PatientMedical:
                         error_message = pf.EmptyFieldError()
                         print(error_message)
                     except pf.InvalidAnswerError:
-                        print("\n    < You have entered a wrong value. Please type Y as yes and N as no>\n")
+                        print("\n    < You have entered a wrong value. Please type Y as yes and N as no >\n")
                     else:
                         break
                 if cancer == "y":
@@ -654,9 +659,9 @@ class PatientMedical:
                             #     error_message = pf.EmptyFieldError()
                             #     print(error_message)
                             except ValueError:
-                                print("\n    < Invalid answer. Please enter a numeric value>\n")
+                                print("\n    < Invalid answer. Please enter a numeric value >\n")
                             except pf.InvalidAnswerError:
-                                print("\n    < Invalid answer. Please enter a correct>\n")
+                                print("\n    < Invalid answer. Please enter a correct >\n")
                             # except pf.InvalidNameFormatError:
                             #     print("\n    < Please do not use any special characters or punctuations in your answer>\n")
                             else:
@@ -735,7 +740,7 @@ class PatientMedical:
                     error_message = pf.EmptyFieldError()
                     print(error_message)
                 except pf.InvalidMenuSelectionError:
-                    print("\n    < You entered an invalid value. Please type 1, 2, or 0 based on the menu>\n")
+                    print("\n    < You entered an invalid value. Please type 1, 2, or 0 based on the menu >\n")
                 else:
                     break
             count = 0
@@ -764,7 +769,8 @@ class PatientMedical:
                 while True:
                     try:
                         print("Please use space to separate first and last names.")
-                        child_name = input("Please only enter the first name and last name of your child separated with a space: ")
+                        child_name = input("Please only enter the first name and last name of your child separated with a space"
+                                           " (or press 0 to exit): ")
                         full_name = child_name.split(' ')
                         if child_name == "0":
                             return 1
@@ -772,7 +778,7 @@ class PatientMedical:
                             raise pf.EmptyFieldError()
                         if len(full_name) == 1 or len(full_name) < 2:
                             raise pf.InvalidNameFormatError()
-                        self.nhs_number_child = input("Please enter {}'s nhs number: ".format(child_name))
+                        self.nhs_number_child = input("Please enter {}'s nhs number (or press 0 to exit): ".format(child_name))
                         if self.nhs_number_child == "0":
                             return 1
                         if not self.nhs_number_child:
@@ -784,9 +790,9 @@ class PatientMedical:
                         print(error_message)
                     except pf.InvalidNameFormatError:
                         print("\n    < Invalid answer."
-                              " Please only enter your child's first name and last name separated with a space with a space>\n")
+                              " Please only enter your child's first name and last name separated with a space with a space >\n")
                     except pf.InvalidAnswerError:
-                        error_message = "\n    < Invalid NHS number>\n"
+                        error_message = "\n    < Invalid NHS number >\n"
                         print(error_message)
                     else:
                         break
