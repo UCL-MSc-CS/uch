@@ -4,108 +4,174 @@ import time
 import calendar
 import pandas as pd
 
+"""
+This module contains all functions for patients to book an appointment.
+
+Error classes contain exception handling for user input in the functions. 
+Functions allow patient to choose the doctor, year, month, day and time for the appointment 
+and for the chosen information to be inserted into the database.
+"""
+
 
 class Error(Exception):
-    """Base class for exceptions in this module"""
+    """ Error exception base class. """
     pass
 
 
 class TimeNotValidError(Error):
-    """Raised when time entered by user is not valid"""
+    """ Raised when time entered by patient is not in valid form or not in the pre-defined times list. """
     pass
 
 
 class YearNotValidError(Error):
-    """Raised when year entered by user is not valid"""
+    """ Raised when year entered by patient is not valid. """
     pass
 
 
 class MonthNotValidError(Error):
-    """Raised when month entered by user is not valid"""
+    """ Raised when month entered by patient is not valid. """
     pass
 
 
 class MonthPassedError(Error):
-    """Raised when month entered by user is not valid"""
+    """ Raised when month entered by patient is in the past. """
     pass
 
 
 class YearPassedError(Error):
-    """Raised when year entered by user is not valid"""
+    """ Raised when year entered by patient is in the past. """
     pass
 
 
 class TimePassedError(Error):
-    """Raised when time entered by user has already passed"""
+    """ Raised when time entered by patient is in the past. """
     pass
 
 
 class DayNotValidError(Error):
-    """Raised when day entered by user is not valid"""
+    """ Raised when day entered by user is not valid. """
     pass
 
 
 class TimeBookedError(Error):
-    """Raised when appointment is not available to book"""
+    """ Raised when appointment is not available to book. """
     pass
 
 
-class DateAfterCurrentError(Error):
-    """Raised when date chosen is in the past"""
+class DatePassedError(Error):
+    """ Raised when date chosen by patient is in the past. """
     pass
 
 
 class LeapYearError(Error):
-    """Raised when date chosen in February is in a leap year"""
+    """ Raised when date chosen in February does not align with the 28/29th leap year. """
     pass
 
 
 class DrChoiceNotValidError(Error):
-    """Raised when choice of doctor not valid"""
+    """ Raised when choice of doctor from the list is not valid. """
     pass
 
 
 class EmptyAnswerError(Error):
-    """Raised when input left empty"""
+    """
+    Error class for when an input is left empty.
+
+    Attributes:
+        message (str): Message is raised when the patient presses enter with no input.
+    """
     def __init__(self, message="\n\t< This field cannot be left empty, please try again >\n"):
+        """
+        The constructor for EmptyAnswerError class.
+
+        Parameters:
+            message (str): Message is raised when the patient presses enter with no input.
+        """
         self.message = message
         super().__init__(self.message)
 
 
 class InvalidAnswerError(Error):
-    """Raised when input is not valid"""
+    """
+    Error class for when an input is not valid.
+
+    Attributes:
+        message (str): Message is raised when the patient enters a string that is not valid to requirements.
+    """
     def __init__(self, message="\n\t< This is not a valid answer, please try again >\n"):
+        """
+        The constructor for InvalidAnswerError class.
+
+        Parameters:
+            message (str): Message is raised when the patient enters a string that is not valid to requirements.
+        """
         self.message = message
         super().__init__(self.message)
 
 
 def to_regular_time(time_stamp):
-    """ Converts unix timestamp to datetime object"""
+    """
+    Converts a unix timestamp to datetime object.
+
+    Parameters:
+        time_stamp (int): Unix timestamp.
+    Returns:
+        datetime (obj): Datetime object.
+    """
     return datetime.utcfromtimestamp(int(time_stamp))
 
 
 def to_unix_time(date_time):
-    """ Converts datetime object to unix timestamp"""
-    result = int(time.mktime(date_time.timetuple()))
-    return result
+    """
+    Converts a datetime object to unix timestamp.
+
+    Parameters:
+        date_time (obj): Datetime object.
+    Returns:
+        time_stamp (int): Unix timestamp.
+    """
+    unix_stamp = int(time.mktime(date_time.timetuple()))
+    return unix_stamp
 
 
 def to_date_time_obj(string):
-    """ Converts date time string to datetime object"""
+    """
+    Converts datetime string to datetime object.
+
+    Parameters:
+        string (str): Datetime string.
+    Returns:
+        dt_object (obj): Datetime object.
+    """
     dt_object = datetime.strptime(string, '%Y-%m-%d %H:%M')
     return dt_object
 
 
 def to_date_time_obj00(string):
-    """ Converts date string to date object with time as 00:00:00"""
+    """
+    Converts date string to date object with time 00:00:00.
+
+    Parameters:
+        string (str): Date string.
+    Returns:
+        dt_object (obj): Datetime object (with time 00:00:00).
+    """
     dt_object = datetime.strptime(string, '%Y-%m-%d')
     return dt_object
 
 
 def generate_end_time(date):
-    """ Generates end timestamp
-    :param date: date string from user input
-    :return: unix time stamp with date + 23:59:59 time"""
+    """
+    Generates 'end' unix timestamp to be used for displaying available appointments within 1 day.
+
+    Takes the date entered by the patient and converts to a datetime object with time + 23:59:59 added.
+    Then converts to a unix timestamp.
+
+    Parameters:
+        date (str): Date string.
+    Returns:
+        end (int): unix timestamp.
+    """
     year, month, day = map(int, date.split('-'))
     dt_str_obj = xyz(year, month, day)
     dt_time = x(23, 59, 59)
@@ -115,9 +181,17 @@ def generate_end_time(date):
 
 
 def choose_dr(dr_names):
-    """ Allows user to select a gp from list obtained from database
-        returns chosen dr email and last name in a list
-        """
+    """
+    Function for patient to select a doctor from list.
+
+    Prints a list of doctors (first and last name) with count for patient to select by a number.
+    Exception prevents patient from choosing a number that does not exist.
+
+    Parameters:
+          dr_names (list): list of all doctors in the database, includes first, last and email address of each.
+    Returns:
+         gp_details (list): list of chosen doctor email and last name.
+    """
     gp_list = []
     counts = []
     count = 1
@@ -148,9 +222,14 @@ def choose_dr(dr_names):
 
 
 def choose_year():
-    """ Allows user to choose the year they would like their appointment
-    Checks if the year chosen is not in the past
-    :return: year as an integer
+    """
+    Function for patient to choose the year they would like their appointment.
+
+    Patient inputs year, exceptions check if the year is not in the past, between 2020 - 2100 and is a number.
+
+    Returns:
+        year (int): Year chosen.
+        or 0 (int): To return to the menu.
     """
     current_year = datetime.now().year
     while True:
@@ -178,13 +257,19 @@ def choose_year():
 
 
 def choose_month(year):
-    """ Allows user to choose the month they would like their appointment
-        checks: if month is an integer
-        If month between 1 to 12
-        if month chosen is in not the past
-        :return:
-        prints calendar for the month chosen
-        month as string, padded with 0 if month a single number """
+    """
+    Function for patient to choose the month they would like their appointment.
+
+    Prints months to choose from as a list of numbers, patient chooses month.
+    Exceptions check if month is an integer, between 1 - 12, is in not the past.
+    Prints a calendar for month chosen to show days.
+
+    Parameters:
+        year (int): Year chosen.
+    Returns:
+        month (int): Month chosen, padded with 0 if month a single number.
+        or 0 (int): To return to the menu.
+    """
     current_month = xyz.today()
     while True:
         try:
@@ -224,13 +309,20 @@ def choose_month(year):
 
 
 def choose_date(month, year):
-    """ Allows user to choose the day they would lieke their appointment
-        Checks date chosen by user is in a valid form
-        Checks: if input is an integer
-                if date chosen is in the past
-                if the date chosen is valid for that month
-                if date in February is in a leap year
-        :return: date string with days padded with 0 for single day number"""
+    """
+    Function for patient to choose the month they would like their appointment.
+
+    Patient inputs day.
+    Exceptions check if day is an integer, is in not the past, if the date chosen is valid for that month,
+    and if date in February is in a leap year.
+
+    Parameters:
+        month (int): Month chosen.
+        year (int): Year chosen.
+    Returns:
+        day (int): Day chosen, padded with 0 if day a single number.
+        or 0 (int): To return to the menu.
+    """
     days_31 = ['01', '03', '05', '07', '08', '10', '12']
     days_30 = ['04', '06', '09', '11']
     days_28 = ['02']
@@ -265,7 +357,7 @@ def choose_date(month, year):
             if date_obj == current:
                 return date
             elif date_obj < current:
-                raise DateAfterCurrentError
+                raise DatePassedError
             else:
                 return date
         except DayNotValidError:
@@ -274,7 +366,7 @@ def choose_date(month, year):
         except LeapYearError:
             print("\n\t< Invalid date entered, please enter the correct date >"
                   "\n")
-        except DateAfterCurrentError:
+        except DatePassedError:
             print("\n\t< This date has already passed, please choose another >"
                   "\n")
         except ValueError:
@@ -283,16 +375,39 @@ def choose_date(month, year):
 
 
 def generate_start_time(date):
-    """ Generates a unix start time stamp from the date (string) input from the user
-    :return: unix start time (integer)"""
+    """
+    Generates 'start' unix timestamp to be used for displaying available appointments within 1 day.
+
+    Takes the date entered by the patient and converts to a datetime object with time + 00:00:00 added.
+    Then converts to a unix timestamp.
+
+    Parameters:
+        date (str): Date string.
+    Returns:
+        start (int): unix timestamp.
+    """
     start_obj = to_date_time_obj00(date)
     start = to_unix_time(start_obj)
     return start
 
 
 def display_available(date, start, end, gp_details):
-    """ Displays appointments from the date and time chosen by user
-    :return: pandas dataframe of the time and availability for the day"""
+    """
+    Displays appointments times and availability from the date chosen by patient.
+
+    Finds all appointments that exist in the database between 00:00:00 - 23:59:59 of the date chosen by patient.
+    If an appointment/booking exists between this time and is not marked as declined, it will display as 'unavailable',
+    otherwise all times will be shown as 'available'.
+    Prints a pandas dataframe with all times from 09:00-18:00 (in 10 minute slots) and availability for each slot.
+
+    Parameters:
+        date (str): Date chosen.
+        start (int): Unix timestamp of date chosen (with time + 00:00:00).
+        end (int): Unix timestamp of date chosen (with time + 23:59:59).
+        gp_details (list): Doctor chosen (email and last name).
+    Returns:
+        times_str (list): List of time strings 09:00-18:00 (in 10 minute slots).
+    """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     print("\nCurrent availability for Dr {} on {}: ".format(gp_details[1], date))
@@ -353,11 +468,20 @@ def display_available(date, start, end, gp_details):
 
 
 def choose_time(date, times_str, gp_details):
-    """ Allows user to choose the time they would like their appointment
-        Checks time entered by user is in valid form and present in the list of appointment times
-        Checks if time entered by user has already been booked
-        Checks if the time has already passed
-        :return: time (string) """
+    """
+    Function for patient to choose the time they would like their appointment.
+
+    Patient inputs time. Exceptions check if time is present in the list of appointment times (times_str),
+    if time entered by user has already been booked, if the time has already passed
+
+    Parameters:
+        date (str): Date chosen.
+        gp_details (list): Doctor chosen (email and last name).
+        times_str (list): List of time strings 09:00-18:00 (in 10 minute slots).
+    Returns:
+        time (str): Time chosen (in form 00:00).
+        or 0 (int): To return to the menu.
+    """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     while True:
@@ -397,8 +521,17 @@ def choose_time(date, times_str, gp_details):
 
 
 def create_start(date_string, time_string):
-    """ Creates a unix timestamp from the chosen date (string) and appointment start time (string) by the user
-    :return: unix timestamp (integer)"""
+    """
+    Creates a unix timestamp from the chosen date and appointment start time to insert into the database.
+
+    Creates date and time string, converts to a datetime object and then to a unix timestamp.
+
+    Parameters:
+        date_string (str): Date chosen.
+        time_string (str): Time chosen.
+    Returns:
+         start (int): Unix timestamp of the date and time chosen.
+    """
     day_str = date_string + ' ' + time_string
     dt_object = to_date_time_obj(day_str)
     start = to_unix_time(dt_object)
@@ -406,8 +539,18 @@ def create_start(date_string, time_string):
 
 
 def insert_appointment(start, gp_details, nhs_number):
-    """ Inserts the appointment details into the database
-    Creates new row with appointment booked as 'Pending'"""
+    """
+    Inserts appointment details into the database.
+
+    Creates new row with appointment with new appointment ID, chosen gp email, gp last name, patient nhs number,
+    start time of appointment, end time of appointment (start time + 599 seconds), reason as 'Appointment', appointment
+    status as 'Pending', date requested as a unix timestamp for now and the remaining fields as empty strings.
+
+    Parameters:
+        start (int): Unix timestamp of the date and time chosen.
+        gp_details (list): Doctor chosen (email and last name).
+        nhs_number (int): The patient's nhs number.
+    """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     end = start + 599
@@ -424,8 +567,10 @@ def insert_appointment(start, gp_details, nhs_number):
 
 
 def return_to_main():
-    """Returns user to main patient menu when typing '0'
-    If user types anything else, will exit the program with a goodbye message"""
+    """
+    Returns user to main patient menu when typing '0'.
+    If user types anything else, will exit the program with a goodbye message.
+    """
     if input("Type [0] to return to the main menu "
              "\n(or any other key to exit the UCL e-health system): ").lower() == '0':
         pass

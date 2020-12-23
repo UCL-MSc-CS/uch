@@ -3,36 +3,81 @@ import random
 import patients.patientFunctions as pf
 import patients.viewCancelFunctions as vc
 
+"""
+This module contains the Appointment class for the patient to navigate to book an appointment.
+
+Error classes contain exception handling for user input in the functions.
+The Appointment class contains functions to navigate through menus, calling other functions (from patientFunctions.py)
+to choose a doctor, year, month, day and time for an appointment. 
+Patient can also navigate to view all their booked appointments and cancel an appointment.
+"""
+
 
 class Error(Exception):
-    """Base class for exceptions in this module"""
+    """Error exception base class."""
     pass
 
 
 class EmptyAnswerError(Error):
-    """ Raised when input field left empty"""
+    """
+    Error class for when an input is left empty.
+
+    Attributes:
+        message (str): Message is raised when the patient presses enter with no input.
+    """
     def __init__(self, message="\n\t< This field cannot be left empty, please try again >\n"):
+        """
+        The constructor for EmptyAnswerError class.
+
+        Parameters:
+            message (str): Message is raised when the patient presses enter with no input.
+        """
         self.message = message
         super().__init__(self.message)
 
 
 class InvalidAnswerError(Error):
-    """ Raised when input entered is not valid """
+    """
+    Error class for when an input is not valid.
+
+    Attributes:
+        message (str): Message is raised when the patient enters a string that is not valid to requirements.
+    """
     def __init__(self, message="\n\t< This is not a valid answer, please try again >\n"):
+        """
+        The constructor for InvalidAnswerError class.
+
+        Parameters:
+            message (str): Message is raised when the patient enters a string that is not valid to requirements.
+        """
         self.message = message
         super().__init__(self.message)
 
 
 class Appointment:
+    """ Class for booking appointments. """
 
     def __init__(self):
+        """
+        The constructor for Appointment class.
+
+        Opens the connection and cursor for the UCH database.
+        """
         self.connection = sql.connect('UCH.db')
         self.c = self.connection.cursor()
 
     def book_appointment(self, nhs_number):
-        """ Prints appointment menu for user to choose a doctor
-        User can choose to book with a specific doctor, any doctor chosen at random by the system
-        or a doctor of a specific gender"""
+        """
+        Main appointment menu for patient to choose a doctor to book an appointment with.
+
+        Prints appointment menu for user to choose to book with a specific doctor, any doctor
+        or a doctor of a specific gender. Function then links to other appropriate functions in order to
+        choose a doctor name, then to choose appointment date and time.
+        Exceptions prevent the input from being empty or a number which is not valid in the list of choices.
+
+        Parameters:
+            nhs_number (int): Patient's nhs number.
+        """
         try:
             print("--------------------------------------------"
                   "\n         Patient Appointment Menu"
@@ -74,8 +119,17 @@ class Appointment:
             self.book_appointment(nhs_number)
 
     def choose_specific_dr(self):
-        """ Allows user to choose a specific doctor from a list from all doctors registered
-        :return: gp_details (list) with gp last name and email address"""
+        """
+        Function for patient to choose a specific doctor.
+
+        Creates a list of all doctors first names, last names and email addresses from all that are listed as active.
+        If the list is empty, prints a message to say there are no doctors available and returns 0. Otherwise,
+        links to the choose_dr function for patient to choose a gp from the list and returns gp_details.
+
+        Returns:
+            gp_details (list): list of chosen doctor email and last name.
+            or 0 (int): To return to the menu.
+        """
         print("********************************************"
               "\nThe doctors currently available at the practice are: ")
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE active='1'")
@@ -89,8 +143,17 @@ class Appointment:
             return gp_details
 
     def choose_any_dr(self):
-        """ Assigns user a doctor at random from a list from all doctors registered
-        :return: gp_details (list) with gp last name and email address"""
+        """
+        Function for patient to be assigned to any doctor.
+
+        Creates a list of all doctors first names, last names and email addresses from all that are listed as active.
+        If the list is empty, prints a message to say there are no doctors available and returns 0.
+        Otherwise, one doctor is chosen at random from the list and gp_details are returned.
+
+        Returns:
+            gp_details (list): list of chosen doctor email and last name.
+            or 0 (int): To return to the menu.
+        """
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE active='1'")
         dr_names = self.c.fetchall()
         if not dr_names:
@@ -109,8 +172,23 @@ class Appointment:
             return gp_details
 
     def choose_dr_gender(self, nhs_number):
-        """ Allows user to choose a doctor by gender (male, female, non-binary) from a list from all doctors registered
-        :return: gp_details (list) with gp last name and email address"""
+        """
+        Function for patient to choose a doctor by gender.
+
+        Prints a menu for patient to choose to book with a male, female or non-binary doctor.
+        Exceptions prevent the input from being empty or a number which is not valid in the list of choices.
+
+        For chosen gender, creates a list of all doctors first names, last names and email addresses from all
+        that are listed as active. If the list is empty, prints a message to say there are no doctors available
+        and returns 0.
+        Otherwise, links to the choose_dr function for patient to choose a gp from the list and returns gp_details.
+
+        Parameters:
+            nhs_number (int): Patient's nhs number.
+        Returns:
+            gp_details (list): list of chosen doctor email and last name.
+            or 0 (int): To return to the menu.
+        """
         try:
             print("********************************************"
                   "\nChoose [1] to book an appointment with a male doctor"
@@ -165,11 +243,21 @@ class Appointment:
             self.choose_dr_gender(nhs_number)
 
     def choose_appointment(self, nhs_number, gp_details):
-        """ Allows user to to book an appointment
-        User can choose the year, month and day
-        User then presented with a list of all appointments on that day by time and shows availability
-        User can then choose which time they would like the appointment
-        appointment details inserted into the database for chosen date and time for this user"""
+        """
+        Function for patient to input year, month, day and time to book an appointment.
+
+        Function calls functions from the patientFunctions module for patient to choose the year, month and day of the
+        appointment. Patient is then presented with a list of all appointments on that day by time and
+        displays availability. The patient can then choose the appointment time.
+        This patient's appointment details are inserted into the database for chosen date and time.
+        At each step, the patient can choose to go back and choose another date.
+        Once booked, the patient is displayed a message that they will receive appointment confirmation shortly
+        and returned back to the main patient menu.
+
+        Parameters:
+            nhs_number (int): Patient's nhs number.
+            gp_details (list): list of chosen doctor email and last name.
+        """
         year = pf.choose_year()
         if year == 0:
             self.book_appointment(nhs_number)
@@ -199,7 +287,19 @@ class Appointment:
                         pass
 
     def cancel_appointment(self, nhs_number):
-        """ Presents user with all their appointments and allows them to choose to cancel one"""
+        """
+        Function for patient to view all of their appointments and allows them to choose to cancel one.
+
+        Calls the view_appointments function (from viewCancelFunctions module), if empty then patient is
+        displayed a message to say they have no appointments booked and are returned to the main patient menu.
+        Otherwise, they can select to cancel an appointment, calling check_app_id to confirm it exists
+        and is not in the past, delete_appointment is then called to delete the chosen appointment from the database.
+        If they choose to cancel another appointment, the process repeats, or they return to the main menu.
+        Exceptions prevent the input from being empty or a number which is not valid in the list of choices.
+
+        Parameters:
+            nhs_number (int): Patient's nhs number.
+        """
         print("--------------------------------------------"
               "\n         Patient: Cancel Appointments"
               "\n--------------------------------------------"
@@ -247,7 +347,15 @@ class Appointment:
                 self.cancel_appointment(nhs_number)
 
     def view_app_confirmations(self, nhs_number):
-        """ Presents user with all their pending, accepted and declined appointments"""
+        """
+        Function for patient to view all of their pending, accepted and declined appointments.
+
+        Calls the view_appointments function (from viewCancelFunctions module).
+        Patient is then returned to the main patient menu via the return_to_main function.
+
+        Parameters:
+            nhs_number (int): Patient's nhs number.
+        """
         print("--------------------------------------------"
               "\n         Patient: View Appointments"
               "\n--------------------------------------------"

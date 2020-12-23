@@ -3,25 +3,39 @@ from datetime import datetime
 import pandas as pd
 import patients.patientFunctions as pf
 
+"""
+This module contains functions for users to view and cancel their appointments.
+
+Error classes contain exception handling for user input in the functions.
+Functions allow patients to view all their appointments, delete appointments from the database
+and check an appointment exists in the database.
+"""
+
 
 class Error(Exception):
-    """Error exception class"""
+    """Error exception base class."""
     pass
 
 
 class AppNotExistError(Error):
-    """Raised when appointmentID entered by user does not exist"""
+    """Raised when the appointment ID entered by user does not exist."""
     pass
 
 
 class AppointmentPassedError(Error):
-    """Raised when the appointment time has already passed, therefore cannot be cancelled"""
+    """Raised when the appointment time has already passed, therefore cannot be cancelled."""
     pass
 
 
 def view_appointments(nhs_number):
-    """ Displays all appointments for that user which are pending, accepted or declined
-    Returns: pandas dataframe of appointment information including appointment ID, date and time, Dr name and status
+    """
+    Displays all appointments for the patient which are pending, accepted or declined.
+
+    Prints pandas dataframe of appointment information including appointment ID,
+    date and time, doctor name and appointment status.
+
+    Parameters:
+        nhs_number (int): Patient's nhs number.
     """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
@@ -64,7 +78,15 @@ def view_appointments(nhs_number):
 
 
 def delete_appointment(cancel):
-    """ Deletes a chosen appointment from the database using appointment ID"""
+    """
+    Deletes an appointment from the database.
+
+    Uses appointment ID entered by patient to delete the appointment row from the 'Appointment' table,
+    also deletes the related prescription row in the 'Prescription' table with the same appointment ID.
+
+    Parameters:
+        cancel (int): Appointment ID input by the patient.
+    """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
@@ -75,9 +97,18 @@ def delete_appointment(cancel):
 
 
 def check_app_id(nhs_number):
-    """ Checks the appointment ID entered by the user exists in the database
-    Checks the time of the appointment is not in the past
-    :return: appointment ID to cancel (integer) """
+    """
+    Checks the appointment ID exists and if the time of the appointment has already passed.
+
+    Patient can enter the appointment ID they would like to cancel, exception handling checks if
+    it exists in the database, then checks if the time and date of the appointment has passed, preventing cancellation.
+
+    Parameters:
+        nhs_number (int): Patient's nhs number.
+    Returns:
+        cancel (int): Appointment ID to cancel.
+        or 0 (int): To return to the main menu.
+    """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     while True:
