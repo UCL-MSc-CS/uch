@@ -54,7 +54,7 @@ class EmailInvalid(Error):
         self.message = message
         super().__init__(self.message)
 
-class nhsNotExists(Error):
+class NhsNotExistsError(Error):
     """Exception raised when email does not exist in list"""
     def __init__(self, message = "\n   < Please enter an existing NHS number > \n"):
         self.message = message
@@ -125,11 +125,6 @@ class GenderError(Error):
         self.message = message
         super().__init__(self.message)
 
-class InvalidAgeRange(Error):
-    """Exception raised when age is not supported by date of birth"""
-    def __init__(self, message = "please input correct age"):
-        self.message = message
-        super().__init__(self.message)
 
 class InvalidAdd(Error):
     """exception raised when address is not valid"""
@@ -527,7 +522,12 @@ class adminFunctions():
 
     def c_in(self):
         """Entering patient NHS number allows admin to check-in patient from existing
-                appointments"""
+        appointments
+
+        The appointments that are available to a specific NHS number are only those that
+        have been confirmed.  Invalid NHS numbers and no confirmed appointments will prompt errors.
+        """
+
         master_back = 1
         while master_back == 1:
             try:
@@ -544,7 +544,7 @@ class adminFunctions():
                 elif not nhs_number:
                     raise FieldEmpty()
                 elif len(nhsq) < 1:
-                    raise nhsNotExists
+                    raise NhsNotExistsError
                 elif len(appointments) == 0:
                     raise DateInvalidError
             except FieldEmpty:
@@ -552,8 +552,8 @@ class adminFunctions():
                 print(error)
             except DateInvalidError:
                 print("\n   <This person has no booked appointments> \n")
-            except nhsNotExists:
-                error = nhsNotExists()
+            except NhsNotExistsError:
+                error = NhsNotExistsError()
                 print(error)
             else:
                 print("********************************************")
@@ -607,8 +607,14 @@ class adminFunctions():
                             return 0
 
     def c_out(self):
-        """Entering patient NHS number allows admin to check-out patient from existing
-            appointments"""
+        """
+        Entering patient NHS number allows admin to check-out patient from existing
+        appointments
+
+        The appointments that are available to a specific NHS number are only those that
+        have been confirmed.  Invalid NHS numbers and no confirmed appointments will prompt errors.
+        """
+
         master_back = 1
         while master_back == 1:
             try:
@@ -625,7 +631,7 @@ class adminFunctions():
                 elif not nhs_number:
                     raise FieldEmpty()
                 elif len(nhsq) < 1:
-                    raise nhsNotExists
+                    raise NhsNotExistsError
                 elif len(appointments) == 0:
                     raise DateInvalidError
             except FieldEmpty:
@@ -633,8 +639,8 @@ class adminFunctions():
                 print(error)
             except DateInvalidError:
                 print("\n   <This person has no booked appointments> \n")
-            except nhsNotExists:
-                error = nhsNotExists()
+            except NhsNotExistsError:
+                error = NhsNotExistsError()
                 print(error)
             else:
                 print("********************************************")
@@ -688,7 +694,8 @@ class adminFunctions():
                             return 0
 
     def manage_det(self):
-        """Changing every patient detail of a specific NHS number"""
+        """Changing every patient detail of a specific NHS number."""
+
         master_back = 0
         while master_back == 0:
             try:
@@ -702,12 +709,12 @@ class adminFunctions():
                 elif not nhs_num:
                     raise FieldEmpty()
                 elif len(nhsq) < 1:
-                    raise nhsNotExists
+                    raise NhsNotExistsError
             except FieldEmpty:
                 error = FieldEmpty()
                 print(error)
-            except nhsNotExists:
-                error = nhsNotExists()
+            except NhsNotExistsError:
+                error = NhsNotExistsError()
                 print(error)
             else:
                 pat_back = 0
@@ -877,17 +884,14 @@ class adminFunctions():
                     except EmailInUse:
                         error = EmailInUse()
                         print(error)
-                    except nhsNotExists:
-                        error = nhsNotExists()
+                    except NhsNotExistsError:
+                        error = NhsNotExistsError()
                         print(error)
                     except FieldEmpty:
                         error = FieldEmpty()
                         print(error)
                     except IncorrectInputLength:
                         error = IncorrectInputLength(correct_length)
-                        print(error)
-                    except InvalidAgeRange:
-                        error = InvalidAgeRange()
                         print(error)
                     except GenderError:
                         error = GenderError()
@@ -923,6 +927,7 @@ class adminFunctions():
 
     def del_pat(self):
         """Deleting the entire row of a patient record"""
+
         delback = 0
         while delback == 0:
             try:
@@ -936,9 +941,9 @@ class adminFunctions():
                 elif not nhs_num:
                     raise FieldEmpty
                 elif len(nhsq) < 1:
-                    raise nhsNotExists
-            except nhsNotExists:
-                error = nhsNotExists()
+                    raise NhsNotExistsError
+            except NhsNotExistsError:
+                error = NhsNotExistsError()
                 print(error)
             except FieldEmpty:
                 error = FieldEmpty()
@@ -951,8 +956,13 @@ class adminFunctions():
                 delback = 1
 
     def man_ind_det(self):
-        """Entering an NHS number allows admin to navigate menu
-             and choose which patient detail to update individually"""
+        """
+        Entering an NHS number allows admin to change individual details.
+
+        This allows user to navigate a menu and change details from that menu.
+        Invalid inputs will raise errors prompting another user input.
+        Options to go back to certain aspects of the function are available.
+        """
         master_back = 0
         while master_back == 0:
             try:
@@ -966,9 +976,9 @@ class adminFunctions():
                 if not nhs_num:
                     raise FieldEmpty
                 elif len(nhsq) < 1:
-                    raise nhsNotExists
-            except nhsNotExists:
-                error = nhsNotExists()
+                    raise NhsNotExistsError
+            except NhsNotExistsError:
+                error = NhsNotExistsError()
                 print(error)
             except FieldEmpty:
                 error = FieldEmpty()
