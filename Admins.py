@@ -761,14 +761,14 @@ class adminFunctions():
                             question_num = 3
 
                         while question_num == 3:
-                            lastnm = input("New last name: ")
-                            if lastnm == '0':
+                            last = input("New last name: ")
+                            if last == '0':
                                 return adminFunctions.manage_det(self)
                                 break
-                            elif lastnm == '1':
+                            elif last == '1':
                                 return master_back
                                 break
-                            elif not lastnm:
+                            elif not last:
                                 raise FieldEmpty
                             question_num = 4
 
@@ -926,7 +926,7 @@ class adminFunctions():
                         self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?
                         , gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
                         telephoneNumber = ? WHERE nhsNumber = ?""",
-                        (emails, first, lastnm, date_of_birth, gender, addl1, addl2, postcode, tel, nhs_num))
+                        (emails, first, last, date_of_birth, gender, addl1, addl2, postcode, tel, nhs_num))
                         self.connection.commit()
                         print("Succesfully updated entire patient record")
                         return master_back

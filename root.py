@@ -171,9 +171,9 @@ while True:
                                 print("********************************************")
                                 try:
                                     det_choice = int(input("Choice: "))
-                                    backvar = 0
+                                    back_var = 0
                                     if det_choice == 1:
-                                        while backvar == 0:
+                                        while back_var == 0:
                                             try:
                                                 print("********************************************")
                                                 AdminM.manage_details2()
@@ -184,7 +184,7 @@ while True:
                                                 elif det_choice2 == 2:
                                                     ad.man_ind_det()
                                                 elif det_choice2 == 0:
-                                                    backvar = 1
+                                                    back_var = 1
                                                     break
                                                 elif det_choice2 != 1 and det_choice2 != 2 and det_choice2 != 0:
                                                     raise ValueError
