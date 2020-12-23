@@ -9,94 +9,274 @@ import patients.patientMedicalFunctions as pf
 import usefulfunctions as uf
 import re
 
-""" This is the main patient menu"""
+"""
+This is the main patient menu.
+
+From this file, patients can register, login, book an appointment, view their appointments, cancel an appointment, view their medical profile, 
+view their personal details, update their personal details, logout, go back to the main menu, and exit the program.
+"""
 
 connection = sql.connect('UCH.db')
 c = connection.cursor()
 
-# All Errors
-
 
 class Error(Exception):
-    """Base class for exceptions in this module"""
+    """
+    This is the base class for exceptions in this module.
+    """
     pass
 
 
 class NotRegisteredError(Error):
+    """
+    This is a class for when the patient is not registered by an administrator.
+
+    Attributes:
+        message (string): The message raised when the patient is not registered by an administrator.
+    """
+
     def __init__(self, message="\n   < An administrator needs to confirm your registration before you can access our services - please try logging in tomorrow > \n"):
+        """
+        The constructor for NotRegisteredError class.
+
+        Parameters:
+            message (string): The message raised when the patient is not registered by an administrator.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class EmptyAnswerError(Error):
+    """
+    This is a class for when the patient presses enter with no input.
+
+    Attributes:
+        message (string): The message raised when the patient presses enter with no input.
+    """
+
     def __init__(self, message="\n   < I'm sorry, this field cannot be left empty, please try again > \n"):
+        """
+        The constructor for EmptyAnswerError class.
+
+        Parameters:
+            message (string): The message raised when the patient presses enter with no input.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class InvalidAnswerError(Error):
+    """
+    This is a class for when the patient types something that does not correctly meet the requirements of the question asked.
+
+    Attributes:
+        message (string): The message raised when the patient types something that does not correctly meet the requirements of the question asked.
+    """
+
     def __init__(self, message="\n   < I'm sorry, this is not a valid answer, please try again > \n"):
+        """
+        The constructor for InvalidAnswerError class.
+
+        Parameters:
+            message (string): The message raised when the patient types something that does not correctly meet the requirements of the question asked.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class InvalidEmailError(Error):
+    """
+    This is a class for when the patient does not type in a correctly-formatted email address.
+
+    Attributes:
+        message (string): The message raised when the patient does not type in a correctly-formatted email address.
+    """
+
     def __init__(self, message="\n   < I'm sorry, that is not a valid email, please try again > \n"):
+        """
+        The constructor for InvalidEmailError class.
+
+        Parameters:
+            message (string): The message raised when the patient does not type in a correctly-formatted email address.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class EmailDoesNotExistError(Error):
+    """
+    This is a class for when the patient tries to login with an email that has not been registered.
+
+    Attributes:
+        message (string): The message raised when the patient tries to login with an email that has not been registered.
+    """
+
     def __init__(self, message="\n   < I'm sorry, that email is not in our system, please try again > \n"):
+        """
+        The constructor for EmailDoesNotExistError class.
+
+        Parameters:
+            message (string): The message raised when the patient tries to login with an email that has not been registered.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class EmailAlreadyExistsError(Error):
+    """
+    This is a class for when the patient tries to register with an email address that is already in the database.
+
+    Attributes:
+        message (string): The message raised when the patient tries to register with an email address that is already in the database.
+    """
+
     def __init__(self, message="\n   < I'm sorry, that email is already in use, please try again > \n"):
+        """
+        The constructor for EmailAlreadyExistsError class.
+
+        Parameters:
+            message (string): The message raised when the patient tries to register with an email address that is already in the database.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class PasswordIncorrectError(Error):
+    """
+    This is a class for when the patient enters an incorrect password.
+
+    Attributes:
+        message (string): The message raised when the patient enters an incorrect password.
+    """
+
     def __init__(self, message="\n   < I'm sorry, that password is not correct, please try again > \n"):
+        """
+        The constructor for PasswordIncorrectError class.
+
+        Parameters:
+            message (string): The message raised when the patient enters an incorrect password.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class NHSDoesNotExistError(Error):
+    """
+    This is a class for when the patient tries to login with an NHS number that has not been registered.
+
+    Attributes:
+        message (string): The message raised when the patient tries to login with an NHS number that has not been registered.
+    """
+
     def __init__(self, message="\n   < I'm sorry, that NHS number is not in our system, please try again > \n"):
+        """
+        The constructor for NHSDoesNotExistError class.
+
+        Parameters:
+            message (string): The message raised when the patient tries to login with an NHS number that has not been registered.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class InvalidTelephoneError(Error):
+    """
+    This is a class for when the patient enters a telephone number that is not in the correct format.
+
+    Attributes:
+        message (string): The message raised when the patient enters a telephone number that is not in the correct format.
+    """
+
     def __init__(self, message="\n   < I'm sorry, that is not a valid telephone number, please try again > \n"):
+        """
+        The constructor for InvalidTelephoneError class.
+
+        Parameters:
+            message (string): The message raised when the patient enters a telephone number that is not in the correct format.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class DateInvalidError(Error):
+    """
+    This is a class for when the patient enters a date that does not exist.
+
+    Attributes:
+        message (string): The message raised when the patient enters a date that does not exist i.e. 2020-02-30.
+    """
+
     def __init__(self, message="\n   < I'm sorry, that is not a valid date, please try again > \n"):
+        """
+        The constructor for DateInvalidError class.
+
+        Parameters:
+            message (string): The message raised when the patient enters a date that does not exist i.e. 2020-02-30.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class DateInFutureError(Error):
+    """
+    This is a class for when the patient enters a date that has not happened yet.
+
+    Attributes:
+        message (string): The message raised when the patient enters a date that has not happened yet.
+    """
+
     def __init__(self, message="\n   < I'm sorry, your date of birth cannot be in the future, please try again > \n"):
+        """
+        The constructor for DateInFutureError class.
+
+        Parameters:
+            message (string): The message raised when the patient enters a date that has not happened yet.
+        """
+
         self.message = message
         super().__init__(self.message)
 
 
 class DateFormatError(Error):
+    """
+    This is a class for when the patient enters a date in a different format to what is requested.
+
+    Attributes:
+        message (string): The message raised when the patient enters a date in a different format to what is requested.
+    """
+
     def __init__(self, message="\n   < I'm sorry, this date is not in the proper YYYY-MM-DD format, with '-'s as separators, please try again > \n"):
+        """
+        The constructor for DateFormatError class.
+
+        Parameters:
+            message (string): The message raised when the patient enters a date in a different format to what is requested.
+        """
+
         self.message = message
         super().__init__(self.message)
 
-# Patient Functions
-
 
 def summary(NHS_number):
+    """ 
+    Function to show all of the patient's details in the database attached to their NHS number. 
+
+    Patients can view their NHS number, their name, their email, their date of birth, their gender, their address, 
+    their telephone number, and their password (hashed for security).
+
+    Parameters:
+    NHS_number (string): the patient's NHS number. 
+    """
     c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
     results = c.fetchall()
     hash = ""
@@ -126,13 +306,22 @@ def summary(NHS_number):
 
 
 def options(NHS_number):
+    """ 
+    Function which offers several options for the patient who has successfully logged in and is confirmed by an administrator. 
+
+    Patients can book an appointment, view their appointments, cancel an appointment, see their medical profile, 
+    see their personal details, update their personal details, or log out.
+
+    Parameters:
+    NHS_number (string): the patient's NHS number. 
+    """
     count = 0
     while True:
         while count < 13:
             try:
                 update_patient = {"address_line_1": "",
-                                        "address_line_2": "",
-                                        "postcode": ""}
+                                  "address_line_2": "",
+                                  "postcode": ""}
                 while count == 0:
                     uf.banner('Patient')
                     print("What would you like to do next?")
@@ -140,8 +329,8 @@ def options(NHS_number):
                     print("Choose [2] to view your appointments")
                     print("Choose [3] to cancel an appointment")
                     print("Choose [4] to see your medical profile")
-                    print("Choose [5] to see your contact details")
-                    print("Choose [6] to update your contact details")
+                    print("Choose [5] to see your personal details")
+                    print("Choose [6] to update your personal details")
                     print("Choose [0] to log out")
                     action = input("Please select an option: ")
                     if action == '':
@@ -169,7 +358,8 @@ def options(NHS_number):
                 while count == 1:
                     print("********************************************")
                     print("Choose [1] to see your medical profile")
-                    print("Choose [2] to take the lifestyle risk questionnaire")
+                    print(
+                        "Choose [2] to take the lifestyle risk questionnaire")
                     print("Choose [3] to update your medical history")
                     print("Choose [0] to go back")
                     print("********************************************")
@@ -244,8 +434,8 @@ def options(NHS_number):
                         count = 5
                     elif action == '3':
                         update_patient = {"address_line_1": "",
-                                        "address_line_2": "",
-                                        "postcode": ""}
+                                          "address_line_2": "",
+                                          "postcode": ""}
                         count = 9
                     elif action == '4':
                         count = 6
@@ -271,7 +461,7 @@ def options(NHS_number):
                             raise InvalidAnswerError()
                         else:
                             c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""",
-                                    (first_name, NHS_number))
+                                      (first_name, NHS_number))
                             connection.commit()
                             print("Successfully changed first name")
                             summary(NHS_number)
@@ -303,13 +493,14 @@ def options(NHS_number):
                     elif telephone_number == '0':
                         count = 3
                     else:
-                        telephone_number = re.sub("[^0-9]", "", telephone_number)
+                        telephone_number = re.sub(
+                            "[^0-9]", "", telephone_number)
                         if len(telephone_number) > 17 or len(telephone_number) < 11:
                             raise InvalidTelephoneError()
                         else:
                             telephone_number = int(telephone_number)
                             c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""",
-                                    (telephone_number, NHS_number))
+                                      (telephone_number, NHS_number))
                             connection.commit()
                             print("Successfully changed telephone number")
                             summary(NHS_number)
@@ -323,13 +514,13 @@ def options(NHS_number):
                         count = 3
                     elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
                         c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?",
-                                        [patient_email])
+                                  [patient_email])
                         patient_emails = c.fetchall()
                         if patient_emails != []:
                             raise EmailAlreadyExistsError()
                         else:
                             c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""",
-                                    (patient_email, NHS_number))
+                                      (patient_email, NHS_number))
                             connection.commit()
                             print("Successfully changed email address")
                             summary(NHS_number)
@@ -378,7 +569,7 @@ def options(NHS_number):
                         count = 10
                 while count == 10:
                     address_line_2 = input(
-                            "Please enter your new address line 2 (press 0 to go back to update details menu, press 1 to go back): ")
+                        "Please enter your new address line 2 (press 0 to go back to update details menu, press 1 to go back): ")
                     address_line_2 = address_line_2.strip().title()
                     if address_line_2 == '0':
                         count = 3
@@ -425,13 +616,13 @@ def options(NHS_number):
                     else:
                         update_patient["postcode"] = postcode
                         c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""",
-                                (update_patient["address_line_1"], NHS_number))
+                                  (update_patient["address_line_1"], NHS_number))
                         connection.commit()
                         c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""",
-                                (update_patient["address_line_2"], NHS_number))
+                                  (update_patient["address_line_2"], NHS_number))
                         connection.commit()
                         c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""",
-                                (update_patient["postcode"], NHS_number))
+                                  (update_patient["postcode"], NHS_number))
                         connection.commit()
                         print("Successfully changed address")
                         summary(NHS_number)
@@ -455,7 +646,17 @@ def options(NHS_number):
                 error = PasswordIncorrectError()
                 print(error)
 
+
 def login():
+    """ 
+    Function to allow patients to log into their account. 
+
+    Patients can log in using their email or their NHS number. Once they have successfully logged in, 
+    they are sent to the patient option menu.
+
+    Returns:
+    string: the patient's NHS number. 
+    """
     count = 0
     NHS_number = ""
     while True:
@@ -564,6 +765,12 @@ def login():
 
 
 def register():
+    """ 
+    Function to register new patients. 
+
+    Allows new patients to provide their first name, last name, date of birth, gender, address, telephone number, email, 
+    and password. Once they submit their details, they are sent back to the main menu for patients. 
+    """
     new_patient = {"first_name": "",
                    "last_name": "",
                    "date_of_birth": "",
@@ -571,7 +778,7 @@ def register():
                    "address_line_1": "",
                    "address_line_2": "",
                    "postcode": "",
-                   "telephone_number": "",
+                   "telephone_number": 0,
                    "patient_email": "",
                    "password": ""}
     count = 0
@@ -644,7 +851,8 @@ def register():
                                 elif day > 31 or day < 1:
                                     raise DateInvalidError()
                                 else:
-                                    date_of_birth = datetime.date(year, month, day)
+                                    date_of_birth = datetime.date(
+                                        year, month, day)
                                     today = date.today()
                                     if date_of_birth > today:
                                         raise DateInFutureError()
@@ -754,7 +962,8 @@ def register():
                     elif telephone_number == "1":
                         count = 7
                     else:
-                        telephone_number = re.sub("[^0-9]", "", telephone_number)
+                        telephone_number = re.sub(
+                            "[^0-9]", "", telephone_number)
                         if len(telephone_number) > 17 or len(telephone_number) < 11:
                             raise InvalidTelephoneError()
                         else:
@@ -772,7 +981,7 @@ def register():
                         count = 8
                     elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
                         c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?",
-                                [patient_email])
+                                  [patient_email])
                         patient_emails = c.fetchall()
                         if patient_emails != []:
                             raise EmailAlreadyExistsError()
@@ -821,14 +1030,17 @@ def register():
                     new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
         x.register()
         print("Thank you, " + x.first_name +
-                ", for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days.")
+              ", for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days.")
         summary(x.NHS_number)
         return 0
 
-# Main Patient Function
-
 
 def task():
+    """ 
+    Main menu for patients. 
+
+    Allows patients to either register, login, return to the main menu, or exit the program. 
+    """
     try:
         print("********************************************")
         print("Choose [1] to register for a new account")
