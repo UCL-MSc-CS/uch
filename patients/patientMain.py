@@ -379,16 +379,16 @@ def options(NHS_number):
                 while count == 10:
                     address_line_2 = input(
                             "Please enter your new address line 2 (press 0 to go back to update details menu, press 1 to go back): ")
-                        address_line_2 = address_line_2.strip().title()
-                        if address_line_2 == '0':
-                            count = 3
-                        elif address_line_2 == "1":
-                            count = 9
-                        elif len(address_line_2) > 400:
-                            raise InvalidAnswerError()
-                        else:
-                            update_patient["address_line_2"] = address_line_2
-                            count = 11
+                    address_line_2 = address_line_2.strip().title()
+                    if address_line_2 == '0':
+                        count = 3
+                    elif address_line_2 == "1":
+                        count = 9
+                    elif len(address_line_2) > 400:
+                        raise InvalidAnswerError()
+                    else:
+                        update_patient["address_line_2"] = address_line_2
+                        count = 11
                 while count == 11:
                     city = input(
                         "Please enter your new city (press 0 to go back to update details menu, press 1 to go back): ")
