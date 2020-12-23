@@ -170,7 +170,7 @@ while True:
                                 AdminM.manage_details()
                                 print("********************************************")
                                 try:
-                                    det_choice = int(input("choice: "))
+                                    det_choice = int(input("Choice: "))
                                     backvar = 0
                                     if det_choice == 1:
                                         while backvar == 0:
@@ -178,7 +178,7 @@ while True:
                                                 print("********************************************")
                                                 AdminM.manage_details2()
                                                 print("********************************************")
-                                                det_choice2 = int(input("choice: "))
+                                                det_choice2 = int(input("Choice: "))
                                                 if det_choice2 == 1:
                                                     ad.manage_det()
                                                 elif det_choice2 == 2:

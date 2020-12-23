@@ -591,12 +591,12 @@ class adminFunctions():
                             print("< A check-in time has already been provided for that appointment >")
                             return 1
                         else:
-                            unixd = dt.utcnow().timestamp()
+                            unix_d = dt.utcnow().timestamp()
                             self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
                             Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
                             appointmentID = ?""", (check_number,))
                             firstsel = self.c.fetchall()
-                            self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unixd, check_number))
+                            self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unix_d, check_number))
                             self.connection.commit()
                             x = dt.now().hour
                             y = dt.now().minute
@@ -650,7 +650,7 @@ class adminFunctions():
                 back1 = 1
                 while back1 == 1:
                     try:
-                        intime = dt.now()
+                        in_time = dt.now()
                         print("********************************************")
                         In = str(input("Type in appointment id to check out (press 0 to go back): "))
                         if In == "0":
@@ -678,12 +678,12 @@ class adminFunctions():
                             print("< A check-out time has already been provided for that appointment >")
                             return 1
                         else:
-                            unixd = dt.utcnow().timestamp()
+                            unix_d = dt.utcnow().timestamp()
                             self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
                             Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
                             appointmentID = ?""", (check_number,))
                             firstsel = self.c.fetchall()
-                            self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unixd, check_number))
+                            self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unix_d, check_number))
                             self.connection.commit()
                             x = dt.now().hour
                             y = dt.now().minute
@@ -694,7 +694,13 @@ class adminFunctions():
                             return 0
 
     def manage_det(self):
-        """Changing every patient detail of a specific NHS number."""
+        """
+        Changing every patient detail of a specific NHS number.
+
+        Only information from existing NHS numbers can be changed.
+        Admin does not have the ability to change security information such as password.
+        Nested while loops allow for logical menu navigation
+        """
 
         master_back = 0
         while master_back == 0:
@@ -743,14 +749,14 @@ class adminFunctions():
                             question_num = 2
 
                         while question_num == 2:
-                            firstn = input("New first name: ")
-                            if firstn == '0':
+                            first = input("New first name: ")
+                            if first == '0':
                                 return adminFunctions.manage_det(self)
                                 break
-                            elif firstn == '1':
+                            elif first == '1':
                                 return master_back
                                 break
-                            elif not firstn:
+                            elif not first:
                                 raise FieldEmpty
                             question_num = 3
 
@@ -920,7 +926,7 @@ class adminFunctions():
                         self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?
                         , gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
                         telephoneNumber = ? WHERE nhsNumber = ?""",
-                        (emails, firstn, lastnm, date_of_birth, gender, addl1, addl2, postcode, tel, nhs_num))
+                        (emails, first, lastnm, date_of_birth, gender, addl1, addl2, postcode, tel, nhs_num))
                         self.connection.commit()
                         print("Succesfully updated entire patient record")
                         return master_back
@@ -962,6 +968,7 @@ class adminFunctions():
         This allows user to navigate a menu and change details from that menu.
         Invalid inputs will raise errors prompting another user input.
         Options to go back to certain aspects of the function are available.
+        Nested while loops allow for logical menu navigation
         """
         master_back = 0
         while master_back == 0:
