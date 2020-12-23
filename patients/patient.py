@@ -61,21 +61,12 @@ class Patient:
         self.NHS_generator()
 
     def register(self):
-         """
-         Function puts new patients into the database.
-         """
-
-        self.c.execute("INSERT INTO PatientDetail VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                       (self.NHS_number, self.patient_email, self.first_name, self.last_name, self.date_of_birth, self.gender,
-                        self.address_line_1, self.address_line_2, self.postcode, self.telephone_number, self.password,
-                        self.registration_confirm))
+        # Function puts new patients into the database.
+        self.c.execute("INSERT INTO PatientDetail VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", (self.NHS_number, self.patient_email, self.first_name, self.last_name, self.date_of_birth, self.gender, self.address_line_1, self.address_line_2, self.postcode, self.telephone_number, self.password, self.registration_confirm))
         self.connection.commit()
 
     def NHS_generator(self):
-         """
-         Function creates a random and unique NHS number for each new patient.
-         """
-
+        # Function creates a random and unique NHS number for each new patient.
         count = 0
         NHS_number = ""
         while count < 10:
