@@ -127,12 +127,14 @@ def summary(NHS_number):
 
 def login():
     count = 0
+    NHS_number = ""
     while True:
         try:
             while count == 0:
                 print("********************************************")
                 print("Choose [1] to login using your email")
                 print("Choose [2] to login using your NHS number")
+                print("Choose [0] to go back")
                 print("********************************************")
                 action = input("Please select an option: ")
                 if action == '':
@@ -140,19 +142,95 @@ def login():
                 elif action == '1':
                     count = 1
                 elif action == '2':
-                    count = 2
+                    count = 3
+                elif action == '0':
+                    return 0
                 else:
                     raise InvalidAnswerError()
             while count == 1:
-                return 0
+                patient_email = input("Email (press 0 to go back): ")
+                if patient_email == '0':
+                    count = 0
+                elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
+                    c.execute(
+                        "SELECT * FROM PatientDetail WHERE patientEmail = ?", [patient_email])
+                    patient_emails = c.fetchall()
+                    if patient_emails == []:
+                        raise EmailDoesNotExistError
+                    else:
+                        count = 2
+                else:
+                    raise InvalidEmailError()
             while count == 2:
-                return 0
+                c.execute(
+                    "SELECT * FROM PatientDetail WHERE patientEmail = ?", [patient_email])
+                patient_emails = c.fetchall()
+                password = input("Password (press 0 to go back): ")
+                if password == '0':
+                    count = 1
+                elif password != patient_emails[0][10]:
+                    raise PasswordIncorrectError()
+                else:
+                    NHS_number = patient_emails[0][0]
+                    count = 5
+            while count == 3:
+                NHS_number = input("NHS Number (press 0 to go back): ")
+                NHS_number = int(re.sub("[^0-9]", "", NHS_number))
+                c.execute(
+                    "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
+                NHS_numbers = c.fetchall()
+                if NHS_number == '0':
+                    count = 0
+                elif NHS_numbers == []:
+                    raise NHSDoesNotExistError()
+                else:
+                    count = 4
+            while count == 4:
+                c.execute(
+                    "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
+                NHS_numbers = c.fetchall()
+                password = input("Password (press 0 to go back): ")
+                if password == '0':
+                    count = 3
+                elif password != NHS_numbers[0][10]:
+                    raise PasswordIncorrectError()
+                else:
+                    NHS_number = NHS_numbers[0][0]
+                    count = 5
+            while count == 5:
+                c.execute(
+                    "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
+                results = c.fetchall()
+                if results[0][11] == 0:
+                    raise NotRegisteredError()
+                    return 0
+                else:
+                    count = 6
         except InvalidAnswerError:
             error = InvalidAnswerError()
             print(error)
         except EmptyAnswerError:
             error = EmptyAnswerError()
             print(error)
+        except InvalidEmailError:
+            error = InvalidEmailError()
+            print(error)
+        except EmailDoesNotExistError:
+            error = EmailDoesNotExistError()
+            print(error)
+        except PasswordIncorrectError:
+            error = PasswordIncorrectError()
+            print(error)
+        except NHSDoesNotExistError:
+            error = NHSDoesNotExistError()
+            print(error)
+        except NotRegisteredError:
+            error = NotRegisteredError()
+            print(error)
+        else:
+            # options(NHS_number)
+            summary(NHS_number)
+            return 0
 
 
 def register():
