@@ -125,6 +125,336 @@ def summary(NHS_number):
     print("Password: " + hash)
 
 
+def options(NHS_number):
+    count = 0
+    while True:
+        while count < 13:
+            try:
+                update_patient = {"address_line_1": "",
+                                        "address_line_2": "",
+                                        "postcode": ""}
+                while count == 0:
+                    uf.banner('Patient')
+                    print("What would you like to do next?")
+                    print("Choose [1] to book an appointment")
+                    print("Choose [2] to view your appointments")
+                    print("Choose [3] to cancel an appointment")
+                    print("Choose [4] to see your medical profile")
+                    print("Choose [5] to see your contact details")
+                    print("Choose [6] to update your contact details")
+                    print("Choose [0] to log out")
+                    action = input("Please select an option: ")
+                    if action == '':
+                        raise EmptyAnswerError()
+                    elif action == '1':
+                        x = Appointment()
+                        x.book_appointment(NHS_number)
+                    elif action == '2':
+                        x = Appointment()
+                        x.view_app_confirmations(NHS_number)
+                    elif action == '3':
+                        x = Appointment()
+                        x.cancel_appointment(NHS_number)
+                    elif action == '4':
+                        count = 1
+                    elif action == '5':
+                        summary(NHS_number)
+                    elif action == '6':
+                        summary(NHS_number)
+                        count = 3
+                    elif action == '0':
+                        return 0
+                    else:
+                        raise InvalidAnswerError()
+                while count == 1:
+                    print("********************************************")
+                    print("Choose [1] to see your medical profile")
+                    print("Choose [2] to take the lifestyle risk questionnaire")
+                    print("Choose [3] to update your medical history")
+                    print("Choose [0] to go back")
+                    print("********************************************")
+                    action = input("Please select an option: ")
+                    if action == '':
+                        raise EmptyAnswerError()
+                    elif action == '1':
+                        name = PatientMedical(NHS_number)
+                        name.show_profile(NHS_number)
+                    elif action == '2':
+                        print(
+                            "Please fill out the following lifestyle questions to assess any potential health risk")
+                        x = RiskProfile(NHS_number)
+                        x.questions(NHS_number)
+                        x.BMI_calculator(NHS_number)
+                        x.smoking(NHS_number)
+                        x.drugs(NHS_number)
+                        x.alcohol(NHS_number)
+                        x.diet(NHS_number)
+                        x.insert_to_table(NHS_number)
+                    elif action == '3':
+                        count = 2
+                    elif action == '0':
+                        count = 0
+                    else:
+                        raise InvalidAnswerError()
+                while count == 2:
+                    x = PatientMedical(NHS_number)
+                    print("********************************************")
+                    print(
+                        "Choose [1] to provide vaccination history for you or your children (if any)")
+                    print(
+                        "Choose [2] to provide cancer related medical history for you or your family (if any)")
+                    print(
+                        "Choose [3] to provide pre-existing conditions for you or your children (if any)")
+                    print(
+                        "Choose [4] to provide medicine allergies for you or your children (if any)")
+                    print("Choose [0] to go back")
+                    print("********************************************")
+                    action = input('Please select an option: ')
+                    if action == '':
+                        raise EmptyAnswerError()
+                    elif action == '1':
+                        x.vaccination(NHS_number)
+                    elif action == '2':
+                        x.cancer(NHS_number)
+                    elif action == '3':
+                        x.pre_existing_con(NHS_number)
+                    elif action == '4':
+                        x.med_allergy(NHS_number)
+                    elif action == '0':
+                        count = 1
+                    else:
+                        raise InvalidAnswerError()
+                while count == 3:
+                    print("********************************************")
+                    print("Which details would you like to update?")
+                    print("Choose [1] for first name")
+                    print("Choose [2] for last name")
+                    print("Choose [3] for address")
+                    print("Choose [4] for telephone number")
+                    print("Choose [5] for email address")
+                    print("Choose [6] for password")
+                    print("Choose [0] to go back")
+                    print("********************************************")
+                    action = input("Please select an option: ")
+                    if action == '':
+                        raise EmptyAnswerError()
+                    elif action == '1':
+                        count = 4
+                    elif action == '2':
+                        count = 5
+                    elif action == '3':
+                        update_patient = {"address_line_1": "",
+                                        "address_line_2": "",
+                                        "postcode": ""}
+                        count = 9
+                    elif action == '4':
+                        count = 6
+                    elif action == '5':
+                        count = 7
+                    elif action == '6':
+                        count = 8
+                    elif action == '0':
+                        count = 0
+                    else:
+                        raise InvalidAnswerError()
+                while count == 4:
+                    first_name = input(
+                        "Please enter your new first name (press 0 to go back): ")
+                    first_name = first_name.strip().title()
+                    if first_name == '':
+                        raise EmptyAnswerError()
+                    elif first_name == '0':
+                        count = 3
+                    else:
+                        x = first_name.replace(" ", "")
+                        if (any(str.isdigit(y) for y in x)) == True:
+                            raise InvalidAnswerError()
+                        else:
+                            c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""",
+                                    (first_name, NHS_number))
+                            connection.commit()
+                            print("Successfully changed first name")
+                            summary(NHS_number)
+                            count = 3
+                while count == 5:
+                    last_name = input(
+                        "Please enter your new last name (press 0 to go back): ")
+                    last_name = last_name.strip().title()
+                    if last_name == '':
+                        raise EmptyAnswerError()
+                    elif last_name == '0':
+                        count = 3
+                    else:
+                        x = last_name.replace(" ", "")
+                        if (any(str.isdigit(y) for y in x)) == True:
+                            raise InvalidAnswerError()
+                        else:
+                            c.execute(
+                                """UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (last_name, NHS_number))
+                            connection.commit()
+                            print("Successfully changed last name")
+                            summary(NHS_number)
+                            count = 3
+                while count == 6:
+                    telephone_number = input(
+                        "Please enter your new telephone number, including country code (i.e. +447123456789)(press 0 to go back): ")
+                    if telephone_number == '':
+                        raise EmptyAnswerError()
+                    elif telephone_number == '0':
+                        count = 3
+                    else:
+                        telephone_number = re.sub("[^0-9]", "", telephone_number)
+                        if len(telephone_number) > 17 or len(telephone_number) < 11:
+                            raise InvalidTelephoneError()
+                        else:
+                            telephone_number = int(telephone_number)
+                            c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""",
+                                    (telephone_number, NHS_number))
+                            connection.commit()
+                            print("Successfully changed telephone number")
+                            summary(NHS_number)
+                            count = 3
+                while count == 7:
+                    patient_email = input(
+                        "Please enter your new email (press 0 to go back): ")
+                    if patient_email == '':
+                        raise EmptyAnswerError()
+                    elif patient_email == '0':
+                        count = 3
+                    elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
+                        c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?",
+                                        [patient_email])
+                        patient_emails = c.fetchall()
+                        if patient_emails != []:
+                            raise EmailAlreadyExistsError()
+                        else:
+                            c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""",
+                                    (patient_email, NHS_number))
+                            connection.commit()
+                            print("Successfully changed email address")
+                            summary(NHS_number)
+                            count = 3
+                    else:
+                        raise InvalidEmailError()
+                while count == 8:
+                    c.execute(
+                        "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
+                    NHS_numbers = c.fetchall()
+                    password = input(
+                        "In order to change your password, please enter your old password (press 0 to go back): ")
+                    if password == '':
+                        raise EmptyAnswerError()
+                    elif password == '0':
+                        count = 3
+                    else:
+                        if password != NHS_numbers[0][10]:
+                            raise PasswordIncorrectError()
+                        else:
+                            password = input(
+                                "Please enter your new password (press 0 to go back to update details menu): ")
+                            if password == '':
+                                raise EmptyAnswerError()
+                            elif password == '0':
+                                count = 3
+                            else:
+                                c.execute(
+                                    """UPDATE PatientDetail SET password = ? WHERE nhsNumber = ?""", (password, NHS_number))
+                                connection.commit()
+                                print("Successfully changed password")
+                                summary(NHS_number)
+                                count = 3
+                while count == 9:
+                    address_line_1 = input(
+                        "Please enter your new address line 1 (press 0 to go back): ")
+                    address_line_1 = address_line_1.strip().title()
+                    if address_line_1 == '':
+                        raise EmptyAnswerError()
+                    elif address_line_1 == '0':
+                        count = 3
+                    elif len(address_line_1) > 400:
+                        raise InvalidAnswerError()
+                    else:
+                        update_patient["address_line_1"] = address_line_1
+                        count = 10
+                while count == 10:
+                    address_line_2 = input(
+                            "Please enter your new address line 2 (press 0 to go back to update details menu, press 1 to go back): ")
+                        address_line_2 = address_line_2.strip().title()
+                        if address_line_2 == '0':
+                            count = 3
+                        elif address_line_2 == "1":
+                            count = 9
+                        elif len(address_line_2) > 400:
+                            raise InvalidAnswerError()
+                        else:
+                            update_patient["address_line_2"] = address_line_2
+                            count = 11
+                while count == 11:
+                    city = input(
+                        "Please enter your new city (press 0 to go back to update details menu, press 1 to go back): ")
+                    city = city.strip().title()
+                    if city == '':
+                        raise EmptyAnswerError()
+                    elif city == '0':
+                        count = 3
+                    elif city == "1":
+                        count = 10
+                    elif len(city) > 200:
+                        raise InvalidAnswerError()
+                    else:
+                        x = city.replace(" ", "")
+                        if (any(str.isdigit(y) for y in x)) == True:
+                            raise InvalidAnswerError()
+                        else:
+                            address_line_2 = (
+                                update_patient["address_line_2"] + " " + city).strip()
+                            update_patient["address_line_2"] = address_line_2
+                            count = 12
+                while count == 12:
+                    postcode = input(
+                        "Please enter your new postcode (press 0 to go back to update details menu, press 1 to go back): ")
+                    postcode = postcode.strip().upper()
+                    if postcode == '':
+                        raise EmptyAnswerError()
+                    elif postcode == '0':
+                        count = 3
+                    elif postcode == "1":
+                        count = 11
+                    elif len(postcode) > 50:
+                        raise InvalidAnswerError()
+                    else:
+                        update_patient["postcode"] = postcode
+                        c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""",
+                                (update_patient["address_line_1"], NHS_number))
+                        connection.commit()
+                        c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""",
+                                (update_patient["address_line_2"], NHS_number))
+                        connection.commit()
+                        c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""",
+                                (update_patient["postcode"], NHS_number))
+                        connection.commit()
+                        print("Successfully changed address")
+                        summary(NHS_number)
+                        count = 3
+            except InvalidAnswerError:
+                error = InvalidAnswerError()
+                print(error)
+            except EmptyAnswerError:
+                error = EmptyAnswerError()
+                print(error)
+            except InvalidTelephoneError:
+                error = InvalidTelephoneError()
+                print(error)
+            except InvalidEmailError:
+                error = InvalidEmailError()
+                print(error)
+            except EmailAlreadyExistsError:
+                error = EmailAlreadyExistsError()
+                print(error)
+            except PasswordIncorrectError:
+                error = PasswordIncorrectError()
+                print(error)
+
 def login():
     count = 0
     NHS_number = ""
@@ -229,7 +559,7 @@ def login():
             except NotRegisteredError:
                 error = NotRegisteredError()
                 print(error)
-        summary(NHS_number)
+        options(NHS_number)
         return 0
 
 
@@ -360,7 +690,7 @@ def register():
                         return 0
                     elif address_line_1 == "1":
                         count = 3
-                    elif len(address_line_1) > 100:
+                    elif len(address_line_1) > 400:
                         raise InvalidAnswerError()
                     else:
                         new_patient["address_line_1"] = address_line_1
@@ -373,7 +703,7 @@ def register():
                         return 0
                     elif address_line_2 == "1":
                         count = 4
-                    elif len(address_line_2) > 100:
+                    elif len(address_line_2) > 400:
                         raise InvalidAnswerError()
                     else:
                         new_patient["address_line_2"] = address_line_2
@@ -388,7 +718,7 @@ def register():
                         return 0
                     elif city == "1":
                         count = 5
-                    elif len(city) > 100:
+                    elif len(city) > 200:
                         raise InvalidAnswerError()
                     else:
                         x = city.replace(" ", "")
@@ -409,7 +739,7 @@ def register():
                         return 0
                     elif postcode == "1":
                         count = 6
-                    elif len(postcode) > 100:
+                    elif len(postcode) > 50:
                         raise InvalidAnswerError()
                     else:
                         new_patient["postcode"] = postcode
