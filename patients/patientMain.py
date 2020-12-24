@@ -291,6 +291,7 @@ def summary(NHS_number):
     one = x[0:3]
     two = x[3:6]
     three = x[6:10]
+    # Seoarating the NHS number so that the format looks more realistic
     print(one, two, three)
     print("First Name: " + str(results[0][2]))
     print("Last Name: " + str(results[0][3]))
@@ -298,6 +299,7 @@ def summary(NHS_number):
     print("Date of Birth: " + str(results[0][4]))
     print("Gender: " + str(results[0][5]))
     print("Address: ")
+    # Printing each line of the address
     print(str(results[0][6]))
     print(str(results[0][7]))
     print(str(results[0][8]))
@@ -319,6 +321,7 @@ def options(NHS_number):
     while True:
         while count < 13:
             try:
+                # update_patient declared here because it is used by multiple while loops in this function
                 update_patient = {"address_line_1": "",
                                   "address_line_2": "",
                                   "postcode": ""}
@@ -336,22 +339,29 @@ def options(NHS_number):
                     if action == '':
                         raise EmptyAnswerError()
                     elif action == '1':
+                        # Uses the appointment.py file to book an appointment
                         x = Appointment()
                         x.book_appointment(NHS_number)
                     elif action == '2':
+                        # Uses the appointment.py file to view appointments
                         x = Appointment()
                         x.view_app_confirmations(NHS_number)
                     elif action == '3':
+                        # Uses the appointment.py file to cancel an appointment
                         x = Appointment()
                         x.cancel_appointment(NHS_number)
                     elif action == '4':
+                        # Redirects to a new menu
                         count = 1
                     elif action == '5':
+                        # To see the patient summary
                         summary(NHS_number)
                     elif action == '6':
+                        # To see the patient summary then redirects to a new menu
                         summary(NHS_number)
                         count = 3
                     elif action == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
                     else:
                         raise InvalidAnswerError()
@@ -367,11 +377,13 @@ def options(NHS_number):
                     if action == '':
                         raise EmptyAnswerError()
                     elif action == '1':
+                        # Uses PatientRiskProfile.py to view medical profile
                         name = PatientMedical(NHS_number)
                         name.show_profile(NHS_number)
                     elif action == '2':
                         print(
                             "Please fill out the following lifestyle questions to assess any potential health risk")
+                        # Uses lifestyleQuestionnaire.py to take the lifestyle risk questionnaire
                         x = RiskProfile(NHS_number)
                         x.questions(NHS_number)
                         x.BMI_calculator(NHS_number)
@@ -381,8 +393,10 @@ def options(NHS_number):
                         x.diet(NHS_number)
                         x.insert_to_table(NHS_number)
                     elif action == '3':
+                        # Redirects to a new menu
                         count = 2
                     elif action == '0':
+                        # Returns to main options menu
                         count = 0
                     else:
                         raise InvalidAnswerError()
@@ -403,14 +417,19 @@ def options(NHS_number):
                     if action == '':
                         raise EmptyAnswerError()
                     elif action == '1':
+                        # Uses PatientRiskProfile.py to provide vaccination history
                         x.vaccination(NHS_number)
                     elif action == '2':
+                        # Uses PatientRiskProfile.py to provide cancer related medical history
                         x.cancer(NHS_number)
                     elif action == '3':
+                        # Uses PatientRiskProfile.py to provide pre-existing conditions
                         x.pre_existing_con(NHS_number)
                     elif action == '4':
+                        # Uses PatientRiskProfile.py to provide medicine allergies
                         x.med_allergy(NHS_number)
                     elif action == '0':
+                        # Returns to medical profile menu
                         count = 1
                     else:
                         raise InvalidAnswerError()
@@ -429,61 +448,82 @@ def options(NHS_number):
                     if action == '':
                         raise EmptyAnswerError()
                     elif action == '1':
+                        # Redirects to update first name while loop
                         count = 4
                     elif action == '2':
+                        # Redirects to update last name while loop
                         count = 5
                     elif action == '3':
+                        # Redirects to update address while loop and reassigns blank values
                         update_patient = {"address_line_1": "",
                                           "address_line_2": "",
                                           "postcode": ""}
                         count = 9
                     elif action == '4':
+                        # Redirects to update telephone number while loop
                         count = 6
                     elif action == '5':
+                        # Redirects to update email address while loop
                         count = 7
                     elif action == '6':
+                        # Redirects to update password while loop
                         count = 8
                     elif action == '0':
+                        # Returns to main options menu
                         count = 0
                     else:
                         raise InvalidAnswerError()
                 while count == 4:
                     first_name = input(
                         "Please enter your new first name (press 0 to go back): ")
-                    first_name = first_name.strip().title()
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
+                    first_name = first_name.strip().title() 
                     if first_name == '':
                         raise EmptyAnswerError()
                     elif first_name == '0':
+                        # Returns to the update details menu
                         count = 3
                     else:
+                        # Removes all spaces from input
                         x = first_name.replace(" ", "")
+                        # Checks if there are any numbers in the input
                         if (any(str.isdigit(y) for y in x)) == True:
                             raise InvalidAnswerError()
                         else:
+                            # Updates first name in the database
                             c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""",
                                       (first_name, NHS_number))
                             connection.commit()
                             print("Successfully changed first name")
+                            # Shows the patient summary
                             summary(NHS_number)
+                            # Returns to the update details menu
                             count = 3
                 while count == 5:
                     last_name = input(
                         "Please enter your new last name (press 0 to go back): ")
-                    last_name = last_name.strip().title()
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
+                    last_name = last_name.strip().title() 
                     if last_name == '':
                         raise EmptyAnswerError()
                     elif last_name == '0':
+                        # Returns to the update details menu
                         count = 3
                     else:
+                        # Removes all spaces from input
                         x = last_name.replace(" ", "")
+                        # Checks if there are any numbers in the input
                         if (any(str.isdigit(y) for y in x)) == True:
                             raise InvalidAnswerError()
                         else:
+                            # Updates last name in the database
                             c.execute(
                                 """UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (last_name, NHS_number))
                             connection.commit()
                             print("Successfully changed last name")
+                            # Shows the patient summary
                             summary(NHS_number)
+                            # Returns to the update details menu
                             count = 3
                 while count == 6:
                     telephone_number = input(
@@ -491,6 +531,7 @@ def options(NHS_number):
                     if telephone_number == '':
                         raise EmptyAnswerError()
                     elif telephone_number == '0':
+                        # Returns to the update details menu
                         count = 3
                     else:
                         telephone_number = re.sub(
@@ -503,7 +544,9 @@ def options(NHS_number):
                                       (telephone_number, NHS_number))
                             connection.commit()
                             print("Successfully changed telephone number")
+                            # Shows the patient summary
                             summary(NHS_number)
+                            # Returns to the update details menu
                             count = 3
                 while count == 7:
                     patient_email = input(
@@ -511,6 +554,7 @@ def options(NHS_number):
                     if patient_email == '':
                         raise EmptyAnswerError()
                     elif patient_email == '0':
+                        # Returns to the update details menu
                         count = 3
                     elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
                         c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?",
@@ -523,7 +567,9 @@ def options(NHS_number):
                                       (patient_email, NHS_number))
                             connection.commit()
                             print("Successfully changed email address")
+                            # Shows the patient summary
                             summary(NHS_number)
+                            # Returns to the update details menu
                             count = 3
                     else:
                         raise InvalidEmailError()
@@ -536,6 +582,7 @@ def options(NHS_number):
                     if password == '':
                         raise EmptyAnswerError()
                     elif password == '0':
+                        # Returns to the update details menu
                         count = 3
                     else:
                         if password != NHS_numbers[0][10]:
@@ -546,21 +593,26 @@ def options(NHS_number):
                             if password == '':
                                 raise EmptyAnswerError()
                             elif password == '0':
+                                # Returns to the update details menu
                                 count = 3
                             else:
                                 c.execute(
                                     """UPDATE PatientDetail SET password = ? WHERE nhsNumber = ?""", (password, NHS_number))
                                 connection.commit()
                                 print("Successfully changed password")
+                                # Shows the patient summary
                                 summary(NHS_number)
+                                # Returns to the update details menu
                                 count = 3
                 while count == 9:
                     address_line_1 = input(
                         "Please enter your new address line 1 (press 0 to go back): ")
-                    address_line_1 = address_line_1.strip().title()
+                    address_line_1 = address_line_1.strip().title() 
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
                     if address_line_1 == '':
                         raise EmptyAnswerError()
                     elif address_line_1 == '0':
+                        # Returns to the update details menu
                         count = 3
                     elif len(address_line_1) > 400:
                         raise InvalidAnswerError()
@@ -570,8 +622,10 @@ def options(NHS_number):
                 while count == 10:
                     address_line_2 = input(
                         "Please enter your new address line 2 (press 0 to go back to update details menu, press 1 to go back): ")
-                    address_line_2 = address_line_2.strip().title()
+                    address_line_2 = address_line_2.strip().title() 
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
                     if address_line_2 == '0':
+                        # Returns to the update details menu
                         count = 3
                     elif address_line_2 == "1":
                         count = 9
@@ -583,10 +637,12 @@ def options(NHS_number):
                 while count == 11:
                     city = input(
                         "Please enter your new city (press 0 to go back to update details menu, press 1 to go back): ")
-                    city = city.strip().title()
+                    city = city.strip().title() 
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
                     if city == '':
                         raise EmptyAnswerError()
                     elif city == '0':
+                        # Returns to the update details menu
                         count = 3
                     elif city == "1":
                         count = 10
@@ -594,6 +650,8 @@ def options(NHS_number):
                         raise InvalidAnswerError()
                     else:
                         x = city.replace(" ", "")
+                        # Removes all spaces from input
+                        # Checks if there are any numbers in the input
                         if (any(str.isdigit(y) for y in x)) == True:
                             raise InvalidAnswerError()
                         else:
@@ -608,6 +666,7 @@ def options(NHS_number):
                     if postcode == '':
                         raise EmptyAnswerError()
                     elif postcode == '0':
+                        # Returns to the update details menu
                         count = 3
                     elif postcode == "1":
                         count = 11
@@ -625,7 +684,9 @@ def options(NHS_number):
                                   (update_patient["postcode"], NHS_number))
                         connection.commit()
                         print("Successfully changed address")
+                        # Shows the patient summary
                         summary(NHS_number)
+                        # Returns to the update details menu
                         count = 3
             except InvalidAnswerError:
                 error = InvalidAnswerError()
@@ -788,12 +849,15 @@ def register():
                 while count == 0:
                     first_name = input(
                         "Please enter your first name (press 0 to exit registration): ")
-                    first_name = first_name.strip().title()
+                    first_name = first_name.strip().title() 
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
                     if first_name == '':
                         raise EmptyAnswerError()
                     elif first_name == '0':
                         return 0
                     x = first_name.replace(" ", "")
+                    # Removes all spaces from input
+                    # Checks if there are any numbers in the input
                     if (any(str.isdigit(y) for y in x)) == True:
                         raise InvalidAnswerError()
                     else:
@@ -802,7 +866,8 @@ def register():
                 while count == 1:
                     last_name = input(
                         "Please enter your last name (press 0 to exit registration, press 1 to go back): ")
-                    last_name = last_name.strip().title()
+                    last_name = last_name.strip().title() 
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
                     if last_name == '':
                         raise EmptyAnswerError()
                     elif last_name == '0':
@@ -811,6 +876,8 @@ def register():
                         count = 0
                     else:
                         x = last_name.replace(" ", "")
+                        # Removes all spaces from input
+                        # Checks if there are any numbers in the input
                         if (any(str.isdigit(y) for y in x)) == True:
                             raise InvalidAnswerError()
                         else:
@@ -827,6 +894,7 @@ def register():
                         count = 1
                     else:
                         x = date_of_birth.replace(" ", "")
+                        # Removes all spaces from input
                         x = x.replace("-", "")
                         if (len(date_of_birth) != 10) or (date_of_birth[4] != '-' or date_of_birth[7] != '-') or (x.isdigit() == False):
                             raise DateFormatError()
@@ -891,7 +959,8 @@ def register():
                 while count == 4:
                     address_line_1 = input(
                         "Address Line 1 (press 0 to exit registration, press 1 to go back): ")
-                    address_line_1 = address_line_1.strip().title()
+                    address_line_1 = address_line_1.strip().title() 
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
                     if address_line_1 == '':
                         raise EmptyAnswerError()
                     elif address_line_1 == '0':
@@ -906,7 +975,8 @@ def register():
                 while count == 5:
                     address_line_2 = input(
                         "Address Line 2 (press 0 to exit registration, press 1 to go back): ")
-                    address_line_2 = address_line_2.strip().title()
+                    address_line_2 = address_line_2.strip().title() 
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
                     if address_line_2 == '0':
                         return 0
                     elif address_line_2 == "1":
@@ -919,7 +989,8 @@ def register():
                 while count == 6:
                     city = input(
                         "City (press 0 to exit registration, press 1 to go back): ")
-                    city = city.strip().title()
+                    city = city.strip().title() 
+                    # Removes preceding and trailing spaces, and capitalises the first letter of each word
                     if city == '':
                         raise EmptyAnswerError()
                     elif city == '0':
@@ -930,6 +1001,8 @@ def register():
                         raise InvalidAnswerError()
                     else:
                         x = city.replace(" ", "")
+                        # Removes all spaces from input
+                        # Checks if there are any numbers in the input
                         if (any(str.isdigit(y) for y in x)) == True:
                             raise InvalidAnswerError()
                         else:
