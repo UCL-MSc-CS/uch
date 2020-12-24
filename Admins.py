@@ -934,15 +934,15 @@ class adminFunctions():
     def del_pat(self):
         """Deleting the entire row of a patient record"""
 
-        delback = 0
-        while delback == 0:
+        del_back = 0
+        while del_back == 0:
             try:
                 print("********************************************")
                 nhs_num = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_num,))
                 nhsq = self.c.fetchall()
                 if nhs_num == "0":
-                    delback = 1
+                    del_back = 1
                     break
                 elif not nhs_num:
                     raise FieldEmpty
@@ -959,7 +959,7 @@ class adminFunctions():
                 self.c.execute("""DELETE FROM PatientDetail WHERE nhsNumber = ?""", (nhs_num,))
                 self.connection.commit()
                 print("Successfully deleted patient record")
-                delback = 1
+                del_back = 1
 
     def man_ind_det(self):
         """
@@ -1007,19 +1007,19 @@ class adminFunctions():
                     print("********************************************")
                     try:
                         print("Press [0] to re-enter NHS number")
-                        detinp = input("Choose which detail to change: ")
-                        if detinp == '0':
+                        det_inp = input("Choose which detail to change: ")
+                        if det_inp == '0':
                             Cagain = 1
                             break
-                        elif detinp == '1':
+                        elif det_inp == '1':
                             master_back = 1
                             break
-                        elif detinp.isdigit() == False:
+                        elif det_inp.isdigit() == False:
                             raise IntegerError
-                        indetinp = int(detinp)
-                        if indetinp > 10:
+                        ind_inp = int(det_inp)
+                        if ind_inp > 10:
                             raise IntegerError
-                        elif not indetinp:
+                        elif not ind_inp:
                             raise FieldEmpty
                     except FieldEmpty:
                             error = FieldEmpty()
@@ -1031,7 +1031,7 @@ class adminFunctions():
                         print("********************************************")
                         print("Press [0] to re-enter NHS number")
                         print("Press [1] to go back to options")
-                        if indetinp == 2:
+                        if ind_inp == 2:
                             back = 0
                             while back == 0:
                                 try:
@@ -1065,7 +1065,7 @@ class adminFunctions():
                                     print("Successfully changed email")
                                     back = 1
 
-                        elif indetinp == 3:
+                        elif ind_inp == 3:
                             back2 = 0
                             while back2 == 0:
                                 try:
@@ -1087,7 +1087,7 @@ class adminFunctions():
                                     print("Successfully changed first name")
                                     back2 = 1
 
-                        elif indetinp == 4:
+                        elif ind_inp == 4:
                             back3 = 0
                             while back3 == 0:
                                 try:
@@ -1109,7 +1109,7 @@ class adminFunctions():
                                     print("Successfully changed last name")
                                     back3 = 1
 
-                        elif indetinp == 5:
+                        elif ind_inp == 5:
                             back4 = 0
                             while back4 == 0:
                                 try:
@@ -1174,7 +1174,7 @@ class adminFunctions():
                                     print("Successfully changed date of birth")
                                     back4 = 1
 
-                        elif indetinp == 6:
+                        elif ind_inp == 6:
                             back6 = 0
                             while back6 == 0:
                                 try:
@@ -1202,7 +1202,7 @@ class adminFunctions():
                                     print("Successfully changed gender")
                                     back6 = 1
 
-                        elif indetinp == 7:
+                        elif ind_inp == 7:
                             back7 = 0
                             while back7 == 0:
                                 try:
@@ -1230,7 +1230,7 @@ class adminFunctions():
                                     print("Successfully changed address line 1")
                                     back7 = 1
 
-                        elif indetinp == 8:
+                        elif ind_inp == 8:
                             back8 = 0
                             while back8 == 0:
                                 try:
@@ -1253,30 +1253,30 @@ class adminFunctions():
                                     print("Successfully changed address line 2")
                                     back8 = 1
 
-                        elif indetinp == 9:
+                        elif ind_inp == 9:
                             back9 = 0
                             while back9 == 0:
                                 try:
-                                    Cpost = input("New postcode: ")
-                                    if Cpost == '0':
+                                    c_post = input("New postcode: ")
+                                    if c_post == '0':
                                         Cagain = 1
                                         break
-                                    elif Cpost == '1':
+                                    elif c_post == '1':
                                         back9 = 1
                                         break
-                                    elif not Cpost:
+                                    elif not c_post:
                                         raise FieldEmpty()
                                 except FieldEmpty:
                                     error = FieldEmpty()
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""",
-                                                   (Cpost, nhs_num))
+                                                   (c_post, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed post code")
                                     back9 = 1
 
-                        elif indetinp == 10:
+                        elif ind_inp == 10:
                             back10 = 0
                             while back10 == 0:
                                 try:
