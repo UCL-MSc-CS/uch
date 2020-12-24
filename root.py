@@ -69,7 +69,7 @@ while True:
         selection1 = int(input("Please select an option: "))
         while selection1 == 0 or selection1 == 1 or selection1 == 2 or selection1 == 3:
             while selection1 == 2:
-                p_choice = pm.task("start")
+                p_choice = pm.task()
                 if p_choice == 0:
                     masterlogin.MasterMenu()
                     selection1 = int(input("Please select an option: "))

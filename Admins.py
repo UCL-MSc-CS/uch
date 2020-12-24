@@ -453,10 +453,12 @@ class adminFunctions():
                 error = EmailInvalid(email)
                 print(error)
             else:
-                self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
+                self.c.execute("SELECT active FROM GP WHERE gpEmail = ?", (email,))
                 items = self.c.fetchall()
                 if len(items) == 0:
                     print("\n   < No record exists with this email> \n")
+                elif items[0][0] == 0:
+                    print("\n < This GP has already been deactivated > \n")
                 else:
                     self.c.execute("""UPDATE GP SET active = 0 WHERE gpEmail = ?""", (email,))
                     self.connection.commit()
@@ -481,10 +483,12 @@ class adminFunctions():
                 error = EmailInvalid(email)
                 print(error)
             else:
-                self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
+                self.c.execute("SELECT active FROM GP WHERE gpEmail = ?", (email,))
                 items = self.c.fetchall()
                 if len(items) == 0:
                     print("\n   < No record exists with this email> \n")
+                elif items[0][0] == 1:
+                    print("\n < This GP is already active > \n")
                 else:
                     self.c.execute("""UPDATE GP SET active = 1 WHERE gpEmail = ?""", (email,))
                     self.connection.commit()
