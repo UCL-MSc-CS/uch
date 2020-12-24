@@ -288,3 +288,8 @@ def initialise_database():
 
 if __name__ == "__main__":
     initialise_database()
+    connection = sqlite3.connect('UCH.db')
+    c = connection.cursor()
+    c.execute("SELECT active FROM GP WHERE gpEmail = 'chenuka.ratwatte@ucl.ac.uk'")
+    items = c.fetchall()
+    print(items[0][0])
