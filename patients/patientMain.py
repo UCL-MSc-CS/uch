@@ -291,7 +291,7 @@ def summary(NHS_number):
     one = x[0:3]
     two = x[3:6]
     three = x[6:10]
-    # Seoarating the NHS number so that the format looks more realistic
+    # Separating the NHS number so that the format looks more realistic
     print(one, two, three)
     print("First Name: " + str(results[0][2]))
     print("Last Name: " + str(results[0][3]))
@@ -336,7 +336,7 @@ def options(NHS_number):
                     print("Choose [6] to update your personal details")
                     print("Choose [0] to log out")
                     action = input("Please select an option: ")
-                    if action == '':
+                    if action == "":
                         raise EmptyAnswerError()
                     elif action == '1':
                         # Uses the appointment.py file to book an appointment
@@ -374,7 +374,7 @@ def options(NHS_number):
                     print("Choose [0] to go back")
                     print("********************************************")
                     action = input("Please select an option: ")
-                    if action == '':
+                    if action == "":
                         raise EmptyAnswerError()
                     elif action == '1':
                         # Uses PatientRiskProfile.py to view medical profile
@@ -414,7 +414,7 @@ def options(NHS_number):
                     print("Choose [0] to go back")
                     print("********************************************")
                     action = input('Please select an option: ')
-                    if action == '':
+                    if action == "":
                         raise EmptyAnswerError()
                     elif action == '1':
                         # Uses PatientRiskProfile.py to provide vaccination history
@@ -445,7 +445,7 @@ def options(NHS_number):
                     print("Choose [0] to go back")
                     print("********************************************")
                     action = input("Please select an option: ")
-                    if action == '':
+                    if action == "":
                         raise EmptyAnswerError()
                     elif action == '1':
                         # Redirects to the update first name while loop
@@ -477,8 +477,8 @@ def options(NHS_number):
                     first_name = input(
                         "Please enter your new first name (press 0 to go back): ")
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    first_name = first_name.strip().title() 
-                    if first_name == '':
+                    first_name = first_name.strip().title()
+                    if first_name == "":
                         raise EmptyAnswerError()
                     elif first_name == '0':
                         # Returns to the update details menu
@@ -503,8 +503,8 @@ def options(NHS_number):
                     last_name = input(
                         "Please enter your new last name (press 0 to go back): ")
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    last_name = last_name.strip().title() 
-                    if last_name == '':
+                    last_name = last_name.strip().title()
+                    if last_name == "":
                         raise EmptyAnswerError()
                     elif last_name == '0':
                         # Returns to the update details menu
@@ -528,7 +528,7 @@ def options(NHS_number):
                 while count == 6:
                     telephone_number = input(
                         "Please enter your new telephone number, including country code (i.e. +447123456789)(press 0 to go back): ")
-                    if telephone_number == '':
+                    if telephone_number == "":
                         raise EmptyAnswerError()
                     elif telephone_number == '0':
                         # Returns to the update details menu
@@ -555,7 +555,7 @@ def options(NHS_number):
                 while count == 7:
                     patient_email = input(
                         "Please enter your new email (press 0 to go back): ")
-                    if patient_email == '':
+                    if patient_email == "":
                         raise EmptyAnswerError()
                     elif patient_email == '0':
                         # Returns to the update details menu
@@ -587,7 +587,7 @@ def options(NHS_number):
                     NHS_numbers = c.fetchall()
                     password = input(
                         "In order to change your password, please enter your old password (press 0 to go back): ")
-                    if password == '':
+                    if password == "":
                         raise EmptyAnswerError()
                     elif password == '0':
                         # Returns to the update details menu
@@ -599,7 +599,7 @@ def options(NHS_number):
                         else:
                             password = input(
                                 "Please enter your new password (press 0 to go back to update details menu): ")
-                            if password == '':
+                            if password == "":
                                 raise EmptyAnswerError()
                             elif password == '0':
                                 # Returns to the update details menu
@@ -618,8 +618,8 @@ def options(NHS_number):
                     address_line_1 = input(
                         "Please enter your new address line 1 (press 0 to go back): ")
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    address_line_1 = address_line_1.strip().title() 
-                    if address_line_1 == '':
+                    address_line_1 = address_line_1.strip().title()
+                    if address_line_1 == "":
                         raise EmptyAnswerError()
                     elif address_line_1 == '0':
                         # Returns to the update details menu
@@ -640,7 +640,7 @@ def options(NHS_number):
                     if address_line_2 == '0':
                         # Returns to the update details menu
                         count = 3
-                    elif address_line_2 == "1":
+                    elif address_line_2 == '1':
                         #  Returns to the update address line 1 while loop
                         count = 9
                     # Ensures the input length is not too long
@@ -655,13 +655,13 @@ def options(NHS_number):
                     city = input(
                         "Please enter your new city (press 0 to go back to update details menu, press 1 to go back): ")
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    city = city.strip().title() 
-                    if city == '':
+                    city = city.strip().title()
+                    if city == "":
                         raise EmptyAnswerError()
                     elif city == '0':
                         # Returns to the update details menu
                         count = 3
-                    elif city == "1":
+                    elif city == '1':
                         #  Returns to the update address line 2 while loop
                         count = 10
                     # Ensures the input length is not too long
@@ -685,12 +685,12 @@ def options(NHS_number):
                         "Please enter your new postcode (press 0 to go back to update details menu, press 1 to go back): ")
                     # Removes preceding and trailing spaces and capitalises each letter
                     postcode = postcode.strip().upper()
-                    if postcode == '':
+                    if postcode == "":
                         raise EmptyAnswerError()
                     elif postcode == '0':
                         # Returns to the update details menu
                         count = 3
-                    elif postcode == "1":
+                    elif postcode == '1':
                         #  Returns to the update city while loop
                         count = 11
                     # Ensures the input length is not too long
@@ -747,6 +747,7 @@ def login():
     string: the patient's NHS number. 
     """
     count = 0
+    # NHS_number declared here because it is assigned later in various while loops in this function
     NHS_number = ""
     while True:
         while count < 6:
@@ -758,7 +759,7 @@ def login():
                     print("Choose [0] to go back")
                     print("********************************************")
                     action = input("Please select an option: ")
-                    if action == '':
+                    if action == "":
                         raise EmptyAnswerError()
                     elif action == '1':
                         # Redirects to patient login with email while loop
@@ -774,10 +775,11 @@ def login():
                 while count == 1:
                     patient_email = input("Email (press 0 to go back): ")
                     if patient_email == '0':
+                        # Returns to the login menu
                         count = 0
                     # Checks that input is a valid email address
                     elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
-                        # Checks if email already exists in the database
+                        # Checks if email exists in the database
                         c.execute(
                             "SELECT * FROM PatientDetail WHERE patientEmail = ?", [patient_email])
                         patient_emails = c.fetchall()
@@ -789,23 +791,30 @@ def login():
                     else:
                         raise InvalidEmailError()
                 while count == 2:
+                    # Fetches patient record from database that matches their email to check password
                     c.execute(
                         "SELECT * FROM PatientDetail WHERE patientEmail = ?", [patient_email])
                     patient_emails = c.fetchall()
                     password = input("Password (press 0 to go back): ")
                     if password == '0':
+                        # Returns to the email while loop
                         count = 1
                     elif password != patient_emails[0][10]:
                         raise PasswordIncorrectError()
                     else:
+                        # Assigns this patient's NHS number
                         NHS_number = patient_emails[0][0]
+                        # Redirects to the check registration while loop
                         count = 5
                 while count == 3:
                     NHS_number = input("NHS Number (press 0 to go back): ")
                     if NHS_number == '0':
+                        # Returns to the login menu
                         count = 0
                     else:
+                        # Removes any character from input that is not a number
                         NHS_number = int(re.sub("[^0-9]", "", NHS_number))
+                        # Checks if NHS number exists in the database
                         c.execute(
                             "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
                         NHS_numbers = c.fetchall()
@@ -821,21 +830,27 @@ def login():
                     NHS_numbers = c.fetchall()
                     password = input("Password (press 0 to go back): ")
                     if password == '0':
+                        # Returns to the NHS number while loop
                         count = 3
                     # Checks if the password input matches the password in the database
-                
+                    elif password != NHS_numbers[0][10]:
                         raise PasswordIncorrectError()
                     else:
+                        # Assigns this patient's NHS number
                         NHS_number = NHS_numbers[0][0]
+                        # Redirects to the check registration while loop
                         count = 5
                 while count == 5:
+                    # Fetches patient record from database that matches the NHS_number global variable to check registration
                     c.execute(
                         "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
                     results = c.fetchall()
                     if results[0][11] == 0:
                         raise NotRegisteredError()
+                        # Redirects to task() (the main menu for patients)
                         return 0
                     else:
+                        # count = 6 to break the outer while loop
                         count = 6
             except InvalidAnswerError:
                 error = InvalidAnswerError()
@@ -858,7 +873,9 @@ def login():
             except NotRegisteredError:
                 error = NotRegisteredError()
                 print(error)
+        # Redirects to options(NHS_number) only when the patient successfully logs in and is registered
         options(NHS_number)
+        # Redirects to task() (the main menu for patients)
         return 0
 
 
@@ -886,83 +903,105 @@ def register():
                 while count == 0:
                     first_name = input(
                         "Please enter your first name (press 0 to exit registration): ")
-                    first_name = first_name.strip().title() 
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    if first_name == '':
+                    first_name = first_name.strip().title()
+                    if first_name == "":
                         raise EmptyAnswerError()
                     elif first_name == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
-                    x = first_name.replace(" ", "")
                     # Removes all spaces from input
+                    x = first_name.replace(" ", "")
                     # Checks if there are any numbers in the input
                     if (any(str.isdigit(y) for y in x)) == True:
                         raise InvalidAnswerError()
                     else:
+                        # Assigns input value to new_patient dictionary
                         new_patient["first_name"] = first_name
+                        # Redirects to the last name while loop
                         count = 1
                 while count == 1:
                     last_name = input(
                         "Please enter your last name (press 0 to exit registration, press 1 to go back): ")
-                    last_name = last_name.strip().title() 
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    if last_name == '':
+                    last_name = last_name.strip().title()
+                    if last_name == "":
                         raise EmptyAnswerError()
                     elif last_name == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
                     elif last_name == '1':
+                        # Returns to the first name while loop
                         count = 0
                     else:
-                        x = last_name.replace(" ", "")
                         # Removes all spaces from input
+                        x = last_name.replace(" ", "")
                         # Checks if there are any numbers in the input
                         if (any(str.isdigit(y) for y in x)) == True:
                             raise InvalidAnswerError()
                         else:
+                            # Assigns input value to new_patient dictionary
                             new_patient["last_name"] = last_name
+                            # Redirects to the date of birth while loop
                             count = 2
                 while count == 2:
                     date_of_birth = input(
                         'Please enter your birthday in YYYY-MM-DD format (press 0 to exit registration, press 1 to go back): ')
-                    if date_of_birth == '':
+                    if date_of_birth == "":
                         raise EmptyAnswerError()
                     elif date_of_birth == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
                     elif date_of_birth == '1':
+                        # Returns to last name the while loop
                         count = 1
                     else:
+                        # Removes all spaces and hyphens from input
                         x = date_of_birth.replace(" ", "")
-                        # Removes all spaces from input
                         x = x.replace("-", "")
+                        # Checks if the input is the right length, if the hyphens are in the right place, and all characters besides the hyphens are numbers
                         if (len(date_of_birth) != 10) or (date_of_birth[4] != '-' or date_of_birth[7] != '-') or (x.isdigit() == False):
                             raise DateFormatError()
                         else:
+                            # Separates day, month, and year to check them individually
                             day = date_of_birth[8:10]
                             month = date_of_birth[5:7]
                             year = date_of_birth[0:4]
+                            # Checks that the day, month, and year are all digits i.e. no hyphens for negative inputs
                             if (day.isdigit() == False) or (month.isdigit() == False) or (year.isdigit() == False):
                                 raise DateInvalidError()
                             else:
-                                day = int(date_of_birth[8:10])
-                                month = int(date_of_birth[5:7])
-                                year = int(date_of_birth[0:4])
+                                # Converts day, month, and year into integers to check they exist in the calendar
+                                day = int(day)
+                                month = int(month)
+                                year = int(year)
+                                # Checks month input is 1 - 12
                                 if month > 12 or month < 1:
                                     raise DateInvalidError()
+                                # Checks day input does not exceed 30 for September, April, June, and November
                                 elif (month == 9 or month == 4 or month == 6 or month == 11) and day > 30:
                                     raise DateInvalidError()
+                                # Checks day input does not exceed 28 for February for a year that is not a leap year
                                 elif month == 2 and year % 4 != 0 and day > 28:
                                     raise DateInvalidError()
+                                # Checks day input does not exceed 29 for February for a year that is a leap year
                                 elif month == 2 and year % 4 == 0 and day > 29:
                                     raise DateInvalidError()
+                                # Checks day input is 1 - 31
                                 elif day > 31 or day < 1:
                                     raise DateInvalidError()
                                 else:
+                                    # Converts date of birth input into a date object
                                     date_of_birth = datetime.date(
                                         year, month, day)
                                     today = date.today()
+                                    # Checks date of birth input is not in the future
                                     if date_of_birth > today:
                                         raise DateInFutureError()
                                     else:
+                                        # Assigns date object to new_patient dictionary
                                         new_patient["date_of_birth"] = date_of_birth
+                                        # Redirects to the gender while loop
                                         count = 3
                 while count == 3:
                     print("********************************************")
@@ -973,107 +1012,135 @@ def register():
                     print("Choose [5] to go back")
                     print("********************************************")
                     choice = input("Please select an option: ")
-                    if choice == '':
+                    if choice == "":
                         raise EmptyAnswerError()
                     elif choice == '1':
                         gender = "Female"
+                        # Assigns input value to new_patient dictionary
                         new_patient["gender"] = gender
+                        # Redirects to the address line 1 while loop
                         count = 4
-                    elif choice == "2":
+                    elif choice == '2':
                         gender = "Male"
+                        # Assigns input value to new_patient dictionary
                         new_patient["gender"] = gender
+                        # Redirects to the address line 1 while loop
                         count = 4
-                    elif choice == "3":
+                    elif choice == '3':
                         gender = "Non-Binary"
+                        # Assigns input value to new_patient dictionary
                         new_patient["gender"] = gender
+                        # Redirects to the address line 1 while loop
                         count = 4
-                    elif choice == "4":
+                    elif choice == '4':
+                        # Redirects to task() (the main menu for patients)
                         return 0
-                    elif choice == "5":
+                    elif choice == '5':
+                        # Returns to the date of birth while loop
                         count = 2
                     else:
                         raise InvalidAnswerError()
                 while count == 4:
                     address_line_1 = input(
                         "Address Line 1 (press 0 to exit registration, press 1 to go back): ")
-                    address_line_1 = address_line_1.strip().title() 
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    if address_line_1 == '':
+                    address_line_1 = address_line_1.strip().title()
+                    if address_line_1 == "":
                         raise EmptyAnswerError()
                     elif address_line_1 == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
-                    elif address_line_1 == "1":
+                    elif address_line_1 == '1':
+                        # Returns to the gender while loop
                         count = 3
+                    # Ensures the input length is not too long
                     elif len(address_line_1) > 400:
-                        # Ensures the input length is not too long
                         raise InvalidAnswerError()
                     else:
+                        # Assigns input value to new_patient dictionary
                         new_patient["address_line_1"] = address_line_1
+                        # Redirects to the address line 2 while loop
                         count = 5
                 while count == 5:
                     address_line_2 = input(
                         "Address Line 2 (press 0 to exit registration, press 1 to go back): ")
-                    address_line_2 = address_line_2.strip().title() 
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
+                    address_line_2 = address_line_2.strip().title()
                     if address_line_2 == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
-                    elif address_line_2 == "1":
+                    elif address_line_2 == '1':
+                        # Returns to the address line 1 while loop
                         count = 4
+                    # Ensures the input length is not too long
                     elif len(address_line_2) > 400:
-                        # Ensures the input length is not too long
                         raise InvalidAnswerError()
                     else:
+                        # Assigns input value to new_patient dictionary
                         new_patient["address_line_2"] = address_line_2
+                        # Redirects to the city while loop
                         count = 6
                 while count == 6:
                     city = input(
                         "City (press 0 to exit registration, press 1 to go back): ")
-                    city = city.strip().title() 
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    if city == '':
+                    city = city.strip().title()
+                    if city == "":
                         raise EmptyAnswerError()
                     elif city == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
-                    elif city == "1":
+                    elif city == '1':
+                        # Returns to the address line 2 while loop
                         count = 5
+                    # Ensures the input length is not too long
                     elif len(city) > 200:
-                        # Ensures the input length is not too long
                         raise InvalidAnswerError()
                     else:
-                        x = city.replace(" ", "")
                         # Removes all spaces from input
+                        x = city.replace(" ", "")
                         # Checks if there are any numbers in the input
                         if (any(str.isdigit(y) for y in x)) == True:
                             raise InvalidAnswerError()
                         else:
+                            # Reassigns address_line_2 as a combination of address_line_2 and city while removing preceding and trailing spaces
                             address_line_2 = (
                                 new_patient["address_line_2"] + " " + city).strip()
+                            # Assigns input value to new_patient dictionary
                             new_patient["address_line_2"] = address_line_2
+                            # Redirects to the postcode while loop
                             count = 7
                 while count == 7:
                     postcode = input(
                         "Postcode (press 0 to exit registration, press 1 to go back): ")
+                    # Removes preceding and trailing spaces and capitalises each letter
                     postcode = postcode.strip().upper()
-                    if postcode == '':
+                    if postcode == "":
                         raise EmptyAnswerError()
                     elif postcode == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
-                    elif postcode == "1":
+                    elif postcode == '1':
+                        # Returns to the city while loop
                         count = 6
+                    # Ensures the input length is not too long
                     elif len(postcode) > 50:
-                        # Ensures the input length is not too long
                         raise InvalidAnswerError()
                     else:
+                        # Assigns input value to new_patient dictionary
                         new_patient["postcode"] = postcode
+                        # Redirects to the telephone number while loop
                         count = 8
                 while count == 8:
                     telephone_number = input(
                         "Telephone number, including country code (i.e. +447123456789)(press 0 to exit registration, press 1 to go back): ")
-                    if telephone_number == '':
+                    if telephone_number == "":
                         raise EmptyAnswerError()
                     elif telephone_number == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
-                    elif telephone_number == "1":
+                    elif telephone_number == '1':
+                        # Returns to the postcode while loop
                         count = 7
                     else:
                         # Removes any character from input that is not a number
@@ -1085,16 +1152,20 @@ def register():
                         else:
                             # Converts telephone number string into an integer
                             telephone_number = int(telephone_number)
+                            # Assigns input value to new_patient dictionary
                             new_patient["telephone_number"] = telephone_number
+                            # Redirects to the email while loop
                             count = 9
                 while count == 9:
                     patient_email = input(
                         "Email (press 0 to exit registration, press 1 to go back): ")
-                    if patient_email == '':
+                    if patient_email == "":
                         raise EmptyAnswerError()
                     elif patient_email == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
-                    elif patient_email == "1":
+                    elif patient_email == '1':
+                        # Returns to the telephone number while loop
                         count = 8
                     # Checks that input is a valid email address
                     elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
@@ -1105,21 +1176,27 @@ def register():
                         if patient_emails != []:
                             raise EmailAlreadyExistsError()
                         else:
+                            # Assigns input value to new_patient dictionary
                             new_patient["patient_email"] = patient_email
+                            # Redirects to the password while loop
                             count = 10
                     else:
                         raise InvalidEmailError()
                 while count == 10:
                     password = input(
                         "Password (press 0 to exit registration, press 1 to go back): ")
-                    if password == '':
+                    if password == "":
                         raise EmptyAnswerError()
                     elif password == '0':
+                        # Redirects to task() (the main menu for patients)
                         return 0
-                    elif password == "1":
+                    elif password == '1':
+                        # Returns to the email while loop
                         count = 9
                     else:
+                        # Assigns input value to new_patient dictionary
                         new_patient["password"] = password
+                        # count = 11 to break the outer while loop
                         count = 11
             except EmptyAnswerError:
                 error = EmptyAnswerError()
@@ -1145,12 +1222,16 @@ def register():
             except EmailAlreadyExistsError:
                 error = EmailAlreadyExistsError()
                 print(error)
+        # Uses patient.py to create new patient
         x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"],
                     new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
+        # Inserts new patient into the database
         x.register()
         print("Thank you, " + x.first_name +
               ", for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days.")
+        # To see the patient summary
         summary(x.NHS_number)
+        # Redirects to task() (the main menu for patients)
         return 0
 
 
@@ -1168,16 +1249,20 @@ def task():
         print("Choose [0] to exit")
         print("********************************************")
         action = input("Please select an option: ")
-        if action == '':
+        if action == "":
             raise EmptyAnswerError()
         elif action == '1':
+            # Redirects to register function
             register()
         elif action == '2':
+            # Redirects to login function
             login()
         elif action == '3':
+            # Redirects to root.py (the program main menu)
             return 0
         elif action == '0':
             print("Thank you for using the UCH e-health system! Goodbye for now!")
+            # Exits program
             exit()
         else:
             raise InvalidAnswerError()
