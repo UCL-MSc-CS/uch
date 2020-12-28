@@ -55,7 +55,11 @@ class EmailInvalidError(Error):
         super().__init__(self.message)
 
 class NhsNotExistsError(Error):
-    """Exception raised when email does not exist in list"""
+    """Exception raised when NHS does not exist
+
+    :param: NHS Number - input NHS Number which causes the error
+            message - explanation of the error to the user
+    """
     def __init__(self, message = "\n   < Please enter an existing NHS number > \n"):
         self.message = message
         super().__init__(self.message)
@@ -127,7 +131,11 @@ class GenderError(Error):
 
 
 class InvalidAddError(Error):
-    """exception raised when address is not valid"""
+    """exception raised when address is not valid
+
+    :param: address - input address which causes the error
+            message - explanation of the error to the user
+    """
     def __init__(self, message = "\n   < Please input an address containing number and street > \n"):
         self.message = message
         super().__init__(self.message)
@@ -530,20 +538,20 @@ class adminFunctions():
         while master_back == 1:
             try:
                 print("********************************************")
-                nhs_number = input("Enter patient NHS number (press 0 to go back): ")
+                nhs_number = input("Enter patient NHS number (press 0 to go back): ")  # Will be 10 digits
                 self.c.execute("""SELECT appointmentID, start FROM Appointment 
                     WHERE nhsNumber =? and AppointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhs_number])
                 appointments = self.c.fetchall()
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_number,))
-                nhsq = self.c.fetchall()
+                nhsq = self.c.fetchall()  # list of patients with matching NHS number
                 if nhs_number == "0":
                     master_back = 2
                     break
                 elif not nhs_number:
                     raise FieldEmptyError()
                 elif len(nhsq) < 1:
-                    raise NhsNotExistsError
-                elif len(appointments) == 0:
+                    raise NhsNotExistsError  # Check if NHS number exists in database
+                elif len(appointments) == 0:  # Check if appointments is empty
                     raise DateInvalidError
             except FieldEmptyError:
                 error = FieldEmptyError()
@@ -557,7 +565,7 @@ class adminFunctions():
                 print("********************************************")
                 print("AppointmentID".ljust(15, ' '), "Start Time")
                 for i in appointments:
-                    print(str(i[0]).ljust(15, " "), uf.toregulartime(i[1]))
+                    print(str(i[0]).ljust(15, " "), uf.toregulartime(i[1]))  # Separates appointment information
                 back1 = 1
                 while back1 == 1:
                     try:
@@ -589,10 +597,10 @@ class adminFunctions():
                             print("< A check-in time has already been provided for that appointment >")
                             return 1
                         else:
-                            unix_d = dt.utcnow().timestamp()
+                            unix_d = dt.utcnow().timestamp()  # Finding current timestamp in unix format
                             self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
                             Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
-                            appointmentID = ?""", (check_number,))
+                            appointmentID = ?""", (check_number,))  #  Selecting patient name
                             firstsel = self.c.fetchall()
                             self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unix_d, check_number))
                             self.connection.commit()
@@ -620,7 +628,7 @@ class adminFunctions():
                 nhs_number = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("""SELECT appointmentID, start FROM Appointment 
                     WHERE nhsNumber =? and appointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhs_number])
-                appointments = self.c.fetchall()
+                appointments = self.c.fetchall()  # Fetching all appointments with inputted NHS number
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_number,))
                 nhsq = self.c.fetchall()
                 if nhs_number == "0":
@@ -642,7 +650,7 @@ class adminFunctions():
                 print(error)
             else:
                 print("********************************************")
-                print("AppointmentID".ljust(15, ' '), "Start Time")
+                print("AppointmentID".ljust(15, ' '), "Start Time")  # Separating appointment information
                 for i in appointments:
                     print(str(i[0]).ljust(15, " "), uf.toregulartime(i[1]))
                 back1 = 1
@@ -672,7 +680,7 @@ class adminFunctions():
                             return 1
                         self.c.execute("SELECT checkOut FROM Appointment WHERE appointmentID = ?", (check_number,))
                         items = self.c.fetchall()
-                        if items[0][0] != 0:
+                        if items[0][0] != 0:  # Appointment table initializes check-in/out with a zero
                             print("< A check-out time has already been provided for that appointment >")
                             return 1
                         else:
@@ -706,7 +714,7 @@ class adminFunctions():
                 print("********************************************")
                 nhs_num = input("Enter patient NHS number (press 0 to go back): ")
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_num,))
-                nhsq = self.c.fetchall()
+                nhsq = self.c.fetchall()  # Selecting patient with inputted NHS number
                 if nhs_num == '0':
                     master_back = 1
                     break
@@ -724,6 +732,7 @@ class adminFunctions():
                 pat_back = 0
                 question_num = 1
                 while pat_back == 0:
+                    # Creating menu to allow easier user navigation
                     print("********************************************")
                     print("Press [0] to re-enter NHS number: ")
                     print("Press [1] to go back to update patient details menu")
@@ -804,7 +813,7 @@ class adminFunctions():
                             if month > 12:
                                 raise DateInvalidError
 
-                            # input_list = [int(i) for i in str(dateOfBirth)]
+                            # Checking if inputted date of birth is before current date.
                             date_entered = date(year, month, day)
                             date_today = date.today()
                             if date_entered > date_today:
@@ -823,6 +832,7 @@ class adminFunctions():
                                 break
                             elif not gender:
                                 raise FieldEmptyError()
+                            # Checking if inputted gender matches accepted values.
                             if gender != "male" and gender != "female" and gender != "non-binary" and gender != "prefer not to say":
                                 raise GenderError()
                             question_num = 7
@@ -837,6 +847,7 @@ class adminFunctions():
                                 break
                             elif not addl1:
                                 raise FieldEmptyError()
+                            # Address line 1 must contain a street number
                             elif any(chr.isdigit() for chr in addl1) == False:
                                 raise InvalidAddError
                             question_num = 8
@@ -866,6 +877,7 @@ class adminFunctions():
                             question_num = 10
 
                         while question_num == 10:
+                            # Telephone number takes in country codes of different lengths
                             tel = (input("New telephone number (no spaces, with country code. E.g. +4471234123123): "))
                             if tel == '0':
                                 return adminFunctions.manage_det(self)
@@ -926,7 +938,7 @@ class adminFunctions():
                         telephoneNumber = ? WHERE nhsNumber = ?""",
                         (emails, first, last, date_of_birth, gender, addl1, addl2, postcode, tel, nhs_num))
                         self.connection.commit()
-                        print("Succesfully updated entire patient record")
+                        print("Successfully updated entire patient record")
                         return master_back
 
     def del_pat(self):
@@ -989,8 +1001,9 @@ class adminFunctions():
                 error = FieldEmptyError()
                 print(error)
             else:
-                Cagain = 0
-                while Cagain == 0:
+                c_again = 0
+                while c_again == 0:
+                    # Menu of options that the user selects from in the below code
                     print("********************************************")
                     print("Choose [1] to go back to update patient details menu")
                     print("Choose [2] to update email")
@@ -1007,10 +1020,10 @@ class adminFunctions():
                         print("Press [0] to re-enter NHS number")
                         det_inp = input("Choose which detail to change: ")
                         if det_inp == '0':
-                            Cagain = 1
+                            c_again = 1
                             break
                         elif det_inp == '1':
-                            master_back = 1
+                            master_back = 1  # User inputs a "1" to return to update patients menu
                             break
                         elif det_inp.isdigit() == False:
                             raise IntegerError
@@ -1020,12 +1033,13 @@ class adminFunctions():
                         elif not ind_inp:
                             raise FieldEmptyError
                     except FieldEmptyError:
-                            error = FieldEmptyError()
-                            print(error)
+                        error = FieldEmptyError()
+                        print(error)
                     except IntegerError:
-                            error = IntegerError()
-                            print(error)
+                        error = IntegerError()
+                        print(error)
                     else:
+                        # Menu for easier user navigation
                         print("********************************************")
                         print("Press [0] to re-enter NHS number")
                         print("Press [1] to go back to options")
@@ -1037,10 +1051,10 @@ class adminFunctions():
                                     self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (CEmail,))
                                     email_check = self.c.fetchall()
                                     if CEmail == '0':
-                                        Cagain = 1
+                                        c_again = 1  # Inputting a "1" returns user to re-enter NHS number
                                         break
                                     elif CEmail == '1':
-                                        back = 0
+                                        back = 0  # Returns user back to options menu
                                         break
                                     elif len(email_check) > 0:
                                         raise EmailInUseError
@@ -1069,7 +1083,7 @@ class adminFunctions():
                                 try:
                                     Cfn = input("New first name: ")
                                     if Cfn == '0':
-                                        Cagain = 1
+                                        c_again = 1
                                         break
                                     elif Cfn == '1':
                                         back2 = 1
@@ -1091,7 +1105,7 @@ class adminFunctions():
                                 try:
                                     Cln = input("New last name: ")
                                     if Cln == '0':
-                                        Cagain = 1
+                                        c_again = 1
                                         break
                                     elif Cln == '1':
                                         back3 = 1
@@ -1113,7 +1127,7 @@ class adminFunctions():
                                 try:
                                     date_of_birth = (input("New date of birth as YYYY-MM-DD: "))
                                     if date_of_birth == '0':
-                                        Cagain = 1
+                                        c_again = 1
                                         break
                                     elif date_of_birth == '1':
                                         back4 = 1
@@ -1125,6 +1139,7 @@ class adminFunctions():
                                         raise IncorrectInputLengthError(10)
                                     elif date_of_birth[4] != '-' or date_of_birth[7] != '-':
                                         raise DateFormatError
+                                    # Formatting date of birth for input checks
                                     day = int(date_of_birth[8:10])
                                     month = int(date_of_birth[5:7])
                                     year = int(date_of_birth[0:4])
@@ -1145,6 +1160,7 @@ class adminFunctions():
                                         raise DateInvalidError
 
                                     # input_list = [int(i) for i in str(dateOfBirth)]
+                                    # Checking if date of birth is before current date
                                     date_entered = date(year, month, day)
                                     date_today = date.today()
                                     if date_entered > date_today:
@@ -1178,7 +1194,7 @@ class adminFunctions():
                                 try:
                                     Cgen = input("New gender (enter male/female/non-binary/prefer not to say): ")
                                     if Cgen == '0':
-                                        Cagain = 1
+                                        c_again = 1
                                         break
                                     elif Cgen == '1':
                                         back6 = 1
@@ -1204,16 +1220,16 @@ class adminFunctions():
                             back7 = 0
                             while back7 == 0:
                                 try:
-                                    Cad1 = input("New address line 1: ")
-                                    if Cad1 == '0':
-                                        Cagain = 1
+                                    c_ad1 = input("New address line 1: ")
+                                    if c_ad1 == '0':
+                                        c_again = 1
                                         break
-                                    elif Cad1 == '1':
+                                    elif c_ad1 == '1':
                                         back7 = 1
                                         break
-                                    elif not Cad1:
+                                    elif not c_ad1:
                                         raise FieldEmptyError()
-                                    elif any(chr.isdigit() for chr in Cad1) == False:
+                                    elif any(chr.isdigit() for chr in c_ad1) == False:
                                         raise InvalidAddError
                                 except FieldEmptyError:
                                     error = FieldEmptyError()
@@ -1223,7 +1239,7 @@ class adminFunctions():
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""",
-                                                   (Cad1, nhs_num))
+                                                   (c_ad1, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed address line 1")
                                     back7 = 1
@@ -1232,21 +1248,21 @@ class adminFunctions():
                             back8 = 0
                             while back8 == 0:
                                 try:
-                                    Cad2 = input("new address line 2: ")
-                                    if Cad2 == '0':
-                                        Cagain = 1
+                                    c_ad2 = input("new address line 2: ")
+                                    if c_ad2 == '0':
+                                        c_again = 1
                                         break
-                                    elif Cad2 == '1':
+                                    elif c_ad2 == '1':
                                         back8 = 1
                                         break
-                                    elif not Cad2:
+                                    elif not c_ad2:
                                         raise FieldEmptyError()
                                 except FieldEmptyError:
                                     error = FieldEmptyError()
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""",
-                                                   (Cad2, nhs_num))
+                                                   (c_ad2, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed address line 2")
                                     back8 = 1
@@ -1257,7 +1273,7 @@ class adminFunctions():
                                 try:
                                     c_post = input("New postcode: ")
                                     if c_post == '0':
-                                        Cagain = 1
+                                        c_again = 1
                                         break
                                     elif c_post == '1':
                                         back9 = 1
@@ -1278,20 +1294,21 @@ class adminFunctions():
                             back10 = 0
                             while back10 == 0:
                                 try:
-                                    Ctel = (
+                                    # Telephone accepts input with different country cods of a range of lengths
+                                    c_tel = (
                                         input("Telephone number (no spaces, with country code. E.g. +4471234123123): "))
-                                    if Ctel == '0':
-                                        Cagain = 1
+                                    if c_tel == '0':
+                                        c_again = 1
                                         break
-                                    elif Ctel == '1':
+                                    elif c_tel == '1':
                                         back10 = 1
                                         break
-                                    elif not Ctel:
+                                    elif not c_tel:
                                         raise FieldEmptyError()
-                                    if '+' not in Ctel or ' ' in Ctel:
+                                    if '+' not in c_tel or ' ' in c_tel:
                                         raise TeleNoFormatError()
-                                    Ctel = Ctel.replace('+', '')
-                                    input_list = [i for i in Ctel]
+                                    c_tel = c_tel.replace('+', '')
+                                    input_list = [i for i in c_tel]
                                     if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(
                                             input_list) != 14 and len(
                                             input_list) != 15 and len(input_list) != 16 and len(
@@ -1315,7 +1332,7 @@ class adminFunctions():
                                 else:
                                     self.c.execute(
                                         """UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""",
-                                        (Ctel, nhs_num))
+                                        (c_tel, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed telephone number")
                                     back10 = 1
