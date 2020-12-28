@@ -575,7 +575,7 @@ class adminFunctions():
                         if In == "0":
                             back1 = 2
                             break
-                            #return 0
+                            # return 0
                         if not In:
                             raise FieldEmptyError()
                         check_number = int(In)
@@ -600,14 +600,14 @@ class adminFunctions():
                             unix_d = dt.utcnow().timestamp()  # Finding current timestamp in unix format
                             self.c.execute("""SELECT PatientDetail.firstName FROM PatientDetail INNER JOIN
                             Appointment ON PatientDetail.nhsNumber = Appointment.nhsNumber WHERE
-                            appointmentID = ?""", (check_number,))  #  Selecting patient name
+                            appointmentID = ?""", (check_number,))  # Selecting patient name
                             firstsel = self.c.fetchall()
                             self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unix_d, check_number))
                             self.connection.commit()
                             x = dt.now().hour
                             y = dt.now().minute
                             if y < 10:
-                                print("Successfully checked in {} at {a}:{c}{b}".format(firstsel[0][0], a=x,c=0, b=y))
+                                print("Successfully checked in {} at {a}:{c}{b}".format(firstsel[0][0], a=x, c=0, b=y))
                             else:
                                 print("Successfully checked in {} at {a}:{b}".format(firstsel[0][0], a=x, b=y))
                             return 0
@@ -737,7 +737,7 @@ class adminFunctions():
                     print("Press [0] to re-enter NHS number: ")
                     print("Press [1] to go back to update patient details menu")
                     try:
-                        while question_num == 1:
+                        while question_num == 1:  # Initializes while loop
                             emails = input("New email: ")
                             self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (emails,))
                             email_check = self.c.fetchall()
@@ -753,7 +753,7 @@ class adminFunctions():
                                 raise EmailInvalidError(emails)
                             elif not emails:
                                 raise FieldEmptyError
-                            question_num = 2
+                            question_num = 2  # increments to the next while loop (next input)
 
                         while question_num == 2:
                             first = input("New first name: ")
@@ -891,8 +891,9 @@ class adminFunctions():
                                 raise TeleNoFormatError()
                             tel = tel.replace('+', '')
                             input_list = [i for i in tel]
-                            if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
-                                    input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
+                            if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 \
+                                    and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 \
+                                    and len(input_list) != 17 and len(input_list) != 18:
                                 correct_length = '11 to 18'
                                 raise IncorrectInputLengthError(correct_length)
                             question_num = 11
@@ -933,8 +934,8 @@ class adminFunctions():
                         error = DateFormatError()
                         print(error)
                     else:
-                        self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, dateOfBirth = ?
-                        , gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
+                        self.c.execute("""UPDATE PatientDetail SET patientEmail = ?, firstName = ?, lastName = ?, 
+                        dateOfBirth = ?, gender = ?, addressLine1 = ?, addressLine2 = ?, postcode = ?,
                         telephoneNumber = ? WHERE nhsNumber = ?""",
                         (emails, first, last, date_of_birth, gender, addl1, addl2, postcode, tel, nhs_num))
                         self.connection.commit()
@@ -966,6 +967,7 @@ class adminFunctions():
                 print(error)
 
             else:
+                # Deleting patient from database with inputted NHS number
                 self.c.execute("""DELETE FROM PatientDetail WHERE nhsNumber = ?""", (nhs_num,))
                 self.connection.commit()
                 print("Successfully deleted patient record")
@@ -1047,20 +1049,20 @@ class adminFunctions():
                             back = 0
                             while back == 0:
                                 try:
-                                    CEmail = input("New email: ")
-                                    self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (CEmail,))
+                                    c_email = input("New email: ")
+                                    self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (c_email,))
                                     email_check = self.c.fetchall()
-                                    if CEmail == '0':
+                                    if c_email == '0':
                                         c_again = 1  # Inputting a "1" returns user to re-enter NHS number
                                         break
-                                    elif CEmail == '1':
+                                    elif c_email == '1':
                                         back = 0  # Returns user back to options menu
                                         break
                                     elif len(email_check) > 0:
                                         raise EmailInUseError
-                                    elif "@" not in CEmail or ".com" not in CEmail:
-                                        raise EmailInvalidError(CEmail)
-                                    elif not CEmail:
+                                    elif "@" not in c_email or ".com" not in c_email:
+                                        raise EmailInvalidError(c_email)
+                                    elif not c_email:
                                         raise FieldEmptyError
                                 except EmailInUseError:
                                     error = EmailInUseError()
@@ -1069,10 +1071,10 @@ class adminFunctions():
                                     error = FieldEmptyError()
                                     print(error)
                                 except EmailInvalidError:
-                                    error = EmailInvalidError(CEmail)
+                                    error = EmailInvalidError(c_email)
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (CEmail, nhs_num))
+                                    self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (c_email, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed email")
                                     back = 1
@@ -1081,20 +1083,21 @@ class adminFunctions():
                             back2 = 0
                             while back2 == 0:
                                 try:
-                                    Cfn = input("New first name: ")
-                                    if Cfn == '0':
+                                    c_fn = input("New first name: ")
+                                    if c_fn == '0':
                                         c_again = 1
                                         break
-                                    elif Cfn == '1':
+                                    elif c_fn == '1':
                                         back2 = 1
                                         break
-                                    elif not Cfn:
+                                    elif not c_fn:
                                         raise FieldEmptyError
                                 except FieldEmptyError:
                                     error = FieldEmptyError()
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (Cfn, nhs_num))
+                                    self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""",
+                                                   (c_fn, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed first name")
                                     back2 = 1
@@ -1103,20 +1106,21 @@ class adminFunctions():
                             back3 = 0
                             while back3 == 0:
                                 try:
-                                    Cln = input("New last name: ")
-                                    if Cln == '0':
+                                    change_Ln = input("New last name: ")
+                                    if change_Ln == '0':
                                         c_again = 1
                                         break
-                                    elif Cln == '1':
+                                    elif change_Ln == '1':
                                         back3 = 1
                                         break
-                                    elif not Cln:
+                                    elif not change_Ln:
                                         raise FieldEmptyError
                                 except FieldEmptyError:
                                     error = FieldEmptyError()
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (Cln, nhs_num))
+                                    self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""",
+                                                   (change_Ln, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed last name")
                                     back3 = 1
@@ -1309,11 +1313,9 @@ class adminFunctions():
                                         raise TeleNoFormatError()
                                     c_tel = c_tel.replace('+', '')
                                     input_list = [i for i in c_tel]
-                                    if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(
-                                            input_list) != 14 and len(
-                                            input_list) != 15 and len(input_list) != 16 and len(
-                                        input_list) != 17 and len(
-                                        input_list) != 18:
+                                    if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 \
+                                        and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 \
+                                        and len(input_list) != 17 and len(input_list) != 18:
                                         correct_length = '11 to 18'
                                         raise IncorrectInputLengthError(correct_length)
 
