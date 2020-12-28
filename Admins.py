@@ -543,7 +543,7 @@ class adminFunctions():
                     WHERE nhsNumber =? and AppointmentStatus = "Accepted" ORDER BY appointmentID ASC""", [nhs_number])
                 appointments = self.c.fetchall()
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_number,))
-                nhsq = self.c.fetchall()  # list of patients with matching NHS number
+                nhsq = self.c.fetchall()  # List of patients with matching NHS number
                 if nhs_number == "0":
                     master_back = 2
                     break
