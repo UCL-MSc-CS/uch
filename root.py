@@ -7,7 +7,9 @@ import os.path
 from database import initialise_database
 
 class Menus():
-    def MasterMenu(self):
+    """This is a class containing menus used on the first page and the Admin side of the program."""
+    
+    def master_menu(self):
         print("--------------------------------------------")
         print("         UCH Management System   ")
         print("--------------------------------------------")
@@ -17,7 +19,7 @@ class Menus():
         print("Choose [3] for GP")
         print("Choose [0] to close the program")
 
-    def adminmenu(self):
+    def admin_menu(self):
         uf.banner('Admin')
         print("Choose [1] to add a new doctor")
         print("Choose [2] to deactivate/reactivate or delete a profile")
@@ -63,7 +65,7 @@ while True:
             initialise_database()
 
         masterlogin = Menus()
-        masterlogin.MasterMenu()
+        masterlogin.master_menu()
 
 
         selection1 = int(input("Please select an option: "))
@@ -71,23 +73,23 @@ while True:
             while selection1 == 2:
                 p_choice = pm.task()
                 if p_choice == 0:
-                    masterlogin.MasterMenu()
+                    masterlogin.master_menu()
                     selection1 = int(input("Please select an option: "))
 
             while selection1 == 3:
                 gpChoice = gpm.gpStart()
                 if gpChoice == "exitGPLogin":
-                    masterlogin.MasterMenu()
+                    masterlogin.master_menu()
                     selection1 = int(input("Please select an option: "))
 
             while selection1 == 1:
-                ad = Admins.adminFunctions()
+                ad = Admins.AdminFunctions()
                 logged_in = ad.admin_login()
 
                 while logged_in == True:
 
                     AdminM = Menus()
-                    AdminM.adminmenu()
+                    AdminM.admin_menu()
                     ad.check_registrations()
                     
                     try:
@@ -201,12 +203,12 @@ while True:
 
                             elif selection > 5 or selection < 0:
                                 print("Not a valid selection, please enter a number between 0 and 5")
-                                # AdminM.adminmenu()
+                                # AdminM.admin_menu()
                                 # ad.check_registrations()
                                 # selection = int(input("please select an option: "))
                                 break
                             if selection == 0:
-                                AdminM.adminmenu()
+                                AdminM.admin_menu()
                                 ad.check_registrations()
                                 selection = int(input("please select an option: "))
 
@@ -221,7 +223,7 @@ while True:
                     logged_in = "entering details"
                 if logged_in == "restart":
                     ad.commit_and_close()
-                    masterlogin.MasterMenu()
+                    masterlogin.master_menu()
                     selection1 = int(input("please select an option: "))
             if selection1 == 0:
                 raise KeyboardInterrupt

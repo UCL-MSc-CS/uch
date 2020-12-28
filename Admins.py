@@ -4,13 +4,6 @@ from datetime import date
 import usefulfunctions as uf
 import pandas as pd
 
-"""exceptions under here"""
-# still need to come up with UK postcode validity check - make user input space separated post code,
-# splice the inputted string at the space to get the outcode and incode, check the outcode and incode,
-# based on the rules we found.
-# change telephone number check (won't work with international numbers rn)
-# DoB not in future check.
-
 class Error(Exception):
     """Base class for exceptions in this module."""
     pass
@@ -153,15 +146,22 @@ class YNError(Error):
         super().__init__(self.message)
 
 
-""" admin functions under here: """
-
-class adminFunctions():
+class AdminFunctions():
+    """This is a class containing functions used in the Admin side of the program."""
 
     def __init__(self): 
+        """The constructor for the AdminFunctions class."""
         self.connection = sql.connect('UCH.db')
         self.c = self.connection.cursor()  
 
     def admin_login(self):
+        """
+        The function to request login details from the user and verify them to allow the user to login.
+
+        Returns: 
+            'restart' if the user enters 0 to go back.
+            True if the user enters correct details.
+        """
         email = input('Email: (press 0 to go back) ')
         if email == '0':
             return "restart"
@@ -188,6 +188,12 @@ class adminFunctions():
             return True
 
     def add_doctor(self):
+        """
+        The function to carry out the process of adding a new GP to the database.
+
+        Returns:
+            0 if the user enters 0 to go back.
+        """
         question_num = 0
         print("Press 0 to return to the main menu at any stage")
         while True:
@@ -198,13 +204,13 @@ class adminFunctions():
                         print('Going back')
                         return 0
                     if not a:
-                        raise FieldEmpty()
+                        raise FieldEmptyError()
                     if "@" not in a or (".co" not in a and ".ac" not in a and ".org" not in a and ".gov" not in a):
-                        raise EmailInvalid(a)
+                        raise EmailInvalidError(a)
                     self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (a,))
                     items = self.c.fetchall()
                     if len(items) != 0:
-                        raise EmailInUse()
+                        raise EmailInUseError()
                     question_num = 1
                 while question_num == 1:
                     pw = input("Password: ")
@@ -212,7 +218,7 @@ class adminFunctions():
                         print('Going back')
                         return 0
                     if not pw:
-                        raise FieldEmpty()
+                        raise FieldEmptyError()
                     question_num = 2
                 while question_num == 2:
                     b = input("First name: ")
@@ -220,7 +226,7 @@ class adminFunctions():
                         print('Going back')
                         return 0
                     if not b:
-                        raise FieldEmpty()
+                        raise FieldEmptyError()
                     question_num = 3
                 while question_num == 3:
                     c = input("Last name: ")
@@ -228,7 +234,7 @@ class adminFunctions():
                         print('Going back')
                         return 0
                     if not c:
-                        raise FieldEmpty()
+                        raise FieldEmptyError()
                     question_num = 4
                 while question_num == 4:
                     dateOfBirth = (input("Enter date of birth as YYYY-MM-DD: "))
@@ -236,7 +242,7 @@ class adminFunctions():
                         print('Going back')
                         return 0
                     if not dateOfBirth:
-                        raise FieldEmpty()
+                        raise FieldEmptyError()
                     if len(dateOfBirth) != 10:
                         correct_length = 10
                         raise IncorrectInputLength(10)
@@ -245,23 +251,16 @@ class adminFunctions():
                     day = int(dateOfBirth[8:10])
                     month = int(dateOfBirth[5:7])
                     year = int(dateOfBirth[0:4])
-                    if month == 9 or month == 4 or month == 6 or month == 11:
-                        if day > 30:
-                            raise DateInvalidError
-                    elif month == 2:
-                        if year % 4 != 0:
-                            if day > 28:
-                                raise DateInvalidError
-                        elif year % 4 == 0:
-                            if day > 29:
-                                raise DateInvalidError
-                    else:
-                        if day > 31:
-                            raise DateInvalidError
+                    if month == 9 or month == 4 or month == 6 or month == 11 and day > 30:
+                        raise DateInvalidError
+                    elif month == 2 and year % 4 != 0 and day > 28:
+                        raise DateInvalidError
+                    elif year % 4 == 0 and day > 29:
+                        raise DateInvalidError
+                    elif day > 31:
+                        raise DateInvalidError
                     if month > 12:
                         raise DateInvalidError
-                    
-                    # input_list = [int(i) for i in str(dateOfBirth)]
                     date_entered = date(year,month,day)
                     date_today = date.today()
                     if date_entered > date_today:
@@ -274,7 +273,7 @@ class adminFunctions():
                         print('Going back')
                         return 0
                     if not department:
-                        raise FieldEmpty()
+                        raise FieldEmptyError()
                     question_num = 6
                 while question_num == 6:
                     teleNo = input("Telephone number (no spaces, with country code. E.g. +4471234123123): ")
@@ -282,12 +281,13 @@ class adminFunctions():
                         print('Going back')
                         return 0
                     if not teleNo:
-                        raise FieldEmpty()
+                        raise FieldEmptyError()
                     if '+' not in teleNo or ' ' in teleNo:
                         raise TeleNoFormatError()
                     teleNo = teleNo.replace('+', '')
                     input_list = [i for i in teleNo]
                     if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 and len(input_list) != 17:
+                        #input lengths from 11 to 17 are permitted, as country code lenghts range from 1 character to 7 characters.
                         correct_length = '12 to 18'
                         raise IncorrectInputLength(correct_length)
                     question_num = 7
@@ -298,7 +298,7 @@ class adminFunctions():
                         print('Going back')
                         return 0
                     if not gender:
-                        raise FieldEmpty()
+                        raise FieldEmptyError()
                     if gender != 'male' and gender != 'female' and gender != 'non-binary' and gender != 'prefer not to say':
                         raise GenderError()
                     active = 1
@@ -309,7 +309,7 @@ class adminFunctions():
                         print('Going back')
                         return 0
                     if not addressL1:
-                        raise FieldEmpty()
+                        raise FieldEmptyError()
                     addressL2 = input("Address Line 2: ")
                     if addressL2 == '0':
                         print('Going back')
@@ -317,14 +317,14 @@ class adminFunctions():
                     if not addressL2:
                         raise FieldEmpty()
                     question_num = 9
-            except FieldEmpty:
-                error = FieldEmpty()
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
-            except EmailInvalid:
-                error = EmailInvalid(a)
+            except EmailInvalidError:
+                error = EmailInvalidError(a)
                 print(error)
-            except EmailInUse:
-                error = EmailInUse()
+            except EmailInUseError:
+                error = EmailInUseError()
                 print(error)
             except ValueError:
                 print("\n   < Please provide a numerical input > \n")
@@ -354,16 +354,23 @@ class adminFunctions():
                 return 0
 
     def check_registrations(self):
+        """The function to check the number of new patient accounts that have pending registration confirmations."""
+
         self.c.execute("""SELECT COUNT(patientEmail) FROM PatientDetail WHERE registrationConfirm = 0 """)
         items = self.c.fetchall()
         count = items[0][0]
         print("   < You have %d patient registrations to confirm >" % count)
-        # self.c.execute("SELECT * FROM PatientDetail WHERE registrationConfirm = 0")
-        # items = self.c.fetchall()
-        # for i in items:
-        #     print(i)
 
     def confirm_registrations(self):
+        """
+        The function to show the admin each patient account registration that needs to be confirmed and
+        allow the admin to confirm the registration. 
+
+        Returns:
+            0 if there are no registrations to confirm.
+            3 if there are registrations to confirm, and the user has gone through all of them.
+        """
+
         print("********************************************")
         self.c.execute("""SELECT * FROM PatientDetail WHERE registrationConfirm = 0 """)
         items = self.c.fetchall()
@@ -376,8 +383,6 @@ class adminFunctions():
                 print("Email: {}".format(i[1]))
                 print("First name: {}".format(i[2]))
                 print("Last name: {}".format(i[3]))
-                # date = uf.toregulartime(i[4])
-                # date = date.strftime("%Y-%m-%d") 
                 print("Date of birth: {}".format(i[4]))
                 print("Gender: {}".format(i[5]))
                 print("Address line 1: {}".format(i[6]))
@@ -395,10 +400,6 @@ class adminFunctions():
                                         (i[0],))
                             print("Registration confirmed successfully")
                             print(" ")
-                            # self.c.execute("SELECT * FROM PatientDetail WHERE registrationConfirm = 1")
-                            # items = self.c.fetchall()
-                            # for i in items:
-                            #     print(i)
                         elif change == 'N':
                             print("Registration not confirmed")
                             print(" ")
@@ -406,11 +407,18 @@ class adminFunctions():
                             raise YNError
                     except YNError:
                         print("Please enter Y/N")
-                        # change = input("Do you want to confirm this registration?: (Y/N) ")
             self.connection.commit()
             return 3
 
     def unconfirm_registrations(self):
+        """
+        The function to allow the admin to un-confirm the registration of a patient account that was
+        previously confirmed. 
+
+        Returns:
+            3 user presses 0 to go back or successfully un-confirms an account using the account's 
+            NHS number. 
+        """
         while True:
             try:
                 print("********************************************")
@@ -418,26 +426,29 @@ class adminFunctions():
                 if nhs_num == '0':
                     return 3
                 if not nhs_num:
-                    raise FieldEmpty()
-            except FieldEmpty:
-                error = FieldEmpty()
+                    raise FieldEmptyError()
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
             else:
                 self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_num,))
                 items = self.c.fetchall()
                 if len(items) == 0:
-                    print("No record exists with this email")
+                    print("No record exists with this nhsNumber")
                 else:
                     self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 0 WHERE nhsNumber = ?""", (nhs_num,))
                     print("Registration un-confirmed successfully")
-                    # self.c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", (nhs_num,))
-                    # items = self.c.fetchall()
-                    # for i in items:
-                    #     print(i)
                     self.connection.commit()
                     return 3
 
     def deactivate_doctor(self):
+        """
+        The function to allow an admin to deactivate a GP's account.
+
+        Returns:
+            2 if the user presses 0 to go back and if the user successfully deactivates an account using
+            the account's email.
+        """
         while True:
             try:
                 print("********************************************")
@@ -445,14 +456,14 @@ class adminFunctions():
                 if email == '0':
                     return 2
                 if not email:
-                    raise FieldEmpty()
+                    raise FieldEmptyError()
                 if "@" not in email or (".co" not in email and ".ac" not in email and ".org" not in email and ".gov" not in email):
-                    raise EmailInvalid(email)
-            except FieldEmpty:
-                error = FieldEmpty()
+                    raise EmailInvalidError(email)
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
-            except EmailInvalid:
-                error = EmailInvalid(email)
+            except EmailInvalidError:
+                error = EmailInvalidError(email)
                 print(error)
             else:
                 self.c.execute("SELECT active FROM GP WHERE gpEmail = ?", (email,))
@@ -468,6 +479,13 @@ class adminFunctions():
                     return 2
 
     def reactivate_doctor(self):
+        """
+        The function to allow an admin to reactivate a GP's account.
+
+        Returns:
+            2 if the user presses 0 to go back and if the user successfully reactivates an account using
+            the account's email.
+        """
         while True:
             try:
                 print("********************************************")
@@ -475,14 +493,14 @@ class adminFunctions():
                 if email == '0':
                     return 2
                 if not email:
-                    raise FieldEmpty()
+                    raise FieldEmptyError()
                 if "@" not in email or (".co" not in email and ".ac" not in email and ".org" not in email and ".gov" not in email):
-                    raise EmailInvalid(email)
-            except FieldEmpty:
-                error = FieldEmpty()
+                    raise EmailInvalidError(email)
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
-            except EmailInvalid:
-                error = EmailInvalid(email)
+            except EmailInvalidError:
+                error = EmailInvalidError(email)
                 print(error)
             else:
                 self.c.execute("SELECT active FROM GP WHERE gpEmail = ?", (email,))
@@ -498,6 +516,13 @@ class adminFunctions():
                     return 2
 
     def delete_doctor(self):
+        """
+        The function to allow an admin to delete a GP's account.
+
+        Returns:
+            2 if the user presses 0 to go back and if the user successfully deletes an account using
+            the account's email.
+        """
         providing_input = True
         while providing_input == True:
             try:
@@ -506,14 +531,14 @@ class adminFunctions():
                 if email == "0":
                     return 2
                 if not email:
-                    raise FieldEmpty()
+                    raise FieldEmptyError()
                 if "@" not in email or (".co" not in email and ".ac" not in email and ".org" not in email and ".gov" not in email):
-                    raise EmailInvalid(email)
-            except FieldEmpty:
-                error = FieldEmpty()
+                    raise EmailInvalidError(email)
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
-            except EmailInvalid:
-                error = EmailInvalid(email)
+            except EmailInvalidError:
+                error = EmailInvalidError(email)
                 print(error)
             else:
                 self.c.execute("SELECT * FROM GP WHERE gpEmail = ?", (email,))
@@ -1338,50 +1363,6 @@ class adminFunctions():
                                     back10 = 1
 
     def commit_and_close(self):
+        """Function to commit changes to the database and close the connection."""
         self.connection.commit()
         self.connection.close()
-
-
-# yadayada add more functions for selections
-
-"""old code under here"""
-
-# def addGP():
-#     print("registering new physician")
-#     create = int(input("choose [1] to input physician or [2] to exit: "))
-#     if create == 1:
-#         a = input("first name ")
-#         b = input("last name ")
-#         c = input("email ")
-#         d = int(input("enter date of birth as ddmmyy "))
-#         f = input("specialty ")
-#         gp = physician(a, b, c, d, f)
-#         gp.add_physician()
-#     elif create == 2:
-#         pass  # add code to abort registration
-#     else:
-#         print("did not enter Y or N")
-#         raise NameError
-#
-# #yadayada add more functions for selections
-#
-# class physician():
-#     def __init__(self, first, last, email, date_birth, specialty):
-#         self.first = first
-#         self.last = last
-#         self.email = email
-#         self.date_birth = date_birth
-#         self.specialty = specialty
-#
-#     def add_physician(self):
-#         connection = sql.connect('UCH.db')
-#         c = connection.cursor()
-#         input = [self.email, self.first, self.last, self.date_birth, self.specialty]
-#         c.execute("""INSERT INTO doctors VALUES(?, ?, ?, ?, ?)""", input)
-#         connection.commit()
-#         # The following allows you to check the doctors table:
-#         # c.execute("SELECT * FROM doctors")
-#         # items = c.fetchall()
-#         # for i in items:
-#         #     print(i)
-#         # connection.commit()
