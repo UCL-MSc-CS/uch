@@ -6,6 +6,7 @@ import usefulfunctions as uf
 import os.path
 from database import initialise_database
 
+
 class Menus():
     def MasterMenu(self):
         print("--------------------------------------------")
@@ -50,8 +51,6 @@ class Menus():
         print("Choose [0] to go back")
 
 
-
-
 """ This is the main loop"""
 while True:
     try:
@@ -64,7 +63,6 @@ while True:
 
         masterlogin = Menus()
         masterlogin.MasterMenu()
-
 
         selection1 = int(input("Please select an option: "))
         while selection1 == 0 or selection1 == 1 or selection1 == 2 or selection1 == 3:
@@ -89,7 +87,7 @@ while True:
                     AdminM = Menus()
                     AdminM.adminmenu()
                     ad.check_registrations()
-                    
+
                     try:
                         selection = int(input("please select an option: "))
 
@@ -142,8 +140,8 @@ while True:
                                     selection = ad.unconfirm_registrations()
                                 if ipt == 0:
                                     selection = 0
-                                
-                            #checking patient in or out
+
+                            # Checking patient in or out
                             if selection == 4:
                                 print("********************************************")
                                 AdminM.admin_submenuCheckIO()
@@ -151,9 +149,9 @@ while True:
                                 try:
                                     CheckOpt = int(input("Choice: "))
                                     if CheckOpt == 1:
-                                        ad.c_in()
+                                        ad.c_in()  # Calling check-in function from admins
                                     elif CheckOpt == 2:
-                                        ad.c_out()
+                                        ad.c_out()  # Calling check-out function from admins
                                     elif CheckOpt == 0:
                                         selection = 0
                                     else:
@@ -162,9 +160,7 @@ while True:
 
                                     print("< Not a valid choice >")
 
-
-
-                            #updating/deleting patient details
+                            # Updating/deleting patient details
                             elif selection == 5:
                                 print("********************************************")
                                 AdminM.manage_details()
@@ -180,9 +176,9 @@ while True:
                                                 print("********************************************")
                                                 det_choice2 = int(input("Choice: "))
                                                 if det_choice2 == 1:
-                                                    ad.manage_det()
+                                                    ad.manage_det()  # Calling function from admins
                                                 elif det_choice2 == 2:
-                                                    ad.man_ind_det()
+                                                    ad.man_ind_det()  # Calling function from admins
                                                 elif det_choice2 == 0:
                                                     back_var = 1
                                                     break
@@ -210,7 +206,6 @@ while True:
                                 ad.check_registrations()
                                 selection = int(input("please select an option: "))
 
-
                             # print("exiting menu")
                         if selection == 0:
                             logged_in = "restart"
@@ -228,7 +223,7 @@ while True:
         if selection1 != 0 or selection1 != 1 or selection1 != 2 or selection1 != 3:
             print("\n   < Please enter a number between 0 and 3 >\n")
             continue
-        
+
     except ValueError:
         print("\n   < Please enter a number >\n")
     except KeyboardInterrupt:
