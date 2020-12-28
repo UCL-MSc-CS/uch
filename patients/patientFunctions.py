@@ -464,6 +464,7 @@ def display_available(date, start, end, gp_details):
         print("********************************************\n")
         print(data.to_string(columns=['Time', 'Status'], index=False))
         print("\n********************************************")
+    connection.close()
     return times_str
 
 
@@ -508,6 +509,7 @@ def choose_time(date, times_str, gp_details):
                 if start >= start_time and end <= end_time:
                     raise TimeBookedError
             else:
+                connection.close()
                 return time_in
         except TimeNotValidError:
             print("\n\t< This is not a valid time option, please try again >"

@@ -104,7 +104,10 @@ class Appointment:
                     self.choose_appointment(nhs_number, y)
             elif dr_options == '3':
                 y = self.choose_dr_gender(nhs_number)
-                self.choose_appointment(nhs_number, y)
+                if y == 0:
+                    pass
+                else:
+                    self.choose_appointment(nhs_number, y)
             elif dr_options == '0':
                 pass
             else:
@@ -140,6 +143,7 @@ class Appointment:
             return 0
         else:
             gp_details = pf.choose_dr(dr_names)
+            self.connection.close()
             return gp_details
 
     def choose_any_dr(self):
@@ -169,6 +173,7 @@ class Appointment:
             gp_chosen_name = gp_choice[1]
             gp_details = [gp_chosen_email, gp_chosen_name]
             print("The doctor you have been assigned is Dr {}".format(gp_chosen_name))
+            self.connection.close()
             return gp_details
 
     def choose_dr_gender(self, nhs_number):
@@ -205,9 +210,10 @@ class Appointment:
                 if not dr_names:
                     print("\nI'm sorry, there are no male doctors currently available at the practice"
                           "\nplease try again another time")
-                    self.book_appointment(nhs_number)
+                    return 0
                 else:
                     gp_details = pf.choose_dr(dr_names)
+                    self.connection.close()
                     return gp_details
             elif gp_options == '2':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'female' and active='1'")
@@ -215,9 +221,10 @@ class Appointment:
                 if not dr_names:
                     print("\nI'm sorry, there are no female doctors currently available at the practice"
                           "\nplease try again another time")
-                    self.book_appointment(nhs_number)
+                    return 0
                 else:
                     gp_details = pf.choose_dr(dr_names)
+                    self.connection.close()
                     return gp_details
             elif gp_options == '3':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'non-binary' and active='1'")
@@ -225,9 +232,10 @@ class Appointment:
                 if not dr_names:
                     print("\nI'm sorry, there are no non-binary doctors currently available at the practice"
                           "\nplease try again another time")
-                    self.book_appointment(nhs_number)
+                    return 0
                 else:
                     gp_details = pf.choose_dr(dr_names)
+                    self.connection.close()
                     return gp_details
             elif gp_options == '0':
                 pass
