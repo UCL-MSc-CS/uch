@@ -176,9 +176,9 @@ while True:
                                                 print("********************************************")
                                                 det_choice2 = int(input("Choice: "))
                                                 if det_choice2 == 1:
-                                                    ad.manage_det()  # Calling function from admins
+                                                    ad.manage_det()  # Calling function that changes all details
                                                 elif det_choice2 == 2:
-                                                    ad.man_ind_det()  # Calling function from admins
+                                                    ad.man_ind_det()  # Calling function that changes individual details
                                                 elif det_choice2 == 0:
                                                     back_var = 1
                                                     break
