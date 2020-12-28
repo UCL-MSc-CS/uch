@@ -15,7 +15,7 @@ class Error(Exception):
     """Base class for exceptions in this module."""
     pass
 
-class FieldEmpty(Error):
+class FieldEmptyError(Error):
     """
     Exception raised when the user provides a blank input
 
@@ -31,7 +31,7 @@ class OutOfBounds(Error):
         self.message = message
         super().__init__(self.message)
 
-class EmailInUse(Error):
+class EmailInUseError(Error):
     """
     Exception raised when the email is already in use
 
@@ -42,7 +42,7 @@ class EmailInUse(Error):
         self.message = message
         super().__init__(self.message)
 
-class EmailInvalid(Error):
+class EmailInvalidError(Error):
     """
     Exception raised when the email does not contain @ or .co
 
@@ -103,7 +103,7 @@ class TeleNoFormatError(Error):
         self.message = message
         super().__init__(self.message)
 
-class IncorrectInputLength(Error):
+class IncorrectInputLengthError(Error):
     """
     Exception raised when the input length is incorrect
 
@@ -126,7 +126,7 @@ class GenderError(Error):
         super().__init__(self.message)
 
 
-class InvalidAdd(Error):
+class InvalidAddError(Error):
     """exception raised when address is not valid"""
     def __init__(self, message = "\n   < Please input an address containing number and street > \n"):
         self.message = message
@@ -144,12 +144,6 @@ class YNError(Error):
         self.message = message
         super().__init__(self.message)
 
-class EmailInUse(Error):
-    """exception raised when email already exist"""
-
-    def __init__(self, message="\n   < Email has already been used, Please enter a different email > \n"):
-        self.message = message
-        super().__init__(self.message)
 
 """ admin functions under here: """
 
@@ -546,13 +540,13 @@ class adminFunctions():
                     master_back = 2
                     break
                 elif not nhs_number:
-                    raise FieldEmpty()
+                    raise FieldEmptyError()
                 elif len(nhsq) < 1:
                     raise NhsNotExistsError
                 elif len(appointments) == 0:
                     raise DateInvalidError
-            except FieldEmpty:
-                error = FieldEmpty()
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
             except DateInvalidError:
                 print("\n   <This person has no booked appointments> \n")
@@ -575,10 +569,10 @@ class adminFunctions():
                             break
                             #return 0
                         if not In:
-                            raise FieldEmpty()
+                            raise FieldEmptyError()
                         check_number = int(In)
-                    except FieldEmpty:
-                        error = FieldEmpty()
+                    except FieldEmptyError:
+                        error = FieldEmptyError()
                         print(error)
                     except ValueError:
                         print("\n   < Please provide a numerical input >\n")
@@ -633,13 +627,13 @@ class adminFunctions():
                     master_back = 2
                     break
                 elif not nhs_number:
-                    raise FieldEmpty()
+                    raise FieldEmptyError()
                 elif len(nhsq) < 1:
                     raise NhsNotExistsError
                 elif len(appointments) == 0:
                     raise DateInvalidError
-            except FieldEmpty:
-                error = FieldEmpty()
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
             except DateInvalidError:
                 print("\n   <This person has no booked appointments> \n")
@@ -662,10 +656,10 @@ class adminFunctions():
                             break
                             #return 0
                         if not In:
-                            raise FieldEmpty()
+                            raise FieldEmptyError()
                         check_number = int(In)
-                    except FieldEmpty:
-                        error = FieldEmpty()
+                    except FieldEmptyError:
+                        error = FieldEmptyError()
                         print(error)
                     except ValueError:
                         print("\n   < Please provide a numerical input >\n")
@@ -717,11 +711,11 @@ class adminFunctions():
                     master_back = 1
                     break
                 elif not nhs_num:
-                    raise FieldEmpty()
+                    raise FieldEmptyError()
                 elif len(nhsq) < 1:
                     raise NhsNotExistsError
-            except FieldEmpty:
-                error = FieldEmpty()
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
             except NhsNotExistsError:
                 error = NhsNotExistsError()
@@ -745,11 +739,11 @@ class adminFunctions():
                                 return master_back
                                 break
                             elif len(email_check) > 0:
-                                raise EmailInUse
+                                raise EmailInUseError
                             elif "@" not in emails or ".com" not in emails:
-                                raise EmailInvalid(emails)
+                                raise EmailInvalidError(emails)
                             elif not emails:
-                                raise FieldEmpty
+                                raise FieldEmptyError
                             question_num = 2
 
                         while question_num == 2:
@@ -761,7 +755,7 @@ class adminFunctions():
                                 return master_back
                                 break
                             elif not first:
-                                raise FieldEmpty
+                                raise FieldEmptyError
                             question_num = 3
 
                         while question_num == 3:
@@ -773,7 +767,7 @@ class adminFunctions():
                                 return master_back
                                 break
                             elif not last:
-                                raise FieldEmpty
+                                raise FieldEmptyError
                             question_num = 4
 
                         while question_num == 4:
@@ -785,10 +779,10 @@ class adminFunctions():
                                 return master_back
                                 break
                             elif not date_of_birth:
-                                raise FieldEmpty()
+                                raise FieldEmptyError()
                             elif len(date_of_birth) != 10:
                                 correct_length = 10
-                                raise IncorrectInputLength(10)
+                                raise IncorrectInputLengthError(10)
                             elif date_of_birth[4] != '-' or date_of_birth[7] != '-':
                                 raise DateFormatError
                             day = int(date_of_birth[8:10])
@@ -828,7 +822,7 @@ class adminFunctions():
                                 return master_back
                                 break
                             elif not gender:
-                                raise FieldEmpty()
+                                raise FieldEmptyError()
                             if gender != "male" and gender != "female" and gender != "non-binary" and gender != "prefer not to say":
                                 raise GenderError()
                             question_num = 7
@@ -842,9 +836,9 @@ class adminFunctions():
                                 return master_back
                                 break
                             elif not addl1:
-                                raise FieldEmpty()
+                                raise FieldEmptyError()
                             elif any(chr.isdigit() for chr in addl1) == False:
-                                raise InvalidAdd
+                                raise InvalidAddError
                             question_num = 8
 
                         while question_num == 8:
@@ -856,7 +850,7 @@ class adminFunctions():
                                 return master_back
                                 break
                             elif not addl2:
-                                raise FieldEmpty()
+                                raise FieldEmptyError()
                             question_num = 9
 
                         while question_num == 9:
@@ -868,7 +862,7 @@ class adminFunctions():
                                 return master_back
                                 break
                             elif not postcode:
-                                raise FieldEmpty()
+                                raise FieldEmptyError()
                             question_num = 10
 
                         while question_num == 10:
@@ -880,7 +874,7 @@ class adminFunctions():
                                 return master_back
                                 break
                             elif not tel:
-                                raise FieldEmpty()
+                                raise FieldEmptyError()
                             if '+' not in tel or ' ' in tel:
                                 raise TeleNoFormatError()
                             tel = tel.replace('+', '')
@@ -888,29 +882,29 @@ class adminFunctions():
                             if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(
                                     input_list) != 15 and len(input_list) != 16 and len(input_list) != 17 and len(input_list) != 18:
                                 correct_length = '11 to 18'
-                                raise IncorrectInputLength(correct_length)
+                                raise IncorrectInputLengthError(correct_length)
                             question_num = 11
 
-                    except EmailInUse:
-                        error = EmailInUse()
+                    except EmailInUseError:
+                        error = EmailInUseError()
                         print(error)
                     except NhsNotExistsError:
                         error = NhsNotExistsError()
                         print(error)
-                    except FieldEmpty:
-                        error = FieldEmpty()
+                    except FieldEmptyError:
+                        error = FieldEmptyError()
                         print(error)
-                    except IncorrectInputLength:
-                        error = IncorrectInputLength(correct_length)
+                    except IncorrectInputLengthError:
+                        error = IncorrectInputLengthError(correct_length)
                         print(error)
                     except GenderError:
                         error = GenderError()
                         print(error)
-                    except InvalidAdd:
-                        error = InvalidAdd()
+                    except InvalidAddError:
+                        error = InvalidAddError()
                         print(error)
-                    except EmailInvalid:
-                        error = EmailInvalid(emails)
+                    except EmailInvalidError:
+                        error = EmailInvalidError(emails)
                         print(error)
                     except TeleNoFormatError:
                         error = TeleNoFormatError()
@@ -949,14 +943,14 @@ class adminFunctions():
                     del_back = 1
                     break
                 elif not nhs_num:
-                    raise FieldEmpty
+                    raise FieldEmptyError
                 elif len(nhsq) < 1:
                     raise NhsNotExistsError
             except NhsNotExistsError:
                 error = NhsNotExistsError()
                 print(error)
-            except FieldEmpty:
-                error = FieldEmpty()
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
 
             else:
@@ -985,14 +979,14 @@ class adminFunctions():
                     master_back = 1
                     break
                 if not nhs_num:
-                    raise FieldEmpty
+                    raise FieldEmptyError
                 elif len(nhsq) < 1:
                     raise NhsNotExistsError
             except NhsNotExistsError:
                 error = NhsNotExistsError()
                 print(error)
-            except FieldEmpty:
-                error = FieldEmpty()
+            except FieldEmptyError:
+                error = FieldEmptyError()
                 print(error)
             else:
                 Cagain = 0
@@ -1024,9 +1018,9 @@ class adminFunctions():
                         if ind_inp > 10:
                             raise IntegerError
                         elif not ind_inp:
-                            raise FieldEmpty
-                    except FieldEmpty:
-                            error = FieldEmpty()
+                            raise FieldEmptyError
+                    except FieldEmptyError:
+                            error = FieldEmptyError()
                             print(error)
                     except IntegerError:
                             error = IntegerError()
@@ -1049,19 +1043,19 @@ class adminFunctions():
                                         back = 0
                                         break
                                     elif len(email_check) > 0:
-                                        raise EmailInUse
+                                        raise EmailInUseError
                                     elif "@" not in CEmail or ".com" not in CEmail:
-                                        raise EmailInvalid(CEmail)
+                                        raise EmailInvalidError(CEmail)
                                     elif not CEmail:
-                                        raise FieldEmpty
-                                except EmailInUse:
-                                    error = EmailInUse()
+                                        raise FieldEmptyError
+                                except EmailInUseError:
+                                    error = EmailInUseError()
                                     print(error)
-                                except FieldEmpty:
-                                    error = FieldEmpty()
+                                except FieldEmptyError:
+                                    error = FieldEmptyError()
                                     print(error)
-                                except EmailInvalid:
-                                    error = EmailInvalid(CEmail)
+                                except EmailInvalidError:
+                                    error = EmailInvalidError(CEmail)
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (CEmail, nhs_num))
@@ -1081,9 +1075,9 @@ class adminFunctions():
                                         back2 = 1
                                         break
                                     elif not Cfn:
-                                        raise FieldEmpty
-                                except FieldEmpty:
-                                    error = FieldEmpty()
+                                        raise FieldEmptyError
+                                except FieldEmptyError:
+                                    error = FieldEmptyError()
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (Cfn, nhs_num))
@@ -1103,9 +1097,9 @@ class adminFunctions():
                                         back3 = 1
                                         break
                                     elif not Cln:
-                                        raise FieldEmpty
-                                except FieldEmpty:
-                                    error = FieldEmpty()
+                                        raise FieldEmptyError
+                                except FieldEmptyError:
+                                    error = FieldEmptyError()
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (Cln, nhs_num))
@@ -1125,10 +1119,10 @@ class adminFunctions():
                                         back4 = 1
                                         break
                                     elif not date_of_birth:
-                                        raise FieldEmpty()
+                                        raise FieldEmptyError()
                                     elif len(date_of_birth) != 10:
                                         correct_length = 10
-                                        raise IncorrectInputLength(10)
+                                        raise IncorrectInputLengthError(10)
                                     elif date_of_birth[4] != '-' or date_of_birth[7] != '-':
                                         raise DateFormatError
                                     day = int(date_of_birth[8:10])
@@ -1157,11 +1151,11 @@ class adminFunctions():
                                         raise DateInFutureError
                                     date_of_birth = date_entered.isoformat()
                                     print(date_of_birth)
-                                except FieldEmpty:
-                                    error = FieldEmpty()
+                                except FieldEmptyError:
+                                    error = FieldEmptyError()
                                     print(error)
-                                except IncorrectInputLength:
-                                    error = IncorrectInputLength(correct_length)
+                                except IncorrectInputLengthError:
+                                    error = IncorrectInputLengthError(correct_length)
                                     print(error)
                                 except DateFormatError:
                                     error = DateFormatError()
@@ -1190,11 +1184,11 @@ class adminFunctions():
                                         back6 = 1
                                         break
                                     elif not Cgen:
-                                        raise FieldEmpty()
+                                        raise FieldEmptyError()
                                     elif Cgen != "male" and Cgen != "female" and Cgen != "non-binary" and Cgen != "prefer not to say":
                                         raise GenderError()
-                                except FieldEmpty:
-                                    error = FieldEmpty()
+                                except FieldEmptyError:
+                                    error = FieldEmptyError()
                                     print(error)
                                 except GenderError:
                                     error = GenderError()
@@ -1218,14 +1212,14 @@ class adminFunctions():
                                         back7 = 1
                                         break
                                     elif not Cad1:
-                                        raise FieldEmpty()
+                                        raise FieldEmptyError()
                                     elif any(chr.isdigit() for chr in Cad1) == False:
-                                        raise InvalidAdd
-                                except FieldEmpty:
-                                    error = FieldEmpty()
+                                        raise InvalidAddError
+                                except FieldEmptyError:
+                                    error = FieldEmptyError()
                                     print(error)
-                                except InvalidAdd:
-                                    error = InvalidAdd()
+                                except InvalidAddError:
+                                    error = InvalidAddError()
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""",
@@ -1246,9 +1240,9 @@ class adminFunctions():
                                         back8 = 1
                                         break
                                     elif not Cad2:
-                                        raise FieldEmpty()
-                                except FieldEmpty:
-                                    error = FieldEmpty()
+                                        raise FieldEmptyError()
+                                except FieldEmptyError:
+                                    error = FieldEmptyError()
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""",
@@ -1269,9 +1263,9 @@ class adminFunctions():
                                         back9 = 1
                                         break
                                     elif not c_post:
-                                        raise FieldEmpty()
-                                except FieldEmpty:
-                                    error = FieldEmpty()
+                                        raise FieldEmptyError()
+                                except FieldEmptyError:
+                                    error = FieldEmptyError()
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""",
@@ -1293,7 +1287,7 @@ class adminFunctions():
                                         back10 = 1
                                         break
                                     elif not Ctel:
-                                        raise FieldEmpty()
+                                        raise FieldEmptyError()
                                     if '+' not in Ctel or ' ' in Ctel:
                                         raise TeleNoFormatError()
                                     Ctel = Ctel.replace('+', '')
@@ -1304,13 +1298,13 @@ class adminFunctions():
                                         input_list) != 17 and len(
                                         input_list) != 18:
                                         correct_length = '11 to 18'
-                                        raise IncorrectInputLength(correct_length)
+                                        raise IncorrectInputLengthError(correct_length)
 
-                                except FieldEmpty:
-                                    error = FieldEmpty()
+                                except FieldEmptyError:
+                                    error = FieldEmptyError()
                                     print(error)
-                                except IncorrectInputLength:
-                                    error = IncorrectInputLength(correct_length)
+                                except IncorrectInputLengthError:
+                                    error = IncorrectInputLengthError(correct_length)
                                     print(error)
                                 except IntegerError:
                                     error = IntegerError()
