@@ -14,6 +14,7 @@ class Patient:
     This is a class for patients.
 
     Attributes:
+        nhs_number (int): The patient's NHS number.
         patient_email (string): The patient's email.
         first_name (string): The patient's first name.
         last_name (string): The patient's last name.
@@ -24,23 +25,12 @@ class Patient:
         postcode (string): The patient's postcode.
         telephone_number (int): The patient's telephone number.
         password (string): The patient's password.
+        registration_confirm (int): For adminstrators to confirm registration of new patients - 0 for not confirmed and 1 for confirmed.
     """
 
     def __init__(self):
         """
         The constructor for Patient class.
-
-        Parameters:
-            patient_email (string): The patient's email.
-            first_name (string): The patient's first name.
-            last_name (string): The patient's last name.
-            date_of_birth (string): The patient's date of birth.
-            gender (string): The patient's gender.
-            address_line_1 (string): The patient's first line of their address.
-            address_line_2 (string): The patient's second line of their address.
-            postcode (string): The patient's postcode.
-            telephone_number (int): The patient's telephone number.
-            password (string): The patient's password.
         """
 
         self.nhs_number = 0  # Generated on line 25
@@ -54,7 +44,7 @@ class Patient:
         self.postcode = ""
         self.telephone_number = 0
         self.password = ""
-        self.registration_confirm = 0  # For admins to confirm registration of new patients
+        self.registration_confirm = 0  
         self.connection = sql.connect('UCH.db')
         self.c = self.connection.cursor()
         self.nhs_generator()

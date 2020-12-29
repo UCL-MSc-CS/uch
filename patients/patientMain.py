@@ -310,12 +310,8 @@ def options(nhs_number):
     """
     count = 0
     while True:
-        while count < 13:
+        while count < 12:
             try:
-                # update_patient declared here because it is used by multiple while loops in this function
-                update_patient = {"address_line_1": "",
-                                  "address_line_2": "",
-                                  "postcode": ""}
                 while count == 0:
                     uf.banner('Patient')
                     print("What would you like to do next?")
@@ -445,10 +441,7 @@ def options(nhs_number):
                         # Redirects to the update last name while loop
                         count = 5
                     elif action == '3':
-                        # Redirects to the update address line 1 while loop and reassigns blank values
-                        update_patient = {"address_line_1": "",
-                                          "address_line_2": "",
-                                          "postcode": ""}
+                        # Redirects to the update address line 1 while loop 
                         count = 9
                     elif action == '4':
                         # Redirects to the update telephone number while loop
@@ -620,12 +613,14 @@ def options(nhs_number):
                         raise InvalidAnswerError()
                     else:
                         # Assigns input value to update_patient dictionary
+                        global update_patient 
+                        update_patient = {}
                         update_patient["address_line_1"] = address_line_1
                         # Redirects to the update address line 2 while loop
                         count = 10
                 while count == 10:
                     address_line_2 = input(
-                        "Please enter your new address line 2 (press 0 to go back to update details menu, press 1 to go back): ")
+                        "Please enter your new address line 2, including city (press 0 to go back to update details menu, press 1 to go back): ")
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
                     address_line_2 = address_line_2.strip().title()
                     if address_line_2 == '0':
@@ -640,38 +635,9 @@ def options(nhs_number):
                     else:
                         # Assigns input value to update_patient dictionary
                         update_patient["address_line_2"] = address_line_2
-                        # Redirects to the update city while loop
+                        # Redirects to the update postcode while loop
                         count = 11
                 while count == 11:
-                    city = input(
-                        "Please enter your new city (press 0 to go back to update details menu, press 1 to go back): ")
-                    # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    city = city.strip().title()
-                    if city == "":
-                        raise EmptyAnswerError()
-                    elif city == '0':
-                        # Returns to the update details menu
-                        count = 3
-                    elif city == '1':
-                        #  Returns to the update address line 2 while loop
-                        count = 10
-                    # Ensures the input length is not too long
-                    elif len(city) > 200:
-                        raise InvalidAnswerError()
-                    else:
-                        # Removes all spaces from input
-                        x = city.replace(" ", "")
-                        # Checks if there are any numbers in the input
-                        if (any(str.isdigit(y) for y in x)) == True:
-                            raise InvalidAnswerError()
-                        else:
-                            address_line_2 = (
-                                update_patient["address_line_2"] + " " + city).strip()
-                            # Assigns input value to update_patient dictionary
-                            update_patient["address_line_2"] = address_line_2
-                            # Redirects to the update postcode while loop
-                            count = 12
-                while count == 12:
                     postcode = input(
                         "Please enter your new postcode (press 0 to go back to update details menu, press 1 to go back): ")
                     # Removes preceding and trailing spaces and capitalises each letter
@@ -682,8 +648,8 @@ def options(nhs_number):
                         # Returns to the update details menu
                         count = 3
                     elif postcode == '1':
-                        #  Returns to the update city while loop
-                        count = 11
+                        #  Returns to the update address line 2 while loop
+                        count = 10
                     # Ensures the input length is not too long
                     elif len(postcode) > 50:
                         raise InvalidAnswerError()
@@ -882,7 +848,7 @@ def register():
     new_patient = Patient()
     count = 0
     while True:
-        while count < 11:
+        while count < 10:
             try:
                 while count == 0:
                     first_name = input(
@@ -902,7 +868,6 @@ def register():
                     else:
                         # Assigns input value to new_patient instance
                         new_patient.first_name = first_name
-                        print("HI %s" %(new_patient.first_name))
                         # Redirects to the last name while loop
                         count = 1
                 while count == 1:
@@ -927,7 +892,6 @@ def register():
                         else:
                             # Assigns input value to new_patient instance
                             new_patient.last_name = last_name
-                            print("HI %s %s" %(new_patient.first_name, new_patient.last_name))
                             # Redirects to the date of birth while loop
                             count = 2
                 while count == 2:
@@ -987,7 +951,6 @@ def register():
                                     else:
                                         # Assigns date object to new_patient instance
                                         new_patient.date_of_birth = date_of_birth
-                                        print("HI %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth))
                                         # Redirects to the gender while loop
                                         count = 3
                 while count == 3:
@@ -1005,21 +968,18 @@ def register():
                         gender = "Female"
                         # Assigns input value to new_patient instance
                         new_patient.gender = gender
-                        print("HI %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender))
                         # Redirects to the address line 1 while loop
                         count = 4
                     elif choice == '2':
                         gender = "Male"
                         # Assigns input value to new_patient instance
                         new_patient.gender = gender
-                        print("HI %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender))
                         # Redirects to the address line 1 while loop
                         count = 4
                     elif choice == '3':
                         gender = "Non-Binary"
                         # Assigns input value to new_patient instance
                         new_patient.gender = gender
-                        print("HI %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender))
                         # Redirects to the address line 1 while loop
                         count = 4
                     elif choice == '4':
@@ -1049,12 +1009,11 @@ def register():
                     else:
                         # Assigns input value to new_patient instance
                         new_patient.address_line_1 = address_line_1
-                        print("HI %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1))
                         # Redirects to the address line 2 while loop
                         count = 5
                 while count == 5:
                     address_line_2 = input(
-                        "Address Line 2 (press 0 to exit registration, press 1 to go back): ")
+                        "Address Line 2, including city (press 0 to exit registration, press 1 to go back): ")
                     # Removes preceding and trailing spaces and capitalises the first letter of each word
                     address_line_2 = address_line_2.strip().title()
                     if address_line_2 == '0':
@@ -1069,41 +1028,9 @@ def register():
                     else:
                         # Assigns input value to new_patient instance
                         new_patient.address_line_2 = address_line_2
-                        print("HI %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2))
-                        # Redirects to the city while loop
+                        # Redirects to the postcode while loop
                         count = 6
                 while count == 6:
-                    city = input(
-                        "City (press 0 to exit registration, press 1 to go back): ")
-                    # Removes preceding and trailing spaces and capitalises the first letter of each word
-                    city = city.strip().title()
-                    if city == "":
-                        raise EmptyAnswerError()
-                    elif city == '0':
-                        # Redirects to task() (the main menu for patients)
-                        return 0
-                    elif city == '1':
-                        # Returns to the address line 2 while loop
-                        count = 5
-                    # Ensures the input length is not too long
-                    elif len(city) > 200:
-                        raise InvalidAnswerError()
-                    else:
-                        # Removes all spaces from input
-                        x = city.replace(" ", "")
-                        # Checks if there are any numbers in the input
-                        if (any(str.isdigit(y) for y in x)) == True:
-                            raise InvalidAnswerError()
-                        else:
-                            # Reassigns address_line_2 as a combination of address_line_2 and city while removing preceding and trailing spaces
-                            address_line_2 = (
-                                new_patient.address_line_2 + " " + city).strip()
-                            # Assigns input value to new_patient instance
-                            new_patient.address_line_2 = address_line_2
-                            print("HI %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2))
-                            # Redirects to the postcode while loop
-                            count = 7
-                while count == 7:
                     postcode = input(
                         "Postcode (press 0 to exit registration, press 1 to go back): ")
                     # Removes preceding and trailing spaces and capitalises each letter
@@ -1115,17 +1042,16 @@ def register():
                         return 0
                     elif postcode == '1':
                         # Returns to the city while loop
-                        count = 6
+                        count = 5
                     # Ensures the input length is not too long
                     elif len(postcode) > 50:
                         raise InvalidAnswerError()
                     else:
                         # Assigns input value to new_patient instance
                         new_patient.postcode = postcode
-                        print("HI %s %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2, new_patient.postcode))
                         # Redirects to the telephone number while loop
-                        count = 8
-                while count == 8:
+                        count = 7
+                while count == 7:
                     telephone_number = input(
                         "Telephone number, including country code (i.e. +447123456789)(press 0 to exit registration, press 1 to go back): ")
                     if telephone_number == "":
@@ -1135,7 +1061,7 @@ def register():
                         return 0
                     elif telephone_number == '1':
                         # Returns to the postcode while loop
-                        count = 7
+                        count = 6
                     else:
                         # Removes any character from input that is not a number
                         telephone_number = re.sub(
@@ -1148,10 +1074,9 @@ def register():
                             telephone_number = int(telephone_number)
                             # Assigns input value to new_patient instance
                             new_patient.telephone_number = telephone_number
-                            print("HI %s %s %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2, new_patient.postcode, new_patient.telephone_number))
                             # Redirects to the email while loop
-                            count = 9
-                while count == 9:
+                            count = 8
+                while count == 8:
                     patient_email = input(
                         "Email (press 0 to exit registration, press 1 to go back): ")
                     if patient_email == "":
@@ -1161,7 +1086,7 @@ def register():
                         return 0
                     elif patient_email == '1':
                         # Returns to the telephone number while loop
-                        count = 8
+                        count = 7
                     # Checks that input is a valid email address
                     elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):
                         # Checks if email already exists in the database
@@ -1173,12 +1098,11 @@ def register():
                         else:
                             # Assigns input value to new_patient instance
                             new_patient.patient_email = patient_email
-                            print("HI %s %s %s %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2, new_patient.postcode, new_patient.telephone_number, new_patient.patient_email))
                             # Redirects to the password while loop
-                            count = 10
+                            count = 9
                     else:
                         raise InvalidEmailError()
-                while count == 10:
+                while count == 9:
                     password = input(
                         "Password (press 0 to exit registration, press 1 to go back): ")
                     if password == "":
@@ -1188,13 +1112,12 @@ def register():
                         return 0
                     elif password == '1':
                         # Returns to the email while loop
-                        count = 9
+                        count = 8
                     else:
                         # Assigns input value to new_patient instance
                         new_patient.password = password
-                        print("HI %s %s %s %s %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2, new_patient.postcode, new_patient.telephone_number, new_patient.patient_email, new_patient.password))
-                        # count = 11 to break the outer while loop
-                        count = 11
+                        # count = 10 to break the outer while loop
+                        count = 10
             except EmptyAnswerError:
                 error = EmptyAnswerError()
                 print(error)
