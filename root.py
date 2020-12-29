@@ -99,6 +99,7 @@ while True:
                             while selection == 1:
                                 print("********************************************")
                                 selection = ad.add_doctor()
+                                
                             while selection == 2:
                                 AdminM.admin_submenu2()
                                 ipt = ''
@@ -122,6 +123,7 @@ while True:
                                     selection = ad.delete_doctor()
                                 if ipt == 0:
                                     selection = 0
+
                             while selection == 3:
                                 print("********************************************")
                                 print("choose [1] to confirm a registration")
@@ -145,7 +147,6 @@ while True:
                                 if ipt == 0:
                                     selection = 0
                                 
-                            #checking patient in or out
                             if selection == 4:
                                 print("********************************************")
                                 AdminM.admin_submenuCheckIO()
@@ -164,9 +165,6 @@ while True:
 
                                     print("< Not a valid choice >")
 
-
-
-                            #updating/deleting patient details
                             elif selection == 5:
                                 print("********************************************")
                                 AdminM.manage_details()
@@ -209,8 +207,6 @@ while True:
                                 ad.check_registrations()
                                 selection = int(input("Please select an option: "))
 
-
-                            # print("exiting menu")
                         if selection == 0:
                             logged_in = "restart"
                     except ValueError:
