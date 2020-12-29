@@ -527,11 +527,14 @@ class adminFunctions():
                     return 2
 
     def c_in(self):
-        """Entering patient NHS number allows admin to check-in patient from existing
-        appointments
+        """
+        Entering patient NHS number allows admin to check-in patient from existing
+        appointments.
 
-        The appointments that are available to a specific NHS number are only those that
-        have been confirmed.  Invalid NHS numbers and no confirmed appointments will prompt errors.
+        Returns:
+            2 when user inputs 0 as NHS number to go back.
+            0 when admin successfully checks-in patient to appointment.
+
         """
 
         master_back = 1
@@ -615,10 +618,14 @@ class adminFunctions():
     def c_out(self):
         """
         Entering patient NHS number allows admin to check-out patient from existing
-        appointments
+        appointments.
 
         The appointments that are available to a specific NHS number are only those that
         have been confirmed.  Invalid NHS numbers and no confirmed appointments will prompt errors.
+
+        Returns:
+             2 when user inputs 0 as NHS number to go back.
+             0 when admin successfully checks-out patient.
         """
 
         master_back = 1
@@ -705,7 +712,10 @@ class adminFunctions():
 
         Only information from existing NHS numbers can be changed.
         Admin does not have the ability to change security information such as password.
-        Nested while loops allow for logical menu navigation
+
+        Return:
+            1 when user inputs 0 as NHS number to go back.
+            Function when user inputs 1 as updated detail.
         """
 
         master_back = 0
@@ -943,7 +953,12 @@ class adminFunctions():
                         return master_back
 
     def del_pat(self):
-        """Deleting the entire row of a patient record"""
+        """
+        Deleting the entire row of a patient record.
+
+        Returns:
+            1 when user inputs 0 as NHS number to go back and when successfully deleted record.
+        """
 
         del_back = 0
         while del_back == 0:
@@ -980,7 +995,9 @@ class adminFunctions():
         This allows user to navigate a menu and change details from that menu.
         Invalid inputs will raise errors prompting another user input.
         Options to go back to certain aspects of the function are available.
-        Nested while loops allow for logical menu navigation
+
+        Returns:
+            1 when user inputs 0 as NHS number to go back and when inputting 1 to go back got options.
         """
         master_back = 0
         while master_back == 0:
