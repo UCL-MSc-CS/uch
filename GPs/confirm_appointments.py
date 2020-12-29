@@ -13,7 +13,7 @@ def confirm_appointments(doctoremail):
         if confirmdate.date() >= datetime.today().date():
             break
         else:
-            print("\n\t<You cannot confirm appointments in the past, please try again>\n")
+            print("\n\t< You cannot confirm appointments in the past, please try again >\n")
     datestring = datetime.strftime(confirmdate, DATE_FORMAT_STRING)
     continueconfirming = True
     while continueconfirming:
@@ -24,7 +24,7 @@ def confirm_appointments(doctoremail):
             pendingids.append(appointment[4])
 
         if not pendingids:
-            print("\n\t<There are no pending appointments to confirm on " + datestring + ">\n")
+            print("\n\t< There are no pending appointments to confirm on " + datestring + " >\n")
             break
 
         print("--------------------------------------------")
@@ -55,6 +55,6 @@ def confirm_appointments(doctoremail):
                 db.accept_appointment(idnum)
                 print("Accepted appointment with id " + id)
             else:
-                print("\n\t<You entered an invalid id number!>\n")
+                print("\n\t< You entered an invalid id number! >\n")
         except ValueError:
-            print("\n\t<That is not a integer value>\n")
+            print("\n\t< That is not a integer value >\n")

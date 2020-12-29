@@ -52,7 +52,11 @@ def help_page():
     img = Label(second_frame,image=render)
     img.image = render
     img.grid(row=1,column=1)
-    step1 = Label(second_frame,text="Step 1: Add your search terms and filters and then click the 'Search Medicine' button.")
+    labeltext = """
+    Step 1: Add your search terms and filters.
+    Then click the 'Search Medicine' button.
+    """
+    step1 = Label(second_frame,text=labeltext)
     step1.grid(row=1,column=2)
 
     #-------------------------------------Step 2----------------------------------------------------#
@@ -78,7 +82,7 @@ def help_page():
     img.image = render
     img.grid(row=3,column=1)
     labeltext = """
-    "Step 3: In the 'Chosen Medicine box' set your dosage, its multiplier and any further information."
+    Step 3: In the 'Chosen Medicine box' set your dosage, its multiplier and any further information.
     Press the 'Add Medicine' button to add the medicine into the final prescription section below.
     """
     step2 = Label(second_frame,text=labeltext)
@@ -93,7 +97,7 @@ def help_page():
     img.image = render
     img.grid(row=4,column=1)
     labeltext = """
-    "Step 4: Build your prescription by continuously adding medicines."
+    Step 4: Build your prescription by continuously adding medicines.
     You can remove all medicines/a selected medicines given the buttons below.
     """
     step2 = Label(second_frame,text=labeltext)
@@ -108,7 +112,7 @@ def help_page():
     img.image = render
     img.grid(row=5,column=1)
     labeltext = """
-    "Step 5: When you are ready press the 'Save Prescription' button.
+    Step 5: When you are ready press the 'Save Prescription' button.
     When the dialog box pops up asking you to confirm your exit, please press 'OK'.
     """
     step2 = Label(second_frame,text=labeltext)

@@ -32,5 +32,5 @@ def doctor_main_menu(dremail, drname):
             print("********************************************")
             break
         else:
-            print("\n\t<Invalid option chosen. Please try again>\n")
+            print("\n\t< Invalid option chosen. Please try again >\n")
         print("********************************************")

@@ -21,9 +21,9 @@ def validate_date(string):
             date = datetime.strptime(datestring,dateformatstring)
             return date
         except EmptyValueError:
-            print("\t<You need to enter a value, please try again...>")
+            print("\n\t< You need to enter a value, please try again... >\n")
         except ValueError:
-            print("\t<Invalid date entered, please try again...>")
+            print("\n\t< Invalid date entered, please try again... >\n")
 
 #call this function to validate any time entered by the user
 def validate_time(string):
@@ -37,9 +37,9 @@ def validate_time(string):
             time = datetime.strptime(timestring,timeformatstring)
             return time
         except EmptyValueError:
-            print("\t<You need to enter a value, please try again...>")
+            print("\n\t< You need to enter a value, please try again... >\n")
         except ValueError:
-            print("\t<Invalid time entered, Please try again...>")
+            print("\n\t< Invalid time entered, Please try again... >\n")
 
 #convert a unix integer time back into a datetime object
 def unix_to_regular_time(unixtimestamp):

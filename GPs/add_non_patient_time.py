@@ -29,7 +29,7 @@ def add_non_patient_time(doctoremail):
         elif choice == '0':
             break
         else:
-            print("\n\t<Invalid option chosen, Please try again>\n")
+            print("\n\t< Invalid option chosen, Please try again >\n")
         print("********************************************")
 
 def add_holiday(doctoremail):
@@ -37,7 +37,7 @@ def add_holiday(doctoremail):
     if startdate == 'exit':
         return
     elif startdate.date() < datetime.today().date():
-        print("\n\t<You cannot book a holiday in the past!>\n")
+        print("\n\t< You cannot book a holiday in the past! >\n")
         choice = input("Press [0] to try again, or any other entry to return to menu \n:")
         if choice == '0':
             add_holiday(doctoremail)
@@ -51,7 +51,7 @@ def add_holiday(doctoremail):
             datestring = datetime.strftime(single_date,dateformatstring)
             status = db.check_slot_available(datestring, clinicstart, clinicend, [doctoremail])
             if status[0] == "unavailable":
-                print("\n\t<Sorry, you are busy during this period and cannot book your holiday>\n")
+                print("\n\t< Sorry, you are busy during this period and cannot book your holiday >\n")
                 choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
                 if choice == '0':
                     add_holiday(doctoremail)
@@ -65,7 +65,7 @@ def add_holiday(doctoremail):
                 print("Automatically declined any pending appointments on " + datestring)
         print("Successfully booked holiday!!!")
     else:
-        print("\n\t<You have entered an end date that is before a start date. Please try again>\n")
+        print("\n\t< You have entered an end date that is before a start date. Please try again >\n")
 
 
 def add_non_patient_hours(doctoremail):
@@ -73,7 +73,7 @@ def add_non_patient_hours(doctoremail):
     if chosendate == 'exit':
         return
     if chosendate.date() < datetime.today().date():
-        print("\n\t<You cannot book non-patient hours in the past!>\n")
+        print("\n\t< You cannot book non-patient hours in the past! >\n")
         choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
         if choice == '0':
             add_non_patient_hours(doctoremail)
@@ -98,13 +98,13 @@ def add_non_patient_hours(doctoremail):
         if declined:
             print("Automatically declined any conflicting pending appointments during this time")
     elif starttime < endtime and status[0] == 'unavailable':
-        print("\n\t<You already have booked time during this period, please check your timetable>\n")
+        print("\n\t< You already have booked time during this period, please check your timetable >\n")
         choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
         if choice == '0':
             add_non_patient_hours(doctoremail)
         return
     else:
-        print("\n\t<You've entered an end time before a start time, please try again>\n")
+        print("\n\t< You've entered an end time before a start time, please try again >\n")
 
 def select_reason():
     while True:
@@ -118,6 +118,6 @@ def select_reason():
                 reason = reasondict[int(option)]
                 return reason
             else:
-                print("\n\t<You need to enter a value between 1 and " + len(reasondict) + ", Please try again!>\n")
+                print("\n\t< You need to enter a value between 1 and " + len(reasondict) + ", Please try again! >\n")
         except:
-            print("\n\t<You failed to enter  number try again>\n")
+            print("\n\t< You failed to enter  number try again >\n")

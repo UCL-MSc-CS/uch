@@ -18,7 +18,7 @@ def clearhours(doctoremail):
     for appointment in db.timetable_block(doctoremail, datestring):
         appointments.append(appointment[4])
     if not appointments:
-        print("\t<There are no appointments on "+datestring+" returning to the main menu>")
+        print("\t< There are no appointments on "+datestring+" returning to the main menu >")
         return
     print("\n\nPlease enter the appointment ids you would like to cancel separated by commas:")
     userinput = input(":")
@@ -30,9 +30,9 @@ def clearhours(doctoremail):
                 db.clear_booked_time(idnum)
                 print("Successfully deleted Appointment " + str(idnum))
             else:
-                print("\t <Appointment of ID: "+str(idnum)+" doesn't exist on the given date.>")
+                print("\t < Appointment of ID: "+str(idnum)+" doesn't exist on the given date. >")
         except ValueError:
-            print("\t< "+ id + " is not a valid number>")
+            print("\t< "+ id + " is not a valid number >")
     choice = input("\nPress [0] to return to the Cancel Appointment menu, press any other button for the Main Menu \n:")
     print("********************************************")
     if choice == '0':

@@ -45,7 +45,7 @@ def open_appointment(doctoremail):
                 print("\n Returning to main menu...... \n")
                 break
             else:
-                print("\n\t<Invalid option chosen. Try again>\n")
+                print("\n\t< Invalid option chosen. Try again >\n")
 
             print("********************************************")
 
@@ -58,8 +58,8 @@ def print_todays_appointments(doctoremail):
     print("--------------------------------------------")
     appointments = db.todays_appointments(doctoremail)
     if not appointments:
-        print("\n\t<There are no confirmed appointments available on this day.>")
-        print("\t<Consider confirming some pending appointments if you have any>\n")
+        print("\n\t< There are no confirmed appointments available on this day. >")
+        print("\t< Consider confirming some pending appointments if you have any >\n")
         return "",""
     appointmentids = []
     print("id" + "\t" + "reason" + "\t\t" + "time" + "\t\t" + "nhs number" + "\t" + "patient name")
@@ -88,9 +88,9 @@ def print_todays_appointments(doctoremail):
                         chosenNhsNumber = appointment[3]
                 return idNum, chosenNhsNumber
             else:
-                print("\n\t<You entered an invalid id number!>\n")
+                print("\n\t< You entered an invalid id number! >\n")
         except ValueError:
-            print("\n\t<That is not a integer value>\n")
+            print("\n\t< That is not a integer value >\n")
 
         choosecontinue = input("Would you like to try again y/n ? :")
         if choosecontinue.lower() == 'y':
@@ -99,5 +99,5 @@ def print_todays_appointments(doctoremail):
             print("Returning to main menu......")
             return "",""
         else:
-            print("\n\t<Invalid option chosen, exiting today's appointments....>\n")
+            print("\n\t< Invalid option chosen, exiting today's appointments.... >\n")
             return "",""

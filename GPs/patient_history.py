@@ -6,7 +6,7 @@ def patient_history(nhsNumber):
         print("\t Patient History Menu")
         print("--------------------------------------------")
         print("Choose [1] to display cancer history")
-        print("Choose [2] to display prexisting condition history")
+        print("Choose [2] to display pre-existing condition history")
         print("Choose [0] to return to appointment menu")
         option = input(":")
         if option == "1":
@@ -18,5 +18,5 @@ def patient_history(nhsNumber):
             print("********************************************")
             break
         else:
-            print("\n\t<Invalid option chosen. Please try again>\n")
+            print("\n\t< Invalid option chosen. Please try again >\n")
         print("********************************************")
