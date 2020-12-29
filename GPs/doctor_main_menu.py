@@ -1,7 +1,7 @@
-from GPs.clearhours import clearhours
-from GPs.printtimetable import printtimetable
-from GPs.addnonpatienttime import addnonpatienttime
-from GPs.confirmappointments import confirmappointments
+from GPs.clear_hours import clearhours
+from GPs.print_timetable import printtimetable
+from GPs.add_non_patient_time import addnonpatienttime
+from GPs.confirm_appointments import confirmappointments
 from GPs.openAppointment import openappointment
 
 def mainmenu(dremail,drname):

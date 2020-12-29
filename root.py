@@ -1,6 +1,6 @@
 import Admins
 import patients.patientMain as pm
-import GPs.GPMain as gpm
+import GPs.gp_main as gpm
 import sys
 import usefulfunctions as uf
 import os.path

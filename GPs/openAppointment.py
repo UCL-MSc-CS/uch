@@ -1,5 +1,5 @@
-from GPs.appointmentnotes import appointmentnotes
-from GPs.patienthistory import patienthistory
+from GPs.appointment_notes import appointmentnotes
+from GPs.patient_history import patienthistory
 from GPs.prescription import prescription
 import timetablefunctions as db
 from datetime import datetime

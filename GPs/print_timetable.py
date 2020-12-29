@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import usefulfunctions as uf
-from GPs.printday import printday
+from GPs.print_day import printday
 
 
 def printdays(date, doctoremail):
