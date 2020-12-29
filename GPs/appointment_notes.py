@@ -7,7 +7,6 @@ from tkinter import messagebox, ttk
 def appointment_notes(appointmentid):
     """Loads up appointment notes window"""
 
-
     # ------------------------- Pulls up data from UCH.db -------------------------
     # Pulls up existing appointment notes
     doctorsNotes = get_doctor_notes(appointmentid)

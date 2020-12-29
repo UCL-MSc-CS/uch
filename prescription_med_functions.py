@@ -2,9 +2,8 @@ import sqlite3
 from pathlib import Path
 import re
 
-
-# connect to your database
 def connect_to_db():
+    """Connects to database"""
     path = str(Path(__file__).parent.absolute()) + "/UCH.db"
     connection = sqlite3.connect(path)  # DO NOT add this file to Git!!!
     cursor = connection.cursor()
@@ -12,26 +11,14 @@ def connect_to_db():
     return conncursordict
 
 
-# disconnect from your database
 def close_connection(conn):
+    """Disconnect from database"""
     conn.commit()
     conn.close()
 
 
-"""
-place all functions below in the following template....
-
-def functionname(args):
-    conn = connecttodb()
-
-    *your code here.....*
-
-    closeconn(conn["connection"])
-
-"""
-
-
 def get_all_dosage_types():
+    """Pulls dosage types from database"""
     conn = connect_to_db()
 
     conn['cursor'].execute("""SELECT DISTINCT dosageType FROM Medicine ORDER BY dosageType asc""")
@@ -46,7 +33,9 @@ def get_all_dosage_types():
 
     return dosageTypes
 
+
 def get_all_med_types():
+    """Pulls medicine types from database"""
     conn = connect_to_db()
 
     conn['cursor'].execute("""SELECT DISTINCT medicineType FROM Medicine ORDER BY medicineType asc""")
@@ -61,7 +50,9 @@ def get_all_med_types():
 
     return medicineTypes
 
+
 def get_all_med_categories():
+    """Pulls medicine categories from database"""
     conn = connect_to_db()
 
     conn['cursor'].execute("""SELECT DISTINCT category FROM Medicine ORDER BY medicineType asc""")
@@ -76,8 +67,9 @@ def get_all_med_categories():
 
     return categories
 
-# This searches for drugs
+
 def medicine_search(medname, drugname, dosetype, medtype, category):
+    """Searches for medicine"""
     conn = connect_to_db()
 
     if medname:
@@ -109,6 +101,7 @@ def medicine_search(medname, drugname, dosetype, medtype, category):
     return results
 
 def add_prescription_to_db(prescription):
+    """Adds prescription to database"""
     conn = connect_to_db()
 
     prescriptionTuple = tuple(prescription)
@@ -123,6 +116,8 @@ def add_prescription_to_db(prescription):
     close_connection(conn["connection"])
 
 def get_prescription_from_db(appointmentID):
+    """Pulls pre-existing prescriptions from database"""
+
     conn = connect_to_db()
 
     conn['cursor'].execute("""
@@ -138,6 +133,8 @@ def get_prescription_from_db(appointmentID):
     return results
 
 def get_medicine_units(medicineID):
+    """Pulls medicine units for specified medicine from database"""
+
     conn = connect_to_db()
 
     conn['cursor'].execute("""
@@ -151,6 +148,8 @@ def get_medicine_units(medicineID):
     return results
 
 def delete_med_record(appointmentID):
+    """Deletes all medicine records from database"""
+
     conn = connect_to_db()
     conn['cursor'].execute("""
             DELETE from Prescription
@@ -160,6 +159,8 @@ def delete_med_record(appointmentID):
     close_connection(conn["connection"])
 
 def get_patient_allergies(nhsNumber):
+    """Pulls patient allergies from database"""
+
     conn = connect_to_db()
 
     conn['cursor'].execute("""
@@ -178,6 +179,8 @@ def get_patient_allergies(nhsNumber):
     close_connection(conn["connection"])
 
 def allergy_message_handler(nhsNumber, medicine):
+    """Displays pop up warning about patient medicine allergy"""
+
     conn = connect_to_db()
 
     conn['cursor'].execute("""
