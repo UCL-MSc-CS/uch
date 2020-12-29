@@ -5,3 +5,4 @@ venv/
 GPs/__pycache__
 PatientSummary.txt
 dasd
+patient_summary.txt
