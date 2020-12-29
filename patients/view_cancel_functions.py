@@ -43,6 +43,7 @@ def view_appointments(nhs_number):
     LEFT JOIN GP P USING (gpEmail) WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhs_number])
     appointments = c.fetchall()
     connection.close()
+    # if appointment list empty, patient told they have none booked and returned to main menu
     if not appointments:
         print("\nYou currently have no appointments booked"
               "\n")
@@ -60,6 +61,7 @@ def view_appointments(nhs_number):
             gp.append('Dr ' + appoint[2])
             status.append(appoint[3])
         new_status = []
+        # reassign names for user-friendly display to patient
         for item in status:
             if item == 'Accepted':
                 item = '    Booking Confirmed'
@@ -70,6 +72,7 @@ def view_appointments(nhs_number):
             elif item == 'Declined':
                 item = '    Appointment Declined'
                 new_status.append(item)
+        # create pandas dataframe to display appointment details
         data = pd.DataFrame({'Appointment ID': appointment_id, 'Date and Time': date,
                              'Doctor': gp, 'Status': new_status})
         print("********************************************\n")
@@ -125,6 +128,7 @@ def check_app_id(nhs_number):
                 id_list = []
                 for app_id in app_ids:
                     id_list.append(app_id[0])
+                # if the appointment id chosen does not exist in the database, exception raised
                 if cancel not in id_list:
                     raise AppNotExistError
                 c.execute("SELECT start FROM Appointment "
@@ -133,6 +137,7 @@ def check_app_id(nhs_number):
                 s_time = app_time[0]
                 start_time = pf.to_regular_time(s_time)
                 current = datetime.now()
+                # if the appointment start time is in the past, exception raised
                 if start_time < current:
                     raise AppointmentPassedError
                 else:
