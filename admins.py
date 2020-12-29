@@ -555,6 +555,9 @@ class AdminFunctions():
         Entering patient NHS number allows admin to check-in patient from existing
         appointments.
 
+        The appointments that are available to a specific NHS number are only those that
+        have been confirmed.  Invalid NHS numbers and no confirmed appointments will prompt errors.
+
         Returns:
             2 when user inputs 0 as NHS number to go back.
             0 when admin successfully checks-in patient to appointment.
