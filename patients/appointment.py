@@ -1,13 +1,13 @@
 import sqlite3 as sql
 import random
-import patients.patientFunctions as pf
-import patients.viewCancelFunctions as vc
+import patients.patient_functions as pf
+import patients.view_cancel_functions as vc
 
 """
 This module contains the Appointment class for the patient to navigate to book an appointment.
 
 Error classes contain exception handling for user input in the functions.
-The Appointment class contains functions to navigate through menus, calling other functions (from patientFunctions.py)
+The Appointment class contains functions to navigate through menus, calling other functions (from patient_functions.py)
 to choose a doctor, year, month, day and time for an appointment. 
 Patient can also navigate to view all their booked appointments and cancel an appointment.
 """
@@ -90,21 +90,28 @@ class Appointment:
             dr_options = input("Please select an option: ")
             if dr_options == '':
                 raise EmptyAnswerError()
+            # to book appointment with specific dr
             elif dr_options == '1':
                 y = self.choose_specific_dr()
                 if y == 0:
                     pass
                 else:
                     self.choose_appointment(nhs_number, y)
+            # to book appointment with any dr
             elif dr_options == '2':
                 y = self.choose_any_dr()
                 if y == 0:
                     pass
                 else:
                     self.choose_appointment(nhs_number, y)
+            # to book appointment with a dr of specific gender
             elif dr_options == '3':
                 y = self.choose_dr_gender(nhs_number)
-                self.choose_appointment(nhs_number, y)
+                if y == 0:
+                    pass
+                else:
+                    self.choose_appointment(nhs_number, y)
+            # exit to patient menu
             elif dr_options == '0':
                 pass
             else:
@@ -134,12 +141,14 @@ class Appointment:
               "\nThe doctors currently available at the practice are: ")
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE active='1'")
         dr_names = self.c.fetchall()
+        # when list returned empty, there are no doctors available, patient returned to main menu
         if not dr_names:
             print("\nI'm sorry, there are no doctors currently available at the practice,"
                   "\nplease try again another time\n")
             return 0
         else:
             gp_details = pf.choose_dr(dr_names)
+            self.connection.close()
             return gp_details
 
     def choose_any_dr(self):
@@ -156,6 +165,7 @@ class Appointment:
         """
         self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE active='1'")
         dr_names = self.c.fetchall()
+        # when list returned empty, there are no doctors available, patient returned to main menu
         if not dr_names:
             print("\nI'm sorry, there are no doctors currently available at the practice"
                   "\n")
@@ -164,11 +174,14 @@ class Appointment:
             gp_list = []
             for dr in dr_names:
                 gp_list.append(dr)
+            # dr chosen at random from gp_list
             gp_choice = random.choice(gp_list)
             gp_chosen_email = gp_choice[2]
             gp_chosen_name = gp_choice[1]
+            # list of gp email and last name created
             gp_details = [gp_chosen_email, gp_chosen_name]
             print("The doctor you have been assigned is Dr {}".format(gp_chosen_name))
+            self.connection.close()
             return gp_details
 
     def choose_dr_gender(self, nhs_number):
@@ -202,33 +215,43 @@ class Appointment:
             if gp_options == '1':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'male' and active='1'")
                 dr_names = self.c.fetchall()
+                # when list returned empty, there are no doctors available, patient returned to main menu
                 if not dr_names:
                     print("\nI'm sorry, there are no male doctors currently available at the practice"
                           "\nplease try again another time")
-                    self.book_appointment(nhs_number)
+                    return 0
                 else:
+                    # choose_dr called only with male drs in list
                     gp_details = pf.choose_dr(dr_names)
+                    self.connection.close()
                     return gp_details
             elif gp_options == '2':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'female' and active='1'")
                 dr_names = self.c.fetchall()
+                # when list returned empty, there are no doctors available, patient returned to main menu
                 if not dr_names:
                     print("\nI'm sorry, there are no female doctors currently available at the practice"
                           "\nplease try again another time")
-                    self.book_appointment(nhs_number)
+                    return 0
                 else:
+                    # choose_dr called only with female drs in list
                     gp_details = pf.choose_dr(dr_names)
+                    self.connection.close()
                     return gp_details
             elif gp_options == '3':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'non-binary' and active='1'")
                 dr_names = self.c.fetchall()
+                # when list returned empty, there are no doctors available, patient returned to main menu
                 if not dr_names:
                     print("\nI'm sorry, there are no non-binary doctors currently available at the practice"
                           "\nplease try again another time")
-                    self.book_appointment(nhs_number)
+                    return 0
                 else:
+                    # choose_dr called only with non-binary drs in list
                     gp_details = pf.choose_dr(dr_names)
+                    self.connection.close()
                     return gp_details
+            # exit to patient menu
             elif gp_options == '0':
                 pass
             else:
@@ -246,7 +269,7 @@ class Appointment:
         """
         Function for patient to input year, month, day and time to book an appointment.
 
-        Function calls functions from the patientFunctions module for patient to choose the year, month and day of the
+        Calls functions from the patientFunctions module for patient to choose the year, month and day of the
         appointment. Patient is then presented with a list of all appointments on that day by time and
         displays availability. The patient can then choose the appointment time.
         This patient's appointment details are inserted into the database for chosen date and time.
@@ -258,26 +281,34 @@ class Appointment:
             nhs_number (int): Patient's nhs number.
             gp_details (list): list of chosen doctor email and last name.
         """
+        # to choose year
         year = pf.choose_year()
         if year == 0:
             self.book_appointment(nhs_number)
         else:
+            # to choose month
             month = pf.choose_month(year)
             if month == 0:
                 self.choose_appointment(nhs_number, gp_details)
             else:
+                # to choose day
                 date = pf.choose_date(month, year)
                 if date == 0:
                     self.choose_appointment(nhs_number, gp_details)
                 else:
+                    # start and end created for chosen date
                     start = pf.generate_start_time(date)
                     end = pf.generate_end_time(date)
+                    # appointments displayed for that date
                     times_str = pf.display_available(date, start, end, gp_details)
+                    # to choose time
                     chosen_time = pf.choose_time(date, times_str, gp_details)
                     if chosen_time == 0:
                         self.choose_appointment(nhs_number, gp_details)
                     else:
+                        # start created for chosen date to insert into database
                         start = pf.create_start(date, chosen_time)
+                        # appointment details inserted into database
                         pf.insert_appointment(start, gp_details, nhs_number)
                         print("\nYou have requested to book an appointment on {} at {}, "
                               "\nYou will receive confirmation of your appointment "
@@ -307,6 +338,7 @@ class Appointment:
         viewing = vc.view_appointments(nhs_number)
         if viewing == 0:
             print("You have no appointments booked to cancel at this time")
+            # exit to patient menu
             pf.return_to_main()
         else:
             try:
@@ -319,10 +351,12 @@ class Appointment:
                 elif options == '0':
                     pass
                 elif options == '1':
+                    # to check appointment id is valid
                     cancel = vc.check_app_id(nhs_number)
                     if cancel == 0:
                         pass
                     else:
+                        # delete appointment from database
                         vc.delete_appointment(cancel)
                         print("\nWould you like to cancel another appointment?"
                               "\nChoose [1] to cancel an appointment"
