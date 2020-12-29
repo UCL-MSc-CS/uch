@@ -1,6 +1,7 @@
 import sqlite3 as sql
 
 def gp_login():
+    """Logs the GP in according to their email and password"""
 
     print("\n--------------------------------------------")
     print("\t Doctor Login")

@@ -5,21 +5,19 @@ from tkinter import messagebox, ttk
 
 
 def appointment_notes(appointmentid):
+    """Loads up appointment notes window"""
 
-    # Existing doctor's notes
+    # ------------------------- Pulls up data from UCH.db -------------------------
+    # Pulls up existing appointment notes
     doctorsNotes = get_doctor_notes(appointmentid)
-    global globalDoctorsNotes
-    globalDoctorsNotes = doctorsNotes
     patientComplaint = doctorsNotes[0]
     doctorFindings = doctorsNotes[1]
     diagnosis = doctorsNotes[2]
     furtherInspections = doctorsNotes[3]
     doctorAdvice = doctorsNotes[4]
 
-    # Patient information
+    # Pulls up patient information
     patientInfo = get_patient_info(appointmentid)
-    global globalPatientInfo
-    globalPatientInfo = patientInfo
     nhsNumber = patientInfo[0]
     patientEmail = patientInfo[1]
     firstName = patientInfo[2]
@@ -34,10 +32,11 @@ def appointment_notes(appointmentid):
     weight = patientInfo[12]
     bmi = patientInfo[13]
 
-    # Patient Allergies
+    # Pulls up patient Allergies
     allergyList = get_patient_allergies(nhsNumber)
 
-    # Create tkinter window
+
+    # ------------------------- Creates a tkinter window and lays out frame structure -------------------------
     global root
     root = Tk()
     root.title('Appointment ID: ' + str(appointmentid))
@@ -45,32 +44,38 @@ def appointment_notes(appointmentid):
     root.configure(background='SlateGray1')
     root.after(1000, root.focus_force)
 
+    # Creates mainframe that encompasses all subframes
     mainFrame = Frame(root)
     mainFrame.grid()
 
+    # Creates title frame
     titleFrame = Frame(mainFrame, bd=20, width=1350, padx=20, relief=RIDGE, background='SlateGray1')
     titleFrame.pack(side=TOP)
-
     appointmentTitle = Label(titleFrame, font=('arial', 20, 'bold'),
                              text='Appointment notes for patient: ' + firstName + ' ' + lastName, padx=2,
                              background='SlateGray1')
     appointmentTitle.grid()
 
-
+    # Creates button frame
     buttonFrame = Frame(mainFrame, bd=20, width=1350, height=50, padx=20, relief=RIDGE, background='SlateGray1')
     buttonFrame.pack(side=BOTTOM)
 
+    # Creates frame for where all appointment data resides
     dataFrame = Frame(mainFrame, bd=20, width=1350, height=400, padx=20, relief=RIDGE, background='SlateGray1')
     dataFrame.pack(side=BOTTOM)
 
+    # Creates a left frame for where all text boxes reside
     dataFrameLeft = LabelFrame(dataFrame, bd=10, width=800, height=300, padx=20, relief=RIDGE,
                                font=('arial', 14, 'bold'), text='Appointment notes:', background='SlateGray1')
     dataFrameLeft.pack(side=LEFT)
 
+    # Creates a right frame for where patient information resides
     dataFrameRight = LabelFrame(dataFrame, bd=10, width=450, height=340, padx=20, relief=RIDGE,
                                 font=('arial', 14, 'bold'), text='Patient information:', background='SlateGray1')
     dataFrameRight.pack(side=RIGHT)
 
+
+    # ------------------------- Creates text boxes for GP input -------------------------
     complaintLabel = Label(dataFrameLeft, font=('arial', 12, 'bold'), text="Reason for visit:", padx=2,
                            background='SlateGray1')
     complaintLabel.grid(row=0, column=0, sticky=W)
@@ -111,13 +116,8 @@ def appointment_notes(appointmentid):
     adviceTextBox.insert(END, doctorAdvice)
     adviceTextBox.grid(row=4, column=1)
 
-    saveButton = Button(buttonFrame, text='Save Notes', font=('arial', 12, 'bold'), width=9, command=save_notes,
-                        background='SlateGray1')
-    saveButton.grid(row=0, column=0)
 
-
-    # ------------------------- Patient Information -------------------------
-
+    # ------------------------- Creates patient information tabs -------------------------
     # Create notebook for tabs feature
     s = ttk.Style()
     s.configure('TNotebook.Tab', font=('URW Gothic L', '11', 'bold'))
@@ -136,7 +136,8 @@ def appointment_notes(appointmentid):
     my_notebook.add(my_frame1, text = 'Basic Information')
     my_notebook.add(my_frame2, text = 'Medical Allergies')
 
-    # Display basic information
+
+    # ------------------------- Display basic patient information within tab 1 -------------------------
     nhsNoLabel = Label(my_frame1, font=('arial', 12, 'bold'), text="NHS Number:", padx=2, background='SlateGray2')
     nhsNoLabel.grid(row=0, column=0, sticky=W)
     nhsNoInfo = Label(my_frame1, font=('arial', 12, 'bold'), text=str(nhsNumber), padx=2, background='SlateGray2')
@@ -234,37 +235,48 @@ def appointment_notes(appointmentid):
                         background='SlateGray2')
     bmiInfo.grid(row=12, column=1, sticky=W)
 
-    # Display patient allergies
 
-    # Place allergies treeview in my_frame2
+    # ------------------------- Display patient allergies within tab 2 -------------------------
+    # Places allergies treeview in my_frame2
     allergyTree = ttk.Treeview(my_frame2, height='5')
 
-    # Define our columns
+    # Defines our columns
     allergyTree['columns'] = ("#","Medicine Name")
 
-    # Format our columns
+    # Formats our columns
     allergyTree.column('#0', width=0, stretch=NO)
     allergyTree.column("#", anchor=CENTER, width=40)
     allergyTree.column("Medicine Name", anchor=W, width=220)
 
-    # Create headings
+    # Creates headings
     allergyTree.heading("#0", text="", anchor=W)
     allergyTree.heading("#", text="#", anchor=CENTER)
     allergyTree.heading("Medicine Name", text="Medicine Name", anchor=W)
 
-    # Insert data from database into treeview
+    # Inserts data from database into treeview
     count = 1
     for record in allergyList:
         allergyTree.insert(parent='', index='end', text="",values=(count, record))
         count += 1
 
-    #Pack to the screen
+    #Packs to the screen
     allergyTree.pack(pady=20)
 
+
+    # ------------------------- Creates button to save notes -------------------------
+    saveButton = Button(buttonFrame, text='Save Notes', font=('arial', 12, 'bold'), width=9, command=save_notes,
+                        background='SlateGray1')
+    saveButton.grid(row=0, column=0)
+
+
+    # ------------------------- Runs tkinter -------------------------
+    root.after(1000, root.focus_force)
     root.mainloop()
 
 
 def save_notes():
+    """Saves text box notes into UCH.db"""
+
     globalDoctorsNotes[0] = patientComplaintTextBox.get(1.0, END)
     globalDoctorsNotes[1] = findingsTextBox.get(1.0, END)
     globalDoctorsNotes[2] = diagnosisTextBox.get(1.0, END)
@@ -272,7 +284,7 @@ def save_notes():
     globalDoctorsNotes[4] = adviceTextBox.get(1.0, END)
     save_doctor_notes(globalDoctorsNotes)
     response = messagebox.askyesno("Your notes have been saved!",
-                                   "Your notes have been saved. Are you finished editing your notes?")
+                                   "Your notes have been saved. Confirm if you want to exit.")
     if response == 1:
         root.after(1, root.destroy())
     else:
