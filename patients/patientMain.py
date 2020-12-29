@@ -506,54 +506,42 @@ def options(nhs_number):
                         "Please enter your new email (press 0 to go back): ")
                     if patient_email == "":raise EmptyAnswerError()
                     # Returns to the update details menu
-                    elif patient_email == '0':count = 3
+                    elif patient_email == '0':
+                        count = 3
+                        break
                     # Checks that input is a valid email address
-                    elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email): #&&&&
-                        # Checks if email already exists in the database
-                        c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?",
-                                  [patient_email])
-                        patient_emails = c.fetchall()
-                        if patient_emails != []:raise EmailAlreadyExistsError()
-                        else:
-                            # Updates email in the database
-                            c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""",
-                                      (patient_email, nhs_number))
-                            connection.commit()
-                            print("Successfully changed email address")
-                            # Shows the patient summary
-                            summary(nhs_number)
-                            # Returns to the update details menu
-                            count = 3
-                    else:raise InvalidEmailError()
+                    elif not re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):raise InvalidEmailError()
+                    # Checks if email already exists in the database
+                    c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?",
+                                [patient_email])
+                    patient_emails = c.fetchall()
+                    if patient_emails != []:raise EmailAlreadyExistsError()
+                    else: 
+                        # Updates email in the database
+                        c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""",
+                                    (patient_email, nhs_number))
+                        connection.commit()
+                        print("Successfully changed email address")
+                        # Shows the patient summary
+                        summary(nhs_number)
+                        # Returns to the update details menu
+                        count = 3
                 while count == 8:
-                    # Fetches patient record from database that matches their NHS number to check password
-                    c.execute(
-                        "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [nhs_number])
-                    nhs_numbers = c.fetchall()
                     password = input(
-                        "In order to change your password, please enter your old password (press 0 to go back): ")
+                        "Please enter your new password (press 0 to go back): ")
                     if password == "":raise EmptyAnswerError()
                     # Returns to the update details menu
                     elif password == '0':count = 3
-                    else: #&&&&
-                        # Checks if the password input matches the password in the database
-                        if password != nhs_numbers[0][10]:raise PasswordIncorrectError()
-                        else:
-                            password = input(
-                                "Please enter your new password (press 0 to go back to update details menu): ")
-                            if password == "":raise EmptyAnswerError()
-                            # Returns to the update details menu
-                            elif password == '0':count = 3
-                            else:
-                                # Updates password in the database
-                                c.execute(
-                                    """UPDATE PatientDetail SET password = ? WHERE nhsNumber = ?""", (password, nhs_number))
-                                connection.commit()
-                                print("Successfully changed password")
-                                # Shows the patient summary
-                                summary(nhs_number)
-                                # Returns to the update details menu
-                                count = 3
+                    else: 
+                        # Updates password in the database
+                        c.execute(
+                            """UPDATE PatientDetail SET password = ? WHERE nhsNumber = ?""", (password, nhs_number))
+                        connection.commit()
+                        print("Successfully changed password")
+                        # Shows the patient summary
+                        summary(nhs_number)
+                        # Returns to the update details menu
+                        count = 3
                 while count == 9:
                     address_line_1 = input(
                         "Please enter your new address line 1 (press 0 to go back): ")
@@ -670,20 +658,22 @@ def login():
                     # Redirects to task() (the main menu for patients)
                     elif action == '0':return 0
                     else:raise InvalidAnswerError()
-                while count == 1:
+                while count == 1: 
                     patient_email = input("Email (press 0 to go back): ")
+                    if patient_email =="":raise EmptyAnswerError()
                     # Returns to the login menu
-                    if patient_email == '0':count = 0
+                    if patient_email == '0':
+                        count = 0
+                        break
                     # Checks that input is a valid email address
-                    elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email): #&&&&
-                        # Checks if email exists in the database
-                        c.execute(
-                            "SELECT * FROM PatientDetail WHERE patientEmail = ?", [patient_email])
-                        patient_emails = c.fetchall()
-                        if patient_emails == []:raise EmailDoesNotExistError
-                        # Redirects to password while loop
-                        else:count = 2
-                    else:raise InvalidEmailError()
+                    elif not re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):raise InvalidEmailError()
+                    # Checks if email exists in the database
+                    c.execute(
+                        "SELECT * FROM PatientDetail WHERE patientEmail = ?", [patient_email])
+                    patient_emails = c.fetchall()
+                    if patient_emails == []:raise EmailDoesNotExistError()
+                    # Redirects to password while loop
+                    else:count = 2
                 while count == 2:
                     # Fetches patient record from database that matches their email to check password
                     c.execute(
@@ -823,47 +813,45 @@ def register():
                     # Redirects to task() (the main menu for patients)
                     elif date_of_birth == '0':return 0
                     # Returns to last name the while loop
-                    elif date_of_birth == '1':count = 1
-                    else: #&&&&
-                        # Removes all spaces and hyphens from input
-                        x = date_of_birth.replace(" ", "")
-                        x = x.replace("-", "")
-                        # Checks if the input is the right length, if the hyphens are in the right place, and all characters besides the hyphens are numbers
-                        if (len(date_of_birth) != 10) or (date_of_birth[4] != '-' or date_of_birth[7] != '-') or (x.isdigit() == False):raise DateFormatError()
-                        else:
-                            # Separates day, month, and year to check them individually
-                            day = date_of_birth[8:10]
-                            month = date_of_birth[5:7]
-                            year = date_of_birth[0:4]
-                            # Checks that the day, month, and year are all digits i.e. no hyphens for negative inputs
-                            if (day.isdigit() == False) or (month.isdigit() == False) or (year.isdigit() == False):raise DateInvalidError()
-                            else:
-                                # Converts day, month, and year into integers to check they exist in the calendar
-                                day = int(day)
-                                month = int(month)
-                                year = int(year)
-                                # Checks month input is 1 - 12
-                                if month > 12 or month < 1:raise DateInvalidError()
-                                # Checks day input does not exceed 30 for September, April, June, and November
-                                elif (month == 9 or month == 4 or month == 6 or month == 11) and day > 30:raise DateInvalidError()
-                                # Checks day input does not exceed 28 for February for a year that is not a leap year
-                                elif month == 2 and year % 4 != 0 and day > 28:raise DateInvalidError()
-                                # Checks day input does not exceed 29 for February for a year that is a leap year
-                                elif month == 2 and year % 4 == 0 and day > 29:raise DateInvalidError()
-                                # Checks day input is 1 - 31
-                                elif day > 31 or day < 1:raise DateInvalidError()
-                                else:
-                                    # Converts date of birth input into a date object
-                                    date_of_birth = datetime.date(
-                                        year, month, day)
-                                    today = date.today()
-                                    # Checks date of birth input is not in the future
-                                    if date_of_birth > today:raise DateInFutureError()
-                                    else:
-                                        # Assigns date object to new_patient instance
-                                        new_patient.date_of_birth = date_of_birth
-                                        # Redirects to the gender while loop
-                                        count = 3
+                    elif date_of_birth == '1':
+                        count = 1
+                        break
+                    # Removes all spaces and hyphens from input
+                    x = date_of_birth.replace(" ", "")
+                    x = x.replace("-", "")
+                    # Checks if the input is the right length, if the hyphens are in the right place, and all characters besides the hyphens are numbers
+                    if (len(date_of_birth) != 10) or (date_of_birth[4] != '-' or date_of_birth[7] != '-') or (x.isdigit() == False):raise DateFormatError()
+                    # Separates day, month, and year to check them individually
+                    day = date_of_birth[8:10]
+                    month = date_of_birth[5:7]
+                    year = date_of_birth[0:4]
+                    # Checks that the day, month, and year are all digits i.e. no hyphens for negative inputs
+                    if (day.isdigit() == False) or (month.isdigit() == False) or (year.isdigit() == False):raise DateInvalidError()
+                    # Converts day, month, and year into integers to check they exist in the calendar
+                    int_day = int(day)
+                    int_month = int(month)
+                    int_year = int(year)
+                    # Checks int_month input is 1 - 12
+                    if int_month > 12 or int_month < 1:raise DateInvalidError()
+                    # Checks int_day input does not exceed 30 for September, April, June, and November
+                    elif (int_month == 9 or int_month == 4 or int_month == 6 or int_month == 11) and int_day > 30:raise DateInvalidError()
+                    # Checks int_day input does not exceed 28 for February for a int_year that is not a leap year
+                    elif int_month == 2 and int_year % 4 != 0 and int_day > 28:raise DateInvalidError()
+                    # Checks int_day input does not exceed 29 for February for a int_year that is a leap year
+                    elif int_month == 2 and int_year % 4 == 0 and int_day > 29:raise DateInvalidError()
+                    # Checks int_day input is 1 - 31
+                    elif int_day > 31 or int_day < 1:raise DateInvalidError()
+                    # Converts date of birth input into a date object
+                    final_date_of_birth = datetime.date(
+                        int_year, int_month, int_day)
+                    today = date.today()
+                    # Checks date of birth input is not in the future
+                    if final_date_of_birth > today:raise DateInFutureError()
+                    else:
+                        # Assigns date object to new_patient instance
+                        new_patient.date_of_birth = final_date_of_birth
+                        # Redirects to the gender while loop
+                        count = 3
                 while count == 3:
                     print("********************************************")
                     print("Choose [1] for female")
@@ -971,20 +959,21 @@ def register():
                     # Redirects to task() (the main menu for patients)
                     elif patient_email == '0':return 0
                     # Returns to the telephone number while loop
-                    elif patient_email == '1':count = 7
+                    elif patient_email == '1':
+                        count = 7
+                        break
                     # Checks that input is a valid email address
-                    elif re.match(r"[^@]+@[^@]+\.[^@]+", patient_email): #&&&&
-                        # Checks if email already exists in the database
-                        c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?",
-                                  [patient_email])
-                        patient_emails = c.fetchall()
-                        if patient_emails != []:raise EmailAlreadyExistsError()
-                        else:
-                            # Assigns input value to new_patient instance
-                            new_patient.patient_email = patient_email
-                            # Redirects to the password while loop
-                            count = 9
-                    else:raise InvalidEmailError()
+                    elif not re.match(r"[^@]+@[^@]+\.[^@]+", patient_email):raise InvalidEmailError() 
+                    # Checks if email already exists in the database
+                    c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?",
+                                [patient_email])
+                    patient_emails = c.fetchall()
+                    if patient_emails != []:raise EmailAlreadyExistsError()
+                    else:
+                        # Assigns input value to new_patient instance
+                        new_patient.patient_email = patient_email
+                        # Redirects to the password while loop
+                        count = 9
                 while count == 9:
                     password = input(
                         "Password (press 0 to exit registration, press 1 to go back): ")
