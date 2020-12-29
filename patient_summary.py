@@ -51,7 +51,7 @@ def patient_summary(nhsNumber):
 
         for i in range(0,len(items)):
             date_unix = items[i][0]
-            date_regular = uf.toregulartime(date_unix)
+            date_regular = uf.unix_to_regular_time(date_unix)
             date_regular = date_regular.strftime("%Y-%m-%d")
             diagnosis = items[i][1]
             if items[i][1] == '':
@@ -89,7 +89,7 @@ def patient_summary(nhsNumber):
             f.write("The patient has no medication history \n")
         else:
             for i in range(0,len(items)):
-                time_string = datetime.strftime(uf.toregulartime(items[i][2]),datetimeformat)
+                time_string = datetime.strftime(uf.unix_to_regular_time(items[i][2]), datetimeformat)
                 if len(str(items[i][0])) > 30:
                     f.write('{:<60s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], time_string))
                 else:

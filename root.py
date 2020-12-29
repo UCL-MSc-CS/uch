@@ -1,6 +1,6 @@
 import admins
 import patients.patientMain as pm
-import GPs.GPMain as gpm
+import GPs.gp_main as gpm
 import sys
 import useful_functions as uf
 import os.path
@@ -75,7 +75,7 @@ while True:
                     selection1 = int(input("Please select an option: "))
 
             while selection1 == 3:
-                gpChoice = gpm.gpStart()
+                gpChoice = gpm.gp_start()
                 if gpChoice == "exitGPLogin":
                     masterlogin.master_menu()
                     selection1 = int(input("Please select an option: "))

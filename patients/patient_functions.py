@@ -196,6 +196,7 @@ def choose_dr(dr_names):
     counts = []
     count = 1
     for dr in dr_names:
+        # print [count] and dr first and last name for display to patient
         print("Choose [" + str(count) + "] Dr", dr[0] + ' ' + dr[1])
         count += 1
         gp_list.append(dr)
@@ -205,11 +206,13 @@ def choose_dr(dr_names):
             dr_options = int(input("********************************************"
                                    "\nPlease choose the doctor you would "
                                    "like to book an appointment with: "))
+            # exception raised if input not a number in count list
             if dr_options not in counts:
                 raise DrChoiceNotValidError
             else:
                 gp_chosen_email = gp_list[dr_options - 1][2]
                 gp_chosen_name = gp_list[dr_options - 1][1]
+                # list of dr email and last name created
                 gp_details = [gp_chosen_email, gp_chosen_name]
                 print("\nYou have chosen Dr {}".format(gp_chosen_name))
                 return gp_details
@@ -237,13 +240,17 @@ def choose_year():
             year = int(input("********************************************"
                              "\nPlease choose the year you would like your appointment as YYYY "
                              "\nOr type 0 to go back to the appointment menu: "))
+            # return to menu
             if year == 0:
                 return 0
+            # exception raised if year chosen in the past
             elif year < current_year:
                 raise YearPassedError
+            # exception raised if year chosen not within 2020-2100
             elif not 2020 <= year <= 2100:
                 raise YearNotValidError
             else:
+                # chosen year returned
                 return year
         except YearPassedError:
             print("\n\t< This year has already passed, please try again >"
@@ -281,21 +288,27 @@ def choose_month(year):
                   "\n********************************************")
             mm = int(input("Please choose the month would you would like your appointment "
                            "\n(or type 0 to go back choose another date): "))
+            # to choose another date
             if mm == 0:
                 return 0
+            # to format month as an object
             month_str = "{}-{}-28".format(year, str(mm))
             format_str = '%Y-%m-%d'
             month_obj = datetime.strptime(month_str, format_str)
             month_input = month_obj.date()
+            # exception raised if month chosen in the past
             if month_input < current_month:
                 raise MonthPassedError
+            # exception raised if month chosen not between 1-12
             elif not 1 <= mm <= 12:
                 raise MonthNotValidError
             else:
+                # print calendar for chosen month and year
                 print("--------------------------------------------")
                 print(calendar.month(year, mm))
                 print("--------------------------------------------")
                 month = '{:02}'.format(mm)
+                # return chosen month
                 return month
         except MonthNotValidError:
             print("\n\t< This is not a valid month, please try again >"
@@ -323,6 +336,7 @@ def choose_date(month, year):
         day (int): Day chosen, padded with 0 if day a single number.
         or 0 (int): To return to the menu.
     """
+    # lists of months with 31, 30 and 28/29 days
     days_31 = ['01', '03', '05', '07', '08', '10', '12']
     days_30 = ['04', '06', '09', '11']
     days_28 = ['02']
@@ -330,19 +344,24 @@ def choose_date(month, year):
         try:
             day = int(input("Please choose a day in your chosen month (as D/DD)"
                             "\n(or type 0 to go back and choose another date): "))
+            # to choose another date
             if day == 0:
                 return 0
+            # to create datetime object with chosen month, day and year
             date = "{}-{}-{:02}".format(year, str(month), day)
             date_obj = to_date_time_obj00(date).date()
             current = datetime.now().date()
             for mm in days_31:
                 if mm == month:
+                    # if day not between 1-31
                     if not 1 <= day <= 31:
                         raise DayNotValidError
             for mm in days_30:
                 if mm == month:
+                    # if day not between 1-30
                     if not 1 <= day <= 30:
                         raise DayNotValidError
+            # to find leap year errors in February
             for mm in days_28:
                 if mm == month:
                     if (year % 4) == 0:
@@ -356,9 +375,11 @@ def choose_date(month, year):
                             raise LeapYearError
             if date_obj == current:
                 return date
+            # exception raised if day chosen in the past
             elif date_obj < current:
                 raise DatePassedError
             else:
+                # return date
                 return date
         except DayNotValidError:
             print("\n\t< Invalid date entered, please enter a date in the correct format >"
@@ -426,6 +447,7 @@ def display_available(date, start, end, gp_details):
                  "16:00", "16:10", "16:20", "16:30", "16:40", "16:50",
                  "17:00", "17:10", "17:20", "17:30", "17:40", "17:50"]
     times_list = []
+    # format all times as datetime objects and add to times_list
     for times in times_str:
         format_str = '%H:%M'
         time_2 = datetime.strptime(times, format_str).time()
@@ -433,25 +455,33 @@ def display_available(date, start, end, gp_details):
     key_time = []
     value_status = []
     times_status = {}
+    # if appointments list empty, display all appointments as available for that day
     if not appointments:
         for i in times_list:
             time_i = i.strftime('%H:%M')
             key_time.append(time_i)
             value_status.append("   Available")
+        # create pandas dataframe
         data = pd.DataFrame({'Time': key_time, 'Status': value_status})
         print("********************************************\n")
         print(data.to_string(columns=['Time', 'Status'], index=False))
         print("\n********************************************")
 
     else:
+        # for each time in times_list (10 min slot)
         for items in times_list:
+            # for each booking in list from database
             for app in appointments:
+                # convert start and end to datetime objects
                 start_time = to_regular_time(app[0])
                 start_time_2 = datetime.time(start_time)
                 end_time = to_regular_time(app[2] - 1)
                 end_time_2 = datetime.time(end_time)
+                # if booking exists between start and end time
                 if items >= start_time_2 and items <= end_time_2:
+                    # display as unavailable
                     times_status[items] = ' Unavailable'
+                # if time not in list, display as available
                 elif items not in times_status:
                     times_status[items] = " Available"
         key_time = []
@@ -460,10 +490,13 @@ def display_available(date, start, end, gp_details):
             time_i = key.strftime('%H:%M')
             key_time.append(time_i)
             value_status.append('   ' + value)
+        # create pandas dataframe
         data = pd.DataFrame({'Time': key_time, 'Status': value_status})
         print("********************************************\n")
         print(data.to_string(columns=['Time', 'Status'], index=False))
         print("\n********************************************")
+    connection.close()
+    # return times_str for use in choose time exception handling
     return times_str
 
 
@@ -488,14 +521,17 @@ def choose_time(date, times_str, gp_details):
         try:
             time_in = input("\nPlease choose a time from the available appointments (as HH:MM)"
                             "\n(or type 0 to go back and choose another date): ")
+            # to choose another date
             if time_in == '0':
                 return 0
+            # if time chosen not in the times_str list (09:00-18:00 in 10 min slots) exception raised
             if time_in not in times_str:
                 raise TimeNotValidError
             start = create_start(date, time_in)
             end = start + 599
             date_obj = to_regular_time(start)
             current = datetime.now()
+            # if time has past, exception raised
             if date_obj < current:
                 raise TimePassedError
             c.execute("SELECT start, appointmentStatus, end FROM Appointment "
@@ -505,9 +541,12 @@ def choose_time(date, times_str, gp_details):
             for app in booked_times:
                 start_time = app[0]
                 end_time = app[2]
+                # if time already booked, exception raised
                 if start >= start_time and end <= end_time:
                     raise TimeBookedError
             else:
+                connection.close()
+                # return time chosen
                 return time_in
         except TimeNotValidError:
             print("\n\t< This is not a valid time option, please try again >"

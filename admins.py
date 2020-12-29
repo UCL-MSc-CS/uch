@@ -595,7 +595,7 @@ class AdminFunctions():
                 print("********************************************")
                 print("AppointmentID".ljust(15, ' '), "Start Time")
                 for i in appointments:
-                    print(str(i[0]).ljust(15, " "), uf.toregulartime(i[1]))  # Separates appointment information
+                    print(str(i[0]).ljust(15, " "), uf.unix_to_regular_time(i[1]))
                 back1 = 1
                 while back1 == 1:
                     try:
@@ -605,7 +605,6 @@ class AdminFunctions():
                         if In == "0":
                             back1 = 2
                             break
-                            # return 0
                         if not In:
                             raise FieldEmptyError()
                         check_number = int(In)
@@ -686,7 +685,7 @@ class AdminFunctions():
                 print("********************************************")
                 print("AppointmentID".ljust(15, ' '), "Start Time")  # Separating appointment information
                 for i in appointments:
-                    print(str(i[0]).ljust(15, " "), uf.toregulartime(i[1]))
+                    print(str(i[0]).ljust(15, " "), uf.unix_to_regular_time(i[1]))
                 back1 = 1
                 while back1 == 1:
                     try:

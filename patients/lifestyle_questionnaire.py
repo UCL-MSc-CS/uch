@@ -1,11 +1,25 @@
 import sqlite3 as sql
 import webbrowser
-import patients.patientMedicalFunctions as pf
+import patients.patient_medical_functions as pf
 
 
-"""Patient can enter data about their lifestyles. Relevant NHS advise and support information are provided to them"""
 class RiskProfile:
-    def __init__(self, nhsNumber):
+    """
+    This is a class for patient to set up his or her lifestyle profile.
+
+    Patient can enter data about their lifestyles. Relevant NHS advise and support information are provided to them, so
+    that the patient can modify his or her lifestyle to prevent certain medical conditions from developing.
+    """
+    def __init__(self, nhs_number):
+        """
+        The constructor for the RiskProfile class.
+
+        Opens the connection and cursor for the UCH database file.
+
+        Parameters:
+            nhs_number: the patient's NHS number.
+        """
+
         self.connection = sql.connect('UCH.db')
         self.a = self.connection.cursor()
         self.questionnaire = [
@@ -19,6 +33,17 @@ class RiskProfile:
         self.answers = []
 
     def questions(self, nhs_number):
+        """
+        This function asks and stores the patient's answers to questions related to weekly exercise.
+
+        Exceptions are handled during user inputs. Exercise related suggestions are provided based on NHS guidelines.
+
+        Parameters:
+            nhs_number: patient's NHS number.
+
+        Returns:
+             1 (int): exit the function when patient enters 0.
+        """
         print('*'*20, '\nEXERCISE\n\nPlease enter 0 to exit exercises related questions.'
                       '\nENTERING 0 IN ANY OF THE QUESTIONS WILL RESULT IN NONE OF THE ANSWERS PROVIDED BEING SAVED IN THE END!')
         while True:
@@ -112,8 +137,20 @@ class RiskProfile:
                 break
         d_goals = d_goals.title()
         self.questionnaire[4] = d_goals
+        self.answers.extend(self.questionnaire)
 
-    def BMI_calculator(self, nhs_number):
+    def bmi_calculator(self, nhs_number):
+        """
+        This function asks and stores the patient's answers to BMI questions.
+
+        Exceptions are handled during user inputs. BMI related suggestions are provided based on NHS guidelines.
+
+        Parameters:
+            nhs_number: patient's NHS number.
+
+        Returns:
+            1 (int): exit the function when patient enters 0.
+        """
         print('*'*20, '\nBMI CALCULATOR\nPlease enter 0 to exit BMI related questions.')
         while True:
             try:
@@ -141,7 +178,6 @@ class RiskProfile:
         self.BMIRelatedData.append(height)
         self.BMIRelatedData.append(weight)
         self.BMIRelatedData.append(bmi)
-        self.answers.extend(self.questionnaire)
         self.answers.extend(self.BMIRelatedData)
         if bmi < 18.4:
             print("*" * 20)
@@ -178,6 +214,17 @@ class RiskProfile:
                                 "/?tabname=weight-loss-support", new=2)
 
     def smoking(self, nhs_number):
+        """
+        This function asks and stores the patient's answers to smoking related questions.
+
+        Exceptions are handled during user inputs. Specific suggestions are provided based on NHS guidelines.
+
+        Parameters:
+            nhs_number: patient's NHS number.
+
+        Returns:
+            1 (int): exit the function when patient enters 0.
+        """
         print('*'*20, '\nSMOKING\nPlease enter 0 to exit smoking related questions.')
         while True:
             try:
@@ -212,6 +259,17 @@ class RiskProfile:
                 webbrowser.open("https://www.nhs.uk/better-health/quit-smoking/", new=2)
 
     def drugs(self, nhs_number):
+        """
+        This function asks and stores the patient's answers to drugs related questions.
+
+        Exceptions are handled during user inputs.
+
+        Parameters:
+            nhs_number: patient's NHS number.
+
+        Returns:
+            1 (int): exit the function when patient enters 0.
+        """
         print('*'*20, '\nDRUGS\nPlease enter 0 to exit drug related questions.')
         while True:
             try:
@@ -253,6 +311,16 @@ class RiskProfile:
             self.answers.append(drugs_type)
 
     def alcohol(self, nhs_number):
+        """
+        This function asks and stores the patient's answers to alcohol related questions.
+
+        Exceptions are handled during user inputs. Specific suggestions are provided based on NHS guidelines.
+
+        Parameters:
+            nhs_number: patient's NHS number.
+        Returns:
+            1 (int): exit the function if patient enters 0.
+        """
         print('*'*20, '\nALCOHOL\nPlease enter 0 to exit alcohol related questions.')
         print("1 unit of alcohol is around 76ml(~1/2 a glass) of wine or 250ml of beer (~1/2 a pint).")
         while True:
@@ -322,17 +390,25 @@ class RiskProfile:
             self.answers.append(alcohol_unit)
 
     def diet(self, nhs_number):
-        print('*'*20, '\nDIET\nPlease enter 0 to exit diet related questions.')
+        """
+        This function asks and stores the patient's answers to diet related questions.
+
+        Exceptions are handled during user inputs. Specific suggestions are provided based on NHS guidelines.
+
+        Parameters:
+            nhs_number: patient's NHS number.
+        Returns:
+            1 (int): exit the function if patient enters 00.
+        """
+        print('*'*20, '\nDIET\nPlease enter 00 to exit diet related questions.')
         while True:
             try:
                 meat = int(input("How many meals a week do you consume red meat: "))
-                if meat == '':
-                    raise pf.EmptyFieldError()
+                if meat == 00:
+                    return 1
                 diet = int(input("How many portions of fruit or vegetables do you consume a day: "))
-                # if diet == "0":
-                #     return 1
-                if diet == '':
-                    raise pf.EmptyFieldError()
+                if diet == 00:
+                    return 1
             except pf.EmptyFieldError:
                 error = pf.EmptyFieldError()
                 print(error)
@@ -350,8 +426,8 @@ class RiskProfile:
         while True:
             try:
                 caffeine = int(input("How many cups of coffee or caffeinated drinks do you consume per day: "))
-                # if caffeine == "0":
-                #     return 1
+                if caffeine == 00:
+                    return 1
             except ValueError:
                 print('\n    < Error! Please enter a numeric value >\n')
             else:
@@ -368,6 +444,17 @@ class RiskProfile:
         self.answers.append(str(caffeine))
 
     def insert_to_table(self, nhs_number):
+        """
+        This function inserts all the answers the patient provided from the functions above to the UCH database file.
+
+        Exceptions are handled for when the patient exited from any of the functions above. Incomplete questionnaire
+        answers will not be stored in the UCH database file.
+
+        Parameters:
+            nhs_number: patient's NHS number.
+        Returns:
+            1 (int): exit the function if patient does not fully complete all of the lifestyle related questions.
+        """
         self.answers.insert(0, nhs_number)
         try:
             question_query = """INSERT INTO questionnaireTable (nhsNumber, exercise, exerciseType, exerciseFrequency,
@@ -381,16 +468,3 @@ class RiskProfile:
         else:
             self.connection.commit()
             self.connection.close()
-        # self.a.execute("SELECT * FROM questionnaireTable")
-        # result = self.a.fetchall()
-        # print(result)
-
-# Erin = RiskProfile()
-# Erin.questions("0123456789")
-# Erin.BMI_calculator("0123456789")
-# Erin.alcohol("0123456789")
-# Erin.drugs("0123456789")
-# Erin.diet("0123456789")
-# Erin.smoking("0123456789")
-# Erin.save_your_answers()
-# correct order: smoking, drugs, alcohol, diet
