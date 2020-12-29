@@ -1,14 +1,25 @@
 import sqlite3 as sql
-import usefulfunctions as uf
+import useful_functions as uf
 from datetime import datetime
 
 datetimeformat = "%Y-%m-%d %H:%M"
 
-def PatientSummary(nhsNumber):
+def patient_summary(nhsNumber):
+    """
+    This is the function for generating the patient summary. The patient summary is an important document used in 
+    the NHS that aims to show doctors what current/ongoing problems the patient may be experiencing, what
+    treatments the patient has undergone recently and any other relevant background information. 
+    The layout and formatting of this summary is designed to reflect what is used in practice by the NHS as much as 
+    possible. Similarly, it is also generated in a format that can be emailed and printed easily to allow it to 
+    be exchanged between doctors, as done in the NHS. In this case, the .txt format was chosen. 
+
+    Parameters: 
+        nhsNumber - the NHS number of the patient that the summary is on. 
+    """
     connection = sql.connect('UCH.db')
     c = connection.cursor()
 
-    with open('PatientSummary.txt','w') as f:
+    with open('patient_{}_summary.txt' .format(nhsNumber),'w') as f:
         c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", (nhsNumber,))
         results = c.fetchall()
         dateOfBirth = results[0][4]
@@ -39,13 +50,9 @@ def PatientSummary(nhsNumber):
         items = c.fetchall()
 
         for i in range(0,len(items)):
-            #print(items[i])
             date_unix = items[i][0]
-            #print(date_unix)
             date_regular = uf.toregulartime(date_unix)
-            #print(date_regular)
             date_regular = date_regular.strftime("%Y-%m-%d")
-            #print(date_regular)
             diagnosis = items[i][1]
             if items[i][1] == '':
                 diagnosis = "Diagnosis pending"
@@ -87,9 +94,8 @@ def PatientSummary(nhsNumber):
                     f.write('{:<60s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], time_string))
                 else:
                     f.write('{:<30s}{:^10s}{:^20s} \n'.format(items[i][0], items[i][1], time_string))
-            # promethazine hydrochloride and codeine phosphate
-            # Losartan Potassium and Hydrochlorothiazide
-            # "Butalbital, Acetaminophen, Caffeine, and Codeine Phosphate " 59 characters long
+            # There are many medicines in the medicine database with long names. The longest is "Butalbital, Acetaminophen, Caffeine, and Codeine Phosphate " 
+            # which is 59 characters long. In case a medecine with a long name is used, other columns are moved to the right to allow space for it. 
 
         f.write("--------------------------------------------\n")
         f.write("CANCER HISTORY: \n")
@@ -146,4 +152,4 @@ def PatientSummary(nhsNumber):
     print("Summary downloaded, check your folder to see the file")
 
 if __name__ == "__main__":
-    PatientSummary(61784222)
+    patient_summary(1234567890)

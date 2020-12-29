@@ -1,14 +1,16 @@
-import Admins
+import admins
 import patients.patientMain as pm
 import GPs.GPMain as gpm
 import sys
-import usefulfunctions as uf
+import useful_functions as uf
 import os.path
 from database import initialise_database
 
 
 class Menus():
-    def MasterMenu(self):
+    """This is a class containing menus used on the first page and the Admin side of the program."""
+
+    def master_menu(self):
         print("--------------------------------------------")
         print("         UCH Management System   ")
         print("--------------------------------------------")
@@ -18,7 +20,7 @@ class Menus():
         print("Choose [3] for GP")
         print("Choose [0] to close the program")
 
-    def adminmenu(self):
+    def admin_menu(self):
         uf.banner('Admin')
         print("Choose [1] to add a new doctor")
         print("Choose [2] to deactivate/reactivate or delete a profile")
@@ -62,39 +64,40 @@ while True:
             initialise_database()
 
         masterlogin = Menus()
-        masterlogin.MasterMenu()
+        masterlogin.master_menu()
 
         selection1 = int(input("Please select an option: "))
         while selection1 == 0 or selection1 == 1 or selection1 == 2 or selection1 == 3:
             while selection1 == 2:
                 p_choice = pm.task()
                 if p_choice == 0:
-                    masterlogin.MasterMenu()
+                    masterlogin.master_menu()
                     selection1 = int(input("Please select an option: "))
 
             while selection1 == 3:
                 gpChoice = gpm.gpStart()
                 if gpChoice == "exitGPLogin":
-                    masterlogin.MasterMenu()
+                    masterlogin.master_menu()
                     selection1 = int(input("Please select an option: "))
 
             while selection1 == 1:
-                ad = Admins.adminFunctions()
+                ad = admins.AdminFunctions()
                 logged_in = ad.admin_login()
 
                 while logged_in == True:
 
                     AdminM = Menus()
-                    AdminM.adminmenu()
+                    AdminM.admin_menu()
                     ad.check_registrations()
 
                     try:
-                        selection = int(input("please select an option: "))
+                        selection = int(input("Please select an option: "))
 
                         while selection != 0:
                             while selection == 1:
                                 print("********************************************")
                                 selection = ad.add_doctor()
+                                
                             while selection == 2:
                                 AdminM.admin_submenu2()
                                 ipt = ''
@@ -118,6 +121,7 @@ while True:
                                     selection = ad.delete_doctor()
                                 if ipt == 0:
                                     selection = 0
+
                             while selection == 3:
                                 print("********************************************")
                                 print("choose [1] to confirm a registration")
@@ -133,15 +137,14 @@ while True:
 
                                 while ipt != 1 and ipt != 2 and ipt != 0:
                                     print('Not a valid input')
-                                    ipt = int(input("please select an option: "))
+                                    ipt = int(input("Please select an option: "))
                                 if ipt == 1:
                                     selection = ad.confirm_registrations()
                                 if ipt == 2:
                                     selection = ad.unconfirm_registrations()
                                 if ipt == 0:
                                     selection = 0
-
-                            # Checking patient in or out
+                                
                             if selection == 4:
                                 print("********************************************")
                                 AdminM.admin_submenuCheckIO()
@@ -160,7 +163,6 @@ while True:
 
                                     print("< Not a valid choice >")
 
-                            # Updating/deleting patient details
                             elif selection == 5:
                                 print("********************************************")
                                 AdminM.manage_details()
@@ -197,16 +199,12 @@ while True:
 
                             elif selection > 5 or selection < 0:
                                 print("Not a valid selection, please enter a number between 0 and 5")
-                                # AdminM.adminmenu()
-                                # ad.check_registrations()
-                                # selection = int(input("please select an option: "))
                                 break
                             if selection == 0:
-                                AdminM.adminmenu()
+                                AdminM.admin_menu()
                                 ad.check_registrations()
-                                selection = int(input("please select an option: "))
+                                selection = int(input("Please select an option: "))
 
-                            # print("exiting menu")
                         if selection == 0:
                             logged_in = "restart"
                     except ValueError:
@@ -216,8 +214,8 @@ while True:
                     logged_in = "entering details"
                 if logged_in == "restart":
                     ad.commit_and_close()
-                    masterlogin.MasterMenu()
-                    selection1 = int(input("please select an option: "))
+                    masterlogin.master_menu()
+                    selection1 = int(input("Please select an option: "))
             if selection1 == 0:
                 raise KeyboardInterrupt
         if selection1 != 0 or selection1 != 1 or selection1 != 2 or selection1 != 3:
