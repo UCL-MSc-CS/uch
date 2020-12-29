@@ -386,7 +386,7 @@ def options(NHS_number):
                         # Uses lifestyleQuestionnaire.py to take the lifestyle risk questionnaire
                         x = RiskProfile(NHS_number)
                         x.questions(NHS_number)
-                        x.BMI_calculator(NHS_number)
+                        x.bmi_calculator(NHS_number)
                         x.smoking(NHS_number)
                         x.drugs(NHS_number)
                         x.alcohol(NHS_number)

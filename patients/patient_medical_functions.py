@@ -260,3 +260,10 @@ def display_preexisting_condition_history(nhs_number):
             rows += 1
         else:
             print('\n    <<Pre-existing condition record ends>>\n')
+
+
+def close_connection():
+    """
+    Closes the database connection.
+    """
+    connection.close()

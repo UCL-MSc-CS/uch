@@ -1,6 +1,6 @@
 import sqlite3 as sql
 import webbrowser
-import patients.patientMedicalFunctions as pf
+import patients.patient_medical_functions as pf
 
 
 class RiskProfile:
@@ -139,7 +139,7 @@ class RiskProfile:
         self.questionnaire[4] = d_goals
         self.answers.extend(self.questionnaire)
 
-    def BMI_calculator(self, nhs_number):
+    def bmi_calculator(self, nhs_number):
         """
         This function asks and stores the patient's answers to BMI questions.
 
