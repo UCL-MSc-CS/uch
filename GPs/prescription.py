@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox, ttk
 import prescriptionMedFunctions as ms
 from GPs.instructionFunction import instructionFunction
+from GPs.help_page import instructionFunction
 
 def prescription(doctoremail,appointmentID,nhsNumber):
 
