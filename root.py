@@ -93,7 +93,7 @@ while True:
                     ad.check_registrations()
                     
                     try:
-                        selection = int(input("please select an option: "))
+                        selection = int(input("Please select an option: "))
 
                         while selection != 0:
                             while selection == 1:
@@ -137,7 +137,7 @@ while True:
 
                                 while ipt != 1 and ipt != 2 and ipt != 0:
                                     print('Not a valid input')
-                                    ipt = int(input("please select an option: "))
+                                    ipt = int(input("Please select an option: "))
                                 if ipt == 1:
                                     selection = ad.confirm_registrations()
                                 if ipt == 2:
@@ -203,14 +203,11 @@ while True:
 
                             elif selection > 5 or selection < 0:
                                 print("Not a valid selection, please enter a number between 0 and 5")
-                                # AdminM.admin_menu()
-                                # ad.check_registrations()
-                                # selection = int(input("please select an option: "))
                                 break
                             if selection == 0:
                                 AdminM.admin_menu()
                                 ad.check_registrations()
-                                selection = int(input("please select an option: "))
+                                selection = int(input("Please select an option: "))
 
 
                             # print("exiting menu")
@@ -224,7 +221,7 @@ while True:
                 if logged_in == "restart":
                     ad.commit_and_close()
                     masterlogin.master_menu()
-                    selection1 = int(input("please select an option: "))
+                    selection1 = int(input("Please select an option: "))
             if selection1 == 0:
                 raise KeyboardInterrupt
         if selection1 != 0 or selection1 != 1 or selection1 != 2 or selection1 != 3:
