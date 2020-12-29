@@ -1,7 +1,7 @@
 import sqlite3 as sql
 from datetime import datetime as dt
 from datetime import date 
-import useful_functions as uf
+import usefulfunctions as uf
 import pandas as pd
 
 class Error(Exception):
@@ -245,7 +245,7 @@ class AdminFunctions():
                         raise FieldEmptyError()
                     if len(dateOfBirth) != 10:
                         correct_length = 10
-                        raise IncorrectInputLength(10)
+                        raise IncorrectInputLengthError(10)
                     if dateOfBirth[4] != '-' or dateOfBirth[7] != '-':
                         raise DateFormatError
                     day = int(dateOfBirth[8:10])
@@ -289,7 +289,7 @@ class AdminFunctions():
                     if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(input_list) != 14 and len(input_list) != 15 and len(input_list) != 16 and len(input_list) != 17:
                         #input lengths from 11 to 17 are permitted, as country code lenghts range from 1 character to 7 characters.
                         correct_length = '12 to 18'
-                        raise IncorrectInputLength(correct_length)
+                        raise IncorrectInputLengthError(correct_length)
                     question_num = 7
                 while question_num == 7:
                     gender = input("Gender (enter male/female/non-binary/prefer not to say): ")
@@ -331,8 +331,8 @@ class AdminFunctions():
             except TeleNoFormatError:
                 error = TeleNoFormatError()
                 print(error)
-            except IncorrectInputLength:
-                error = IncorrectInputLength(correct_length)
+            except IncorrectInputLengthError:
+                error = IncorrectInputLengthError(correct_length)
                 print(error)
             except GenderError:
                 error = GenderError()
@@ -359,7 +359,7 @@ class AdminFunctions():
         self.c.execute("""SELECT COUNT(patientEmail) FROM PatientDetail WHERE registrationConfirm = 0 """)
         items = self.c.fetchall()
         count = items[0][0]
-        print("   < You have %d patient registrations to confirm >" % count)
+        print("   < You have {} patient registrations to confirm >" .format(count))
 
     def confirm_registrations(self):
         """
@@ -523,8 +523,7 @@ class AdminFunctions():
             2 if the user presses 0 to go back and if the user successfully deletes an account using
             the account's email.
         """
-        providing_input = True
-        while providing_input == True:
+        while True:
             try:
                 print("********************************************")
                 email = input("Type in the practitioner's email (press 0 to go back): ")

@@ -1,5 +1,5 @@
 import sqlite3 as sql
-import useful_functions as uf
+import usefulfunctions as uf
 from datetime import datetime
 
 datetimeformat = "%Y-%m-%d %H:%M"
@@ -19,7 +19,7 @@ def patient_summary(nhsNumber):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
 
-    with open('patient_summary.txt','w') as f:
+    with open('patient_{}_summary.txt' .format(nhsNumber),'w') as f:
         c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", (nhsNumber,))
         results = c.fetchall()
         dateOfBirth = results[0][4]
@@ -152,4 +152,4 @@ def patient_summary(nhsNumber):
     print("Summary downloaded, check your folder to see the file")
 
 if __name__ == "__main__":
-    PatientSummary(61784222)
+    patient_summary(1234567890)

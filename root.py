@@ -2,7 +2,7 @@ import admins
 import patients.patientMain as pm
 import GPs.GPMain as gpm
 import sys
-import useful_functions as uf
+import usefulfunctions as uf
 import os.path
 from database import initialise_database
 
@@ -83,7 +83,7 @@ while True:
                     selection1 = int(input("Please select an option: "))
 
             while selection1 == 1:
-                ad = Admins.AdminFunctions()
+                ad = admins.AdminFunctions()
                 logged_in = ad.admin_login()
 
                 while logged_in == True:
