@@ -20,7 +20,12 @@ UCH is organized into the following files:
 * *images folder* - stores all of the images for this README file.
 
 **Step-by-Step on how to run the application**
-This is a CLI (command line interface) application, and it can be run by cloning the source code to your local computer.
+This is a CLI (command line interface) application, and it can be run by cloning the source code to your local computer. Some aspects of this application have a graphical user interface.
+
+The following libraries were used in this project and will have to be installed in order to run the code.
+1.Pandas
+2.Pillow
+If an error is thrown, asking for installation of these libraries, run the following command in terminal - "pip install <name of library here>" 
 
 **Technologies Used** 
 

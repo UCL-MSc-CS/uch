@@ -1,7 +1,7 @@
 import sqlite3 as sql
 from datetime import datetime as dt
 from datetime import date 
-import usefulfunctions as uf
+import useful_functions as uf
 import pandas as pd
 
 """exceptions under here"""
@@ -563,7 +563,7 @@ class adminFunctions():
                 print("********************************************")
                 print("AppointmentID".ljust(15, ' '), "Start Time")
                 for i in appointments:
-                    print(str(i[0]).ljust(15, " "), uf.toregulartime(i[1]))
+                    print(str(i[0]).ljust(15, " "), uf.unix_to_regular_time(i[1]))
                 back1 = 1
                 while back1 == 1:
                     try:
@@ -650,7 +650,7 @@ class adminFunctions():
                 print("********************************************")
                 print("AppointmentID".ljust(15, ' '), "Start Time")
                 for i in appointments:
-                    print(str(i[0]).ljust(15, " "), uf.toregulartime(i[1]))
+                    print(str(i[0]).ljust(15, " "), uf.unix_to_regular_time(i[1]))
                 back1 = 1
                 while back1 == 1:
                     try:

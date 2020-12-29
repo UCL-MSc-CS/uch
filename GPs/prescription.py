@@ -1,53 +1,57 @@
 from tkinter import *
 from tkinter import messagebox, ttk
-import prescriptionMedFunctions as ms
-from GPs.instructionFunction import instructionFunction
+import prescription_med_functions as ms
+from GPs.help_page import help_page
 
 def prescription(doctoremail,appointmentID,nhsNumber):
+    """Loads up prescription page"""
 
-    # Pull all saved prescription records from the database
-    prescriptionData = ms.getPrescription(appointmentID)
+    # ------------------------- Pulls up data from UCH.db -------------------------
+    # Pulls all saved prescription records from the database
+    prescriptionData = ms.get_prescription_from_db(appointmentID)
 
-    # Pull medicine IDs from prescription database and append into initial treeviewMedID
+    # Pulls medicine IDs from prescription database
     treeviewMedID = []
     for medicine in prescriptionData:
         treeviewMedID.append(medicine[0])
 
+    # ------------------------- Creates a tkinter window and lays out frame structure -------------------------
     root = Tk()
     root.title('Appointment ID: ' + str(appointmentID) + ', with Dr. ' + doctoremail)
     root.geometry("1920x950")
 
+    # Creates mainframe that encompasses all subframes
     mainFrame = Frame(root)
     mainFrame.grid()
 
-    # titleFrame = Frame(mainFrame, bd=20, width=1350, padx=20, relief=RIDGE)
-    # titleFrame.pack(side=TOP)
+    # Creates top frame
+    topFrame = Frame(mainFrame, bd=20, width=1350, height=400, padx=10, relief=RIDGE)
+    topFrame.pack(side=TOP)
 
-    # titleLabel = Label(titleFrame, font=('arial', 40, 'bold'), text='Prescription ID: ' + str(prescriptionID), padx=8)
-    # titleLabel.grid()
-
-    # Frame for prescriptions treeview (bottom)
+    # Creates bottom frame
     bottomFrame = Frame(mainFrame, bd=20, width=1350, height=100, padx=20, relief=RIDGE)
     bottomFrame.pack(side=BOTTOM)
 
-    # Frame for select and print medicine sections (top)
-    medicineFrame = Frame(mainFrame, bd=20, width=1350, height=400, padx=10, relief=RIDGE)
-    medicineFrame.pack(side=BOTTOM)
+    # Creates search medicine frame
+    medSearchFrame = LabelFrame(topFrame, bd=10, width=800, height=300, padx=10, relief=RIDGE, font=('arial', 12, 'bold'), text="Step 1. Search Medicine:")
+    medSearchFrame.pack(side=LEFT)
 
-    # Final medicine section
+    # Creates medicine results frame
+    medResultsFrame = LabelFrame(topFrame, bd=10, width=800, height=300, padx=5, relief=RIDGE, font=('arial', 12, 'bold'), text="Step 2. Choose Medicine Search Results:")
+    medResultsFrame.pack(side=RIGHT)
+
+    # Creates frame for confirm final prescription section
     prescriptionFrame = LabelFrame(bottomFrame, bd=10, width=450, height=300, padx=20, relief=RIDGE, font=('arial', 12, 'bold'), text="Step 3. Confirm Final Prescription:")
     prescriptionFrame.pack(side=TOP)
 
-    # Load instructions section
+    # Creates frame for i instructions section
     instructionFrame = LabelFrame(bottomFrame, bd=10, width=225, height=50, padx=20, relief=RIDGE, font=('arial', 12, 'bold'), text="Need help? Here is a guide:")
     instructionFrame.pack(side=BOTTOM)
 
-    # Select medicine section --------------------------------------------
-    medSelectFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=10, relief=RIDGE, font=('arial', 12, 'bold'), text="Step 1. Search Medicine:")
-    medSelectFrame.pack(side=LEFT)
 
-
-    def submitmedsearch():
+    # ------------------------- Seach medicine functionality -------------------------
+    def submit_medicine_search():
+        """Pulls all medicine from database based on GP search preferences and displays it on a treeview"""
 
         trv.delete(*trv.get_children())
 
@@ -58,73 +62,74 @@ def prescription(doctoremail,appointmentID,nhsNumber):
         mtype = chosenmedtype.get()
         ctype = chosencategory.get()
 
-        results = ms.search(medsearchstring, drugsearchstring, dtype, mtype, ctype)
+        results = ms.medicine_search(medsearchstring, drugsearchstring, dtype, mtype, ctype)
         for result in results:
             trv.insert('', 'end', values=result)
 
-
-    dosage_types = ms.alldosagetypes()
+    # Displays input categories for searching medicine
+    dosage_types = ms.get_all_dosage_types()
     dosage_types.insert(0,"-")
-    medicine_types = ms.allmedtypes()
+    medicine_types = ms.get_all_med_types()
     medicine_types.insert(0,"-")
-    categories = ms.allcategories()
+    categories = ms.get_all_med_categories()
     categories.insert(0,"-")
 
     chosendosetype = StringVar(value="-")
     chosenmedtype = StringVar(value="-")
     chosencategory = StringVar(value="-")
 
-    mednamelabel = Label(medSelectFrame, text="Medicine name/Brand name")
+    mednamelabel = Label(medSearchFrame, text="Medicine name/Brand name")
     mednamelabel.pack()
-    mednamesearch = Entry(medSelectFrame)
+    mednamesearch = Entry(medSearchFrame)
     mednamesearch.config(width = 25)
     mednamesearch.pack()
 
-    drugnamelabel = Label(medSelectFrame, text="Drug name/Active Ingredient")
+    drugnamelabel = Label(medSearchFrame, text="Drug name/Active Ingredient")
     drugnamelabel.pack()
-    drugnamesearch = Entry(medSelectFrame)
+    drugnamesearch = Entry(medSearchFrame)
     drugnamesearch.config(width = 25)
     drugnamesearch.pack()
 
-    dtlabel = Label(medSelectFrame, text="Dosage type")
+    dtlabel = Label(medSearchFrame, text="Dosage type")
     dtlabel.pack()
-    dosetypedropmenu = OptionMenu(medSelectFrame, chosendosetype, *dosage_types)
+    dosetypedropmenu = OptionMenu(medSearchFrame, chosendosetype, *dosage_types)
     dosetypedropmenu.config(width = 20)
     dosetypedropmenu.pack()
 
-    mtlabel = Label(medSelectFrame, text="Medicine type")
+    mtlabel = Label(medSearchFrame, text="Medicine type")
     mtlabel.pack()
-    medtypedropmenu = OptionMenu(medSelectFrame, chosenmedtype, *medicine_types)
+    medtypedropmenu = OptionMenu(medSearchFrame, chosenmedtype, *medicine_types)
     medtypedropmenu.config(width = 20)
     medtypedropmenu.pack()
 
-    catlabel = Label(medSelectFrame, text="Categories")
+    catlabel = Label(medSearchFrame, text="Categories")
     catlabel.pack()
-    catdropmenu = OptionMenu(medSelectFrame, chosencategory, *categories)
+    catdropmenu = OptionMenu(medSearchFrame, chosencategory, *categories)
     catdropmenu.config(width = 20)
     catdropmenu.pack()
 
-    medsearchsubmit = Button(medSelectFrame, text="Search Medicine", command=submitmedsearch)
+    medsearchsubmit = Button(medSearchFrame, text="Search Medicine", command=submit_medicine_search)
     medsearchsubmit.pack(pady=10)
 
-    # Print search medicine section --------------------------------------------
-    medResultsFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=5, relief=RIDGE, font=('arial', 12, 'bold'), text="Step 2. Choose Medicine Search Results:")
-    medResultsFrame.pack(side=RIGHT)
+    # ------------------------- Medicine results functionality -------------------------
+    def enter_into_disabled_box(textbox, string):
+        """Displays selected medicine data into unalterable boxes for the user"""
 
-    def enterintodisabled(textbox, string):
         textbox.config(state=NORMAL)
         textbox.delete(0, END)
         textbox.insert(0, string)
         textbox.config(state=DISABLED)
 
-    def submitchoice():
+    def submit_choice():
+        """Displays data of the selected medicine within entry boxes of the chosen medicine section"""
+
         if trv.selection():
             for row in trv.selection():
                 selected_medicine = trv.item(row, "values")
                 break
-            enterintodisabled(medid, selected_medicine[0])
-            enterintodisabled(medname, selected_medicine[1])
-            enterintodisabled(doseType, selected_medicine[3])
+            enter_into_disabled_box(medid, selected_medicine[0])
+            enter_into_disabled_box(medname, selected_medicine[1])
+            enter_into_disabled_box(doseType, selected_medicine[3])
             dosages = selected_medicine[7].split(";")
             global chosendose
             chosendose = StringVar()
@@ -134,12 +139,13 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             dosagedropdown.config(width = 10)
             dosagedropdown.grid(row=2, column=3)
 
-    # Add record
-    def addRecord():
+
+    def add_record():
+        """Adds record into confirm final prescription treeview"""
 
         if medid.get() and int(medid.get()) not in treeviewMedID:
             treeviewMedID.append(int(medid.get()))
-            doseUnit = ms.getUnits(medid.get())
+            doseUnit = ms.get_medicine_units(medid.get())
 
             global count
             addvalues = (
@@ -169,7 +175,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             medname.config(state=DISABLED)
             doseType.config(state=DISABLED)
             multiplier.config(state='readonly')
-            potential_allergy = ms.allergyhandler(nhsNumber,addvalues[1])
+            potential_allergy = ms.allergy_message_handler(nhsNumber, addvalues[1])
             if potential_allergy:
                 messagebox.showerror("Warning!", potential_allergy)
 
@@ -179,10 +185,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             messagebox.showerror("Error", "You have added a medicine that already exists in your final prescriptions.")
 
 
-    # tree_frame = Frame(medResultsFrame)
-    # tree_frame.pack(padx=20,pady=20)
-
-    # Place medicine results treeview in medicine results frame
+    # Places medicine results treeview in medicine results frame
     global trv
     trv = ttk.Treeview(
         medResultsFrame,
@@ -192,10 +195,10 @@ def prescription(doctoremail,appointmentID,nhsNumber):
         selectmode="browse"
     )
 
-    # Pack to the screen
+    # Packs to the screen
     trv.pack(pady=5)
 
-    # Format columns and headings
+    # Formats columns and headings
     trv.heading(1, text="ID")
     trv.column(1,width=45)
     trv.heading(2, text="Medicine Name")
@@ -219,13 +222,16 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     trv.heading(11, text="Category")
     trv.column(11, width=100)
 
-    choosemedbutton = Button(medResultsFrame, text="Choose medicine", command=submitchoice)
+    # Creates choose medicine button
+    choosemedbutton = Button(medResultsFrame, text="Choose medicine", command=submit_choice)
     choosemedbutton.pack(pady=10)
 
+    # Creates chosen medicine frame
     global chosenmedframe
     chosenmedframe = LabelFrame(medResultsFrame,text="Chosen medicine",padx=20,pady=20)
     chosenmedframe.pack(pady=10,padx=10)
 
+    # Creates chosen medicine data boxes and displays respective data within these boxes
     medidlabel = Label(chosenmedframe,text="Medicine ID")
     medidlabel.grid(row=1,column=1)
     global medid
@@ -257,16 +263,19 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     furtherInformation = Entry(chosenmedframe, width=40)
     furtherInformation.grid(row=2,column=6)
 
-    addRecord = Button(medResultsFrame, text="Add Medicine", command=addRecord)
+    # Creates add record button
+    addRecord = Button(medResultsFrame, text="Add Medicine", command=add_record)
     addRecord.pack(pady=10)
 
-    # Place treeview in prescription frame
+
+    # ------------------------- Confirm final prescriptions functionality -------------------------
+    # Places treeview in prescription frame
     myTree = ttk.Treeview(prescriptionFrame, height='5')
 
-    # Define our columns (treeview has a phantom column at the start)
+    # Defines treeview columns
     myTree['columns'] = ("Medicine ID", "Medicine Name", "Dosage", "Dosage Multiplier", "Dosage Method", "Further Information")
 
-    # Format our columns
+    # Formats treeview columns
     myTree.column('#0', width=0, stretch=NO)
     myTree.column("Medicine ID", anchor=CENTER, width=100)
     myTree.column("Medicine Name", anchor=W, width=140)
@@ -275,8 +284,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     myTree.column("Dosage Method", anchor=CENTER, width=140)
     myTree.column("Further Information", anchor=W, width=140)
 
-
-    # Create headings
+    # Creates headings
     myTree.heading("#0", text="", anchor=W)
     myTree.heading("Medicine ID", text="Medicine ID", anchor=CENTER)
     myTree.heading("Medicine Name", text="Medicine Name", anchor=W)
@@ -285,41 +293,32 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     myTree.heading("Dosage Method", text="Dosage Method", anchor=CENTER)
     myTree.heading("Further Information", text="Further Information", anchor=W)
 
-
-    # Pull data from database (prescriptionData) and add it into final prescription treeview.
+    # Adds any record from prescriptionData and adds it into final prescription treeview
     global count
     count= 0
     for record in prescriptionData:
         myTree.insert(parent='', index='end', id=count, text="", values=(record[0],record[1],record[2],record[3],record[4],record[5]))
         count += 1
 
-    # Pack to the screen
+    # Packs to the screen
     myTree.pack(pady=20)
 
-    # Remove all records
-    def removeAll():
+    def remove_all():
+        """Removes all records"""
         treeviewMedID.clear()
         for record in myTree.get_children():
             myTree.delete(record)
 
-
-
-    # Remove one selected
-    def removeSelected():
+    def remove_selected():
+        """Remove selected record(s)"""
         for selection in myTree.selection():
             selectionID = int(myTree.item(selection, "values")[0])
             treeviewMedID.remove(selectionID)
             myTree.delete(selection)
 
-
-        # x = myTree.selection()[0]
-        # print(x)
-        # myTree.delete(x)
-
-    # Saves prescription data into database
-    def savePrescription():
-        #todo connect to database and insert new data
-        ms.deleteMedRecord(appointmentID)
+    def save_prescription():
+        """Saves prescription data into UCH.db"""
+        ms.delete_med_record(appointmentID)
         for record in myTree.get_children():
             prescriptionLine = myTree.item(record, "values")
             prescriptionList = list(prescriptionLine)
@@ -327,34 +326,32 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             prescriptionList.pop(2)
             prescriptionList.pop(4)
 
-            ms.addPrescription(prescriptionList)
-
+            ms.add_prescription_to_db(prescriptionList)
 
         exit = messagebox.askyesno("Save Prescription", "Confirm if you want to exit.")
         if exit > 0:
             root.after(1, root.destroy())
-
             return
 
-    # Remove all
-    removeAll = Button(prescriptionFrame, text="Remove All Medicine", command=removeAll)
+    # Creates remove all button
+    removeAll = Button(prescriptionFrame, text="Remove All Medicine", command=remove_all)
     removeAll.pack(pady=5)
 
-    # Remove one
-    removeSelected = Button(prescriptionFrame, text="Remove Selected Medicine", command=removeSelected)
+    # Creates remove selected button
+    removeSelected = Button(prescriptionFrame, text="Remove Selected Medicine", command=remove_selected)
     removeSelected.pack(pady=5)
 
-    # Save prescription
-    savePrescription = Button(prescriptionFrame, text="Save Prescription", command=savePrescription)
+    # Creates save prescription button
+    savePrescription = Button(prescriptionFrame, text="Save Prescription", command=save_prescription)
     savePrescription.pack(pady=5)
 
-    # Load up guide
-    instructionButton = Button(instructionFrame, text='User Guide', command=instructionFunction,
-                        background='SlateGray1')
+    # Creates user guide button
+    instructionButton = Button(instructionFrame, text='User Guide', command=help_page,
+                               background='SlateGray1')
     instructionButton.pack(pady=5)
 
-
+    # ------------------------- Runs tkinter -------------------------
     root.after(1000, root.focus_force)
     root.mainloop()
 
-#prescription('matthew.shorvon@ucl.ac.uk', 3, '1234567890')
+prescription("matthew.shorvon@ucl.ac.uk", 2, "1234567890")
