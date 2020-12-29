@@ -19,7 +19,7 @@ def patient_summary(nhsNumber):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
 
-    with open('PatientSummary.txt','w') as f:
+    with open('patient_summary.txt','w') as f:
         c.execute("SELECT * FROM PatientDetail WHERE nhsNumber =?", (nhsNumber,))
         results = c.fetchall()
         dateOfBirth = results[0][4]
