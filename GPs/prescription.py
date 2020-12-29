@@ -113,7 +113,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
 
     # ------------------------- Medicine results functionality -------------------------
     def enter_into_disabled_box(textbox, string):
-        """Displays selected medicine data into medicine id, medicine name, and dose type boxes"""
+        """Displays selected medicine data into unalterable boxes for the user"""
 
         textbox.config(state=NORMAL)
         textbox.delete(0, END)
@@ -121,7 +121,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
         textbox.config(state=DISABLED)
 
     def submit_choice():
-        """Displays selected medicine data into dosage, dosage multiplier boxes"""
+        """Displays data of the selected medicine within entry boxes of the chosen medicine section"""
 
         if trv.selection():
             for row in trv.selection():
