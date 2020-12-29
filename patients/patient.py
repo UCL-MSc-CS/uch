@@ -70,7 +70,7 @@ class Patient:
                 count = 0
                 nhs_number = ""
                 while count < 10:
-                    x = random.randint(0, 9)
+                    x = random.randrange(0, 10)
                     nhs_number += str(x)
                     count += 1
                 self.c.execute(
