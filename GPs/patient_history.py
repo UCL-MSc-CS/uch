@@ -8,7 +8,7 @@ def patient_history(nhsNumber):
         print("Choose [1] to display cancer history")
         print("Choose [2] to display pre-existing condition history")
         print("Choose [0] to return to appointment menu")
-        option = input(":")
+        option = input("Please select an option: ")
         if option == "1":
             pm.display_cancer_history(nhsNumber)
         elif option == "2":

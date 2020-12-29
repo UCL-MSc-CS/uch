@@ -25,7 +25,7 @@ def open_appointment(doctoremail):
             print("Choose [4] for selecting a different appointment")
             print("Choose [5] to download a patient summary")
             print("Choose [0] to exit this appointment")
-            option = input(":")
+            option = input("Please select an option: ")
             if option == "1":
                 print("\n Opening your notes for this appointment in a separate window.... \n")
                 appointment_notes(appointmentid)

@@ -22,7 +22,7 @@ def print_timetable(doctoremail):
         print("Choose [2] to view next week")
         print("Choose [3] to view any other week.")
         print("Choose [0] to return to the main menu.")
-        option = input(":")
+        option = input("Please select an option: ")
         try:
             if int(option) == 1:
                 print_days(today, doctoremail)

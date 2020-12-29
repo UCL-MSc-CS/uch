@@ -19,7 +19,7 @@ def add_non_patient_time(doctoremail):
         print("Choose [1] to book a holiday")
         print("Choose [2] to add non-patient hours")
         print("Choose [0] to return to main menu")
-        choice = input(":")
+        choice = input("Please select an option: ")
         if choice == '1':
             add_holiday(doctoremail)
             continue
