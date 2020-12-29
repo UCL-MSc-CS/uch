@@ -267,7 +267,7 @@ class DateFormatError(Error):
         super().__init__(self.message)
 
 
-def summary(NHS_number):
+def summary(nhs_number):
     """ 
     Function to show all of the patient's details in the database attached to their NHS number. 
 
@@ -275,39 +275,30 @@ def summary(NHS_number):
     their telephone number, and their password (hashed for security).
 
     Parameters:
-    NHS_number (string): the patient's NHS number. 
+    nhs_number (string): the patient's NHS number. 
     """
-    c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
+    c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?", [nhs_number])
     results = c.fetchall()
     hash = ""
     for i in results[0][10]:
         hash += "*"
     print("--------------------------------------------")
-    print("Patient Summary of " +
-          str(results[0][2]) + " " + str(results[0][3]))
+    print("Patient Summary of %s %s" %(results[0][2],results[0][3]))
     print("--------------------------------------------")
     print("Your NHS number is: ")
-    x = str(results[0][0])
-    one = x[0:3]
-    two = x[3:6]
-    three = x[6:10]
     # Separating the NHS number so that the format looks more realistic
-    print(one, two, three)
-    print("First Name: " + str(results[0][2]))
-    print("Last Name: " + str(results[0][3]))
-    print("Email: " + str(results[0][1]))
-    print("Date of Birth: " + str(results[0][4]))
-    print("Gender: " + str(results[0][5]))
-    print("Address: ")
-    # Printing each line of the address
-    print(str(results[0][6]))
-    print(str(results[0][7]))
-    print(str(results[0][8]))
-    print("Telephone Number: +" + str(results[0][9]))
-    print("Password: " + hash)
+    print("%s %s %s" %(str(results[0][0])[0:3],str(results[0][0])[3:6],str(results[0][0])[6:10]))
+    print("First Name: %s" %(results[0][2]))
+    print("Last Name: %s" %(results[0][3]))
+    print("Email: %s" %(results[0][1]))
+    print("Date of Birth: %s" %(results[0][4]))
+    print("Gender: %s" %(results[0][5]))
+    print("Address:\n%s\n%s\n%s" %(results[0][6],results[0][7],results[0][8])) 
+    print("Telephone Number: +%s" %(results[0][9]))
+    print("Password: %s" %(hash))
 
 
-def options(NHS_number):
+def options(nhs_number):
     """ 
     Function which offers several options for the patient who has successfully logged in and is confirmed by an administrator. 
 
@@ -315,7 +306,7 @@ def options(NHS_number):
     see their personal details, update their personal details, or log out.
 
     Parameters:
-    NHS_number (string): the patient's NHS number. 
+    nhs_number (string): the patient's NHS number. 
     """
     count = 0
     while True:
@@ -341,24 +332,24 @@ def options(NHS_number):
                     elif action == '1':
                         # Uses the appointment.py file to book an appointment
                         x = Appointment()
-                        x.book_appointment(NHS_number)
+                        x.book_appointment(nhs_number)
                     elif action == '2':
                         # Uses the appointment.py file to view appointments
                         x = Appointment()
-                        x.view_app_confirmations(NHS_number)
+                        x.view_app_confirmations(nhs_number)
                     elif action == '3':
                         # Uses the appointment.py file to cancel an appointment
                         x = Appointment()
-                        x.cancel_appointment(NHS_number)
+                        x.cancel_appointment(nhs_number)
                     elif action == '4':
                         # Redirects to a new menu
                         count = 1
                     elif action == '5':
                         # To see the patient summary
-                        summary(NHS_number)
+                        summary(nhs_number)
                     elif action == '6':
                         # To see the patient summary then redirects to a new menu
-                        summary(NHS_number)
+                        summary(nhs_number)
                         count = 3
                     elif action == '0':
                         # Redirects to task() (the main menu for patients)
@@ -378,20 +369,20 @@ def options(NHS_number):
                         raise EmptyAnswerError()
                     elif action == '1':
                         # Uses PatientRiskProfile.py to view medical profile
-                        name = PatientMedical(NHS_number)
-                        name.show_profile(NHS_number)
+                        name = PatientMedical(nhs_number)
+                        name.show_profile(nhs_number)
                     elif action == '2':
                         print(
                             "Please fill out the following lifestyle questions to assess any potential health risk")
                         # Uses lifestyleQuestionnaire.py to take the lifestyle risk questionnaire
-                        x = RiskProfile(NHS_number)
-                        x.questions(NHS_number)
-                        x.BMI_calculator(NHS_number)
-                        x.smoking(NHS_number)
-                        x.drugs(NHS_number)
-                        x.alcohol(NHS_number)
-                        x.diet(NHS_number)
-                        x.insert_to_table(NHS_number)
+                        x = RiskProfile(nhs_number)
+                        x.questions(nhs_number)
+                        x.BMI_calculator(nhs_number)
+                        x.smoking(nhs_number)
+                        x.drugs(nhs_number)
+                        x.alcohol(nhs_number)
+                        x.diet(nhs_number)
+                        x.insert_to_table(nhs_number)
                     elif action == '3':
                         # Redirects to a new menu
                         count = 2
@@ -401,7 +392,7 @@ def options(NHS_number):
                     else:
                         raise InvalidAnswerError()
                 while count == 2:
-                    x = PatientMedical(NHS_number)
+                    x = PatientMedical(nhs_number)
                     print("********************************************")
                     print(
                         "Choose [1] to provide vaccination history for you or your children (if any)")
@@ -418,16 +409,16 @@ def options(NHS_number):
                         raise EmptyAnswerError()
                     elif action == '1':
                         # Uses PatientRiskProfile.py to provide vaccination history
-                        x.vaccination(NHS_number)
+                        x.vaccination(nhs_number)
                     elif action == '2':
                         # Uses PatientRiskProfile.py to provide cancer related medical history
-                        x.cancer(NHS_number)
+                        x.cancer(nhs_number)
                     elif action == '3':
                         # Uses PatientRiskProfile.py to provide pre-existing conditions
-                        x.pre_existing_con(NHS_number)
+                        x.pre_existing_con(nhs_number)
                     elif action == '4':
                         # Uses PatientRiskProfile.py to provide medicine allergies
-                        x.med_allergy(NHS_number)
+                        x.med_allergy(nhs_number)
                     elif action == '0':
                         # Returns to medical profile menu
                         count = 1
@@ -492,11 +483,11 @@ def options(NHS_number):
                         else:
                             # Updates first name in the database
                             c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""",
-                                      (first_name, NHS_number))
+                                      (first_name, nhs_number))
                             connection.commit()
                             print("Successfully changed first name")
                             # Shows the patient summary
-                            summary(NHS_number)
+                            summary(nhs_number)
                             # Returns to the update details menu
                             count = 3
                 while count == 5:
@@ -518,11 +509,11 @@ def options(NHS_number):
                         else:
                             # Updates last name in the database
                             c.execute(
-                                """UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (last_name, NHS_number))
+                                """UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (last_name, nhs_number))
                             connection.commit()
                             print("Successfully changed last name")
                             # Shows the patient summary
-                            summary(NHS_number)
+                            summary(nhs_number)
                             # Returns to the update details menu
                             count = 3
                 while count == 6:
@@ -545,11 +536,11 @@ def options(NHS_number):
                             telephone_number = int(telephone_number)
                             # Updates telephone number in the database
                             c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""",
-                                      (telephone_number, NHS_number))
+                                      (telephone_number, nhs_number))
                             connection.commit()
                             print("Successfully changed telephone number")
                             # Shows the patient summary
-                            summary(NHS_number)
+                            summary(nhs_number)
                             # Returns to the update details menu
                             count = 3
                 while count == 7:
@@ -571,11 +562,11 @@ def options(NHS_number):
                         else:
                             # Updates email in the database
                             c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""",
-                                      (patient_email, NHS_number))
+                                      (patient_email, nhs_number))
                             connection.commit()
                             print("Successfully changed email address")
                             # Shows the patient summary
-                            summary(NHS_number)
+                            summary(nhs_number)
                             # Returns to the update details menu
                             count = 3
                     else:
@@ -583,8 +574,8 @@ def options(NHS_number):
                 while count == 8:
                     # Fetches patient record from database that matches their NHS number to check password
                     c.execute(
-                        "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
-                    NHS_numbers = c.fetchall()
+                        "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [nhs_number])
+                    nhs_numbers = c.fetchall()
                     password = input(
                         "In order to change your password, please enter your old password (press 0 to go back): ")
                     if password == "":
@@ -594,7 +585,7 @@ def options(NHS_number):
                         count = 3
                     else:
                         # Checks if the password input matches the password in the database
-                        if password != NHS_numbers[0][10]:
+                        if password != nhs_numbers[0][10]:
                             raise PasswordIncorrectError()
                         else:
                             password = input(
@@ -607,11 +598,11 @@ def options(NHS_number):
                             else:
                                 # Updates password in the database
                                 c.execute(
-                                    """UPDATE PatientDetail SET password = ? WHERE nhsNumber = ?""", (password, NHS_number))
+                                    """UPDATE PatientDetail SET password = ? WHERE nhsNumber = ?""", (password, nhs_number))
                                 connection.commit()
                                 print("Successfully changed password")
                                 # Shows the patient summary
-                                summary(NHS_number)
+                                summary(nhs_number)
                                 # Returns to the update details menu
                                 count = 3
                 while count == 9:
@@ -701,19 +692,19 @@ def options(NHS_number):
                         update_patient["postcode"] = postcode
                         # Updates address line 1 in the database
                         c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""",
-                                  (update_patient["address_line_1"], NHS_number))
+                                  (update_patient["address_line_1"], nhs_number))
                         connection.commit()
                         # Updates address line 2 in the database
                         c.execute("""UPDATE PatientDetail SET addressLine2 = ? WHERE nhsNumber = ?""",
-                                  (update_patient["address_line_2"], NHS_number))
+                                  (update_patient["address_line_2"], nhs_number))
                         connection.commit()
                         # Updates the postcode in the database
                         c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""",
-                                  (update_patient["postcode"], NHS_number))
+                                  (update_patient["postcode"], nhs_number))
                         connection.commit()
                         print("Successfully changed address")
                         # Shows the patient summary
-                        summary(NHS_number)
+                        summary(nhs_number)
                         # Returns to the update details menu
                         count = 3
             except InvalidAnswerError:
@@ -747,8 +738,8 @@ def login():
     string: the patient's NHS number. 
     """
     count = 0
-    # NHS_number declared here because it is assigned later in various while loops in this function
-    NHS_number = ""
+    # nhs_number declared here because it is assigned later in various while loops in this function
+    nhs_number = ""
     while True:
         while count < 6:
             try:
@@ -803,22 +794,22 @@ def login():
                         raise PasswordIncorrectError()
                     else:
                         # Assigns this patient's NHS number
-                        NHS_number = patient_emails[0][0]
+                        nhs_number = patient_emails[0][0]
                         # Redirects to the check registration while loop
                         count = 5
                 while count == 3:
-                    NHS_number = input("NHS Number (press 0 to go back): ")
-                    if NHS_number == '0':
+                    nhs_number = input("NHS Number (press 0 to go back): ")
+                    if nhs_number == '0':
                         # Returns to the login menu
                         count = 0
                     else:
                         # Removes any character from input that is not a number
-                        NHS_number = int(re.sub("[^0-9]", "", NHS_number))
+                        nhs_number = int(re.sub("[^0-9]", "", nhs_number))
                         # Checks if NHS number exists in the database
                         c.execute(
-                            "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
-                        NHS_numbers = c.fetchall()
-                        if NHS_numbers == []:
+                            "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [nhs_number])
+                        nhs_numbers = c.fetchall()
+                        if nhs_numbers == []:
                             raise NHSDoesNotExistError()
                         else:
                             # Redirects to patient login with NHS number while loop
@@ -826,32 +817,35 @@ def login():
                 while count == 4:
                     # Fetches patient record from database that matches their NHS number to check password
                     c.execute(
-                        "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
-                    NHS_numbers = c.fetchall()
+                        "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [nhs_number])
+                    nhs_numbers = c.fetchall()
                     password = input("Password (press 0 to go back): ")
                     if password == '0':
                         # Returns to the NHS number while loop
                         count = 3
                     # Checks if the password input matches the password in the database
-                    elif password != NHS_numbers[0][10]:
+                    elif password != nhs_numbers[0][10]:
                         raise PasswordIncorrectError()
                     else:
                         # Assigns this patient's NHS number
-                        NHS_number = NHS_numbers[0][0]
+                        nhs_number = nhs_numbers[0][0]
                         # Redirects to the check registration while loop
                         count = 5
                 while count == 5:
-                    # Fetches patient record from database that matches the NHS_number global variable to check registration
+                    # Fetches patient record from database that matches the nhs_number global variable to check registration
                     c.execute(
-                        "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [NHS_number])
+                        "SELECT * FROM PatientDetail WHERE nhsNumber = ?", [nhs_number])
                     results = c.fetchall()
                     if results[0][11] == 0:
+                        count = 6
                         raise NotRegisteredError()
                         # Redirects to task() (the main menu for patients)
                         return 0
                     else:
                         # count = 6 to break the outer while loop
                         count = 6
+                        # Redirects to options(nhs_number) only when the patient successfully logs in and is registered
+                        options(nhs_number)
             except InvalidAnswerError:
                 error = InvalidAnswerError()
                 print(error)
@@ -873,8 +867,6 @@ def login():
             except NotRegisteredError:
                 error = NotRegisteredError()
                 print(error)
-        # Redirects to options(NHS_number) only when the patient successfully logs in and is registered
-        options(NHS_number)
         # Redirects to task() (the main menu for patients)
         return 0
 
@@ -886,16 +878,8 @@ def register():
     Allows new patients to provide their first name, last name, date of birth, gender, address, telephone number, email, 
     and password. Once they submit their details, they are sent back to the main menu for patients. 
     """
-    new_patient = {"first_name": "",
-                   "last_name": "",
-                   "date_of_birth": "",
-                   "gender": "",
-                   "address_line_1": "",
-                   "address_line_2": "",
-                   "postcode": "",
-                   "telephone_number": 0,
-                   "patient_email": "",
-                   "password": ""}
+    # Uses patient.py to create new patient
+    new_patient = Patient()
     count = 0
     while True:
         while count < 11:
@@ -916,8 +900,9 @@ def register():
                     if (any(str.isdigit(y) for y in x)) == True:
                         raise InvalidAnswerError()
                     else:
-                        # Assigns input value to new_patient dictionary
-                        new_patient["first_name"] = first_name
+                        # Assigns input value to new_patient instance
+                        new_patient.first_name = first_name
+                        print("HI %s" %(new_patient.first_name))
                         # Redirects to the last name while loop
                         count = 1
                 while count == 1:
@@ -940,8 +925,9 @@ def register():
                         if (any(str.isdigit(y) for y in x)) == True:
                             raise InvalidAnswerError()
                         else:
-                            # Assigns input value to new_patient dictionary
-                            new_patient["last_name"] = last_name
+                            # Assigns input value to new_patient instance
+                            new_patient.last_name = last_name
+                            print("HI %s %s" %(new_patient.first_name, new_patient.last_name))
                             # Redirects to the date of birth while loop
                             count = 2
                 while count == 2:
@@ -999,8 +985,9 @@ def register():
                                     if date_of_birth > today:
                                         raise DateInFutureError()
                                     else:
-                                        # Assigns date object to new_patient dictionary
-                                        new_patient["date_of_birth"] = date_of_birth
+                                        # Assigns date object to new_patient instance
+                                        new_patient.date_of_birth = date_of_birth
+                                        print("HI %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth))
                                         # Redirects to the gender while loop
                                         count = 3
                 while count == 3:
@@ -1016,20 +1003,23 @@ def register():
                         raise EmptyAnswerError()
                     elif choice == '1':
                         gender = "Female"
-                        # Assigns input value to new_patient dictionary
-                        new_patient["gender"] = gender
+                        # Assigns input value to new_patient instance
+                        new_patient.gender = gender
+                        print("HI %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender))
                         # Redirects to the address line 1 while loop
                         count = 4
                     elif choice == '2':
                         gender = "Male"
-                        # Assigns input value to new_patient dictionary
-                        new_patient["gender"] = gender
+                        # Assigns input value to new_patient instance
+                        new_patient.gender = gender
+                        print("HI %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender))
                         # Redirects to the address line 1 while loop
                         count = 4
                     elif choice == '3':
                         gender = "Non-Binary"
-                        # Assigns input value to new_patient dictionary
-                        new_patient["gender"] = gender
+                        # Assigns input value to new_patient instance
+                        new_patient.gender = gender
+                        print("HI %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender))
                         # Redirects to the address line 1 while loop
                         count = 4
                     elif choice == '4':
@@ -1057,8 +1047,9 @@ def register():
                     elif len(address_line_1) > 400:
                         raise InvalidAnswerError()
                     else:
-                        # Assigns input value to new_patient dictionary
-                        new_patient["address_line_1"] = address_line_1
+                        # Assigns input value to new_patient instance
+                        new_patient.address_line_1 = address_line_1
+                        print("HI %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1))
                         # Redirects to the address line 2 while loop
                         count = 5
                 while count == 5:
@@ -1076,8 +1067,9 @@ def register():
                     elif len(address_line_2) > 400:
                         raise InvalidAnswerError()
                     else:
-                        # Assigns input value to new_patient dictionary
-                        new_patient["address_line_2"] = address_line_2
+                        # Assigns input value to new_patient instance
+                        new_patient.address_line_2 = address_line_2
+                        print("HI %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2))
                         # Redirects to the city while loop
                         count = 6
                 while count == 6:
@@ -1105,9 +1097,10 @@ def register():
                         else:
                             # Reassigns address_line_2 as a combination of address_line_2 and city while removing preceding and trailing spaces
                             address_line_2 = (
-                                new_patient["address_line_2"] + " " + city).strip()
-                            # Assigns input value to new_patient dictionary
-                            new_patient["address_line_2"] = address_line_2
+                                new_patient.address_line_2 + " " + city).strip()
+                            # Assigns input value to new_patient instance
+                            new_patient.address_line_2 = address_line_2
+                            print("HI %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2))
                             # Redirects to the postcode while loop
                             count = 7
                 while count == 7:
@@ -1127,8 +1120,9 @@ def register():
                     elif len(postcode) > 50:
                         raise InvalidAnswerError()
                     else:
-                        # Assigns input value to new_patient dictionary
-                        new_patient["postcode"] = postcode
+                        # Assigns input value to new_patient instance
+                        new_patient.postcode = postcode
+                        print("HI %s %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2, new_patient.postcode))
                         # Redirects to the telephone number while loop
                         count = 8
                 while count == 8:
@@ -1152,8 +1146,9 @@ def register():
                         else:
                             # Converts telephone number string into an integer
                             telephone_number = int(telephone_number)
-                            # Assigns input value to new_patient dictionary
-                            new_patient["telephone_number"] = telephone_number
+                            # Assigns input value to new_patient instance
+                            new_patient.telephone_number = telephone_number
+                            print("HI %s %s %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2, new_patient.postcode, new_patient.telephone_number))
                             # Redirects to the email while loop
                             count = 9
                 while count == 9:
@@ -1176,8 +1171,9 @@ def register():
                         if patient_emails != []:
                             raise EmailAlreadyExistsError()
                         else:
-                            # Assigns input value to new_patient dictionary
-                            new_patient["patient_email"] = patient_email
+                            # Assigns input value to new_patient instance
+                            new_patient.patient_email = patient_email
+                            print("HI %s %s %s %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2, new_patient.postcode, new_patient.telephone_number, new_patient.patient_email))
                             # Redirects to the password while loop
                             count = 10
                     else:
@@ -1194,8 +1190,9 @@ def register():
                         # Returns to the email while loop
                         count = 9
                     else:
-                        # Assigns input value to new_patient dictionary
-                        new_patient["password"] = password
+                        # Assigns input value to new_patient instance
+                        new_patient.password = password
+                        print("HI %s %s %s %s %s %s %s %s %s %s" %(new_patient.first_name, new_patient.last_name, new_patient.date_of_birth, new_patient.gender, new_patient.address_line_1, new_patient.address_line_2, new_patient.postcode, new_patient.telephone_number, new_patient.patient_email, new_patient.password))
                         # count = 11 to break the outer while loop
                         count = 11
             except EmptyAnswerError:
@@ -1222,15 +1219,11 @@ def register():
             except EmailAlreadyExistsError:
                 error = EmailAlreadyExistsError()
                 print(error)
-        # Uses patient.py to create new patient
-        x = Patient(new_patient["patient_email"], new_patient["first_name"], new_patient["last_name"], new_patient["date_of_birth"], new_patient["gender"],
-                    new_patient["address_line_1"], new_patient["address_line_2"], new_patient["postcode"], new_patient["telephone_number"], new_patient["password"])
         # Inserts new patient into the database
-        x.register()
-        print("Thank you, " + x.first_name +
-              ", for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days.")
+        new_patient.register()
+        print("Thank you, %s, for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days." %(new_patient.first_name))
         # To see the patient summary
-        summary(x.NHS_number)
+        summary(new_patient.nhs_number)
         # Redirects to task() (the main menu for patients)
         return 0
 
