@@ -1,13 +1,13 @@
 from tkinter import *
-from timetable_functions import getDoctorNotes, saveDoctorNotes, getPatientInfo
-from prescription_med_functions import getAllergies
+from timetable_functions import get_doctor_notes, save_doctor_notes, get_patient_info
+from prescription_med_functions import get_patient_allergies
 from tkinter import messagebox, ttk
 
 
 def appointment_notes(appointmentid):
 
     # Existing doctor's notes
-    doctorsNotes = getDoctorNotes(appointmentid)
+    doctorsNotes = get_doctor_notes(appointmentid)
     global globalDoctorsNotes
     globalDoctorsNotes = doctorsNotes
     patientComplaint = doctorsNotes[0]
@@ -17,7 +17,7 @@ def appointment_notes(appointmentid):
     doctorAdvice = doctorsNotes[4]
 
     # Patient information
-    patientInfo = getPatientInfo(appointmentid)
+    patientInfo = get_patient_info(appointmentid)
     global globalPatientInfo
     globalPatientInfo = patientInfo
     nhsNumber = patientInfo[0]
@@ -35,7 +35,7 @@ def appointment_notes(appointmentid):
     bmi = patientInfo[13]
 
     # Patient Allergies
-    allergyList = getAllergies(nhsNumber)
+    allergyList = get_patient_allergies(nhsNumber)
 
     # Create tkinter window
     global root
@@ -270,7 +270,7 @@ def save_notes():
     globalDoctorsNotes[2] = diagnosisTextBox.get(1.0, END)
     globalDoctorsNotes[3] = inspectionsTextBox.get(1.0, END)
     globalDoctorsNotes[4] = adviceTextBox.get(1.0, END)
-    saveDoctorNotes(globalDoctorsNotes)
+    save_doctor_notes(globalDoctorsNotes)
     response = messagebox.askyesno("Your notes have been saved!",
                                    "Your notes have been saved. Are you finished editing your notes?")
     if response == 1:

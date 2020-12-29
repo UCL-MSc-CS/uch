@@ -1,4 +1,4 @@
-import patients.patientMedicalFunctions as pm
+import patients.patient_medical_functions as pm
 
 def patient_history(nhsNumber):
     while True:

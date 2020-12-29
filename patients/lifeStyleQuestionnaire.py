@@ -1,6 +1,6 @@
 import sqlite3 as sql
 import webbrowser
-import patients.patientMedicalFunctions as pf
+import patients.patient_medical_functions as pf
 
 
 """Patient can enter data about their lifestyles. Relevant NHS advise and support information are provided to them"""

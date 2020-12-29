@@ -5,7 +5,7 @@ from patients.patient import Patient
 from patients.PatientRiskProfile import PatientMedical
 from patients.lifeStyleQuestionnaire import RiskProfile
 from patients.appointment import Appointment
-import patients.patientMedicalFunctions as pf
+import patients.patient_medical_functions as pf
 import useful_functions as uf
 import re
 

@@ -2,7 +2,7 @@ from PIL import ImageTk
 from tkinter import *
 from tkinter import ttk
 
-    # Load up instructions function
+# Load up the help page
 def help_page():
     # global guideImage
     top = Toplevel()

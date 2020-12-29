@@ -3,19 +3,19 @@ import useful_functions as uf
 import timetable_functions as db
 from GPs.print_day import print_day
 
-dateformatstring = "%Y-%m-%d"
+DATE_FORMAT_STRING = "%Y-%m-%d"
 
 def clearhours(doctoremail):
     print("--------------------------------------------")
     print("\t Doctor Cancel/Decline Appointments")
     print("--------------------------------------------")
-    date = uf.validatedate("Enter a date you would like to cancel an appointment.")
+    date = uf.validate_date("Enter a date you would like to cancel an appointment.")
     if date == 'exit':
         return
     print_day(date, doctoremail)
-    datestring = datetime.strftime(date,dateformatstring)
+    datestring = datetime.strftime(date, DATE_FORMAT_STRING)
     appointments = []
-    for appointment in db.timetableblock(doctoremail, datestring):
+    for appointment in db.timetable_block(doctoremail, datestring):
         appointments.append(appointment[4])
     if not appointments:
         print("\t<There are no appointments on "+datestring+" returning to the main menu>")
@@ -27,7 +27,7 @@ def clearhours(doctoremail):
         try:
             idnum = int(id)
             if idnum in appointments:
-                db.clearbookedtime(idnum)
+                db.clear_booked_time(idnum)
                 print("Successfully deleted Appointment " + str(idnum))
             else:
                 print("\t <Appointment of ID: "+str(idnum)+" doesn't exist on the given date.>")

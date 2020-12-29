@@ -33,7 +33,7 @@ def add_non_patient_time(doctoremail):
         print("********************************************")
 
 def add_holiday(doctoremail):
-    startdate = uf.validatedate("Please enter a start date")
+    startdate = uf.validate_date("Please enter a start date")
     if startdate == 'exit':
         return
     elif startdate.date() < datetime.today().date():
@@ -42,14 +42,14 @@ def add_holiday(doctoremail):
         if choice == '0':
             add_holiday(doctoremail)
         return
-    enddate = uf.validatedate("Please enter an end date")
+    enddate = uf.validate_date("Please enter an end date")
     if enddate == 'exit':
         add_holiday(doctoremail)
         return
     if enddate >= startdate:
-        for single_date in uf.daterange(startdate, enddate):
+        for single_date in uf.date_range(startdate, enddate):
             datestring = datetime.strftime(single_date,dateformatstring)
-            status = db.checkslotavailable(datestring, clinicstart, clinicend, [doctoremail])
+            status = db.check_slot_available(datestring, clinicstart, clinicend, [doctoremail])
             if status[0] == "unavailable":
                 print("\n\t<Sorry, you are busy during this period and cannot book your holiday>\n")
                 choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
@@ -57,7 +57,7 @@ def add_holiday(doctoremail):
                     add_holiday(doctoremail)
                 return
         reason = "holiday"
-        for single_date in uf.daterange(startdate, enddate):
+        for single_date in uf.date_range(startdate, enddate):
             datestring = datetime.strftime(single_date, dateformatstring)
             db.book_time(datestring, clinicstart, clinicend, reason, "", [doctoremail])
             declined = db.auto_decline_pending(datestring, clinicstart, clinicend, doctoremail)
@@ -69,7 +69,7 @@ def add_holiday(doctoremail):
 
 
 def add_non_patient_hours(doctoremail):
-    chosendate = uf.validatedate("Please enter a date")
+    chosendate = uf.validate_date("Please enter a date")
     if chosendate == 'exit':
         return
     if chosendate.date() < datetime.today().date():
@@ -79,17 +79,17 @@ def add_non_patient_hours(doctoremail):
             add_non_patient_hours(doctoremail)
         return
     datestring = datetime.strftime(chosendate, dateformatstring)
-    starttime = uf.validatetime("Please enter a start time")
+    starttime = uf.validate_time("Please enter a start time")
     if starttime == 'exit':
         add_non_patient_hours(doctoremail)
         return
     starttimestring = datetime.strftime(starttime, timeformatstring)
-    endtime = uf.validatetime("Please enter an end time")
+    endtime = uf.validate_time("Please enter an end time")
     if endtime == 'exit':
         add_non_patient_hours(doctoremail)
         return
     endtimestring = datetime.strftime(endtime, timeformatstring)
-    status = db.checkslotavailable(datestring, starttimestring, endtimestring, [doctoremail])
+    status = db.check_slot_available(datestring, starttimestring, endtimestring, [doctoremail])
     if starttime < endtime and status[0] != 'unavailable':
         reason = select_reason()
         db.book_time(datestring, starttimestring, endtimestring, reason, "", [doctoremail])

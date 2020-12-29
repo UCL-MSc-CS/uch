@@ -1,5 +1,5 @@
 import sqlite3 as sql
-import patients.patientMedicalFunctions as pf
+import patients.patient_medical_functions as pf
 
 
 """Set up patient medical record"""

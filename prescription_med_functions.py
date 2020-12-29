@@ -4,7 +4,7 @@ import re
 
 
 # connect to your database
-def connecttodb():
+def connect_to_db():
     path = str(Path(__file__).parent.absolute()) + "/UCH.db"
     connection = sqlite3.connect(path)  # DO NOT add this file to Git!!!
     cursor = connection.cursor()
@@ -13,7 +13,7 @@ def connecttodb():
 
 
 # disconnect from your database
-def closeconn(conn):
+def close_connection(conn):
     conn.commit()
     conn.close()
 
@@ -31,8 +31,8 @@ def functionname(args):
 """
 
 
-def alldosagetypes():
-    conn = connecttodb()
+def get_all_dosage_types():
+    conn = connect_to_db()
 
     conn['cursor'].execute("""SELECT DISTINCT dosageType FROM Medicine ORDER BY dosageType asc""")
     results = conn['cursor'].fetchall()
@@ -42,12 +42,12 @@ def alldosagetypes():
     for result in results:
         dosageTypes.append(result[0])
 
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
 
     return dosageTypes
 
-def allmedtypes():
-    conn = connecttodb()
+def get_all_med_types():
+    conn = connect_to_db()
 
     conn['cursor'].execute("""SELECT DISTINCT medicineType FROM Medicine ORDER BY medicineType asc""")
     results = conn['cursor'].fetchall()
@@ -57,12 +57,12 @@ def allmedtypes():
     for result in results:
         medicineTypes.append(result[0])
 
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
 
     return medicineTypes
 
-def allcategories():
-    conn = connecttodb()
+def get_all_med_categories():
+    conn = connect_to_db()
 
     conn['cursor'].execute("""SELECT DISTINCT category FROM Medicine ORDER BY medicineType asc""")
     results = conn['cursor'].fetchall()
@@ -72,13 +72,13 @@ def allcategories():
     for result in results:
         categories.append(result[0])
 
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
 
     return categories
 
 # This searches for drugs
-def search(medname,drugname,dosetype,medtype,category):
-    conn = connecttodb()
+def medicine_search(medname, drugname, dosetype, medtype, category):
+    conn = connect_to_db()
 
     if medname:
         medname = "%" + medname + "%"
@@ -105,11 +105,11 @@ def search(medname,drugname,dosetype,medtype,category):
     conn['cursor'].execute(sql,values)
     results = conn['cursor'].fetchall()
 
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
     return results
 
-def addPrescription(prescription):
-    conn = connecttodb()
+def add_prescription_to_db(prescription):
+    conn = connect_to_db()
 
     prescriptionTuple = tuple(prescription)
 
@@ -120,10 +120,10 @@ def addPrescription(prescription):
             (?, ?, ?, ?, ?)
         """, prescriptionTuple)
 
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
 
-def getPrescription(appointmentID):
-    conn = connecttodb()
+def get_prescription_from_db(appointmentID):
+    conn = connect_to_db()
 
     conn['cursor'].execute("""
         SELECT medicineID, medicineName, dosage, dosageMultiplier, dosageType, furtherInformation
@@ -134,11 +134,11 @@ def getPrescription(appointmentID):
     """,(appointmentID,))
 
     results = conn['cursor'].fetchall()
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
     return results
 
-def getUnits(medicineID):
-    conn = connecttodb()
+def get_medicine_units(medicineID):
+    conn = connect_to_db()
 
     conn['cursor'].execute("""
         SELECT activeIngredientUnit
@@ -147,20 +147,20 @@ def getUnits(medicineID):
     """,(medicineID,))
 
     results = conn['cursor'].fetchall()[0]
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
     return results
 
-def deleteMedRecord(appointmentID):
-    conn = connecttodb()
+def delete_med_record(appointmentID):
+    conn = connect_to_db()
     conn['cursor'].execute("""
             DELETE from Prescription
             WHERE 
             appointmentID = ?
         """, (appointmentID,))
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
 
-def getAllergies(nhsNumber):
-    conn = connecttodb()
+def get_patient_allergies(nhsNumber):
+    conn = connect_to_db()
 
     conn['cursor'].execute("""
                 SELECT medName 
@@ -175,10 +175,10 @@ def getAllergies(nhsNumber):
 
     return allergies
 
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
 
-def allergyhandler(nhsNumber,medicine):
-    conn = connecttodb()
+def allergy_message_handler(nhsNumber, medicine):
+    conn = connect_to_db()
 
     conn['cursor'].execute("""
                 SELECT medName 
@@ -199,7 +199,7 @@ def allergyhandler(nhsNumber,medicine):
                          "' as a medical allergy. Please consider carefully before adding this medicine"
             return warningmsg
 
-    closeconn(conn["connection"])
+    close_connection(conn["connection"])
 
 
 # if __name__=="__main__":

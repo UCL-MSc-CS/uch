@@ -1,5 +1,4 @@
 import sqlite3 as sql
-import time
 
 def gp_login():
 

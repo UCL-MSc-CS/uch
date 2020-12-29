@@ -2,22 +2,22 @@ from datetime import datetime
 import useful_functions as uf
 import timetable_functions as db
 
-dateformatstring = "%Y-%m-%d"
-timeformatstring = "%H:%M"
+DATE_FORMAT_STRING = "%Y-%m-%d"
+TIME_FORMAT_STRING = "%H:%M"
 
 def confirm_appointments(doctoremail):
     while True:
-        confirmdate = uf.validatedate("Please enter a date for confirming appointments")
+        confirmdate = uf.validate_date("Please enter a date for confirming appointments")
         if confirmdate == 'exit':
             return
         if confirmdate.date() >= datetime.today().date():
             break
         else:
             print("\n\t<You cannot confirm appointments in the past, please try again>\n")
-    datestring = datetime.strftime(confirmdate,dateformatstring)
+    datestring = datetime.strftime(confirmdate, DATE_FORMAT_STRING)
     continueconfirming = True
     while continueconfirming:
-        pendingappointments = db.getallpendingappointments(doctoremail,datestring)
+        pendingappointments = db.get_all_pending_appointments(doctoremail, datestring)
 
         pendingids = []
         for appointment in pendingappointments:
@@ -33,17 +33,17 @@ def confirm_appointments(doctoremail):
         print("id" + "\t" + "reason" + "\t\t" + "time" + "\t\t" + "nhs number" + "\t" + "patient name")
         for appointment in pendingappointments:
             reason = appointment[0]
-            start = datetime.strftime(uf.toregulartime(appointment[1]), timeformatstring)
-            end = datetime.strftime(uf.toregulartime(appointment[2]), timeformatstring)
+            start = datetime.strftime(uf.unix_to_regular_time(appointment[1]), TIME_FORMAT_STRING)
+            end = datetime.strftime(uf.unix_to_regular_time(appointment[2]), TIME_FORMAT_STRING)
             nhsNumber = str(appointment[3]).zfill(10)
             appointmentid = str(appointment[4])
-            patient_details = db.getPatientInfo(appointmentid)
+            patient_details = db.get_patient_info(appointmentid)
             full_name = patient_details[2] + " " + patient_details[3]
-            status = db.checkslotavailable(datestring, start, end, [doctoremail])
+            status = db.check_slot_available(datestring, start, end, [doctoremail])
             if status[0] != 'unavailable':
                 print(appointmentid+"\t"+reason+"\t"+start+"-"+end+"\t"+nhsNumber+"\t"+full_name)
             else:
-                db.declineappointment(appointmentid)
+                db.decline_appointment(appointmentid)
                 pendingids.remove(appointment[4])
 
         id = input("Please enter the id of an appointment you would like to confirm (type 'x' to exit): ")
@@ -52,7 +52,7 @@ def confirm_appointments(doctoremail):
                 break
             idnum = int(id)
             if idnum in pendingids:
-                db.acceptappointment(idnum)
+                db.accept_appointment(idnum)
                 print("Accepted appointment with id " + id)
             else:
                 print("\n\t<You entered an invalid id number!>\n")

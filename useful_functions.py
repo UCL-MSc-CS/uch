@@ -10,7 +10,7 @@ timeformatstring = "%H:%M"
 datetimeformat = dateformatstring + " " + timeformatstring
 
 #call this function to validate any date entered by the user
-def validatedate(string):
+def validate_date(string):
     while True:
         try:
             datestring = input(string + " (YYYY-MM-DD) (enter [0]) to exit: ")
@@ -26,7 +26,7 @@ def validatedate(string):
             print("\t<Invalid date entered, please try again...>")
 
 #call this function to validate any time entered by the user
-def validatetime(string):
+def validate_time(string):
     while True:
         try:
             timestring = input(string + " (HH:MM) (enter [0]) to exit: ")
@@ -42,11 +42,11 @@ def validatetime(string):
             print("\t<Invalid time entered, Please try again...>")
 
 #convert a unix integer time back into a datetime object
-def toregulartime(unixtimestamp):
+def unix_to_regular_time(unixtimestamp):
     return datetime.utcfromtimestamp(int(unixtimestamp))
 
 #convert python datetime object into a unix timestring
-def tounixtime(dt):
+def regular_to_unix_time(dt):
     result = int(time.mktime(dt.timetuple()))
     return result
 
@@ -54,7 +54,7 @@ def tounixtime(dt):
 #use as follows:
 #   for single_date in daterange(start_date, end_date):
 #       * YOUR CODE HERE *
-def daterange(start_date, end_date):
+def date_range(start_date, end_date):
     for n in range(int((end_date + timedelta(1) - start_date).days)):
         yield start_date + timedelta(n)
 

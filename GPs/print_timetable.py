@@ -6,7 +6,7 @@ from GPs.print_day import print_day
 def print_days(date, doctoremail):
     start_date = date - timedelta(days=date.weekday())
     end_date = start_date + timedelta(days=6)
-    for single_date in uf.daterange(start_date, end_date):
+    for single_date in uf.date_range(start_date, end_date):
         print_day(single_date, doctoremail)
 
 
@@ -39,7 +39,7 @@ def print_timetable(doctoremail):
                 else:
                     break
             elif int(option) == 3:
-                selected_date = uf.validatedate("Please enter a date to view its weekly timetable")
+                selected_date = uf.validate_date("Please enter a date to view its weekly timetable")
                 if selected_date == 'exit':
                     continue
                 print_days(selected_date, doctoremail)

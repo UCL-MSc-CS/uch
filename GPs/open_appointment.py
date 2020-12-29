@@ -56,7 +56,7 @@ def print_todays_appointments(doctoremail):
     print("--------------------------------------------")
     print(datetime.strftime(day, "%A %d %b %Y"))
     print("--------------------------------------------")
-    appointments = db.TodayAppointments(doctoremail)
+    appointments = db.todays_appointments(doctoremail)
     if not appointments:
         print("\n\t<There are no confirmed appointments available on this day.>")
         print("\t<Consider confirming some pending appointments if you have any>\n")
@@ -66,11 +66,11 @@ def print_todays_appointments(doctoremail):
     for appointment in appointments:
         appointmentids.append(appointment[4])
         reason = appointment[0]
-        start = datetime.strftime(uf.toregulartime(appointment[1]), timeformatstring)
-        end = datetime.strftime(uf.toregulartime(appointment[2]), timeformatstring)
+        start = datetime.strftime(uf.unix_to_regular_time(appointment[1]), timeformatstring)
+        end = datetime.strftime(uf.unix_to_regular_time(appointment[2]), timeformatstring)
         nhsNumber = str(appointment[3]).zfill(10)
         appointmentid = str(appointment[4])
-        patient_details = db.getPatientInfo(appointmentid)
+        patient_details = db.get_patient_info(appointmentid)
         full_name = patient_details[2] + " " + patient_details[3]
         print(appointmentid+"\t"+reason+"\t"+start+"-"+end+"\t"+nhsNumber+"\t"+full_name)
     while True:

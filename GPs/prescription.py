@@ -6,7 +6,7 @@ from GPs.help_page import help_page
 def prescription(doctoremail,appointmentID,nhsNumber):
 
     # Pull all saved prescription records from the database
-    prescriptionData = ms.getPrescription(appointmentID)
+    prescriptionData = ms.get_prescription_from_db(appointmentID)
 
     # Pull medicine IDs from prescription database and append into initial treeviewMedID
     treeviewMedID = []
@@ -58,16 +58,16 @@ def prescription(doctoremail,appointmentID,nhsNumber):
         mtype = chosenmedtype.get()
         ctype = chosencategory.get()
 
-        results = ms.search(medsearchstring, drugsearchstring, dtype, mtype, ctype)
+        results = ms.medicine_search(medsearchstring, drugsearchstring, dtype, mtype, ctype)
         for result in results:
             trv.insert('', 'end', values=result)
 
 
-    dosage_types = ms.alldosagetypes()
+    dosage_types = ms.get_all_dosage_types()
     dosage_types.insert(0,"-")
-    medicine_types = ms.allmedtypes()
+    medicine_types = ms.get_all_med_types()
     medicine_types.insert(0,"-")
-    categories = ms.allcategories()
+    categories = ms.get_all_med_categories()
     categories.insert(0,"-")
 
     chosendosetype = StringVar(value="-")
@@ -139,7 +139,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
 
         if medid.get() and int(medid.get()) not in treeviewMedID:
             treeviewMedID.append(int(medid.get()))
-            doseUnit = ms.getUnits(medid.get())
+            doseUnit = ms.get_medicine_units(medid.get())
 
             global count
             addvalues = (
@@ -169,7 +169,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             medname.config(state=DISABLED)
             doseType.config(state=DISABLED)
             multiplier.config(state='readonly')
-            potential_allergy = ms.allergyhandler(nhsNumber,addvalues[1])
+            potential_allergy = ms.allergy_message_handler(nhsNumber, addvalues[1])
             if potential_allergy:
                 messagebox.showerror("Warning!", potential_allergy)
 
@@ -319,7 +319,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     # Saves prescription data into database
     def save_prescription():
         #todo connect to database and insert new data
-        ms.deleteMedRecord(appointmentID)
+        ms.delete_med_record(appointmentID)
         for record in myTree.get_children():
             prescriptionLine = myTree.item(record, "values")
             prescriptionList = list(prescriptionLine)
@@ -327,7 +327,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             prescriptionList.pop(2)
             prescriptionList.pop(4)
 
-            ms.addPrescription(prescriptionList)
+            ms.add_prescription_to_db(prescriptionList)
 
 
         exit = messagebox.askyesno("Save Prescription", "Confirm if you want to exit.")
