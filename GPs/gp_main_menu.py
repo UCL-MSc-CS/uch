@@ -4,12 +4,22 @@ from GPs.add_non_patient_time import add_non_patient_time
 from GPs.confirm_appointments import confirm_appointments
 from GPs.open_appointment import open_appointment
 
-def gp_main_menu(dremail, drname):
+"""
+The main menu function for GPs.
+
+Most options will auto-return to this screen if the user chooses to exit data entry.
+From here doctors can open and confirm appointments.
+Book holidays and non-patient time.
+View their timetable on a given week.
+Cancel appointments.
+Logout. 
+"""
+def gp_main_menu(gp_email, gp_full_name):
     while True:
         print("--------------------------------------------")
         print("\t Doctor Main Menu")
         print("--------------------------------------------")
-        print("Welcome Dr. " + drname)
+        print("Welcome Dr. " + gp_full_name)
         print("Choose [1] to open today's appointments")
         print("Choose [2] to confirm pending appointments")
         print("Choose [3] to add non-patient time (including holidays)")
@@ -18,15 +28,15 @@ def gp_main_menu(dremail, drname):
         print("Choose [0] to logout")
         option = input("Please select an option: ")
         if option == "1":
-            open_appointment(dremail)
+            open_appointment(gp_email)
         elif option == "2":
-            confirm_appointments(dremail)
+            confirm_appointments(gp_email)
         elif option == "3":
-            add_non_patient_time(dremail)
+            add_non_patient_time(gp_email)
         elif option == "4":
-            print_timetable(dremail)
+            print_timetable(gp_email)
         elif option == "5":
-            clearhours(dremail)
+            clearhours(gp_email)
         elif option == "0":
             print("Logging out.....")
             print("********************************************")
