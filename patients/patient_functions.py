@@ -291,25 +291,49 @@ def choose_month(year):
             # to choose another date
             if mm == 0:
                 return 0
-            # to format month as an object
-            month_str = "{}-{}-31".format(year, str(mm))
-            format_str = '%Y-%m-%d'
-            month_obj = datetime.strptime(month_str, format_str)
-            month_input = month_obj.date()
-            # exception raised if month chosen in the past
-            if month_input < current_month:
-                raise MonthPassedError
             # exception raised if month chosen not between 1-12
-            elif not 1 <= mm <= 12:
+            if not 1 <= mm <= 12:
                 raise MonthNotValidError
-            else:
-                # print calendar for chosen month and year
-                print("--------------------------------------------")
-                print(calendar.month(year, mm))
-                print("--------------------------------------------")
+            elif mm == 9 or mm == 4 or mm == 6 or mm == 11:
                 month = '{:02}'.format(mm)
-                # return chosen month
-                return month
+                month_str = "{}-{}-30".format(year, str(month))
+                format_str = '%Y-%m-%d'
+                month_input = datetime.strptime(month_str, format_str).date()
+                # exception raised if month chosen in the past
+                if month_input < current_month:
+                    raise MonthPassedError
+                else:
+                    # print calendar for chosen month and year
+                    print_calendar(year, mm)
+                    month = '{:02}'.format(mm)
+                    # return chosen month
+                    return month
+            elif mm == 1 or mm == 3 or mm == 5 or mm == 7 or mm == 8 or mm == 10 or mm == 12:
+                month_str = "{}-{}-31".format(year, str(mm))
+                format_str = '%Y-%m-%d'
+                month_input = datetime.strptime(month_str, format_str).date()
+                # exception raised if month chosen in the past
+                if month_input < current_month:
+                    raise MonthPassedError
+                else:
+                    # print calendar for chosen month and year
+                    print_calendar(year, mm)
+                    month = '{:02}'.format(mm)
+                    # return chosen month
+                    return month
+            elif mm == 2:
+                month_str = "{}-{}-28".format(year, str(mm))
+                format_str = '%Y-%m-%d'
+                month_input = datetime.strptime(month_str, format_str).date()
+                # exception raised if month chosen in the past
+                if month_input < current_month:
+                    raise MonthPassedError
+                else:
+                    # print calendar for chosen month and year
+                    print_calendar(year, mm)
+                    month = '{:02}'.format(mm)
+                    # return chosen month
+                    return month
         except MonthNotValidError:
             print("\n\t< This is not a valid month, please try again >"
                   "\n")
@@ -319,6 +343,19 @@ def choose_month(year):
         except ValueError:
             print("\n\t< This is not a valid option, please try again >"
                   "\n")
+
+
+def print_calendar(year, month):
+    """
+    Function to print a calendar for the year and month chosen.
+
+    Parameters:
+        month (int): Month chosen.
+        year (int): Year chosen.
+    """
+    print("--------------------------------------------")
+    print(calendar.month(year, month))
+    print("--------------------------------------------")
 
 
 def choose_date(month, year):
