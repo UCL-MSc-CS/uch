@@ -2,50 +2,43 @@ from PIL import ImageTk
 from tkinter import *
 from tkinter import ttk
 
-# Load up the help page
+
 def help_page():
-    # global guideImage
+    """Loads up the help page"""
+
     top = Toplevel()
     top.title('Prescription process')
     top.geometry("1920x950")
 
-    # create Main frame
-
+    # Creates main frame
     main_frame = Frame(top)
     main_frame.pack(fill= BOTH, expand = 1)
 
-    # Create a Canvas in the Main frame
-
+    # Creates a Canvas in the Main frame
     canvas = Canvas(main_frame)
     canvas.pack(side = LEFT, fill= BOTH, expand = 1)
 
-    # Create style for scrollbar
-
+    # Creates style for scrollbar
     scrollstyle = ttk.Style()
     scrollstyle.theme_use('clam')
     #print(scrollstyle.element_options("scrollstyle.Vertical.TScrollbar.trough"))
     scrollstyle.configure("scrollstyle.Vertical.TScrollbar",arrowsize=30)
 
-    # Add a scrollbar
-
+    # Adds a scrollbar
     scrollbar = ttk.Scrollbar(main_frame,orient = VERTICAL,command = canvas.yview, style="scrollstyle.Vertical.TScrollbar")
     scrollbar.pack(side = RIGHT, fill = Y)
 
-    # Configure the Canvas
-
+    # Configures the Canvas
     canvas.configure(yscrollcommand = scrollbar.set)
     canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion = canvas.bbox("all")))
 
-    # create another frame inside the canvas
-
+    # Creates another frame inside the canvas
     second_frame = Frame(canvas)
 
-    #add second frame to a window in the cavas
-
+    #Adds second frame to a window in the cavas
     canvas.create_window((0,0),window = second_frame, anchor = "nw")
 
-    #-------------------------------------Step 1----------------------------------------------------#
-
+    #-------------------------------------Step 1----------------------------------------------------
     image1 = ImageTk.Image.open("GPs/Step 1.PNG")
     image1 = image1.resize((250,300))
     render = ImageTk.PhotoImage(image1)
@@ -60,7 +53,6 @@ def help_page():
     step1.grid(row=1,column=2)
 
     #-------------------------------------Step 2----------------------------------------------------#
-
     image2 = ImageTk.Image.open("GPs/Step 2.PNG")
     image2 = image2.resize((800,300))
     render = ImageTk.PhotoImage(image2)
@@ -89,7 +81,6 @@ def help_page():
     step2.grid(row=3,column=2)
 
     #-------------------------------------Step 4----------------------------------------------------#
-
     image4 = ImageTk.Image.open("GPs/Step 4.PNG")
     image4 = image4.resize((800,300))
     render = ImageTk.PhotoImage(image4)
@@ -104,7 +95,6 @@ def help_page():
     step2.grid(row=4,column=2)
 
     #-------------------------------------Step 5----------------------------------------------------#
-
     image5 = ImageTk.Image.open("GPs/Step 5.PNG")
     image5 = image5.resize((850,300))
     render = ImageTk.PhotoImage(image5)
