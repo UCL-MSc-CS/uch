@@ -4,7 +4,7 @@ from datetime import datetime
 
 datetimeformat = "%Y-%m-%d %H:%M"
 
-def PatientSummary(nhsNumber):
+def patient_summary(nhsNumber):
     """
     This is the function for generating the patient summary. The patient summary is an important document used in 
     the NHS that aims to show doctors what current/ongoing problems the patient may be experiencing, what
