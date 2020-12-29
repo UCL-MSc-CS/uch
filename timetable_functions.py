@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime, timedelta
-import usefulfunctions as uf
+import useful_functions as uf
 from pathlib import Path
 
 datetimeformat = "%Y-%m-%d %H:%M"
