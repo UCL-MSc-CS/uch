@@ -1,5 +1,5 @@
 import sqlite3 as sql
-import usefulfunctions as uf
+import useful_functions as uf
 from datetime import datetime
 
 datetimeformat = "%Y-%m-%d %H:%M"

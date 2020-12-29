@@ -1,7 +1,7 @@
 import sqlite3 as sql
 from datetime import datetime as dt
 from datetime import date 
-import usefulfunctions as uf
+import useful_functions as uf
 import pandas as pd
 
 class Error(Exception):
