@@ -10,15 +10,14 @@ DATE_FORMAT_STRING = "%Y-%m-%d"
 TIME_FORMAT_STRING = "%H:%M"
 DATE_TIME_FORMAT = DATE_FORMAT_STRING + " " + TIME_FORMAT_STRING
 
-"""
-Main menu once a selected appointment has been opened.
-
-From here the GP can add their notes, build a prescription and check on the patients medical history through various
-means.
-"""
-
-
 def open_appointment(gp_email):
+    """
+    Main menu once a selected appointment has been opened.
+
+    From here the GP can add their notes, build a prescription and check on the patients medical history through various
+    means.
+    """
+
     # Starts by printing all the appointments available for the GP to open.
     appointment_id, nhs_number = print_todays_appointments(gp_email)
 
@@ -58,18 +57,16 @@ def open_appointment(gp_email):
 
             print("********************************************")
 
-
-"""
-Prints all confirmed appointments on a given date.
-
-Called when the user chooses to "Open an appointment" from the main menu. 
-Remember that this will only show appointments that have been "confirmed" by the GP and not "pending" appointments.
-The user can select an appointment from the list of printed out appointments.
-Will return the Appointment ID and the nhsNumber of the patient that appointment is booked by.
-"""
-
-
 def print_todays_appointments(doctoremail):
+    """
+    Prints all confirmed appointments on a given date.
+
+    Called when the user chooses to "Open an appointment" from the main menu.
+    Remember that this will only show appointments that have been "confirmed" by the GP and not "pending" appointments.
+    The user can select an appointment from the list of printed out appointments.
+    Will return the Appointment ID and the nhsNumber of the patient that appointment is booked by.
+    """
+
     day = datetime.today()
 
     print("--------------------------------------------")
