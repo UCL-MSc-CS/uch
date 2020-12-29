@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import ttk
 
     # Load up instructions function
-def instructionFunction():
+def help_page():
     # global guideImage
     top = Toplevel()
     top.title('Prescription process')

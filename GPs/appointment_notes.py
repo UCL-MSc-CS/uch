@@ -2,11 +2,9 @@ from tkinter import *
 from timetable_functions import getDoctorNotes, saveDoctorNotes, getPatientInfo
 from prescription_med_functions import getAllergies
 from tkinter import messagebox, ttk
-from functools import partial
-from GPs.prescription import prescription
 
 
-def appointmentnotes(doctoremail, appointmentid):
+def appointment_notes(appointmentid):
 
     # Existing doctor's notes
     doctorsNotes = getDoctorNotes(appointmentid)
@@ -113,7 +111,7 @@ def appointmentnotes(doctoremail, appointmentid):
     adviceTextBox.insert(END, doctorAdvice)
     adviceTextBox.grid(row=4, column=1)
 
-    saveButton = Button(buttonFrame, text='Save Notes', font=('arial', 12, 'bold'), width=9, command=saveNotes,
+    saveButton = Button(buttonFrame, text='Save Notes', font=('arial', 12, 'bold'), width=9, command=save_notes,
                         background='SlateGray1')
     saveButton.grid(row=0, column=0)
 
@@ -266,7 +264,7 @@ def appointmentnotes(doctoremail, appointmentid):
     root.mainloop()
 
 
-def saveNotes():
+def save_notes():
     globalDoctorsNotes[0] = patientComplaintTextBox.get(1.0, END)
     globalDoctorsNotes[1] = findingsTextBox.get(1.0, END)
     globalDoctorsNotes[2] = diagnosisTextBox.get(1.0, END)
@@ -279,6 +277,3 @@ def saveNotes():
         root.after(1, root.destroy())
     else:
         pass
-
-
-#appointmentnotes('matthew.shorvon@ucl.ac.uk', 3)

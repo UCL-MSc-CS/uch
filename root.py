@@ -75,7 +75,7 @@ while True:
                     selection1 = int(input("Please select an option: "))
 
             while selection1 == 3:
-                gpChoice = gpm.gpStart()
+                gpChoice = gpm.gp_start()
                 if gpChoice == "exitGPLogin":
                     masterlogin.MasterMenu()
                     selection1 = int(input("Please select an option: "))

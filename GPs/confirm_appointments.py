@@ -5,7 +5,7 @@ import timetable_functions as db
 dateformatstring = "%Y-%m-%d"
 timeformatstring = "%H:%M"
 
-def confirmappointments(doctoremail):
+def confirm_appointments(doctoremail):
     while True:
         confirmdate = uf.validatedate("Please enter a date for confirming appointments")
         if confirmdate == 'exit':

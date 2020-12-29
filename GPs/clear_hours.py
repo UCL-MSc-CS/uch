@@ -1,7 +1,7 @@
 from datetime import datetime
 import useful_functions as uf
 import timetable_functions as db
-from GPs.print_day import printday
+from GPs.print_day import print_day
 
 dateformatstring = "%Y-%m-%d"
 
@@ -12,7 +12,7 @@ def clearhours(doctoremail):
     date = uf.validatedate("Enter a date you would like to cancel an appointment.")
     if date == 'exit':
         return
-    printday(date,doctoremail)
+    print_day(date, doctoremail)
     datestring = datetime.strftime(date,dateformatstring)
     appointments = []
     for appointment in db.timetableblock(doctoremail, datestring):

@@ -6,7 +6,7 @@ dateformatstring = "%Y-%m-%d"
 timeformatstring = "%H:%M"
 
 
-def printday(day,doctoremail):
+def print_day(day, doctoremail):
     print("--------------------------------------------")
     print(datetime.strftime(day, "%A %d %b %Y"))
     print("--------------------------------------------")

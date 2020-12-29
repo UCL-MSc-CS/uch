@@ -11,7 +11,7 @@ endmin = 0
 clinicstart = "{:02d}".format(starthour) + ":" + "{:02d}".format(startmin)
 clinicend =  "{:02d}".format(endhour) + ":" + "{:02d}".format(endmin)
 
-def addnonpatienttime(doctoremail):
+def add_non_patient_time(doctoremail):
     while True:
         print("--------------------------------------------")
         print("\t Doctor Add non-patient time")
@@ -21,10 +21,10 @@ def addnonpatienttime(doctoremail):
         print("Choose [0] to return to main menu")
         choice = input(":")
         if choice == '1':
-            addholiday(doctoremail)
+            add_holiday(doctoremail)
             continue
         elif choice == '2':
-            addnonpatienthours(doctoremail)
+            add_non_patient_hours(doctoremail)
             continue
         elif choice == '0':
             break
@@ -32,7 +32,7 @@ def addnonpatienttime(doctoremail):
             print("\n\t<Invalid option chosen, Please try again>\n")
         print("********************************************")
 
-def addholiday(doctoremail):
+def add_holiday(doctoremail):
     startdate = uf.validatedate("Please enter a start date")
     if startdate == 'exit':
         return
@@ -40,11 +40,11 @@ def addholiday(doctoremail):
         print("\n\t<You cannot book a holiday in the past!>\n")
         choice = input("Press [0] to try again, or any other entry to return to menu \n:")
         if choice == '0':
-            addholiday(doctoremail)
+            add_holiday(doctoremail)
         return
     enddate = uf.validatedate("Please enter an end date")
     if enddate == 'exit':
-        addholiday(doctoremail)
+        add_holiday(doctoremail)
         return
     if enddate >= startdate:
         for single_date in uf.daterange(startdate, enddate):
@@ -54,7 +54,7 @@ def addholiday(doctoremail):
                 print("\n\t<Sorry, you are busy during this period and cannot book your holiday>\n")
                 choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
                 if choice == '0':
-                    addholiday(doctoremail)
+                    add_holiday(doctoremail)
                 return
         reason = "holiday"
         for single_date in uf.daterange(startdate, enddate):
@@ -68,7 +68,7 @@ def addholiday(doctoremail):
         print("\n\t<You have entered an end date that is before a start date. Please try again>\n")
 
 
-def addnonpatienthours(doctoremail):
+def add_non_patient_hours(doctoremail):
     chosendate = uf.validatedate("Please enter a date")
     if chosendate == 'exit':
         return
@@ -76,22 +76,22 @@ def addnonpatienthours(doctoremail):
         print("\n\t<You cannot book non-patient hours in the past!>\n")
         choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
         if choice == '0':
-            addnonpatienthours(doctoremail)
+            add_non_patient_hours(doctoremail)
         return
     datestring = datetime.strftime(chosendate, dateformatstring)
     starttime = uf.validatetime("Please enter a start time")
     if starttime == 'exit':
-        addnonpatienthours(doctoremail)
+        add_non_patient_hours(doctoremail)
         return
     starttimestring = datetime.strftime(starttime, timeformatstring)
     endtime = uf.validatetime("Please enter an end time")
     if endtime == 'exit':
-        addnonpatienthours(doctoremail)
+        add_non_patient_hours(doctoremail)
         return
     endtimestring = datetime.strftime(endtime, timeformatstring)
     status = db.checkslotavailable(datestring, starttimestring, endtimestring, [doctoremail])
     if starttime < endtime and status[0] != 'unavailable':
-        reason = selectreason()
+        reason = select_reason()
         db.book_time(datestring, starttimestring, endtimestring, reason, "", [doctoremail])
         print("Successfully booked in non patient hours for " + datestring)
         declined = db.auto_decline_pending(datestring, starttimestring, endtimestring, doctoremail)
@@ -101,12 +101,12 @@ def addnonpatienthours(doctoremail):
         print("\n\t<You already have booked time during this period, please check your timetable>\n")
         choice = input("Press [0] to try again, or any other entry to return to main menu \n:")
         if choice == '0':
-            addnonpatienthours(doctoremail)
+            add_non_patient_hours(doctoremail)
         return
     else:
         print("\n\t<You've entered an end time before a start time, please try again>\n")
 
-def selectreason():
+def select_reason():
     while True:
         reasondict = {1:'scheduled break',2:'admin tasks',3:'emergency',4:'other'}
         print("Please select a reason for non-patient hours: ")

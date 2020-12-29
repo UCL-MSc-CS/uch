@@ -1,10 +1,10 @@
 from GPs.clear_hours import clearhours
-from GPs.print_timetable import printtimetable
-from GPs.add_non_patient_time import addnonpatienttime
-from GPs.confirm_appointments import confirmappointments
-from GPs.openAppointment import openappointment
+from GPs.print_timetable import print_timetable
+from GPs.add_non_patient_time import add_non_patient_time
+from GPs.confirm_appointments import confirm_appointments
+from GPs.open_appointment import open_appointment
 
-def mainmenu(dremail,drname):
+def doctor_main_menu(dremail, drname):
     while True:
         print("--------------------------------------------")
         print("\t Doctor Main Menu")
@@ -18,13 +18,13 @@ def mainmenu(dremail,drname):
         print("Choose [0] to logout")
         option = input(":")
         if option == "1":
-            openappointment(dremail)
+            open_appointment(dremail)
         elif option == "2":
-            confirmappointments(dremail)
+            confirm_appointments(dremail)
         elif option == "3":
-            addnonpatienttime(dremail)
+            add_non_patient_time(dremail)
         elif option == "4":
-            printtimetable(dremail)
+            print_timetable(dremail)
         elif option == "5":
             clearhours(dremail)
         elif option == "0":

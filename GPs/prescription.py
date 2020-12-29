@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox, ttk
 import prescription_med_functions as ms
-from GPs.help_page import instructionFunction
+from GPs.help_page import help_page
 
 def prescription(doctoremail,appointmentID,nhsNumber):
 
@@ -47,7 +47,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     medSelectFrame.pack(side=LEFT)
 
 
-    def submitmedsearch():
+    def submit_medicine_search():
 
         trv.delete(*trv.get_children())
 
@@ -104,27 +104,27 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     catdropmenu.config(width = 20)
     catdropmenu.pack()
 
-    medsearchsubmit = Button(medSelectFrame, text="Search Medicine", command=submitmedsearch)
+    medsearchsubmit = Button(medSelectFrame, text="Search Medicine", command=submit_medicine_search)
     medsearchsubmit.pack(pady=10)
 
     # Print search medicine section --------------------------------------------
     medResultsFrame = LabelFrame(medicineFrame, bd=10, width=800, height=300, padx=5, relief=RIDGE, font=('arial', 12, 'bold'), text="Step 2. Choose Medicine Search Results:")
     medResultsFrame.pack(side=RIGHT)
 
-    def enterintodisabled(textbox, string):
+    def enter_into_disabled_box(textbox, string):
         textbox.config(state=NORMAL)
         textbox.delete(0, END)
         textbox.insert(0, string)
         textbox.config(state=DISABLED)
 
-    def submitchoice():
+    def submit_choice():
         if trv.selection():
             for row in trv.selection():
                 selected_medicine = trv.item(row, "values")
                 break
-            enterintodisabled(medid, selected_medicine[0])
-            enterintodisabled(medname, selected_medicine[1])
-            enterintodisabled(doseType, selected_medicine[3])
+            enter_into_disabled_box(medid, selected_medicine[0])
+            enter_into_disabled_box(medname, selected_medicine[1])
+            enter_into_disabled_box(doseType, selected_medicine[3])
             dosages = selected_medicine[7].split(";")
             global chosendose
             chosendose = StringVar()
@@ -135,7 +135,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             dosagedropdown.grid(row=2, column=3)
 
     # Add record
-    def addRecord():
+    def add_record():
 
         if medid.get() and int(medid.get()) not in treeviewMedID:
             treeviewMedID.append(int(medid.get()))
@@ -219,7 +219,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     trv.heading(11, text="Category")
     trv.column(11, width=100)
 
-    choosemedbutton = Button(medResultsFrame, text="Choose medicine", command=submitchoice)
+    choosemedbutton = Button(medResultsFrame, text="Choose medicine", command=submit_choice)
     choosemedbutton.pack(pady=10)
 
     global chosenmedframe
@@ -257,7 +257,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     furtherInformation = Entry(chosenmedframe, width=40)
     furtherInformation.grid(row=2,column=6)
 
-    addRecord = Button(medResultsFrame, text="Add Medicine", command=addRecord)
+    addRecord = Button(medResultsFrame, text="Add Medicine", command=add_record)
     addRecord.pack(pady=10)
 
     # Place treeview in prescription frame
@@ -297,7 +297,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     myTree.pack(pady=20)
 
     # Remove all records
-    def removeAll():
+    def remove_all():
         treeviewMedID.clear()
         for record in myTree.get_children():
             myTree.delete(record)
@@ -305,7 +305,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
 
 
     # Remove one selected
-    def removeSelected():
+    def remove_selected():
         for selection in myTree.selection():
             selectionID = int(myTree.item(selection, "values")[0])
             treeviewMedID.remove(selectionID)
@@ -317,7 +317,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
         # myTree.delete(x)
 
     # Saves prescription data into database
-    def savePrescription():
+    def save_prescription():
         #todo connect to database and insert new data
         ms.deleteMedRecord(appointmentID)
         for record in myTree.get_children():
@@ -337,24 +337,22 @@ def prescription(doctoremail,appointmentID,nhsNumber):
             return
 
     # Remove all
-    removeAll = Button(prescriptionFrame, text="Remove All Medicine", command=removeAll)
+    removeAll = Button(prescriptionFrame, text="Remove All Medicine", command=remove_all)
     removeAll.pack(pady=5)
 
     # Remove one
-    removeSelected = Button(prescriptionFrame, text="Remove Selected Medicine", command=removeSelected)
+    removeSelected = Button(prescriptionFrame, text="Remove Selected Medicine", command=remove_selected)
     removeSelected.pack(pady=5)
 
     # Save prescription
-    savePrescription = Button(prescriptionFrame, text="Save Prescription", command=savePrescription)
+    savePrescription = Button(prescriptionFrame, text="Save Prescription", command=save_prescription)
     savePrescription.pack(pady=5)
 
     # Load up guide
-    instructionButton = Button(instructionFrame, text='User Guide', command=instructionFunction,
-                        background='SlateGray1')
+    instructionButton = Button(instructionFrame, text='User Guide', command=help_page,
+                               background='SlateGray1')
     instructionButton.pack(pady=5)
 
 
     root.after(1000, root.focus_force)
     root.mainloop()
-
-#prescription('matthew.shorvon@ucl.ac.uk', 3, '1234567890')

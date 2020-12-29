@@ -1,6 +1,6 @@
 import patients.patientMedicalFunctions as pm
 
-def patienthistory(doctoremail,appointmentid,nhsNumber):
+def patient_history(nhsNumber):
     while True:
         print("--------------------------------------------")
         print("\t Patient History Menu")

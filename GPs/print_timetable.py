@@ -1,16 +1,16 @@
 from datetime import datetime, timedelta
 import useful_functions as uf
-from GPs.print_day import printday
+from GPs.print_day import print_day
 
 
-def printdays(date, doctoremail):
+def print_days(date, doctoremail):
     start_date = date - timedelta(days=date.weekday())
     end_date = start_date + timedelta(days=6)
     for single_date in uf.daterange(start_date, end_date):
-        printday(single_date, doctoremail)
+        print_day(single_date, doctoremail)
 
 
-def printtimetable(doctoremail):
+def print_timetable(doctoremail):
     while True:
         now = datetime.today()
         today = datetime(now.year, now.month, now.day)
@@ -25,14 +25,14 @@ def printtimetable(doctoremail):
         option = input(":")
         try:
             if int(option) == 1:
-                printdays(today, doctoremail)
+                print_days(today, doctoremail)
                 choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
                 if choice == '0':
                     continue
                 else:
                     break
             elif int(option) == 2:
-                printdays(today + timedelta(7), doctoremail)
+                print_days(today + timedelta(7), doctoremail)
                 choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
                 if choice == '0':
                     continue
@@ -42,7 +42,7 @@ def printtimetable(doctoremail):
                 selected_date = uf.validatedate("Please enter a date to view its weekly timetable")
                 if selected_date == 'exit':
                     continue
-                printdays(selected_date, doctoremail)
+                print_days(selected_date, doctoremail)
                 choice=input("\nPress [0] to go back to Timetable menu, any other button to return to Main menu....")
                 if choice == '0':
                     continue

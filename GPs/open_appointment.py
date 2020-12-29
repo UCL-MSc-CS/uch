@@ -1,19 +1,19 @@
-from GPs.appointment_notes import appointmentnotes
-from GPs.patient_history import patienthistory
+from GPs.appointment_notes import appointment_notes
+from GPs.patient_history import patient_history
 from GPs.prescription import prescription
 import timetable_functions as db
 from datetime import datetime
 import useful_functions as uf
-from PatientSummary import PatientSummary
+from patient_summary import PatientSummary
 
 dateformatstring = "%Y-%m-%d"
 timeformatstring = "%H:%M"
 datetimeformat = dateformatstring + " " + timeformatstring
 
 
-def openappointment(doctoremail):
+def open_appointment(doctoremail):
 
-    appointmentid, nhsNumber = printtodayappointments(doctoremail)
+    appointmentid, nhsNumber = print_todays_appointments(doctoremail)
     if appointmentid:
         while True:
             print("--------------------------------------------")
@@ -28,15 +28,15 @@ def openappointment(doctoremail):
             option = input(":")
             if option == "1":
                 print("\n Opening your notes for this appointment in a separate window.... \n")
-                appointmentnotes(doctoremail,appointmentid)
+                appointment_notes(appointmentid)
             elif option == "2":
-                patienthistory(doctoremail,appointmentid, nhsNumber)
+                patient_history(nhsNumber)
             elif option == "3":
                 print("\n Opening the prescription editor in a separate window... \n")
                 prescription(doctoremail,appointmentid, nhsNumber)
             elif option == "4":
                 print("\n Switching appointments... \n")
-                openappointment(doctoremail)
+                open_appointment(doctoremail)
                 break
             elif option == "5":
                 print("\n Downloading patient summary... \n")
@@ -50,7 +50,7 @@ def openappointment(doctoremail):
             print("********************************************")
 
 
-def printtodayappointments(doctoremail):
+def print_todays_appointments(doctoremail):
     day = datetime.today()
 
     print("--------------------------------------------")

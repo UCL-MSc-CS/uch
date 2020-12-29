@@ -1,7 +1,7 @@
 import sqlite3 as sql
 import time
 
-def login():
+def gp_login():
 
     print("\n--------------------------------------------")
     print("\t Doctor Login")
