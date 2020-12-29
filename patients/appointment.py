@@ -269,7 +269,7 @@ class Appointment:
         """
         Function for patient to input year, month, day and time to book an appointment.
 
-        Function calls functions from the patientFunctions module for patient to choose the year, month and day of the
+        Calls functions from the patientFunctions module for patient to choose the year, month and day of the
         appointment. Patient is then presented with a list of all appointments on that day by time and
         displays availability. The patient can then choose the appointment time.
         This patient's appointment details are inserted into the database for chosen date and time.
