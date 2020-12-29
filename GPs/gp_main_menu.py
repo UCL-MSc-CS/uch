@@ -4,7 +4,7 @@ from GPs.add_non_patient_time import add_non_patient_time
 from GPs.confirm_appointments import confirm_appointments
 from GPs.open_appointment import open_appointment
 
-def doctor_main_menu(dremail, drname):
+def gp_main_menu(dremail, drname):
     while True:
         print("--------------------------------------------")
         print("\t Doctor Main Menu")
