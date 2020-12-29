@@ -1,14 +1,14 @@
-import Admins
+import admins
 import patients.patientMain as pm
 import GPs.GPMain as gpm
 import sys
-import usefulfunctions as uf
+import useful_functions as uf
 import os.path
 from database import initialise_database
 
 class Menus():
     """This is a class containing menus used on the first page and the Admin side of the program."""
-    
+
     def master_menu(self):
         print("--------------------------------------------")
         print("         UCH Management System   ")
