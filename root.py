@@ -1,10 +1,13 @@
 import admins
-import patients.patientMain as pm
+import patients.patient_main as pm
 import GPs.gp_main as gpm
 import sys
 import useful_functions as uf
 import os.path
 from database import initialise_database
+import logging
+
+logging.basicConfig(filename='UCH.log', filemode='w', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
 
 class Menus():
     """This is a class containing menus used on the first page and the Admin side of the program."""
@@ -66,6 +69,7 @@ while True:
 
         masterlogin = Menus()
         masterlogin.master_menu()
+        logging.info('Menu Initialised')
 
 
         selection1 = int(input("Please select an option: "))

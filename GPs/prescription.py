@@ -353,5 +353,3 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     # ------------------------- Runs tkinter -------------------------
     root.after(1000, root.focus_force)
     root.mainloop()
-
-prescription("matthew.shorvon@ucl.ac.uk", 2, "1234567890")

@@ -4,7 +4,7 @@ from GPs.prescription import prescription
 import timetable_functions as db
 from datetime import datetime
 import useful_functions as uf
-from patient_summary import PatientSummary
+from patient_summary import patient_summary
 
 DATE_FORMAT_STRING = "%Y-%m-%d"
 TIME_FORMAT_STRING = "%H:%M"
@@ -49,7 +49,7 @@ def open_appointment(gp_email):
                 break
             elif option == "5":
                 print("\n Downloading patient summary... \n")
-                PatientSummary(int(nhs_number))
+                patient_summary(int(nhs_number))
             elif option == "0":
                 print("\n Returning to main menu...... \n")
                 break

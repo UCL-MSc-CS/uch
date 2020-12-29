@@ -40,3 +40,9 @@
 
 #ASKING FOR input:
 #Use colons
+
+# Logging just for database operations: insert, update, delete
+# anything that changes the database basically
+# log at the debug level
+# configure to show the lowest level
+# UCH.log
