@@ -10,8 +10,6 @@ def appointment_notes(appointmentid):
     # ------------------------- Pulls up data from UCH.db -------------------------
     # Pulls up existing appointment notes
     doctorsNotes = get_doctor_notes(appointmentid)
-    global globalDoctorsNotes
-    globalDoctorsNotes = doctorsNotes
     patientComplaint = doctorsNotes[0]
     doctorFindings = doctorsNotes[1]
     diagnosis = doctorsNotes[2]
@@ -20,8 +18,6 @@ def appointment_notes(appointmentid):
 
     # Pulls up patient information
     patientInfo = get_patient_info(appointmentid)
-    global globalPatientInfo
-    globalPatientInfo = patientInfo
     nhsNumber = patientInfo[0]
     patientEmail = patientInfo[1]
     firstName = patientInfo[2]
