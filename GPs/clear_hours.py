@@ -1,6 +1,6 @@
 from datetime import datetime
-import usefulfunctions as uf
-import timetablefunctions as db
+import useful_functions as uf
+import timetable_functions as db
 from GPs.print_day import printday
 
 dateformatstring = "%Y-%m-%d"

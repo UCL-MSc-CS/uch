@@ -6,7 +6,7 @@ from patients.PatientRiskProfile import PatientMedical
 from patients.lifeStyleQuestionnaire import RiskProfile
 from patients.appointment import Appointment
 import patients.patientMedicalFunctions as pf
-import usefulfunctions as uf
+import useful_functions as uf
 import re
 
 """

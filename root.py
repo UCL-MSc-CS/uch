@@ -2,7 +2,7 @@ import Admins
 import patients.patientMain as pm
 import GPs.gp_main as gpm
 import sys
-import usefulfunctions as uf
+import useful_functions as uf
 import os.path
 from database import initialise_database
 

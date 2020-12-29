@@ -1,9 +1,9 @@
 from GPs.appointment_notes import appointmentnotes
 from GPs.patient_history import patienthistory
 from GPs.prescription import prescription
-import timetablefunctions as db
+import timetable_functions as db
 from datetime import datetime
-import usefulfunctions as uf
+import useful_functions as uf
 from PatientSummary import PatientSummary
 
 dateformatstring = "%Y-%m-%d"

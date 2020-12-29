@@ -1,6 +1,6 @@
 from tkinter import *
-from timetablefunctions import getDoctorNotes, saveDoctorNotes, getPatientInfo
-from prescriptionMedFunctions import getAllergies
+from timetable_functions import getDoctorNotes, saveDoctorNotes, getPatientInfo
+from prescription_med_functions import getAllergies
 from tkinter import messagebox, ttk
 from functools import partial
 from GPs.prescription import prescription
