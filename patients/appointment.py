@@ -148,7 +148,6 @@ class Appointment:
             return 0
         else:
             gp_details = pf.choose_dr(dr_names)
-            self.connection.close()
             return gp_details
 
     def choose_any_dr(self):
@@ -181,7 +180,6 @@ class Appointment:
             # list of gp email and last name created
             gp_details = [gp_chosen_email, gp_chosen_name]
             print("The doctor you have been assigned is Dr {}".format(gp_chosen_name))
-            self.connection.close()
             return gp_details
 
     def choose_dr_gender(self, nhs_number):
@@ -223,7 +221,6 @@ class Appointment:
                 else:
                     # choose_dr called only with male drs in list
                     gp_details = pf.choose_dr(dr_names)
-                    self.connection.close()
                     return gp_details
             elif gp_options == '2':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'female' and active='1'")
@@ -236,7 +233,6 @@ class Appointment:
                 else:
                     # choose_dr called only with female drs in list
                     gp_details = pf.choose_dr(dr_names)
-                    self.connection.close()
                     return gp_details
             elif gp_options == '3':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'non-binary' and active='1'")
@@ -249,7 +245,6 @@ class Appointment:
                 else:
                     # choose_dr called only with non-binary drs in list
                     gp_details = pf.choose_dr(dr_names)
-                    self.connection.close()
                     return gp_details
             # exit to patient menu
             elif gp_options == '0':

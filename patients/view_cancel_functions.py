@@ -42,7 +42,6 @@ def view_appointments(nhs_number):
     c.execute(""" SELECT A.appointmentID, A.start, P.lastName, A.appointmentStatus FROM Appointment A 
     LEFT JOIN GP P USING (gpEmail) WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhs_number])
     appointments = c.fetchall()
-    connection.close()
     # if appointment list empty, patient told they have none booked and returned to main menu
     if not appointments:
         print("\nYou currently have no appointments booked"
@@ -96,7 +95,6 @@ def delete_appointment(cancel):
     c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
     c.execute("DELETE FROM Prescription WHERE appointmentID =?", [cancel])
     connection.commit()
-    connection.close()
     print("You have cancelled appointment ID {}".format(cancel))
 
 
@@ -141,7 +139,6 @@ def check_app_id(nhs_number):
                 if start_time < current:
                     raise AppointmentPassedError
                 else:
-                    connection.close()
                     return cancel
         except AppNotExistError:
             print("\n\t< This appointment does not exist, please try again >"

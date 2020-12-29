@@ -292,7 +292,7 @@ def choose_month(year):
             if mm == 0:
                 return 0
             # to format month as an object
-            month_str = "{}-{}-28".format(year, str(mm))
+            month_str = "{}-{}-31".format(year, str(mm))
             format_str = '%Y-%m-%d'
             month_obj = datetime.strptime(month_str, format_str)
             month_input = month_obj.date()
@@ -317,7 +317,7 @@ def choose_month(year):
             print("\n\t< This month has passed, please try again >"
                   "\n")
         except ValueError:
-            print("\n\t< This is not a valid option, please enter a number >"
+            print("\n\t< This is not a valid option, please try again >"
                   "\n")
 
 
@@ -495,7 +495,6 @@ def display_available(date, start, end, gp_details):
         print("********************************************\n")
         print(data.to_string(columns=['Time', 'Status'], index=False))
         print("\n********************************************")
-    connection.close()
     # return times_str for use in choose time exception handling
     return times_str
 
@@ -545,7 +544,6 @@ def choose_time(date, times_str, gp_details):
                 if start >= start_time and end <= end_time:
                     raise TimeBookedError
             else:
-                connection.close()
                 # return time chosen
                 return time_in
         except TimeNotValidError:
@@ -602,7 +600,6 @@ def insert_appointment(start, gp_details, nhs_number):
               date_requested, '', '', '', '', '', 0, 0)
     c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
     connection.commit()
-    connection.close()
 
 
 def return_to_main():
