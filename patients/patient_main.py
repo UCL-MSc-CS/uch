@@ -2,10 +2,10 @@ import sqlite3 as sql
 import datetime
 from datetime import date
 from patients.patient import Patient
-from patients.PatientRiskProfile import PatientMedical
-from patients.lifeStyleQuestionnaire import RiskProfile
+from patients.patient_risk_profile import PatientMedical
+from patients.lifestyle_questionnaire import RiskProfile
 from patients.appointment import Appointment
-import patients.patientMedicalFunctions as pf
+# import patients.patient_medical_functions as pf
 import useful_functions as uf
 import re
 
@@ -369,7 +369,7 @@ def options(nhs_number):
                         # Uses lifestyleQuestionnaire.py to take the lifestyle risk questionnaire
                         x = RiskProfile(nhs_number)
                         x.questions(nhs_number)
-                        x.BMI_calculator(nhs_number)
+                        x.bmi_calculator(nhs_number)
                         x.smoking(nhs_number)
                         x.drugs(nhs_number)
                         x.alcohol(nhs_number)
