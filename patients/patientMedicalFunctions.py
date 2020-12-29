@@ -1,41 +1,82 @@
 import sqlite3 as sql
-connection = sql.connect('UCH.db')
+connection = sql.connect('UCH.db')  # establish the connection to the UCH database file
 a = connection.cursor()
-
-"""Exceptions set up"""
 
 
 class InvalidMenuSelectionError(Exception):
+    """
+    Error class for when the user enters a numeric value not given by the menu selection.
+    """
     pass
 
 
 class InvalidNameFormatError(Exception):
+    """
+    Error class for when the user enters the wrong format for names.
+    """
     pass
 
 
 class InvalidAnswerError(Exception):
+    """
+    Error class for when the user enters an invalid answer.
+    """
     pass
 
 
 class EmptyFieldError(Exception):
+    """
+    Error class for when the user enters an empty field.
+    """
     def __init__(self):
+        """
+        The constructor for EmptyFieldError class.
+        """
         self.message = '\n    < Please enter a value >\n'
         super().__init__(self.message)
 
 
 class InvalidConditionFormatError(Exception):
+    """
+    Error class for when the user enters a wrong format for the pre-existing condition function.
+    """
     def __init__(self):
+        """
+        The constructor for InvalidConditionFormatError class.
+        """
         self.message = '\n    < Please enter N for no or the name of the condition >\n'
         super().__init__(self.message)
 
 
 class InvalidAllergyFormatError(Exception):
+    """
+    Error class for when the user enters a wrong format for the medicine allergy function.
+    """
     def __init__(self):
+        """
+        The constructor for InvalidAllergyFormatError class.
+        """
         self.message = '\n    < Please enter N for no or the name of the medicine >\n'
         super().__init__(self.message)
 
 
 def update_patient_medical(name, nhs_number):
+    """
+    The function allows the patient to update the specified vaccination record.
+
+    Patient will choose which vaccination result he or she would like to update based on the menu provided. The function
+    will replace the '0' in the database for the specified vaccine with '1'. '0' means no and '1' means yes. The
+    function also prevents the patient from entering repeated information. If patient forgets that he or she has updated
+    the answer to a vaccine to yes before, the function will display a message informing the patient. This function is
+    also used to update the patient's children's vaccination records.
+
+    Parameters:
+        name: 'you' or the name of the child.
+        nhs_number: the patient's or the child's NHS number.
+    Returns:
+        1 (int): exit the function when patient enters 0.
+    """
+
     print('Our system shows that you have provided {} vaccination history before'
           '\nPlease update any specific vaccination on the menu below'.format(name))
     while True:
@@ -74,11 +115,9 @@ def update_patient_medical(name, nhs_number):
         while count_record <= 8:
             new_record.append(update_record[0][count_record])
             count_record += 1
-        # print(new_record)
         if new_record[menu-1] == 0:
             new_record[menu-1] = 1
             new_record.insert(7, nhs_number)
-            # print(new_record)
             a.execute("""
                         UPDATE vaccineHistory
                         SET DTap = ?, HepC = ?, HepB = ?, Measles = ?, Mumps = ?, Rubella = ?, Varicella = ?
@@ -90,21 +129,27 @@ def update_patient_medical(name, nhs_number):
         connection.commit()
 
 
-
 def display_cancer_history(nhs_number):
+    """
+    This function will display the cancer history of the patient and the patient's immediate family.
+
+    Parameters:
+        nhs_number: patient's NHS number.
+    """
+
     a.execute("""
                 SELECT * FROM cancer 
                 WHERE nhsNumber =? AND 
                 cancerRelation = 1 
                 """, [nhs_number])
-    patient_med_record = a.fetchall()
+    patient_med_record = a.fetchall()  # list of tuples of cancers patient previously had
     a.execute("""
                 SELECT * FROM cancer
                 WHERE nhsNumber =? AND 
                 cancerRelation IN (SELECT cancerRelation FROM cancer WHERE cancerRelation !=0 AND cancerRelation !=1 AND cancerRelation != ?)
                 """, [nhs_number, 'None'])
-    pati_rec = a.fetchall()
-    if not patient_med_record and not pati_rec:
+    pati_rec = a.fetchall()  # list of tuples of cancers patient's immediate family previously had
+    if not patient_med_record and not pati_rec:  # if no cancer history exist in the database under the entered NHS number
         print('\nNo patient or family cancer history\n')
     if not pati_rec and patient_med_record:
         print('No family cancer history\n')  # Show patient's cancer record
@@ -122,7 +167,7 @@ def display_cancer_history(nhs_number):
                 else:
                     print(column, ':', patient_med_record[record][count])
                 count += 1
-            print("*" * 18)  # separating each record of the patient
+            print("*" * 18)  # separating each row of record
             record += 1
             rows += 1
         else:
@@ -140,7 +185,7 @@ def display_cancer_history(nhs_number):
                 else:
                     print(column, ':', pati_rec[record][count])
                 count += 1
-            print("*" * 18)  # separating each record of the patient
+            print("*" * 18)  # separating each row of record
             record += 1
             rows += 1
         else:
@@ -160,7 +205,7 @@ def display_cancer_history(nhs_number):
                 else:
                     print(column, ':', patient_med_record[record][count])
                 count += 1
-            print("*"*18)  # separating each record of the patient
+            print("*"*18)  # separating each row of record
             record += 1
             rows += 1
 
@@ -175,14 +220,21 @@ def display_cancer_history(nhs_number):
                 else:
                     print(column, ':', pati_rec[record][count])
                 count += 1
-            print("*" * 18)  # separating each record of the patient
+            print("*" * 18)  # separating each row of record
             record += 1
             rows += 1
         else:
             print('\n    <<Cancer record ends>>\n')
 
 
-def display_preexisting_condition_history(nhs_number):  # Display for pre-existing condition
+def display_preexisting_condition_history(nhs_number):
+    """
+    This function displays all the pre-existing conditions the patient and the patient's children have.
+
+    Parameters:
+        nhs_number: the NHS number of the patient or patient's specified child.
+    """
+
     a.execute("""SELECT * FROM preExistingCondition WHERE nhsNumber =? """, [nhs_number])
     patient_med_record = a.fetchall()
     if not patient_med_record:
@@ -203,18 +255,8 @@ def display_preexisting_condition_history(nhs_number):  # Display for pre-existi
                 else:
                     print(column, ':', patient_med_record[record][count])
                 count += 1
-            print("*" * 18)  # separating each record of the patient
+            print("*" * 18)  # separating each row of record
             record += 1
             rows += 1
         else:
             print('\n    <<Pre-existing condition record ends>>\n')
-
-
-# def medical_history_menu():
-#     print('Choose [1] provide vaccination history for you or your children'
-#           '\nChoose [2] provide cancer related medical history for you or your family if any'
-#           '\nChoose [3] provide pre-existing conditions for you or your children if any'
-#           '\nChoose [4] provide medicine allergies for you or your children if any'
-#           '\nChoose [0] exit')
-#     print('*'*44)
-

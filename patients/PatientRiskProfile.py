@@ -2,9 +2,17 @@ import sqlite3 as sql
 import patients.patientMedicalFunctions as pf
 
 
-"""Set up patient medical record"""
 class PatientMedical:
-    def __init__(self, nhsNumber):
+    """
+    This is a class for patients to set up, update, and access their medical record.
+    """
+    def __init__(self, nhs_number):
+        """
+        The constructor for PatientMedical class.
+
+        Parameter:
+            nhs_Number(int): patient's NHS number.
+        """
         self.connection = sql.connect('UCH.db')
         self.a = self.connection.cursor()
         self.vaccination_history = ["DTap", "HepC", "HepB",
@@ -15,8 +23,25 @@ class PatientMedical:
         self.cancer_relation = ""
         self.child_name = ""
 
-# Obtain information about the patient's vaccination history/parent patients can insert and modify children's records
     def vaccination(self, nhs_number):
+        """
+        The function to obtain information about patient's and their children's vaccination histories.
+
+        This function allows patients to provide their own vaccination information and provide the vaccination
+        information for their children, specified using their children's first name, last name, and NHS number. These
+        changes will be inserted to the UCH database file. After providing the initial vaccination information, patient
+        can also update any new vaccinations he or she had after the initial set up so that the vaccination record
+        reflects the most up-to-date information (i.e. patient initially answered no to one of the vaccines, but has
+        since received it. He or she can update this. The original answer will be replaced by the new one). The patient
+        can do the same update for the children as well.
+
+        Parameter:
+            nhs_number (int): patient's NHS number.
+
+        Returns:
+            1 (int): return to the previous menu if 0 is entered.
+        """
+
         print('Please enter your answers to the following questions with Y/N: ')
         answers_to_vac = []
         while True:
@@ -45,8 +70,8 @@ class PatientMedical:
                 self.status = "own"
                 patient_info = [nhs_number, self.status]
                 self.a.execute("SELECT nhsNumber FROM vaccineHistory WHERE nhsNumber = ?", [nhs_number])
-                check_nhs = self.a.fetchall()
-                if not check_nhs:
+                check_nhs = self.a.fetchall()  # check if patient has entered initial vaccination information before
+                if not check_nhs:  # if no result, patient is entering initial information
                     for name in self.vaccination_history:
                         while True:
                             try:
@@ -78,9 +103,9 @@ class PatientMedical:
                                                     Measles, Mumps, Rubella, Varicella)
                                                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """, patient_info)
                     self.connection.commit()
-                else:
+                else:  # patient has entered initial information before, now updating only
                     name = 'your'
-                    pf.update_patient_medical(name, nhs_number)  # create and use update function
+                    pf.update_patient_medical(name, nhs_number)  # use the update function
             if menu_selection == "2":  # Parents can add vaccination history to their underage children
                 answers_to_vac = []
                 while True:
@@ -153,6 +178,22 @@ class PatientMedical:
                     pf.update_patient_medical(children_name, self.nhs_number_child)  # To update child's existing record
 
     def pre_existing_con(self, nhs_number):
+        """
+        The function obtains information from the patient about his or her pre-existing condition if any.
+
+        Exceptions are handled when the patient is entering the information needed. Once the patient enters the relevant
+        information, the function inserts patient's NHS number and the obtained information to the UCH database file.
+        The patient can do the same for their children, if any, specified by the child's first name, last name, and NHS
+        number. This function also prevents the patient from entering and inserting the exact same information, if it
+        can be found in the UCH database file.
+
+        Parameters:
+            nhs_number (int): patient's NHS number.
+
+        Returns:
+            1 (int): return to the previous menu if 0 is entered.
+        """
+
         print("The following questions are concerned with your or your children's pre-existing conditions ")
         print("If neither you or your children has any known pre-existing conditions, please press 0 to exit")
         while True:
@@ -203,13 +244,11 @@ class PatientMedical:
                     except pf.InvalidConditionFormatError:
                         error_message = pf.InvalidConditionFormatError()
                         print(error_message)
-                    # except ValueError:
-                    #     print('\n    < Please enter a non-numeric value>\n')
                     else:
                         break
                 condition = []
                 for i in major_illness:
-                    condition_record = tuple([nhs_number, i])
+                    condition_record = tuple([nhs_number, i])  # each condition is a tuple and inserted as a row
                     condition.append(condition_record)
                 if not patient_result:
                     self.a.executemany("""INSERT INTO preExistingCondition(nhsNumber, conditionType) VALUES (?, ?)""",
@@ -217,7 +256,7 @@ class PatientMedical:
                     self.connection.commit()
                 else:
                     determinator = []
-                    for each_row in patient_result:
+                    for each_row in patient_result:  # check if entered condition already exists in the database
                         for each_record in condition:
                             if each_record[0] in each_row and each_record[1] in each_row:
                                 print('Sorry, you have updated this condition before')
@@ -281,20 +320,18 @@ class PatientMedical:
                     except pf.InvalidConditionFormatError:
                         error_message = pf.InvalidConditionFormatError()
                         print(error_message)
-                    # except ValueError:
-                    #     print('\n    < Please enter a non-numeric value or 0>\n')
                     else:
                         break
                 condition = []
                 for i in major_illness:
-                    condition_record = tuple([self.nhs_number_child, i])
+                    condition_record = tuple([self.nhs_number_child, i])  # each condition is a tuple and inserted as a row
                     condition.append(condition_record)
                 if not check_child_nhs:  # if child's nhs number does not exist in database, insert
                     self.a.executemany("""INSERT INTO preExistingCondition(nhsNumber, conditionType) VALUES (?, ?)""", condition)
                     self.connection.commit()
                 else:
                     determinator = []
-                    for each_row in check_child_nhs:
+                    for each_row in check_child_nhs:  # check if entered information already exists in the database
                         for each_record in condition:
                             if each_record[0] in each_row and each_record[1] in each_row:
                                 print('Sorry, you have updated this condition before')
@@ -308,6 +345,22 @@ class PatientMedical:
 
 
     def med_allergy(self, nhs_number):
+        """
+        The function obtains information from the patient about his or her medicine allergies if any.
+
+        Exceptions are handled when the patient is entering the information needed. Once the patient enters the relevant
+        information, the function inserts patient's NHS number and the obtained information to the UCH database file.
+        The patient can do the same for their children, if any, specified by the child's first name, last name, and NHS
+        number. This function also prevents the patient from entering and inserting the exact same information, if it
+        can be found in the UCH database file.
+
+        Parameters:
+            nhs_number (int): patient's NHS number.
+
+        Returns:
+            1 (int): return to the previous menu if 0 is entered.
+        """
+
         print("The following questions are concerned with information about your or your children's medicine allergies if any")
         print("If neither you or your children has any known allergies to any medicine, please press 0 to exit")
         while True:
@@ -341,7 +394,7 @@ class PatientMedical:
                                                 '\nIf so, please enter the name of the medicine using comma to '
                                                 'separate different types. Otherwise, please enter N/A'
                                             '\n(or press 0 to exit): ').lower().split(',')
-                        if med_allergy == ['0']:  # could be a bug. check
+                        if med_allergy == ['0']:
                             return 1
                         if med_allergy == ['']:
                             raise pf.EmptyFieldError()
@@ -355,20 +408,18 @@ class PatientMedical:
                     except pf.InvalidAllergyFormatError:
                         error_message = pf.InvalidAllergyFormatError()
                         print(error_message)
-                    # except ValueError:
-                    #     print('\n    < Please enter a non-numeric value>\n')
                     else:
                         break
                 allergy = []
                 for i in med_allergy:
-                    allergy_record = tuple([nhs_number, i])
+                    allergy_record = tuple([nhs_number, i])  # each allergy is a tuple and inserted as a row
                     allergy.append(allergy_record)
                 if not allergy_result:
                     self.a.executemany("""INSERT INTO medAllergy(nhsNumber, medName) VALUES (?, ?)""", allergy)
                     self.connection.commit()
                 else:
                     determinator = []
-                    for each_row in allergy_result:
+                    for each_row in allergy_result:  # check if entered information already exists in the database
                         for each_record in allergy:
                             if each_record[0] in each_row and each_record[1] in each_row:
                                 print('Sorry, you have updated allergy for this medicine before')
@@ -416,7 +467,7 @@ class PatientMedical:
                                             '\nIf so, please enter the name of the medicine using comma to '
                                             'separate different types. Otherwise, please enter N/A'
                                             '\n(or press 0 to exit): '.format(self.child_name)).lower().split(',')
-                        if med_allergy == ['0']:  # could be a bug if. check
+                        if med_allergy == ['0']:
                             return 1
                         if med_allergy == ['']:
                             raise pf.EmptyFieldError()
@@ -430,20 +481,18 @@ class PatientMedical:
                     except pf.InvalidAllergyFormatError:
                         error_message = pf.InvalidAllergyFormatError()
                         print(error_message)
-                    # except ValueError:
-                    #     print('\n    < Please enter a non-numeric value>\n')
                     else:
                         break
                 allergy = []
                 for a in med_allergy:
-                    allergy_record = tuple([self.nhs_number_child, a])
+                    allergy_record = tuple([self.nhs_number_child, a])  # each allergy is a tuple and inserted as a row
                     allergy.append(allergy_record)
                 if not check_child_nhs2:
                     self.a.executemany("""INSERT INTO medAllergy(nhsNumber, medName) VALUES (?, ?)""", allergy)
                     self.connection.commit()
                 else:
                     determinator = []
-                    for each_row in check_child_nhs2:
+                    for each_row in check_child_nhs2:  # check if entered information already exists in the database
                         for each_record in allergy:
                             if each_record[0] in each_row and each_record[1] in each_row:
                                 print('Sorry, you have updated allergy for this medicine before')
@@ -453,13 +502,30 @@ class PatientMedical:
                         self.a.executemany("""INSERT INTO medAllergy(nhsNumber, medName) VALUES (?, ?)""", allergy)
                         self.connection.commit()
 
-# Obtain cancer related data from the patient, and parent patient can insert and modify children's records
     def cancer(self, nhs_number):
-        # cancerRelation: 1 (patient had cancer before),
-                        # 0 (patient has not had cancer before),
-                        # None, no immediate family has had cancer before
-                        # or the family relation (i.e sister, brother, daughter, mother etc.) with whome has had cancer
-        # query set up in the future if needed: WHERE cancerRelation != "1" AND != "0" AND != "None" AND cancerAge <50
+        """
+        The function obtains information from the patient about his or her cancer history, if any, as well as the family cancer history.
+
+        Exceptions are handled when the patient is entering the information needed. Once the patient enters the relevant
+        information, the function inserts patient's NHS number, cancerRelation (i.e. 0 means never had cancer), and the
+        obtained answers to the UCH database file. The patient can also choose to set up or update the cancer history of
+        his or her family. During the process, the types of cancer, cancerRelation (i.e. family relation such as mother
+        or father), and the age at diagnosis will be asked. This function provides information that will help the doctors
+        to assess any genetic risks the patient has with regards to certain cancers. This function also prevents the
+        patient from entering and inserting the exact same information, if it can be found in the UCH database file.
+
+        In the UCH database file, the inserted column, cancerRelation, has four values based on the patient's input. '1'
+        means the patient has had cancer before. 'N/A' means the patient has not had cancer before. 'None' means no
+        immediate family members has had cancer before. Otherwise, the column will have the specific family relation
+        such as mother, father, sister etc..
+
+        Parameters:
+            nhs_number (int): patient's NHS number.
+
+        Returns:
+            1 (int): exit the current function if 0 is entered.
+        """
+
         print("Thank you! The following questions are concerned with your medical history and "
               "the medical history of your family"
               "\n These questions are to assess the genetic risk of certain hereditary diseases.")
@@ -517,8 +583,6 @@ class PatientMedical:
                         except pf.EmptyFieldError:
                             error_message = pf.EmptyFieldError()
                             print(error_message)
-                        # except pf.InvalidAnswerError:
-                        #     print("\n    < Invalid answer. Please enter a non-numeric value>\n")
                         else:
                             break
                     for cancer_name in cancer_type:
@@ -532,8 +596,6 @@ class PatientMedical:
                                     return 1
                                 if not cancer_age:
                                     raise pf.EmptyFieldError()
-                                # if type(cancer_age) is not int:
-                                #     raise ValueError()
                                 if cancer_age < 0 or cancer_age >= 150:
                                     raise pf.InvalidAnswerError()
                             except pf.EmptyFieldError:
@@ -555,9 +617,9 @@ class PatientMedical:
                         self.a.executemany("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge)
                                     VALUES (?, ?, ?, ?)""", self.cancer_history)
                         self.connection.commit()
-                    else:  # something is wrong in this else statement
+                    else:
                         determinator = []
-                        for each_row in query_result:
+                        for each_row in query_result:  # checks if the information entered can be found in the database
                             for each_record in self.cancer_history:
                                 if each_record[0] in each_row and each_record[1] in each_row and \
                                         each_record[2] in each_row and str(each_record[3]) in each_row:
@@ -595,7 +657,6 @@ class PatientMedical:
                 self.cancer_history = []
                 while True:
                     try:
-                        # print('Please enter your answer to the following question with Y/N (or press 0 to exit).')
                         cancer = input('Has anyone in your immediate family, parents, children, or siblings, '
                                        'ever been diagnosed with cancer: ').lower()
                         if cancer == '0':
@@ -622,8 +683,6 @@ class PatientMedical:
                         except pf.EmptyFieldError:
                             error_message = pf.EmptyFieldError()
                             print(error_message)
-                        # except pf.InvalidAnswerError:
-                        #     print("\n    < Invalid answer. Please enter a non-numeric value>\n")
                         else:
                             break
                     for cancer_name in cancer_type:
@@ -640,10 +699,6 @@ class PatientMedical:
                             except pf.EmptyFieldError:
                                 error_message = pf.EmptyFieldError()
                                 print(error_message)
-                            # except pf.InvalidAnswerError:
-                            #     print("\n    < Invalid answer. Please enter a non-numeric value>\n")
-                            # except pf.InvalidNameFormatError:
-                            #     print("\n    < Please do not use any special characters or punctuations in your answer>\n")
                             else:
                                 break
                         while True:
@@ -653,17 +708,10 @@ class PatientMedical:
                                     return 1
                                 if cancer_age < 0 or cancer_age >= 150:
                                     raise pf.InvalidAnswerError()
-                            #     if cancer_age == "":
-                            #         raise pf.EmptyFieldError()
-                            # except pf.EmptyFieldError:
-                            #     error_message = pf.EmptyFieldError()
-                            #     print(error_message)
                             except ValueError:
                                 print("\n    < Invalid answer. Please enter a numeric value >\n")
                             except pf.InvalidAnswerError:
                                 print("\n    < Invalid answer. Please enter a correct >\n")
-                            # except pf.InvalidNameFormatError:
-                            #     print("\n    < Please do not use any special characters or punctuations in your answer>\n")
                             else:
                                 break
                         row_record = [nhs_number, self.cancer_relation, cancer_name, cancer_age]
@@ -680,9 +728,9 @@ class PatientMedical:
                         self.a.executemany("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge)
                                     VALUES (?, ?, ?, ?)""", self.cancer_history)
                         self.connection.commit()
-                    else:  # something is wrong in this else statement
+                    else:
                         determinator = []
-                        for each_row in query_result:
+                        for each_row in query_result:  # checks if the entered information can be found in the database
                             for each_record in self.cancer_history:
                                 if each_record[0] in each_row and each_record[1] in each_row and \
                                         each_record[2] in each_row and str(each_record[3]) in each_row:
@@ -720,6 +768,20 @@ class PatientMedical:
 
 # Display all types of medical related profile for the patient and the patient's children.
     def show_profile(self, nhs_number):
+        """
+        This function displays the medical record of the patient or the children.
+
+        After the patient specifies whether to show his or her own record or the child's record, the most up-to-date
+        vaccination history, pre-existing condition, and cancer history will display. The pre-existing condition and
+        cancer history will be displayed through two function calls. The child's record can only be displayed by
+        entering the child's first name, last name, and NHS number.
+
+        Parameters:
+            nhs_number: patient's NHS number.
+
+        Returns:
+            1 (int): exit the function if 0 is entered.
+        """
         while True:
             print("*"*44)
             print("Which profile would you like to see? "
@@ -812,16 +874,11 @@ class PatientMedical:
                 else:
                     print("\nVaccination history is empty/Records do not exist\n")
                 print("{}'s medical history:".format(child_name))
-                # print('\n    <<Cancer record begins>>\n')
-                # pf.display_cancer_history(self.nhs_number_child)
                 pf.display_preexisting_condition_history(self.nhs_number_child)
             self.connection.commit()
 
     def close_connection(self):
+        """
+        Closes the database connection.
+        """
         self.connection.close()
-
-
-# Erin = PatientMedical()
-# Erin.vaccination("0123456789")
-# Erin.cancer("0123456789")
-# Erin.show_profile("0123456789")
