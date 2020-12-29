@@ -1,7 +1,7 @@
 import sqlite3 as sql
 from datetime import datetime
 import pandas as pd
-import patients.patientFunctions as pf
+import patients.patient_functions as pf
 
 """
 This module contains functions for users to view and cancel their appointments.

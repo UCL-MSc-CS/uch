@@ -1,13 +1,13 @@
 import sqlite3 as sql
 import random
-import patients.patientFunctions as pf
-import patients.viewCancelFunctions as vc
+import patients.patient_functions as pf
+import patients.view_cancel_functions as vc
 
 """
 This module contains the Appointment class for the patient to navigate to book an appointment.
 
 Error classes contain exception handling for user input in the functions.
-The Appointment class contains functions to navigate through menus, calling other functions (from patientFunctions.py)
+The Appointment class contains functions to navigate through menus, calling other functions (from patient_functions.py)
 to choose a doctor, year, month, day and time for an appointment. 
 Patient can also navigate to view all their booked appointments and cancel an appointment.
 """
