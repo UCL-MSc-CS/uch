@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime, timedelta
 import useful_functions as uf
 from pathlib import Path
+import logging
 
 DATE_TIME_FORMAT = "%Y-%m-%d %H:%M"
 
@@ -58,6 +59,7 @@ def get_gp_last_name(docemail):
     lastname = results[0]
 
     close_connection(conn["connection"])
+    logging.info("Retrieving Doctor's last name. Dr. " + lastname)
     return lastname
 
 def book_time(date, startTime, endTime, reason, nhsNumber, gpEmailArray):
@@ -86,6 +88,7 @@ def book_time(date, startTime, endTime, reason, nhsNumber, gpEmailArray):
             Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """, values
         )
+        logging.info("Booking {} time to Dr.{}'s timetable on {} {}-{}".format(reason,gpLastName,date,startTime,endTime))
 
     close_connection(conn["connection"])
 
@@ -102,6 +105,7 @@ def check_slot_available(date, startTime, endTime, gpemailarray):
     Returns a list of available gps during a timeframe that you have provided, else will return "unavailable""
     """
     conn = connect_to_db()
+    logging.info("Checking timeslot {} {}-{} to see if it is available".format(date,startTime,endTime))
 
     startunix = uf.regular_to_unix_time(datetime.strptime(date + " " + startTime, DATE_TIME_FORMAT))
     endunix = uf.regular_to_unix_time(datetime.strptime(date + " " + endTime, DATE_TIME_FORMAT))
@@ -132,8 +136,10 @@ def check_slot_available(date, startTime, endTime, gpemailarray):
             freegps.append(gpemail)
 
     if freegps:
+        logging.info('Available GPs found')
         return freegps
     else:
+        logging.info('No GPs free during this time')
         return ["unavailable"]
 
 
@@ -205,8 +211,10 @@ def clear_booked_time(appointmentId):
     appointment_type = conn['cursor'].fetchone()[0]
     close_connection(conn["connection"])
     if appointment_type == "Appointment":
+        logging.info("Declining patient appointment of ID: " + str(appointmentId))
         decline_appointment(appointmentId)
     else:
+        logging.info("Deleting appointment of ID: " + str(appointmentId))
         delete_booked_time(appointmentId)
 
 def delete_booked_time(appointmentId):
@@ -251,6 +259,7 @@ def accept_appointment(appointmentId):
     Confirm/accept an appointment
     """
     conn = connect_to_db()
+    logging.info("Accepting appointment of ID: " + str(appointmentId))
 
     conn['cursor'].execute("""
     UPDATE 
@@ -310,6 +319,7 @@ def save_doctor_notes(doctorsnotes):
     This saves/updates the doctor's notes to the database.
     """
     conn = connect_to_db()
+    logging.info("Saving Doctor's notes for patient appointment ID: " + doctorsnotes[5])
 
     doctorsnotestuple = tuple(doctorsnotes)
 
@@ -395,6 +405,7 @@ def auto_decline_pending(datestring, startstring, endstring, doctoremail):
         conflicting_appointments.append(result[0])
 
     for appointmentID in conflicting_appointments:
+        logging.info("Auto-Declining pending patient appointment of ID: "+str(appointmentID)+" due to time being booked")
         decline_appointment(appointmentID)
 
     if conflicting_appointments:
