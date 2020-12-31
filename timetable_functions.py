@@ -319,7 +319,7 @@ def save_doctor_notes(doctorsnotes):
     This saves/updates the doctor's notes to the database.
     """
     conn = connect_to_db()
-    logging.info("Saving Doctor's notes for patient appointment ID: " + doctorsnotes[5])
+    logging.info("Saving doctor's notes for patient appointment ID: " + str(doctorsnotes[5]))
 
     doctorsnotestuple = tuple(doctorsnotes)
 
