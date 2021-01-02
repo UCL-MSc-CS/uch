@@ -1,7 +1,10 @@
 import sqlite3 as sql
 import random
+import logging
 import patients.patient_functions as pf
 import patients.view_cancel_functions as vc
+
+# Sqlite3: Hipp, R.D., 2020. SQLite, Available at: https://www.sqlite.org/index.html.
 
 """
 This module contains the Appointment class for the patient to navigate to book an appointment.
@@ -11,6 +14,9 @@ The Appointment class contains functions to navigate through menus, calling othe
 to choose a doctor, year, month, day and time for an appointment. 
 Patient can also navigate to view all their booked appointments and cancel an appointment.
 """
+
+logging.basicConfig(filename='UCH.log', filemode='w', level=logging.DEBUG,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 
 class Error(Exception):

@@ -1,8 +1,13 @@
 import sqlite3 as sql
+import logging
 from datetime import time as x, date as xyz, datetime
 import time
 import calendar
 import pandas as pd
+
+# Sqlite3: Hipp, R.D., 2020. SQLite, Available at: https://www.sqlite.org/index.html.
+# Pandas: McKinney, W. & others, 2010. Data structures for statistical computing in python.
+# In Proceedings of the 9th Python in Science Conference. pp. 51–56.
 
 """
 This module contains all functions for patients to book an appointment.
@@ -11,6 +16,10 @@ Error classes contain exception handling for user input in the functions.
 Functions allow patient to choose the doctor, year, month, day and time for the appointment 
 and for the chosen information to be inserted into the database.
 """
+
+
+logging.basicConfig(filename='UCH.log', filemode='w', level=logging.DEBUG,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 
 class Error(Exception):
@@ -636,6 +645,8 @@ def insert_appointment(start, gp_details, nhs_number):
     chosen = (gp_email, gp_last_name, nhs_number, start, end, reason, appointment_status,
               date_requested, '', '', '', '', '', 0, 0)
     c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
+    logging.info('Appointment inserted into appointment table, for patient NHS number {} ,'
+                 'with Dr {}'.format(nhs_number, gp_last_name))
     connection.commit()
 
 

@@ -1,7 +1,12 @@
 import sqlite3 as sql
+import logging
 from datetime import datetime
 import pandas as pd
 import patients.patient_functions as pf
+
+# Sqlite3: Hipp, R.D., 2020. SQLite, Available at: https://www.sqlite.org/index.html.
+# Pandas: McKinney, W. & others, 2010. Data structures for statistical computing in python.
+# In Proceedings of the 9th Python in Science Conference. pp. 51–56.
 
 """
 This module contains functions for users to view and cancel their appointments.
@@ -10,6 +15,9 @@ Error classes contain exception handling for user input in the functions.
 Functions allow patients to view all their appointments, delete appointments from the database
 and check an appointment exists in the database.
 """
+
+logging.basicConfig(filename='UCH.log', filemode='w', level=logging.DEBUG,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 
 class Error(Exception):
@@ -93,7 +101,9 @@ def delete_appointment(cancel):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
+    logging.info('Appointment ID {} deleted from Appointment table'.format(cancel))
     c.execute("DELETE FROM Prescription WHERE appointmentID =?", [cancel])
+    logging.info('Appointment ID {} deleted from Prescription table'.format(cancel))
     connection.commit()
     print("You have cancelled appointment ID {}".format(cancel))
 
