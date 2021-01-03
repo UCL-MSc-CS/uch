@@ -15,9 +15,6 @@ to choose a doctor, year, month, day and time for an appointment.
 Patient can also navigate to view all their booked appointments and cancel an appointment.
 """
 
-logging.basicConfig(filename='UCH.log', filemode='w', level=logging.DEBUG,
-                    format='%(asctime)s:%(levelname)s:%(message)s')
-
 
 class Error(Exception):
     """Error exception base class."""
@@ -316,6 +313,7 @@ class Appointment:
                               "shortly!"
                               "\nYou can check all of your appointments through "
                               "'view your appointments' in the main menu\n".format(date, chosen_time))
+                        logging.info('Completed appointment booking')
                         pass
 
     def cancel_appointment(self, nhs_number):

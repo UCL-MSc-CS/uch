@@ -16,9 +16,6 @@ Functions allow patients to view all their appointments, delete appointments fro
 and check an appointment exists in the database.
 """
 
-logging.basicConfig(filename='UCH.log', filemode='w', level=logging.DEBUG,
-                    format='%(asctime)s:%(levelname)s:%(message)s')
-
 
 class Error(Exception):
     """Error exception base class."""
@@ -49,6 +46,7 @@ def view_appointments(nhs_number):
     c = connection.cursor()
     c.execute(""" SELECT A.appointmentID, A.start, P.lastName, A.appointmentStatus FROM Appointment A 
     LEFT JOIN GP P USING (gpEmail) WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhs_number])
+    logging.info('Viewing all appointments for patient NHS number {}'.format(nhs_number))
     appointments = c.fetchall()
     # if appointment list empty, patient told they have none booked and returned to main menu
     if not appointments:

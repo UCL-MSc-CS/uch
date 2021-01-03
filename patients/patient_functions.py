@@ -18,10 +18,6 @@ and for the chosen information to be inserted into the database.
 """
 
 
-logging.basicConfig(filename='UCH.log', filemode='w', level=logging.DEBUG,
-                    format='%(asctime)s:%(levelname)s:%(message)s')
-
-
 class Error(Exception):
     """ Error exception base class. """
     pass
@@ -237,7 +233,7 @@ def choose_year():
     """
     Function for patient to choose the year they would like their appointment.
 
-    Patient inputs year, exceptions check if the year is not in the past, between 2020 - 2100 and is a number.
+    Patient inputs year, exceptions check if the year is not in the past, between 2021 - 2100 and is a number.
 
     Returns:
         year (int): Year chosen.
@@ -255,8 +251,8 @@ def choose_year():
             # exception raised if year chosen in the past
             elif year < current_year:
                 raise YearPassedError
-            # exception raised if year chosen not within 2020-2100
-            elif not 2020 <= year <= 2100:
+            # exception raised if year chosen not within 2021-2100
+            elif not 2021 <= year <= 2100:
                 raise YearNotValidError
             else:
                 # chosen year returned
@@ -482,6 +478,8 @@ def display_available(date, start, end, gp_details):
               "WHERE start >=? and end <?"
               "and gpEmail =? and appointmentStatus != 'Declined' ",
               [start, end, gp_details[0]])
+    logging.info('Selecting all appointments for date: {}, '
+                 'with Dr {} to display available times'.format(date, gp_details[1]))
     appointments = c.fetchall()
     times_str = ["09:00", "09:10", "09:20", "09:30", "09:40", "09:50",
                  "10:00", "10:10", "10:20", "10:30", "10:40", "10:50",
