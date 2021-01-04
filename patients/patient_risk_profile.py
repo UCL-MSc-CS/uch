@@ -1,7 +1,7 @@
 import sqlite3 as sql
 import patients.patient_medical_functions as pf
 import logging
-pf.debug_function()
+# pf.debug_function()
 
 
 class PatientMedical:

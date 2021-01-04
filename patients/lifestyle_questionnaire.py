@@ -3,7 +3,7 @@ import webbrowser
 import logging
 import patients.patient_medical_functions as pf
 
-pf.debug_function()
+# pf.debug_function()
 
 class RiskProfile:
     """

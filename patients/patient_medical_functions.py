@@ -61,12 +61,12 @@ class InvalidAllergyFormatError(Exception):
         super().__init__(self.message)
 
 
-def debug_function():
-    logging.basicConfig(level=logging.DEBUG,
-                        filename='UCH.log',
-                        filemode='a',
-                        format='%(module)s - %(asctime)s - %(levelname)s - %(message)s'
-                        )
+# def debug_function():
+#     logging.basicConfig(level=logging.DEBUG,
+#                         filename='UCH.log',
+#                         filemode='a',
+#                         format='%(module)s - %(asctime)s - %(levelname)s - %(message)s'
+#                         )
 
 
 def update_patient_medical(name, nhs_number):

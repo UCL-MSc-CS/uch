@@ -2,8 +2,6 @@ import sqlite3
 import pandas as pd
 import logging
 
-logging.basicConfig(filename='UCH.log', filemode='a', level=logging.DEBUG, format='%(module)s - %(asctime)s - %(levelname)s - %(message)s')
-
 def initialise_database():
 
     connection = sqlite3.connect('UCH.db')

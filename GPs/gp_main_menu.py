@@ -3,7 +3,6 @@ from GPs.print_timetable import print_timetable
 from GPs.add_non_patient_time import add_non_patient_time
 from GPs.confirm_appointments import confirm_appointments
 from GPs.open_appointment import open_appointment
-from open_past_appointments 
 
 def gp_main_menu(gp_email, gp_full_name):
     """
