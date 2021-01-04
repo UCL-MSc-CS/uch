@@ -351,7 +351,7 @@ class AdminFunctions():
                 gp = [a, pw, b, c, gender, dateOfBirth, addressL1, addressL2, teleNo, department, active]
                 self.c.execute("""INSERT INTO GP VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", gp)
                 print("Details entered successfully")
-                logging.info("Added new GP to database. Details: ")
+                logging.info("Added new a GP to the database. Details as follows: ")
                 logging.info("Email: " + str(gp[0]))
                 logging.info("Password: " + str(gp[1]))
                 logging.info("First Name: " + str(gp[2]))
@@ -362,7 +362,7 @@ class AdminFunctions():
                 logging.info("Address Line 2: " + str(gp[7]))
                 logging.info("Telephone Number: " + str(gp[8]))
                 logging.info("Department: " + str(gp[9]))
-                logging.info("Active: " = str(gp[10]))
+                logging.info("Active: " + str(gp[10]))
                 self.connection.commit()
                 return 0
 
@@ -413,6 +413,7 @@ class AdminFunctions():
                                         (i[0],))
                             print("Registration confirmed successfully")
                             print(" ")
+                            logging.info("Registration of patient " + str(i[0]) + " set to 1")
                         elif change == 'N':
                             print("Registration not confirmed")
                             print(" ")
@@ -425,11 +426,11 @@ class AdminFunctions():
 
     def unconfirm_registrations(self):
         """
-        The function to allow the admin to un-confirm the registration of a patient account that was
+        The function to allow the admin to unconfirm the registration of a patient account that was
         previously confirmed. 
 
         Returns:
-            3 user presses 0 to go back or successfully un-confirms an account using the account's 
+            3 if the user presses 0 to go back or successfully unconfirms an account using the account's 
             NHS number. 
         """
         while True:
@@ -448,10 +449,13 @@ class AdminFunctions():
                 items = self.c.fetchall()
                 if len(items) == 0:
                     print("No record exists with this nhsNumber")
+                elif items[0][11] == 0:
+                    print("\n   < This patient's registration is already unconfirmed > \n")
                 else:
                     self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 0 WHERE nhsNumber = ?""", (nhs_num,))
-                    print("Registration un-confirmed successfully")
+                    print("Registration unconfirmed successfully")
                     self.connection.commit()
+                    logging.info("Registration of patient " + str(nhs_num) + " set to 0")
                     return 3
 
     def deactivate_doctor(self):
@@ -484,10 +488,11 @@ class AdminFunctions():
                 if len(items) == 0:
                     print("\n   < No record exists with this email> \n")
                 elif items[0][0] == 0:
-                    print("\n < This GP has already been deactivated > \n")
+                    print("\n   < This practitioner has already been deactivated > \n")
                 else:
                     self.c.execute("""UPDATE GP SET active = 0 WHERE gpEmail = ?""", (email,))
                     self.connection.commit()
+                    logging.info("Practitioner " + str(email) + " activity status set to 0")
                     print("Record deactivated successfully")
                     return 2
 
@@ -521,10 +526,11 @@ class AdminFunctions():
                 if len(items) == 0:
                     print("\n   < No record exists with this email> \n")
                 elif items[0][0] == 1:
-                    print("\n < This GP is already active > \n")
+                    print("\n   < This practitioner is already active > \n")
                 else:
                     self.c.execute("""UPDATE GP SET active = 1 WHERE gpEmail = ?""", (email,))
                     self.connection.commit()
+                    logging.info("Practitioner " + str(email) + " activity status set to 1")
                     print("Record reactivated successfully")
                     return 2
 
@@ -561,6 +567,7 @@ class AdminFunctions():
                     self.c.execute("DELETE FROM GP WHERE gpEmail = ?", (email,))
                     self.connection.commit()
                     print("Record deleted successfully")
+                    logging.info("Practitioner " + str(email) + " deleted")
                     return 2
 
     def c_in(self):
