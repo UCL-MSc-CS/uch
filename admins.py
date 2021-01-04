@@ -188,6 +188,7 @@ class AdminFunctions():
             self.c.execute("SELECT * FROM Admin WHERE email=? AND password =?", (email, password))
             items = self.c.fetchall()
         else:
+            logging.info("Admin " + email + " logged in")
             return True
 
     def add_doctor(self):
