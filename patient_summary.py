@@ -1,4 +1,5 @@
 import sqlite3 as sql
+# Hipp, R.D., 2020. SQLite, Available at: https://www.sqlite.org/index.html.
 import useful_functions as uf
 from datetime import datetime
 

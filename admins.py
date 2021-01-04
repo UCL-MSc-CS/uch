@@ -1,8 +1,10 @@
 import sqlite3 as sql
+# Hipp, R.D., 2020. SQLite, Available at: https://www.sqlite.org/index.html.
 from datetime import datetime as dt
 from datetime import date 
 import useful_functions as uf
 import pandas as pd
+# McKinney, W. & others, 2010. Data structures for statistical computing in python. In Proceedings of the 9th Python in Science Conference. pp. 51–56.
 import logging
 
 class Error(Exception):
