@@ -7,8 +7,6 @@ import os.path
 from database import initialise_database
 import logging
 
-logging.basicConfig(filename='UCH.log', filemode='w', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
-
 class Menus():
     """This is a class containing menus used on the first page and the Admin side of the program."""
 
