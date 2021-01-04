@@ -150,14 +150,14 @@ def display_cancer_history(nhs_number):
     a.execute("""
                 SELECT * FROM cancer 
                 WHERE nhsNumber =? AND 
-                cancerRelation = 1 
+                cancerRelation = 1
                 """, [nhs_number])
     patient_med_record = a.fetchall()  # list of tuples of cancers patient previously had
     a.execute("""
                 SELECT * FROM cancer
                 WHERE nhsNumber =? AND 
-                cancerRelation IN (SELECT cancerRelation FROM cancer WHERE cancerRelation !=0 AND cancerRelation !=1 AND cancerRelation != ?)
-                """, [nhs_number, 'None'])
+                cancerRelation IN (SELECT cancerRelation FROM cancer WHERE cancerRelation !=0 AND cancerRelation !=1 AND cancerRelation != 'None' AND cancerRelation != 'N/A')
+                """, [nhs_number])
     pati_rec = a.fetchall()  # list of tuples of cancers patient's immediate family previously had
     if not patient_med_record and not pati_rec:  # if no cancer history exist in the database under the entered NHS number
         print('\nNo patient or family cancer history\n')
@@ -173,7 +173,7 @@ def display_cancer_history(nhs_number):
                     column = "NHS Number"
                     print(column, ':', patient_med_record[record][count])
                 elif patient_med_record[record][count] == '1':
-                    print(column, ':', 'the Patient')
+                    print(column, ':', 'the patient')
                 else:
                     print(column, ':', patient_med_record[record][count])
                 count += 1
@@ -195,7 +195,7 @@ def display_cancer_history(nhs_number):
                 else:
                     print(column, ':', pati_rec[record][count])
                 count += 1
-            print("*" * 18)  # separating each row of record
+            print("*" * 5)  # separating each row of record
             record += 1
             rows += 1
         else:

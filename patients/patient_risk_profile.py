@@ -234,8 +234,7 @@ class PatientMedical:
                     try:
                         major_illness = input('Do you have any pre-existing conditions?'
                                                 '\nIf so, please enter the name of the pre-existing condition using comma to '
-                                                'separate different conditions. Otherwise, please enter N/A'
-                                              '\n(or press 0 to exit): ').lower().split(',')
+                                                'separate different conditions. Otherwise, please press 0 to exit: ').lower().split(',')
                         if major_illness == ["0"]:
                             return 1
                         if major_illness == ['']:
@@ -312,8 +311,7 @@ class PatientMedical:
                     try:
                         major_illness = input('Does {} have any pre-existing conditions?'
                         '\nIf so, please enter the name of the pre-existing condition using comma to '
-                        'separate different conditions. Otherwise, please enter N/A'
-                        '\n(or press 0 to exit): '.format(self.child_name)).lower().split(',')
+                        'separate different conditions. Otherwise, press 0 to exit: '.format(self.child_name)).lower().split(',')
                         if major_illness == ['0']:
                             return 1
                         if major_illness == ['']:
@@ -401,8 +399,7 @@ class PatientMedical:
                     try:
                         med_allergy = input('Do you have any allergies to any medicines?'
                                                 '\nIf so, please enter the name of the medicine using comma to '
-                                                'separate different types. Otherwise, please enter N/A'
-                                            '\n(or press 0 to exit): ').lower().split(',')
+                                                'separate different types. Otherwise, please press 0 to exit: ').lower().split(',')
                         if med_allergy == ['0']:
                             return 1
                         if med_allergy == ['']:
@@ -476,8 +473,7 @@ class PatientMedical:
                     try:
                         med_allergy = input('Does {} have any allergies to any medicines?'
                                             '\nIf so, please enter the name of the medicine using comma to '
-                                            'separate different types. Otherwise, please enter N/A'
-                                            '\n(or press 0 to exit): '.format(self.child_name)).lower().split(',')
+                                            'separate different types. Otherwise, please press 0 to exit: '.format(self.child_name)).lower().split(',')
                         if med_allergy == ['0']:
                             return 1
                         if med_allergy == ['']:
