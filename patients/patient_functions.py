@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import logging
 from datetime import time as x, date as xyz, datetime
 import time
 import calendar
@@ -204,8 +205,10 @@ def choose_dr(dr_names):
     while True:
         try:
             dr_options = int(input("********************************************"
-                                   "\nPlease choose the doctor you would "
-                                   "like to book an appointment with: "))
+                                   "\nPlease choose the doctor by selecting a number from the list"
+                                   "\nOr type 0 to go back to the patient main menu: "))
+            if dr_options == 0:
+                return 0
             # exception raised if input not a number in count list
             if dr_options not in counts:
                 raise DrChoiceNotValidError
@@ -217,7 +220,7 @@ def choose_dr(dr_names):
                 print("\nYou have chosen Dr {}".format(gp_chosen_name))
                 return gp_details
         except DrChoiceNotValidError:
-            print("\n\t< This is not a valid choice, please try again >"
+            print("\n\t< This number is not in the list, please try again >"
                   "\n ")
         except ValueError:
             print("\n\t< This is not a valid choice, please enter a number >"
@@ -228,7 +231,7 @@ def choose_year():
     """
     Function for patient to choose the year they would like their appointment.
 
-    Patient inputs year, exceptions check if the year is not in the past, between 2020 - 2100 and is a number.
+    Patient inputs year, exceptions check if the year is not in the past, between 2021 - 2100 and is a number.
 
     Returns:
         year (int): Year chosen.
@@ -246,8 +249,8 @@ def choose_year():
             # exception raised if year chosen in the past
             elif year < current_year:
                 raise YearPassedError
-            # exception raised if year chosen not within 2020-2100
-            elif not 2020 <= year <= 2100:
+            # exception raised if year chosen not within 2021-2100
+            elif not 2021 <= year <= 2100:
                 raise YearNotValidError
             else:
                 # chosen year returned
@@ -473,6 +476,8 @@ def display_available(date, start, end, gp_details):
               "WHERE start >=? and end <?"
               "and gpEmail =? and appointmentStatus != 'Declined' ",
               [start, end, gp_details[0]])
+    logging.info('Selecting all appointments for date: {}, '
+                 'with Dr {} to display available times'.format(date, gp_details[1]))
     appointments = c.fetchall()
     times_str = ["09:00", "09:10", "09:20", "09:30", "09:40", "09:50",
                  "10:00", "10:10", "10:20", "10:30", "10:40", "10:50",
@@ -636,17 +641,6 @@ def insert_appointment(start, gp_details, nhs_number):
     chosen = (gp_email, gp_last_name, nhs_number, start, end, reason, appointment_status,
               date_requested, '', '', '', '', '', 0, 0)
     c.execute("INSERT INTO Appointment VALUES (null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", chosen)
+    logging.info('Appointment inserted into appointment table, for patient NHS number {} ,'
+                 'with Dr {}'.format(nhs_number, gp_last_name))
     connection.commit()
-
-
-def return_to_main():
-    """
-    Returns user to main patient menu when typing '0'.
-    If user types anything else, will exit the program with a goodbye message.
-    """
-    if input("Type [0] to return to the main menu "
-             "\n(or any other key to exit the UCL e-health system): ").lower() == '0':
-        pass
-    else:
-        print("Thank you for using the UCH e-health system! Goodbye for now!")
-        exit()

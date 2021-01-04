@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import logging
 from datetime import datetime
 import pandas as pd
 import patients.patient_functions as pf
@@ -41,12 +42,13 @@ def view_appointments(nhs_number):
     c = connection.cursor()
     c.execute(""" SELECT A.appointmentID, A.start, P.lastName, A.appointmentStatus FROM Appointment A 
     LEFT JOIN GP P USING (gpEmail) WHERE nhsNumber =? ORDER BY A.appointmentID ASC""", [nhs_number])
+    logging.info('Viewing all appointments for patient NHS number {}'.format(nhs_number))
     appointments = c.fetchall()
     # if appointment list empty, patient told they have none booked and returned to main menu
     if not appointments:
         print("\nYou currently have no appointments booked"
               "\n")
-        pass
+        return 0
     else:
         appointment_id = []
         date = []
@@ -93,7 +95,9 @@ def delete_appointment(cancel):
     connection = sql.connect('UCH.db')
     c = connection.cursor()
     c.execute("DELETE FROM Appointment WHERE appointmentID =?", [cancel])
+    logging.info('Appointment ID {} deleted from Appointment table'.format(cancel))
     c.execute("DELETE FROM Prescription WHERE appointmentID =?", [cancel])
+    logging.info('Appointment ID {} deleted from Prescription table'.format(cancel))
     connection.commit()
     print("You have cancelled appointment ID {}".format(cancel))
 
