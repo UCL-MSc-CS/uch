@@ -65,7 +65,7 @@ def debug_function():
     logging.basicConfig(level=logging.DEBUG,
                         filename='UCH.log',
                         filemode='a',
-                        format='%(module)s - %(levelname)s - %(message)s'
+                        format='%(module)s - %(asctime)s - %(levelname)s - %(message)s'
                         )
 
 

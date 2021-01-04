@@ -65,7 +65,7 @@ UCH is organized into the following files:
 
 Arianna Bourke - AriannaBourke
 
-Caroline Crandell - cecrandell - patient_main.py, patient.py
+Caroline Crandell - cecrandell 
 
 Jacob Lapkin - Post-Shalom
 

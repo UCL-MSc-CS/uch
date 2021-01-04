@@ -104,9 +104,17 @@ def patient_summary(nhsNumber):
         c.execute("""SELECT cancerRelation, cancerType, cancerAge FROM cancer WHERE
                 nhsNumber = ?""", (nhsNumber,))
         items = c.fetchall()
-        f.write(("Age:").ljust(20, ' ') + ("Relation:").ljust(25, ' ') + ("Type:") + "\n")
-        for i in range(0, len(items)):
-            f.write(str(items[i][2]).ljust(20, ' ') + str(items[i][0]).ljust(25, ' ') + str(items[i][1] + "\n"))
+        if items == []:
+            f.write("The patient has no recorded pre-existing conditions \n")
+        else:
+            f.write(("Age:").ljust(20, ' ') + ("Relation:").ljust(25, ' ') + ("Type:") + "\n")
+            for i in range(0, len(items)):
+                if items[i][0] == '0':
+                    f.write(str(items[i][2]).ljust(20, ' ') + 'N/a'.ljust(25, ' ') + str(items[i][1] + "\n"))
+                if items[i][0] == '1':
+                    f.write(str(items[i][2]).ljust(20, ' ') + 'Self'.ljust(25, ' ') + str(items[i][1] + "\n"))
+                if items[i][0] == "None":
+                    f.write(str(items[i][2]).ljust(20, ' ') + 'N/a family'.ljust(25, ' ') + str(items[i][1] + "\n"))
 
         f.write("--------------------------------------------\n")
         f.write("PRE-EXISTING CONDITIONS: \n")
