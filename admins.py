@@ -1,8 +1,11 @@
 import sqlite3 as sql
+# Hipp, R.D., 2020. SQLite, Available at: https://www.sqlite.org/index.html.
 from datetime import datetime as dt
 from datetime import date 
 import useful_functions as uf
 import pandas as pd
+# McKinney, W. & others, 2010. Data structures for statistical computing in python. In Proceedings of the 9th Python in Science Conference. pp. 51–56.
+import logging
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -350,6 +353,18 @@ class AdminFunctions():
                 gp = [a, pw, b, c, gender, dateOfBirth, addressL1, addressL2, teleNo, department, active]
                 self.c.execute("""INSERT INTO GP VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", gp)
                 print("Details entered successfully")
+                logging.info("Added new a GP to the database. Details as follows: ")
+                logging.info("Email: " + str(gp[0]))
+                logging.info("Password: " + str(gp[1]))
+                logging.info("First Name: " + str(gp[2]))
+                logging.info("Last Name: " + str(gp[3]))
+                logging.info("Gender: " + str(gp[4]))
+                logging.info("Date of Birth: " + str(gp[5]))
+                logging.info("Address Line 1: " + str(gp[6]))
+                logging.info("Address Line 2: " + str(gp[7]))
+                logging.info("Telephone Number: " + str(gp[8]))
+                logging.info("Department: " + str(gp[9]))
+                logging.info("Active: " + str(gp[10]))
                 self.connection.commit()
                 return 0
 
@@ -400,6 +415,7 @@ class AdminFunctions():
                                         (i[0],))
                             print("Registration confirmed successfully")
                             print(" ")
+                            logging.info("Registration of patient " + str(i[0]) + " set to 1")
                         elif change == 'N':
                             print("Registration not confirmed")
                             print(" ")
@@ -412,11 +428,11 @@ class AdminFunctions():
 
     def unconfirm_registrations(self):
         """
-        The function to allow the admin to un-confirm the registration of a patient account that was
+        The function to allow the admin to unconfirm the registration of a patient account that was
         previously confirmed. 
 
         Returns:
-            3 user presses 0 to go back or successfully un-confirms an account using the account's 
+            3 if the user presses 0 to go back or successfully unconfirms an account using the account's 
             NHS number. 
         """
         while True:
@@ -435,10 +451,13 @@ class AdminFunctions():
                 items = self.c.fetchall()
                 if len(items) == 0:
                     print("No record exists with this nhsNumber")
+                elif items[0][11] == 0:
+                    print("\n   < This patient's registration is already unconfirmed > \n")
                 else:
                     self.c.execute("""UPDATE PatientDetail SET registrationConfirm = 0 WHERE nhsNumber = ?""", (nhs_num,))
-                    print("Registration un-confirmed successfully")
+                    print("Registration unconfirmed successfully")
                     self.connection.commit()
+                    logging.info("Registration of patient " + str(nhs_num) + " set to 0")
                     return 3
 
     def deactivate_doctor(self):
@@ -471,10 +490,11 @@ class AdminFunctions():
                 if len(items) == 0:
                     print("\n   < No record exists with this email> \n")
                 elif items[0][0] == 0:
-                    print("\n < This GP has already been deactivated > \n")
+                    print("\n   < This practitioner has already been deactivated > \n")
                 else:
                     self.c.execute("""UPDATE GP SET active = 0 WHERE gpEmail = ?""", (email,))
                     self.connection.commit()
+                    logging.info("Practitioner " + str(email) + " activity status set to 0")
                     print("Record deactivated successfully")
                     return 2
 
@@ -508,10 +528,11 @@ class AdminFunctions():
                 if len(items) == 0:
                     print("\n   < No record exists with this email> \n")
                 elif items[0][0] == 1:
-                    print("\n < This GP is already active > \n")
+                    print("\n   < This practitioner is already active > \n")
                 else:
                     self.c.execute("""UPDATE GP SET active = 1 WHERE gpEmail = ?""", (email,))
                     self.connection.commit()
+                    logging.info("Practitioner " + str(email) + " activity status set to 1")
                     print("Record reactivated successfully")
                     return 2
 
@@ -548,6 +569,7 @@ class AdminFunctions():
                     self.c.execute("DELETE FROM GP WHERE gpEmail = ?", (email,))
                     self.connection.commit()
                     print("Record deleted successfully")
+                    logging.info("Practitioner " + str(email) + " deleted")
                     return 2
 
     def c_in(self):
@@ -628,6 +650,7 @@ class AdminFunctions():
                             firstsel = self.c.fetchall()
                             self.c.execute("""UPDATE Appointment SET checkIn = ? WHERE appointmentID = ? """, (unix_d, check_number))
                             self.connection.commit()
+                            logging.info("Adding check-in time for appointment ID: " + str(check_number) + " to database")
                             x = dt.now().hour
                             y = dt.now().minute
                             if y < 10:
@@ -715,6 +738,8 @@ class AdminFunctions():
                             firstsel = self.c.fetchall()
                             self.c.execute("""UPDATE Appointment SET checkOut = ? WHERE appointmentID = ? """, (unix_d, check_number))
                             self.connection.commit()
+                            logging.info(
+                                "Adding check-out time for appointment ID: " + str(check_number) + " to database")
                             x = dt.now().hour
                             y = dt.now().minute
                             if y < 10:
@@ -843,7 +868,6 @@ class AdminFunctions():
                             if date_entered > date_today:
                                 raise DateInFutureError
                             date_of_birth = date_entered.isoformat()
-                            print(date_of_birth)
                             question_num = 6
 
                         while question_num == 6:
@@ -962,6 +986,7 @@ class AdminFunctions():
                         telephoneNumber = ? WHERE nhsNumber = ?""",
                         (emails, first, last, date_of_birth, gender, addl1, addl2, postcode, tel, nhs_num))
                         self.connection.commit()
+                        logging.info("Update patient record with NHS number: " + nhs_num + " to database")
                         print("Successfully updated entire patient record")
                         return master_back
 
@@ -993,6 +1018,7 @@ class AdminFunctions():
                 self.c.execute("""DELETE FROM PatientDetail WHERE nhsNumber = ?""", (nhs_num,))
                 self.connection.commit()
                 print("Successfully deleted patient record")
+                logging.info("Delete patient record with NHS number: " + nhs_num + " from database")
                 del_back = 1
 
     def man_ind_det(self):
@@ -1071,20 +1097,20 @@ class AdminFunctions():
                             back = 0
                             while back == 0:
                                 try:
-                                    CEmail = input("New email: ")
-                                    self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (CEmail,))
+                                    c_email = input("New email: ")
+                                    self.c.execute("SELECT * FROM PatientDetail WHERE patientEmail = ?", (c_email,))
                                     email_check = self.c.fetchall()
-                                    if CEmail == '0':
+                                    if c_email == '0':
                                         c_again = 1  # Inputting a "1" returns user to re-enter NHS number
                                         break
-                                    elif CEmail == '1':
+                                    elif c_email == '1':
                                         back = 0  # Returns user back to options menu
                                         break
                                     elif len(email_check) > 0:
                                         raise EmailInUseError
-                                    elif "@" not in CEmail or ".com" not in CEmail:
-                                        raise EmailInvalidError(CEmail)
-                                    elif not CEmail:
+                                    elif "@" not in c_email or ".com" not in c_email:
+                                        raise EmailInvalidError(c_email)
+                                    elif not c_email:
                                         raise FieldEmptyError
                                 except EmailInUseError:
                                     error = EmailInUseError()
@@ -1093,55 +1119,64 @@ class AdminFunctions():
                                     error = FieldEmptyError()
                                     print(error)
                                 except EmailInvalidError:
-                                    error = EmailInvalidError(CEmail)
+                                    error = EmailInvalidError(c_email)
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""", (CEmail, nhs_num))
+                                    self.c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""",
+                                                   (c_email, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed email")
+                                    logging.info("Update patient's email to " + str(c_email) + " for NHS number: "
+                                                 + nhs_num + " to database")
                                     back = 1
 
                         elif ind_inp == 3:
                             back2 = 0
                             while back2 == 0:
                                 try:
-                                    Cfn = input("New first name: ")
-                                    if Cfn == '0':
+                                    c_fn = input("New first name: ")
+                                    if c_fn == '0':
                                         c_again = 1
                                         break
-                                    elif Cfn == '1':
+                                    elif c_fn == '1':
                                         back2 = 1
                                         break
-                                    elif not Cfn:
+                                    elif not c_fn:
                                         raise FieldEmptyError
                                 except FieldEmptyError:
                                     error = FieldEmptyError()
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""", (Cfn, nhs_num))
+                                    self.c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""",
+                                                   (c_fn, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed first name")
+                                    logging.info("Update patient's first name to " + str(c_fn) + " for NHS number: "
+                                                 + nhs_num + " to database")
                                     back2 = 1
 
                         elif ind_inp == 4:
                             back3 = 0
                             while back3 == 0:
                                 try:
-                                    Cln = input("New last name: ")
-                                    if Cln == '0':
+                                    c_Ln = input("New last name: ")
+                                    if c_Ln == '0':
                                         c_again = 1
                                         break
-                                    elif Cln == '1':
+                                    elif c_Ln == '1':
                                         back3 = 1
                                         break
-                                    elif not Cln:
+                                    elif not c_Ln:
                                         raise FieldEmptyError
                                 except FieldEmptyError:
                                     error = FieldEmptyError()
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""", (Cln, nhs_num))
+                                    self.c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""",
+                                                   (c_Ln, nhs_num))
                                     self.connection.commit()
+                                    logging.info("Update patient's last name to " + str(c_Ln) + " for NHS number: "
+                                                 + nhs_num + " to database")
                                     print("Successfully changed last name")
                                     back3 = 1
 
@@ -1207,8 +1242,11 @@ class AdminFunctions():
                                     error = DateInFutureError()
                                     print(error)
                                 else:
-                                    self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""", (date_of_birth, nhs_num))
+                                    self.c.execute("""UPDATE PatientDetail SET dateOfBirth = ? WHERE nhsNumber = ?""",
+                                                   (date_of_birth, nhs_num))
                                     self.connection.commit()
+                                    logging.info("Update patient's date of birth to " + str(date_of_birth)
+                                                 + " for NHS number: " + nhs_num + " to database")
                                     print("Successfully changed date of birth")
                                     back4 = 1
 
@@ -1216,16 +1254,17 @@ class AdminFunctions():
                             back6 = 0
                             while back6 == 0:
                                 try:
-                                    Cgen = input("New gender (enter male/female/non-binary/prefer not to say): ")
-                                    if Cgen == '0':
+                                    c_gen = input("New gender (enter male/female/non-binary/prefer not to say): ")
+                                    if c_gen == '0':
                                         c_again = 1
                                         break
-                                    elif Cgen == '1':
+                                    elif c_gen == '1':
                                         back6 = 1
                                         break
-                                    elif not Cgen:
+                                    elif not c_gen:
                                         raise FieldEmptyError()
-                                    elif Cgen != "male" and Cgen != "female" and Cgen != "non-binary" and Cgen != "prefer not to say":
+                                    elif c_gen != "male" and c_gen != "female" and c_gen != "non-binary" \
+                                            and c_gen != "prefer not to say":
                                         raise GenderError()
                                 except FieldEmptyError:
                                     error = FieldEmptyError()
@@ -1235,8 +1274,10 @@ class AdminFunctions():
                                     print(error)
                                 else:
                                     self.c.execute("""UPDATE PatientDetail SET gender = ? WHERE nhsNumber = ?""",
-                                                   (Cgen, nhs_num))
+                                                   (c_gen, nhs_num))
                                     self.connection.commit()
+                                    logging.info("Update patient's gender to " + str(c_gen) + " for NHS number: "
+                                                 + nhs_num + " to database")
                                     print("Successfully changed gender")
                                     back6 = 1
 
@@ -1265,6 +1306,8 @@ class AdminFunctions():
                                     self.c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""",
                                                    (c_ad1, nhs_num))
                                     self.connection.commit()
+                                    logging.info("Update patient's address line 1 to " + str(c_ad1) +
+                                                 " for NHS number: " + nhs_num + " to database")
                                     print("Successfully changed address line 1")
                                     back7 = 1
 
@@ -1289,6 +1332,8 @@ class AdminFunctions():
                                                    (c_ad2, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed address line 2")
+                                    logging.info("Update patient's address line 2 to " + str(c_ad2)
+                                                 + " for NHS number: " + nhs_num + " to database")
                                     back8 = 1
 
                         elif ind_inp == 9:
@@ -1312,6 +1357,8 @@ class AdminFunctions():
                                                    (c_post, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed post code")
+                                    logging.info("Update patient's postcode to " + str(c_post) + " for NHS number: "
+                                                 + nhs_num + " to database")
                                     back9 = 1
 
                         elif ind_inp == 10:
@@ -1333,8 +1380,8 @@ class AdminFunctions():
                                         raise TeleNoFormatError()
                                     c_tel = c_tel.replace('+', '')
                                     input_list = [i for i in c_tel]
-                                    if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and len(
-                                            input_list) != 14 and len(
+                                    if len(input_list) != 11 and len(input_list) != 12 and len(input_list) != 13 and \
+                                            len(input_list) != 14 and len(
                                             input_list) != 15 and len(input_list) != 16 and len(
                                         input_list) != 17 and len(
                                         input_list) != 18:
@@ -1359,6 +1406,8 @@ class AdminFunctions():
                                         (c_tel, nhs_num))
                                     self.connection.commit()
                                     print("Successfully changed telephone number")
+                                    logging.info("Update patient telephone number to " + str(c_tel) +
+                                                 " for NHS number: " + nhs_num + " to database")
                                     back10 = 1
 
     def commit_and_close(self):

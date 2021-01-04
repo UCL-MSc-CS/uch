@@ -51,7 +51,7 @@ def prescription(doctoremail,appointmentID,nhsNumber):
 
     # ------------------------- Seach medicine functionality -------------------------
     def submit_medicine_search():
-        """Pulls all medicine from database based on GP search preferences and displays it on a treeview"""
+        """Pulls all medicine from database based on GP search preferences and displays it on a tree-view"""
 
         trv.delete(*trv.get_children())
 

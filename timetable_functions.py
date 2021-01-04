@@ -2,15 +2,15 @@ import sqlite3
 from datetime import datetime, timedelta
 import useful_functions as uf
 from pathlib import Path
+import logging
 
 DATE_TIME_FORMAT = "%Y-%m-%d %H:%M"
 
 
-"""
-Connect to your database
-"""
 def connect_to_db():
-
+    """
+    Connect to your database
+    """
     path = str(Path(__file__).parent.absolute()) + "/UCH.db"
     connection = sqlite3.connect(path)  # DO NOT add this file to Git!!!
     cursor = connection.cursor()
@@ -18,18 +18,18 @@ def connect_to_db():
     return conncursordict
 
 
-"""
-Disconnect from your database
-"""
 def close_connection(conn):
+    """
+    Disconnect from your database
+    """
     conn.commit()
     conn.close()
 
 
-"""
-Returns the number of rows altered since you last opened a connection
-"""
 def find_rows_changed(conn):
+    """
+    Returns the number of rows altered since you last opened a connection
+    """
     conn["cursor"].execute("SELECT changes()")
     return conn['cursor'].fetchone()[0]
 
@@ -46,10 +46,10 @@ def functionname(args):
 
 """
 
-"""
-Gets the doctor's last name given an email address.
-"""
 def get_gp_last_name(docemail):
+    """
+    Gets the doctor's last name given an email address.
+    """
     conn = connect_to_db()
 
     sql = """SELECT lastName FROM GP WHERE gpEmail = ?"""
@@ -59,13 +59,14 @@ def get_gp_last_name(docemail):
     lastname = results[0]
 
     close_connection(conn["connection"])
+    logging.info("Retrieving Doctor's last name. Dr. " + lastname)
     return lastname
 
-"""
-Allows one to book time into the system's calendar.
-the gpEmailArray is a list with all the GPs you wish to create an appointment for
-"""
 def book_time(date, startTime, endTime, reason, nhsNumber, gpEmailArray):
+    """
+    Allows one to book time into the system's calendar.
+    the gpEmailArray is a list with all the GPs you wish to create an appointment for
+    """
     conn = connect_to_db()
 
     start = uf.regular_to_unix_time(datetime.strptime(date + " " + startTime, DATE_TIME_FORMAT))
@@ -87,22 +88,24 @@ def book_time(date, startTime, endTime, reason, nhsNumber, gpEmailArray):
             Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """, values
         )
+        logging.info("Booking {} time to Dr.{}'s timetable on {} {}-{}".format(reason,gpLastName,date,startTime,endTime))
 
     close_connection(conn["connection"])
 
 
-"""
-Books a patient appointment, auto-sets reason to "Appointment" to make life easy
-"""
 def book_appointment(date, startTime, endTime, nhsNumber, gpEmailArray):
+    """
+    Books a patient appointment, auto-sets reason to "Appointment" to make life easy
+    """
     book_time(date, startTime, endTime, "Appointment", nhsNumber, gpEmailArray)
 
 
-"""
-Returns a list of available gps during a timeframe that you have provided, else will return "unavailable""
-"""
 def check_slot_available(date, startTime, endTime, gpemailarray):
+    """
+    Returns a list of available gps during a timeframe that you have provided, else will return "unavailable""
+    """
     conn = connect_to_db()
+    logging.info("Checking timeslot {} {}-{} to see if it is available".format(date,startTime,endTime))
 
     startunix = uf.regular_to_unix_time(datetime.strptime(date + " " + startTime, DATE_TIME_FORMAT))
     endunix = uf.regular_to_unix_time(datetime.strptime(date + " " + endTime, DATE_TIME_FORMAT))
@@ -133,15 +136,17 @@ def check_slot_available(date, startTime, endTime, gpemailarray):
             freegps.append(gpemail)
 
     if freegps:
+        logging.info('Available GPs found')
         return freegps
     else:
+        logging.info('No GPs free during this time')
         return ["unavailable"]
 
 
-"""
-Returns information to print out appointments for a gp on a given day
-"""
 def timetable_block(gpemail, date):
+    """
+    Returns information to print out appointments for a gp on a given day
+    """
     conn = connect_to_db()
 
     start = uf.regular_to_unix_time(datetime.strptime(date + " 00:00", DATE_TIME_FORMAT))
@@ -165,10 +170,10 @@ def timetable_block(gpemail, date):
     close_connection(conn["connection"])
     return results
 
-"""
-This is used to open today's appointments that have been confirmed.
-"""
 def todays_appointments(gpemail):
+    """
+    This is used to open today's appointments that have been confirmed.
+    """
     conn = connect_to_db()
     now = datetime.today()
     today = datetime(now.year, now.month, now.day)
@@ -193,10 +198,10 @@ def todays_appointments(gpemail):
     close_connection(conn["connection"])
     return results
 
-"""
-Call this function when you want to delete non-patient time/decline an appointment if its a patient appointment
-"""
 def clear_booked_time(appointmentId):
+    """
+    Call this function when you want to delete non-patient time/decline an appointment if its a patient appointment
+    """
     conn = connect_to_db()
     conn['cursor'].execute("""
             SELECT reason 
@@ -206,14 +211,16 @@ def clear_booked_time(appointmentId):
     appointment_type = conn['cursor'].fetchone()[0]
     close_connection(conn["connection"])
     if appointment_type == "Appointment":
+        logging.info("Declining patient appointment of ID: " + str(appointmentId))
         decline_appointment(appointmentId)
     else:
+        logging.info("Deleting appointment of ID: " + str(appointmentId))
         delete_booked_time(appointmentId)
 
-"""
-Call this when you'd like to cancel an appointment
-"""
 def delete_booked_time(appointmentId):
+    """
+    Call this when you'd like to cancel an appointment
+    """
     conn = connect_to_db()
     conn['cursor'].execute("""
         DELETE FROM Appointment
@@ -222,10 +229,10 @@ def delete_booked_time(appointmentId):
     close_connection(conn["connection"])
 
 
-"""
-Used by doctors to find pending appointments to confirm/decline.
-"""
 def get_all_pending_appointments(gpemail, date):
+    """
+    Used by doctors to find pending appointments to confirm/decline.
+    """
     conn = connect_to_db()
 
     start = str(uf.regular_to_unix_time(datetime.strptime(date + " 00:00", DATE_TIME_FORMAT)))
@@ -247,11 +254,12 @@ def get_all_pending_appointments(gpemail, date):
     return results
 
 
-"""
-Confirm/accept an appointment
-"""
 def accept_appointment(appointmentId):
+    """
+    Confirm/accept an appointment
+    """
     conn = connect_to_db()
+    logging.info("Accepting appointment of ID: " + str(appointmentId))
 
     conn['cursor'].execute("""
     UPDATE 
@@ -265,10 +273,10 @@ def accept_appointment(appointmentId):
     close_connection(conn["connection"])
 
 
-"""
-Decline/reject an appointment
-"""
 def decline_appointment(appointmentId):
+    """
+    Decline/reject an appointment
+    """
     conn = connect_to_db()
 
     conn['cursor'].execute("""
@@ -282,10 +290,10 @@ def decline_appointment(appointmentId):
 
     close_connection(conn["connection"])
 
-"""
-Used to get the appointment notes for a particular appointment
-"""
 def get_doctor_notes(appointmentId):
+    """
+    Used to get the appointment notes for a particular appointment
+    """
     conn = connect_to_db()
 
     conn['cursor'].execute("""
@@ -306,11 +314,12 @@ def get_doctor_notes(appointmentId):
     close_connection(conn["connection"])
     return results
 
-"""
-This saves/updates the doctor's notes to the database.
-"""
 def save_doctor_notes(doctorsnotes):
+    """
+    This saves/updates the doctor's notes to the database.
+    """
     conn = connect_to_db()
+    logging.info("Saving doctor's notes for patient appointment ID: " + str(doctorsnotes[5]))
 
     doctorsnotestuple = tuple(doctorsnotes)
 
@@ -329,10 +338,10 @@ def save_doctor_notes(doctorsnotes):
 
     close_connection(conn["connection"])
 
-"""
-This pulls basic patient information for the doctor, given an appointment ID
-"""
 def get_patient_info(appointmentId):
+    """
+    This pulls basic patient information for the doctor, given an appointment ID
+    """
     conn = connect_to_db()
 
     conn['cursor'].execute("""
@@ -363,10 +372,10 @@ def get_patient_info(appointmentId):
     close_connection(conn["connection"])
     return results
 
-"""
-Call this function to auto-decline any pending appointments when a doctor wants to book non-patient time
-"""
 def auto_decline_pending(datestring, startstring, endstring, doctoremail):
+    """
+    Call this function to auto-decline any pending appointments when a doctor wants to book non-patient time
+    """
     conn = connect_to_db()
 
     start = str(uf.regular_to_unix_time(datetime.strptime(datestring + " " + startstring, DATE_TIME_FORMAT)))
@@ -396,6 +405,7 @@ def auto_decline_pending(datestring, startstring, endstring, doctoremail):
         conflicting_appointments.append(result[0])
 
     for appointmentID in conflicting_appointments:
+        logging.info("Auto-Declining pending patient appointment of ID: "+str(appointmentID)+" due to time being booked")
         decline_appointment(appointmentID)
 
     if conflicting_appointments:
@@ -406,10 +416,10 @@ def auto_decline_pending(datestring, startstring, endstring, doctoremail):
         return False
 
 
-"""
-Used only for testing
-"""
 if __name__ == "__main__":
+    """
+    Used only for testing
+    """
     today = datetime.strftime(datetime.today(),"%Y-%m-%d")
     book_appointment(today, "15:00", "16:30", "1234567890", ["chenuka.ratwatte@ucl.ac.uk"])
     book_appointment(today, "14:00", "15:00", "1234567890", ["chenuka.ratwatte@ucl.ac.uk"])

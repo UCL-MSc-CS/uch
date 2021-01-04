@@ -67,7 +67,7 @@ while True:
 
         masterlogin = Menus()
         masterlogin.master_menu()
-        logging.info('Menu Initialised')
+        logging.info('Root Menu Initialised')
 
 
         selection1 = int(input("Please select an option: "))

@@ -11,13 +11,13 @@ END_MIN = 0
 CLINIC_START = "{:02d}".format(START_HOUR) + ":" + "{:02d}".format(START_MIN)
 CLINIC_END = "{:02d}".format(END_HOUR) + ":" + "{:02d}".format(END_MIN)
 
-"""
-Main Menu function for booking non-patient time
-
-These can be things such as holidays, scheduled break hours, admin hours, emergency leave etc.
-Time cannot be booked in the past. Time cannot be booked that conflicts with existing time.
-"""
 def add_non_patient_time(doctoremail):
+    """
+    Main Menu function for booking non-patient time
+
+    These can be things such as holidays, scheduled break hours, admin hours, emergency leave etc.
+    Time cannot be booked in the past. Time cannot be booked that conflicts with existing time.
+    """
     while True:
         print("--------------------------------------------")
         print("\t Doctor Add non-patient time")
@@ -39,14 +39,14 @@ def add_non_patient_time(doctoremail):
         print("********************************************")
 
 
-"""
-Specific function if the user selects add-holiday.
-
-Will ask for a start and an end date and book out a timeslot with reason = "holiday" from the clinic start and
-end times on each of those days. Will auto-decline any pending appointments (ones the doctor hasn't confirmed yet)
-that are during the booked holiday.
-"""
 def add_holiday(doctoremail):
+    """
+    Specific function if the user selects add-holiday.
+
+    Will ask for a start and an end date and book out a timeslot with reason = "holiday" from the clinic start and
+    end times on each of those days. Will auto-decline any pending appointments (ones the doctor hasn't confirmed yet)
+    that are during the booked holiday.
+    """
     startdate = uf.validate_date("Please enter a start date")
     if startdate == 'exit':
         # The user wishes to exit data entry at that point.
@@ -94,15 +94,15 @@ def add_holiday(doctoremail):
         print("\n\t< You have entered an end date that is before a start date. Please try again >\n")
 
 
-"""
-Adding times that aren't holidays.
-
-These aren't blocked out on a day to day basis, these are individual timeslots you can book on a given day. Here you
-can book items like 'emergency leave','scheduled breaks', 'admin tasks' etc.
-Will first ask for a date to book it on, and then will ask for the start and end times. 
-Auto-declines and pending appointments that conflict with the booked time. 
-"""
 def add_non_patient_hours(doctoremail):
+    """
+    Adding times that aren't holidays.
+
+    These aren't blocked out on a day to day basis, these are individual timeslots you can book on a given day. Here you
+    can book items like 'emergency leave','scheduled breaks', 'admin tasks' etc.
+    Will first ask for a date to book it on, and then will ask for the start and end times.
+    Auto-declines and pending appointments that conflict with the booked time.
+    """
     chosen_date = uf.validate_date("Please enter a date")
     if chosen_date == 'exit':
         # Exits the date entry if the user wishes.
@@ -148,12 +148,12 @@ def add_non_patient_hours(doctoremail):
     else:
         print("\n\t< You've entered an end time before a start time, please try again >\n")
 
-"""
-Select a reason for adding non-patient hours.
-
-The reasons for non-patient time are numerous and can be seen in the "reasondict" python dictionary below.
-"""
 def select_reason():
+    """
+    Select a reason for adding non-patient hours.
+
+    The reasons for non-patient time are numerous and can be seen in the "reasondict" python dictionary below.
+    """
     while True:
         reasondict = {1:'scheduled break',2:'admin tasks',3:'emergency',4:'other'}
         print("Please select a reason for non-patient hours: ")

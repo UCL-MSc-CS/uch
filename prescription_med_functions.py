@@ -1,6 +1,7 @@
 import sqlite3
 from pathlib import Path
 import re
+import logging
 
 def connect_to_db():
     """Connects to database"""
@@ -105,7 +106,7 @@ def add_prescription_to_db(prescription):
     conn = connect_to_db()
 
     prescriptionTuple = tuple(prescription)
-
+    logging.info('Adding prescription: ' + str(prescriptionTuple) + ' to database')
     conn['cursor'].execute("""
         INSERT INTO
             Prescription
@@ -151,6 +152,8 @@ def delete_med_record(appointmentID):
     """Deletes all medicine records from database"""
 
     conn = connect_to_db()
+
+    logging.info('Deleting prescription for appointment id: ' + str(appointmentID) + ' from database')
     conn['cursor'].execute("""
             DELETE from Prescription
             WHERE 
