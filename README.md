@@ -13,6 +13,25 @@ To run the program, type 'python .\root.py'
 The sqlite3 database file, UCH.db, should be created automatically the first time the program is run. If it isn't, run database.py in the terminal.
 The GUI windows in this program are designed for 1080p resolution and 100% text scaling. Please check your display settings in case the windows are not displaying fully. 
 
+**Login details**
+Admins:
+    email - jacob.lapkin@ucl.ac.uk
+    p/w   - 1234
+
+GPs:
+    email - andrew.oconnell@ucl.ac.uk
+    p/w   - 1234
+    email - caroline.crandell@ucl.ac.uk
+    p/w   - 1234
+    email - chenuka.ratwatte@ucl.ac.uk
+    p/w   - 1234
+
+Patients:
+    email - m.shorvon@gmail.com
+    p/w   - 1234
+    email - a.bourke@gmail.com
+    p/w   - 1234
+
 **What does this application do and why?**
 
 * This e-Health patient management system makes appointment bookings easy for patients and GPs of University College Hospital (UCH).
