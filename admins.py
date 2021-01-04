@@ -351,6 +351,18 @@ class AdminFunctions():
                 gp = [a, pw, b, c, gender, dateOfBirth, addressL1, addressL2, teleNo, department, active]
                 self.c.execute("""INSERT INTO GP VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", gp)
                 print("Details entered successfully")
+                logging.info("Added new GP to database. Details: ")
+                logging.info("Email: " + str(gp[0]))
+                logging.info("Password: " + str(gp[1]))
+                logging.info("First Name: " + str(gp[2]))
+                logging.info("Last Name: " + str(gp[3]))
+                logging.info("Gender: " + str(gp[4]))
+                logging.info("Date of Birth: " + str(gp[5]))
+                logging.info("Address Line 1: " + str(gp[6]))
+                logging.info("Address Line 2: " + str(gp[7]))
+                logging.info("Telephone Number: " + str(gp[8]))
+                logging.info("Department: " + str(gp[9]))
+                logging.info("Active: " = str(gp[10]))
                 self.connection.commit()
                 return 0
 
