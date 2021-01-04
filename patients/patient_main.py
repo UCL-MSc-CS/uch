@@ -330,8 +330,12 @@ def options(nhs_number):
                         # To see the patient summary then redirects to a new menu
                         summary(nhs_number)
                         count = 3
-                    # Redirects to task() (the main menu for patients)
-                    elif action == "0":return 0
+                    elif action == "0":
+                        c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?",[nhs_number])
+                        results = c.fetchall()
+                        logging.info("NHS Number: %s %s %s / Patient %s, %s logged out"%(str(nhs_number)[0:3],str(nhs_number)[3:6],str(nhs_number)[6:10],results[0][3].upper(),results[0][2].upper()))
+                        # Redirects to task() (the main menu for patients)
+                        return 0
                     else:raise InvalidAnswerError()
                 while count == 1:
                     print("********************************************")
@@ -424,10 +428,14 @@ def options(nhs_number):
                     # Checks if there are any numbers in the input
                     elif (any(str.isdigit(y) for y in x)) == True:raise InvalidAnswerError()
                     else:
+                        c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?",[nhs_number])
+                        results = c.fetchall()
+                        old_first_name = results[0][2]
                         # Updates first name in the database
                         c.execute("""UPDATE PatientDetail SET firstName = ? WHERE nhsNumber = ?""",(first_name,nhs_number))
                         connection.commit()
                         print("Successfully changed first name")
+                        logging.info("NHS Number: %s %s %s / Patient changed first name from '%s' to '%s'"%(str(nhs_number)[0:3],str(nhs_number)[3:6],str(nhs_number)[6:10],old_first_name.upper(),first_name.upper()))
                         # Shows the patient summary
                         summary(nhs_number)
                         # Returns to the update details menu
@@ -444,10 +452,14 @@ def options(nhs_number):
                     # Checks if there are any numbers in the input
                     elif (any(str.isdigit(y) for y in x)) == True:raise InvalidAnswerError()
                     else:
+                        c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?",[nhs_number])
+                        results = c.fetchall()
+                        old_last_name = results[0][3]
                         # Updates last name in the database
                         c.execute("""UPDATE PatientDetail SET lastName = ? WHERE nhsNumber = ?""",(last_name,nhs_number))
                         connection.commit()
                         print("Successfully changed last name")
+                        logging.info("NHS Number: %s %s %s / Patient changed last name from '%s' to '%s'"%(str(nhs_number)[0:3],str(nhs_number)[3:6],str(nhs_number)[6:10],old_last_name.upper(),last_name.upper()))
                         # Shows the patient summary
                         summary(nhs_number)
                         # Returns to the update details menu
@@ -462,12 +474,16 @@ def options(nhs_number):
                     # Checks if input is the right length for any telephone number
                     elif len(x) > 17 or len(x) < 11:raise InvalidTelephoneError()
                     else:
+                        c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?",[nhs_number])
+                        results = c.fetchall()
+                        old_telephone_number = results[0][9]
                         # Converts telephone number string into an integer
                         x = int(x)
                         # Updates telephone number in the database
                         c.execute("""UPDATE PatientDetail SET telephoneNumber = ? WHERE nhsNumber = ?""",(x,nhs_number))
                         connection.commit()
                         print("Successfully changed telephone number")
+                        logging.info("NHS Number: %s %s %s / Patient changed telephone number from '+%s' to '+%s'"%(str(nhs_number)[0:3],str(nhs_number)[3:6],str(nhs_number)[6:10],old_telephone_number,telephone_number))
                         # Shows the patient summary
                         summary(nhs_number)
                         # Returns to the update details menu
@@ -486,10 +502,14 @@ def options(nhs_number):
                     patient_emails = c.fetchall()
                     if patient_emails != []:raise EmailAlreadyExistsError()
                     else: 
+                        c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?",[nhs_number])
+                        results = c.fetchall()
+                        old_patient_email = results[0][1]
                         # Updates email in the database
                         c.execute("""UPDATE PatientDetail SET patientEmail = ? WHERE nhsNumber = ?""",(patient_email,nhs_number))
                         connection.commit()
                         print("Successfully changed email address")
+                        logging.info("NHS Number: %s %s %s / Patient changed email from '%s' to '%s'"%(str(nhs_number)[0:3],str(nhs_number)[3:6],str(nhs_number)[6:10],old_patient_email,patient_email))
                         # Shows the patient summary
                         summary(nhs_number)
                         # Returns to the update details menu
@@ -500,10 +520,14 @@ def options(nhs_number):
                     # Returns to the update details menu
                     elif password == "0":count = 3
                     else: 
+                        c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?",[nhs_number])
+                        results = c.fetchall()
+                        old_password = results[0][10]
                         # Updates password in the database
                         c.execute("""UPDATE PatientDetail SET password = ? WHERE nhsNumber = ?""",(password,nhs_number))
                         connection.commit()
                         print("Successfully changed password")
+                        logging.info("NHS Number: %s %s %s / Patient changed password from '%s' to '%s'"%(str(nhs_number)[0:3],str(nhs_number)[3:6],str(nhs_number)[6:10],old_password,password))
                         # Shows the patient summary
                         summary(nhs_number)
                         # Returns to the update details menu
@@ -553,6 +577,12 @@ def options(nhs_number):
                     else:
                         # Assigns input value to update_patient dictionary
                         update_patient["postcode"] = postcode
+                        c.execute("SELECT * FROM PatientDetail WHERE nhsNumber = ?",[nhs_number])
+                        results = c.fetchall()
+                        old_address_line_1 = results[0][6]
+                        old_address_line_2 = results[0][7]
+                        old_postcode = results[0][8]
+                        print("Address:\n%s\n%s\n%s"%(results[0][6],results[0][7],results[0][8]))
                         # Updates address line 1 in the database
                         c.execute("""UPDATE PatientDetail SET addressLine1 = ? WHERE nhsNumber = ?""",(update_patient["address_line_1"],nhs_number))
                         connection.commit()
@@ -563,6 +593,7 @@ def options(nhs_number):
                         c.execute("""UPDATE PatientDetail SET postcode = ? WHERE nhsNumber = ?""",(update_patient["postcode"],nhs_number))
                         connection.commit()
                         print("Successfully changed address")
+                        logging.info("NHS Number: %s %s %s / Patient changed address from '%s, %s %s' to '%s, %s %s'"%(str(nhs_number)[0:3],str(nhs_number)[3:6],str(nhs_number)[6:10],old_address_line_1,old_address_line_2,old_postcode,update_patient["address_line_1"],update_patient["address_line_2"],update_patient["postcode"]))
                         # Shows the patient summary
                         summary(nhs_number)
                         # Returns to the update details menu
@@ -684,6 +715,7 @@ def login():
                     else:
                         # count = 6 to break the outer while loop
                         count = 6
+                        logging.info("NHS Number: %s %s %s / Patient %s, %s logged in"%(str(nhs_number)[0:3],str(nhs_number)[3:6],str(nhs_number)[6:10],results[0][3].upper(),results[0][2].upper()))
                         # Redirects to options(nhs_number) only when the patient successfully logs in and is registered
                         options(nhs_number)
             except InvalidAnswerError:
@@ -954,7 +986,7 @@ def register():
                 print(error)
         # Inserts new patient into the database
         new_patient.register()
-        logging.info("Registered Patient: %s, %s\nNHS number: %s %s %s"%(new_patient.last_name.upper(),new_patient.first_name.upper(),new_patient.nhs_number[0:3],new_patient.nhs_number[3:6],new_patient.nhs_number[6:10]))
+        logging.info("Registered Patient: %s, %s / NHS number: %s %s %s"%(new_patient.last_name.upper(),new_patient.first_name.upper(),new_patient.nhs_number[0:3],new_patient.nhs_number[3:6],new_patient.nhs_number[6:10]))
         print("Thank you, %s, for submitting your details to our practice. An administrator will confirm your registration within 1-3 working days."%(new_patient.first_name))
         # To see the patient summary
         summary(new_patient.nhs_number)
