@@ -4,8 +4,6 @@ import logging
 import patients.patient_functions as pf
 import patients.view_cancel_functions as vc
 
-# Sqlite3: Hipp, R.D., 2020. SQLite, Available at: https://www.sqlite.org/index.html.
-
 """
 This module contains the Appointment class for the patient to navigate to book an appointment.
 
@@ -146,12 +144,15 @@ class Appointment:
         dr_names = self.c.fetchall()
         # when list returned empty, there are no doctors available, patient returned to main menu
         if not dr_names:
-            print("\nI'm sorry, there are no doctors currently available at the practice,"
+            print("\nSorry, there are no doctors currently available at the practice,"
                   "\nplease try again another time\n")
             return 0
         else:
             gp_details = pf.choose_dr(dr_names)
-            return gp_details
+            if gp_details == 0:
+                return 0
+            else:
+                return gp_details
 
     def choose_any_dr(self):
         """
@@ -169,7 +170,7 @@ class Appointment:
         dr_names = self.c.fetchall()
         # when list returned empty, there are no doctors available, patient returned to main menu
         if not dr_names:
-            print("\nI'm sorry, there are no doctors currently available at the practice"
+            print("\nSorry, there are no doctors currently available at the practice"
                   "\n")
             return 0
         else:
@@ -218,40 +219,49 @@ class Appointment:
                 dr_names = self.c.fetchall()
                 # when list returned empty, there are no doctors available, patient returned to main menu
                 if not dr_names:
-                    print("\nI'm sorry, there are no male doctors currently available at the practice"
+                    print("\nSorry, there are no male doctors currently available at the practice"
                           "\nplease try again another time")
                     return 0
                 else:
                     # choose_dr called only with male drs in list
                     gp_details = pf.choose_dr(dr_names)
-                    return gp_details
+                    if gp_details == 0:
+                        return 0
+                    else:
+                        return gp_details
             elif gp_options == '2':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'female' and active='1'")
                 dr_names = self.c.fetchall()
                 # when list returned empty, there are no doctors available, patient returned to main menu
                 if not dr_names:
-                    print("\nI'm sorry, there are no female doctors currently available at the practice"
+                    print("\nSorry, there are no female doctors currently available at the practice"
                           "\nplease try again another time")
                     return 0
                 else:
                     # choose_dr called only with female drs in list
                     gp_details = pf.choose_dr(dr_names)
-                    return gp_details
+                    if gp_details == 0:
+                        return 0
+                    else:
+                        return gp_details
             elif gp_options == '3':
                 self.c.execute("SELECT firstname, lastname, gpEmail FROM GP WHERE gender = 'non-binary' and active='1'")
                 dr_names = self.c.fetchall()
                 # when list returned empty, there are no doctors available, patient returned to main menu
                 if not dr_names:
-                    print("\nI'm sorry, there are no non-binary doctors currently available at the practice"
+                    print("\nSorry, there are no non-binary doctors currently available at the practice"
                           "\nplease try again another time")
                     return 0
                 else:
                     # choose_dr called only with non-binary drs in list
                     gp_details = pf.choose_dr(dr_names)
-                    return gp_details
+                    if gp_details == 0:
+                        return 0
+                    else:
+                        return gp_details
             # exit to patient menu
             elif gp_options == '0':
-                pass
+                return 0
             else:
                 raise InvalidAnswerError()
         except InvalidAnswerError:
@@ -338,7 +348,7 @@ class Appointment:
         if viewing == 0:
             print("You have no appointments booked to cancel at this time")
             # exit to patient menu
-            pf.return_to_main()
+            pass
         else:
             try:
                 print("Choose [1] to cancel an appointment"
@@ -384,7 +394,7 @@ class Appointment:
         Function for patient to view all of their pending, accepted and declined appointments.
 
         Calls the view_appointments function (from viewCancelFunctions module).
-        Patient is then returned to the main patient menu via the return_to_main function.
+        Patient is then returned to the main patient menu.
 
         Parameters:
             nhs_number (int): Patient's nhs number.
@@ -394,7 +404,7 @@ class Appointment:
               "\n--------------------------------------------"
               "\nYour appointments: ")
         vc.view_appointments(nhs_number)
-        pf.return_to_main()
+        pass
 
 
 

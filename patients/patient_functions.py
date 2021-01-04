@@ -5,10 +5,6 @@ import time
 import calendar
 import pandas as pd
 
-# Sqlite3: Hipp, R.D., 2020. SQLite, Available at: https://www.sqlite.org/index.html.
-# Pandas: McKinney, W. & others, 2010. Data structures for statistical computing in python.
-# In Proceedings of the 9th Python in Science Conference. pp. 51–56.
-
 """
 This module contains all functions for patients to book an appointment.
 
@@ -209,8 +205,10 @@ def choose_dr(dr_names):
     while True:
         try:
             dr_options = int(input("********************************************"
-                                   "\nPlease choose the doctor you would "
-                                   "like to book an appointment with: "))
+                                   "\nPlease choose the doctor by selecting a number from the list"
+                                   "\nOr type 0 to go back to the patient main menu: "))
+            if dr_options == 0:
+                return 0
             # exception raised if input not a number in count list
             if dr_options not in counts:
                 raise DrChoiceNotValidError
@@ -222,7 +220,7 @@ def choose_dr(dr_names):
                 print("\nYou have chosen Dr {}".format(gp_chosen_name))
                 return gp_details
         except DrChoiceNotValidError:
-            print("\n\t< This is not a valid choice, please try again >"
+            print("\n\t< This number is not in the list, please try again >"
                   "\n ")
         except ValueError:
             print("\n\t< This is not a valid choice, please enter a number >"
@@ -646,16 +644,3 @@ def insert_appointment(start, gp_details, nhs_number):
     logging.info('Appointment inserted into appointment table, for patient NHS number {} ,'
                  'with Dr {}'.format(nhs_number, gp_last_name))
     connection.commit()
-
-
-def return_to_main():
-    """
-    Returns user to main patient menu when typing '0'.
-    If user types anything else, will exit the program with a goodbye message.
-    """
-    if input("Type [0] to return to the main menu "
-             "\n(or any other key to exit the UCL e-health system): ").lower() == '0':
-        pass
-    else:
-        print("Thank you for using the UCH e-health system! Goodbye for now!")
-        exit()

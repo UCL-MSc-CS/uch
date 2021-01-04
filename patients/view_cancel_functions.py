@@ -4,10 +4,6 @@ from datetime import datetime
 import pandas as pd
 import patients.patient_functions as pf
 
-# Sqlite3: Hipp, R.D., 2020. SQLite, Available at: https://www.sqlite.org/index.html.
-# Pandas: McKinney, W. & others, 2010. Data structures for statistical computing in python.
-# In Proceedings of the 9th Python in Science Conference. pp. 51–56.
-
 """
 This module contains functions for users to view and cancel their appointments.
 
@@ -52,7 +48,7 @@ def view_appointments(nhs_number):
     if not appointments:
         print("\nYou currently have no appointments booked"
               "\n")
-        pass
+        return 0
     else:
         appointment_id = []
         date = []
