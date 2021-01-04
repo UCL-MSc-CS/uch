@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import logging
 connection = sql.connect('UCH.db')  # establish the connection to the UCH database file
 a = connection.cursor()
 
@@ -60,6 +61,14 @@ class InvalidAllergyFormatError(Exception):
         super().__init__(self.message)
 
 
+def debug_function():
+    logging.basicConfig(level=logging.DEBUG,
+                        filename='UCH.log',
+                        filemode='a',
+                        format='%(module)s - %(levelname)s - %(message)s'
+                        )
+
+
 def update_patient_medical(name, nhs_number):
     """
     The function allows the patient to update the specified vaccination record.
@@ -118,6 +127,7 @@ def update_patient_medical(name, nhs_number):
         if new_record[menu-1] == 0:
             new_record[menu-1] = 1
             new_record.insert(7, nhs_number)
+            logging.debug('The updated answers are: ' + str(new_record))
             a.execute("""
                         UPDATE vaccineHistory
                         SET DTap = ?, HepC = ?, HepB = ?, Measles = ?, Mumps = ?, Rubella = ?, Varicella = ?
@@ -152,7 +162,7 @@ def display_cancer_history(nhs_number):
     if not patient_med_record and not pati_rec:  # if no cancer history exist in the database under the entered NHS number
         print('\nNo patient or family cancer history\n')
     if not pati_rec and patient_med_record:
-        print('No family cancer history\n')  # Show patient's cancer record
+        print('No family cancer history\n')  # Show patient's cancer record instead
         rows = 0
         record = 0
         cancer_table = [nhs_number, 'Patient or family', 'Cancer type', 'Age']
@@ -262,8 +272,4 @@ def display_preexisting_condition_history(nhs_number):
             print('\n    <<Pre-existing condition record ends>>\n')
 
 
-def close_connection():
-    """
-    Closes the database connection.
-    """
-    connection.close()
+

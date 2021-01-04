@@ -1,5 +1,7 @@
 import sqlite3 as sql
 import patients.patient_medical_functions as pf
+import logging
+pf.debug_function()
 
 
 class PatientMedical:
@@ -99,6 +101,7 @@ class PatientMedical:
                             answers_to_vac.append(vaccine)
                             print("Excellent! Please also remember to check back for any need for future boosters.")
                     patient_info.extend(answers_to_vac)
+                    logging.debug('The inserted answers are: ' + str(patient_info))
                     self.a.execute("""INSERT INTO vaccineHistory (nhsNumber, Status, DTap, HepC, HepB,
                                                     Measles, Mumps, Rubella, Varicella)
                                                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """, patient_info)
@@ -111,7 +114,7 @@ class PatientMedical:
                 while True:
                     try:
                         self.status = input("Please enter the first name and last name "
-                                            "of your child whose profile you would like to edit (or press 0 to exit): ")
+                                            "of your child whose profile you would like to edit (or press 0 to exit): ").title()
                         full_name = self.status.split(' ')
                         if self.status == "0":
                             return 1
@@ -119,12 +122,12 @@ class PatientMedical:
                             raise pf.EmptyFieldError()
                         if len(full_name) > 2 or len(full_name) == 1:
                             raise pf.InvalidNameFormatError()
-                        self.nhs_number_child = input("Please enter {}'s nhs number(or press 0 to exit): ".format(self.status))
-                        if self.nhs_number_child == '0':
+                        self.nhs_number_child = int(input("Please enter {}'s nhs number(or press 0 to exit): ".format(self.status)))
+                        if self.nhs_number_child == 0:
                             return 1
                         if not self.nhs_number_child:
                             raise pf.EmptyFieldError()
-                        if len(self.nhs_number_child) != 10:
+                        if len(str(self.nhs_number_child)) != 10:
                             raise pf.InvalidAnswerError()
                     except pf.EmptyFieldError:
                         error_message = pf.EmptyFieldError()
@@ -136,6 +139,8 @@ class PatientMedical:
                         print("\n    < Wrong name format."
                               " Please only enter your child's first name and last name separated by a space "
                               "separated with a space >\n")
+                    except ValueError:
+                        print('\n    <Please entered a numeric value. >\n')
                     else:
                         break
                 self.a.execute("SELECT nhsNumber FROM vaccineHistory WHERE nhsNumber = ?", [self.nhs_number_child])
@@ -145,7 +150,7 @@ class PatientMedical:
                     for name in self.vaccination_history:
                         while True:
                             try:
-                                vaccine = input('Please enter Y/N. Has your {} had the {} vaccination: '.format(self.status, name)).lower()
+                                vaccine = input('Please enter Y/N. Has {} had the {} vaccination: '.format(self.status, name)).lower()
                                 if vaccine == "0":
                                     return 1
                                 if not vaccine:
@@ -169,6 +174,7 @@ class PatientMedical:
                             answers_to_vac.append(vaccine)
                             print("Excellent! Please also remember to check back for any need for future boosters.")
                     patient_info.extend(answers_to_vac)
+                    logging.debug('The inserted answers are: ' + str(answers_to_vac))
                     self.a.execute("""INSERT INTO vaccineHistory (nhsNumber, Status, DTap, HepC, HepB,
                                                         Measles, Mumps, Rubella, Varicella)
                                                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """, patient_info)
@@ -251,6 +257,7 @@ class PatientMedical:
                     condition_record = tuple([nhs_number, i])  # each condition is a tuple and inserted as a row
                     condition.append(condition_record)
                 if not patient_result:
+                    logging.debug('The inserted answers are: ' + str(condition))
                     self.a.executemany("""INSERT INTO preExistingCondition(nhsNumber, conditionType) VALUES (?, ?)""",
                                        condition)
                     self.connection.commit()
@@ -263,6 +270,7 @@ class PatientMedical:
                                 determinator.append('1')
                                 break
                     if not determinator:
+                        logging.debug('The inserted answers are: ' + str(condition))
                         self.a.executemany("""
                                             INSERT INTO preExistingCondition(nhsNumber, conditionType) VALUES (?, ?)""",
                                             condition)
@@ -270,7 +278,7 @@ class PatientMedical:
             if menu_choice == "2":
                 while True:
                     try:
-                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit (or press 0 to exit): ").lower()
+                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit (or press 0 to exit): ").title()
                         full_name = self.child_name.split(' ')
                         if self.child_name == "0":
                             return 1
@@ -327,6 +335,7 @@ class PatientMedical:
                     condition_record = tuple([self.nhs_number_child, i])  # each condition is a tuple and inserted as a row
                     condition.append(condition_record)
                 if not check_child_nhs:  # if child's nhs number does not exist in database, insert
+                    logging.debug('The inserted answers are: ' + str(condition))
                     self.a.executemany("""INSERT INTO preExistingCondition(nhsNumber, conditionType) VALUES (?, ?)""", condition)
                     self.connection.commit()
                 else:
@@ -338,6 +347,7 @@ class PatientMedical:
                                 determinator.append('1')
                                 break
                     if not determinator:
+                        logging.debug('The inserted answers are: ' + str(condition))
                         self.a.executemany("""
                                             INSERT INTO preExistingCondition(nhsNumber, conditionType) VALUES (?, ?)""",
                                             condition)
@@ -414,6 +424,7 @@ class PatientMedical:
                     allergy_record = tuple([nhs_number, i])  # each allergy is a tuple and inserted as a row
                     allergy.append(allergy_record)
                 if not allergy_result:
+                    logging.debug('The inserted answers are: ' + str(allergy))
                     self.a.executemany("""INSERT INTO medAllergy(nhsNumber, medName) VALUES (?, ?)""", allergy)
                     self.connection.commit()
                 else:
@@ -425,12 +436,13 @@ class PatientMedical:
                                 determinator.append('1')
                                 break
                     if not determinator:
+                        logging.debug('The inserted answers are: ' + str(allergy))
                         self.a.executemany("""INSERT INTO medAllergy(nhsNumber, medName) VALUES (?, ?)""", allergy)
                         self.connection.commit()
             if menu_choice == "2":
                 while True:
                     try:
-                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit (or press 0 to exit): ").lower()
+                        self.child_name = input("Please enter the full name of your child whose profile you would like to edit (or press 0 to exit): ").title()
                         full_name = self.child_name.split(' ')
                         if self.child_name == "0":
                             return 1
@@ -487,6 +499,7 @@ class PatientMedical:
                     allergy_record = tuple([self.nhs_number_child, a])  # each allergy is a tuple and inserted as a row
                     allergy.append(allergy_record)
                 if not check_child_nhs2:
+                    logging.debug('The inserted answers are: ' + str(allergy))
                     self.a.executemany("""INSERT INTO medAllergy(nhsNumber, medName) VALUES (?, ?)""", allergy)
                     self.connection.commit()
                 else:
@@ -498,6 +511,7 @@ class PatientMedical:
                                 determinator.append('1')
                                 break
                     if not determinator:
+                        logging.debug('The inserted answers are: ' + str(allergy))
                         self.a.executemany("""INSERT INTO medAllergy(nhsNumber, medName) VALUES (?, ?)""", allergy)
                         self.connection.commit()
 
@@ -613,6 +627,7 @@ class PatientMedical:
                                     """, [nhs_number])
                     query_result = self.a.fetchall()
                     if not query_result:
+                        logging.debug('The inserted answers are: ' + str(self.cancer_history))
                         self.a.executemany("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge)
                                     VALUES (?, ?, ?, ?)""", self.cancer_history)
                         self.connection.commit()
@@ -626,6 +641,7 @@ class PatientMedical:
                                     determinator.append('1')
                                     break
                         if not determinator:
+                            logging.debug('The inserted answers are: ' + str(self.cancer_history))
                             self.a.executemany("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge)
                                                                 VALUES (?, ?, ?, ?)""", self.cancer_history)
                             self.connection.commit()
@@ -638,6 +654,7 @@ class PatientMedical:
                                     """, [nhs_number])
                     query_result = self.a.fetchall()
                     if not query_result:
+                        logging.debug('The inserted answers are: ' + str(self.cancer_history))
                         self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge) 
                                           VALUES (?, ?, ?, ?)""", self.cancer_history)
                         self.connection.commit()
@@ -649,6 +666,7 @@ class PatientMedical:
                                 determinator.append('1')
                                 break
                         if not determinator:
+                            logging.debug('The inserted answers are: ' + str(self.cancer_history))
                             self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge) 
                                               VALUES (?, ?, ?, ?)""", self.cancer_history)
                             self.connection.commit()
@@ -724,6 +742,7 @@ class PatientMedical:
                                     """, [nhs_number])
                     query_result = self.a.fetchall()
                     if not query_result:
+                        logging.debug('The inserted answers are: ' + str(self.cancer_history))
                         self.a.executemany("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge)
                                     VALUES (?, ?, ?, ?)""", self.cancer_history)
                         self.connection.commit()
@@ -737,6 +756,7 @@ class PatientMedical:
                                     determinator.append('1')
                                     break
                         if not determinator:
+                            logging.debug('The inserted answers are: ' + str(self.cancer_history))
                             self.a.executemany("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge)
                                                                 VALUES (?, ?, ?, ?)""", self.cancer_history)
                             self.connection.commit()
@@ -750,6 +770,7 @@ class PatientMedical:
                                     """, [nhs_number])
                     query_result = self.a.fetchall()
                     if not query_result:
+                        logging.debug('The inserted answers are: ' + str(self.cancer_history))
                         self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge) VALUES (?, ?, ?, ?)""", self.cancer_history)
                         self.connection.commit()
                     else:
@@ -760,6 +781,7 @@ class PatientMedical:
                                 determinator.append('1')
                                 break
                         if determinator == []:
+                            logging.debug('The inserted answers are: ' + str(self.cancer_history))
                             self.a.execute("""INSERT INTO cancer(nhsNumber, cancerRelation, cancerType, cancerAge) 
                                             VALUES (?, ?, ?, ?)""", self.cancer_history)
                             self.connection.commit()
@@ -829,7 +851,7 @@ class PatientMedical:
                     try:
                         print("Please use space to separate first and last names.")
                         child_name = input("Please only enter the first name and last name of your child separated with a space"
-                                           " (or press 0 to exit): ")
+                                           " (or press 0 to exit): ").title()
                         full_name = child_name.split(' ')
                         if child_name == "0":
                             return 1

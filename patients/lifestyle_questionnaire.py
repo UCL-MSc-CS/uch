@@ -1,7 +1,9 @@
 import sqlite3 as sql
 import webbrowser
+import logging
 import patients.patient_medical_functions as pf
 
+pf.debug_function()
 
 class RiskProfile:
     """
@@ -456,6 +458,7 @@ class RiskProfile:
             1 (int): exit the function if patient does not fully complete all of the lifestyle related questions.
         """
         self.answers.insert(0, nhs_number)
+        logging.debug('The inserted answers are: ' + str(self.answers))
         try:
             question_query = """INSERT INTO questionnaireTable (nhsNumber, exercise, exerciseType, exerciseFrequency,
             exerciseDuration, goal, height, weight, bmi, smoking, drugs, drugType, alcohol, 
