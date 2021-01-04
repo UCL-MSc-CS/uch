@@ -9,6 +9,7 @@ def appointment_notes(appointmentid):
 
     # ------------------------- Pulls up data from UCH.db -------------------------
     # Pulls up existing appointment notes
+    global doctorsNotes
     doctorsNotes = get_doctor_notes(appointmentid)
     patientComplaint = doctorsNotes[0]
     doctorFindings = doctorsNotes[1]
@@ -277,12 +278,12 @@ def appointment_notes(appointmentid):
 def save_notes():
     """Saves text box notes into UCH.db"""
 
-    globalDoctorsNotes[0] = patientComplaintTextBox.get(1.0, END)
-    globalDoctorsNotes[1] = findingsTextBox.get(1.0, END)
-    globalDoctorsNotes[2] = diagnosisTextBox.get(1.0, END)
-    globalDoctorsNotes[3] = inspectionsTextBox.get(1.0, END)
-    globalDoctorsNotes[4] = adviceTextBox.get(1.0, END)
-    save_doctor_notes(globalDoctorsNotes)
+    doctorsNotes[0] = patientComplaintTextBox.get(1.0, END)
+    doctorsNotes[1] = findingsTextBox.get(1.0, END)
+    doctorsNotes[2] = diagnosisTextBox.get(1.0, END)
+    doctorsNotes[3] = inspectionsTextBox.get(1.0, END)
+    doctorsNotes[4] = adviceTextBox.get(1.0, END)
+    save_doctor_notes(doctorsNotes)
     response = messagebox.askyesno("Your notes have been saved!",
                                    "Your notes have been saved. Confirm if you want to exit.")
     if response == 1:

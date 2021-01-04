@@ -5,17 +5,17 @@ from GPs.print_day import print_day
 
 DATE_FORMAT_STRING = "%Y-%m-%d"
 
-"""
-Clears/Declines appointments chosen by the user.
-
-GP enters a date they want to clear appointments from.
-All appointments on that date are displayed to the GP.
-The GP chooses from the displayed appointments and enters the ID of the appointment they wish to clear.
-The GP can cancel multiple appointments at a time by entering a comma separated list.
-If the appointment is a patient appointment, it will decline the appointment
-If the appointment is a non-patient appointment, it will completely delete that appointment from the database.
-"""
 def clearhours(doctoremail):
+    """
+    Clears/Declines appointments chosen by the user.
+
+    GP enters a date they want to clear appointments from.
+    All appointments on that date are displayed to the GP.
+    The GP chooses from the displayed appointments and enters the ID of the appointment they wish to clear.
+    The GP can cancel multiple appointments at a time by entering a comma separated list.
+    If the appointment is a patient appointment, it will decline the appointment
+    If the appointment is a non-patient appointment, it will completely delete that appointment from the database.
+    """
     print("--------------------------------------------")
     print("\t Doctor Cancel/Decline Appointments")
     print("--------------------------------------------")

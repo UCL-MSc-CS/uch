@@ -1,11 +1,11 @@
 import patients.patient_medical_functions as pm
 
-"""
-Used to display patient history.
-
-Can display cancer history as well as pre-existing conditions.
-"""
 def patient_history(nhs_number):
+    """
+    Used to display patient history.
+
+    Can display cancer history as well as pre-existing conditions.
+    """
     while True:
         print("--------------------------------------------")
         print("\t Patient History Menu")

@@ -1,19 +1,19 @@
 from datetime import datetime,timedelta
 import time
 
-"""Exception class for if the user doesn't enter a value for date or time entry"""
 class EmptyValueError(Exception):
+    """Exception class for if the user doesn't enter a value for date or time entry"""
     pass
 
 DATE_FORMAT_STRING = "%Y-%m-%d"
 TIME_FORMAT_STRING = "%H:%M"
 DATE_TIME_FORMAT = DATE_FORMAT_STRING + " " + TIME_FORMAT_STRING
 
-"""
-Call this function to validate any date entered by the user
-Is escapable. User cannot enter an invalid date or leave the field empty.
-"""
 def validate_date(string):
+    """
+    Call this function to validate any date entered by the user
+    Is escapable. User cannot enter an invalid date or leave the field empty.
+    """
     while True:
         try:
             datestring = input(string + " (YYYY-MM-DD) (enter [0]) to exit: ")
@@ -28,11 +28,12 @@ def validate_date(string):
         except ValueError:
             print("\n\t< Invalid date entered, please try again... >\n")
 
-"""
-Call this function to validate any time entered by the user
-Is escapable. User cannot enter an invalid time or leave the field empty.
-"""
+
 def validate_time(string):
+    """
+    Call this function to validate any time entered by the user
+    Is escapable. User cannot enter an invalid time or leave the field empty.
+    """
     while True:
         try:
             timestring = input(string + " (HH:MM) (enter [0]) to exit: ")
@@ -47,11 +48,10 @@ def validate_time(string):
         except ValueError:
             print("\n\t< Invalid time entered, Please try again... >\n")
 
-
-"""
-Converts a unix integer time back into a python datetime object.
-"""
 def unix_to_regular_time(unixtimestamp):
+    """
+    Converts a unix integer time back into a python datetime object.
+    """
     return datetime.utcfromtimestamp(int(unixtimestamp))
 
 def regular_to_unix_time(dt):
@@ -65,11 +65,13 @@ def regular_to_unix_time(dt):
     result = int(time.mktime(dt.timetuple()))
     return result
 
-#returns an iterable, allowing you to loop through days between a start and an end date
-#use as follows:
-#   for single_date in daterange(start_date, end_date):
-#       * YOUR CODE HERE *
 def date_range(start_date, end_date):
+    """
+    returns an iterable, allowing you to loop through days between a start and an end date
+    use as follows:
+       for single_date in daterange(start_date, end_date):
+           * YOUR CODE HERE *
+    """
     for n in range(int((end_date + timedelta(1) - start_date).days)):
         yield start_date + timedelta(n)
 

@@ -4,7 +4,13 @@ from tkinter import ttk
 
 
 def help_page():
-    """Loads up the help page"""
+    """
+    Loads up the help page for the prescription builder
+
+    Some feedback we got is that this GUI can be a little difficult to understand.
+    Therefore a help page was made with a step-by-step guide to building a prescription.
+    We hope you find this page helpful.
+    """
 
     top = Toplevel()
     top.title('Prescription process')

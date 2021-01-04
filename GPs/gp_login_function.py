@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import logging
 
 def gp_login():
     """Logs the GP in according to their email and password"""
@@ -41,4 +42,5 @@ def gp_login():
         else:
             db.close()
             doctorname = results[0][2] + " " + results[0][3]
+            logging.info('GP ' + doctorname + ' has logged in')
             return email,doctorname

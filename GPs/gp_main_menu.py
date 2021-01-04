@@ -4,17 +4,17 @@ from GPs.add_non_patient_time import add_non_patient_time
 from GPs.confirm_appointments import confirm_appointments
 from GPs.open_appointment import open_appointment
 
-"""
-The main menu function for GPs.
-
-Most options will auto-return to this screen if the user chooses to exit data entry.
-From here doctors can open and confirm appointments.
-Book holidays and non-patient time.
-View their timetable on a given week.
-Cancel appointments.
-Logout. 
-"""
 def gp_main_menu(gp_email, gp_full_name):
+    """
+    The main menu function for GPs.
+
+    Most options will auto-return to this screen if the user chooses to exit data entry.
+    From here doctors can open and confirm appointments.
+    Book holidays and non-patient time.
+    View their timetable on a given week.
+    Cancel appointments.
+    Logout.
+    """
     while True:
         print("--------------------------------------------")
         print("\t Doctor Main Menu")

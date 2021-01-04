@@ -2,32 +2,31 @@ from datetime import datetime, timedelta
 import useful_functions as uf
 from GPs.print_day import print_day
 
-"""
-For a given week, print out all the days in that week and their appointments.
-
-Called from the main "print_timetable()" function below.
-"""
 def print_days(date, gp_email):
+    """
+    For a given date, print out all the days in the week that day belongs to and all its appointments.
+
+    Called from the main "print_timetable()" function below.
+    """
     start_date = date - timedelta(days=date.weekday())
     end_date = start_date + timedelta(days=6)
     for single_date in uf.date_range(start_date, end_date):
         print_day(single_date, gp_email)
 
-
-"""
-Main timetable menu for a Doctor.
-
-Can view: 
-The current week, 
-Next week, 
-Or enter a date of which the entire week that date belongs to will be displayed.
-
-Be careful, the timetable only displays accepted/confirmed patient appointments.
-Will not display patient appointments that are booked as pending/declined as these categories are not 
-considered to have been added to the GPs schedule yet.
-Asks for user input after printing the timetable to stop the terminal from immediately jumping back to the main menu.
-"""
 def print_timetable(gp_email):
+    """
+    Main timetable menu for a Doctor.
+
+    Can view:
+    The current week,
+    Next week,
+    Or enter a date of which the entire week that date belongs to will be displayed.
+
+    Be careful, the timetable only displays accepted/confirmed patient appointments.
+    Will not display patient appointments that are booked as pending/declined as these categories are not
+    considered to have been added to the GPs schedule yet.
+    Asks for user input after printing the timetable to stop the terminal from immediately jumping back to the main menu.
+    """
     while True:
         now = datetime.today()
         today = datetime(now.year, now.month, now.day)

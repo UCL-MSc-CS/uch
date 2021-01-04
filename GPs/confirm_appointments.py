@@ -5,15 +5,15 @@ import timetable_functions as db
 DATE_FORMAT_STRING = "%Y-%m-%d"
 TIME_FORMAT_STRING = "%H:%M"
 
-"""
-This function is called when GPs want to confirm pending appointments that patients have booked.
-
-Will not allow confirming of appointments in the past.
-Auto-exits if the user enters a day there are no pending appointments booked on.
-Prints out all the pending appointments on that day for a user to select from.
-"""
 def confirm_appointments(doctoremail):
-    # Checking for valid date entry
+    """
+    This function is called when GPs want to confirm pending appointments that patients have booked.
+
+    Will not allow confirming of appointments in the past.
+    Auto-exits if the user enters a day there are no pending appointments booked on.
+    Prints out all the pending appointments on that day for a user to select from.
+    """
+    # First checking for valid date entry
     while True:
         confirmdate = uf.validate_date("Please enter a date for confirming appointments")
         if confirmdate == 'exit':

@@ -5,14 +5,14 @@ import timetable_functions as db
 DATE_FORMAT_STRING = "%Y-%m-%d"
 TIME_FORMAT_STRING = "%H:%M"
 
-"""
-For a given day print out all appointments.
-
-Be wary: this will only print out patient appointments that are confirmed/accepted.
-Will not print out pending/declined patient appointments as these are not considered to have been added to the
-GPs timetable.
-"""
 def print_day(day, gp_email):
+    """
+    For a given day print out all appointments.
+
+    Be wary: this will only print out patient appointments that are confirmed/accepted.
+    Will not print out pending/declined patient appointments as these are not considered to have been added to the
+    GPs timetable.
+    """
     print("--------------------------------------------")
     print(datetime.strftime(day, "%A %d %b %Y"))
     print("--------------------------------------------")
