@@ -170,18 +170,16 @@ def timetable_block(gpemail, date):
     close_connection(conn["connection"])
     return results
 
-def todays_appointments(gpemail):
+def get_appointments_on_given_date(gpemail,day):
     """
-    This is used to open today's appointments that have been confirmed.
+    This is used to open appointments on a given day that have been confirmed.
     """
     conn = connect_to_db()
-    now = datetime.today()
-    today = datetime(now.year, now.month, now.day)
-    start = uf.regular_to_unix_time(today)
-    end = uf.regular_to_unix_time(today + timedelta(1))
+    given_date = datetime(day.year, day.month, day.day)
+    start = uf.regular_to_unix_time(given_date)
+    end = uf.regular_to_unix_time(given_date + timedelta(1))
 
     sql = """
-
         SELECT reason,start,end,nhsNumber,appointmentID FROM Appointment 
         WHERE 
             gpEmail = ? AND

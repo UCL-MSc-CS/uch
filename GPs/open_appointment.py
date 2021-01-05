@@ -19,7 +19,7 @@ def open_appointment(gp_email):
     """
 
     # Starts by printing all the appointments available for the GP to open.
-    appointment_id, nhs_number = print_todays_appointments(gp_email)
+    appointment_id, nhs_number = print_appointments(gp_email)
 
     # if the user has successfully selected a valid appointment, continue.
     if appointment_id:
@@ -57,9 +57,13 @@ def open_appointment(gp_email):
 
             print("********************************************")
 
-def print_todays_appointments(doctoremail):
+def print_appointments(doctoremail):
     """
     Prints all confirmed appointments on a given date.
+
+    Initially this was auto-restricted to only be able to open today's confirmed appointments,
+    however because this is a student project,
+    being able to open appointments on any date is useful for testing purposes.
 
     Called when the user chooses to "Open an appointment" from the main menu.
     Remember that this will only show appointments that have been "confirmed" by the GP and not "pending" appointments.
@@ -67,13 +71,31 @@ def print_todays_appointments(doctoremail):
     Will return the Appointment ID and the nhsNumber of the patient that appointment is booked by.
     """
 
-    day = datetime.today()
+    while True:
+        print("********************************************")
+        print("Choose [1] to select from today's appointments")
+        print("Choose [2] to select from appointments on a given date")
+        print("Choose [0] to return to the main menu")
+        option = input("Please select an option: ")
+        if option == "1":
+            day = datetime.today()
+            break
+        elif option == "2":
+            day = uf.validate_date("Enter a date you would like to view appointments on.")
+            if day == "exit":
+                continue
+            break
+        elif option == "0":
+            print("\n Returning to main menu...... \n")
+            return "",""
+        else:
+            print("\n\t< Invalid option chosen. Try again >\n")
 
     print("--------------------------------------------")
     print(datetime.strftime(day, "%A %d %b %Y"))
     print("--------------------------------------------")
 
-    appointments = db.todays_appointments(doctoremail)
+    appointments = db.get_appointments_on_given_date(doctoremail,day)
     if not appointments:
         # Auto-return to main menu if there are no confirmed appointments on the selected date
         print("\n\t< There are no confirmed appointments available on this day. >")
@@ -123,5 +145,5 @@ def print_todays_appointments(doctoremail):
             print("Returning to main menu......")
             return "", ""
         else:
-            print("\n\t< Invalid option chosen, exiting today's appointments.... >\n")
+            print("\n\t< Invalid option chosen, exiting open appointments menu.... >\n")
             return "", ""

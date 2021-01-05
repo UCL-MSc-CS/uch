@@ -20,7 +20,7 @@ def gp_main_menu(gp_email, gp_full_name):
         print("\t Doctor Main Menu")
         print("--------------------------------------------")
         print("Welcome Dr. " + gp_full_name)
-        print("Choose [1] to open today's appointments")
+        print("Choose [1] to open appointments")
         print("Choose [2] to confirm pending appointments")
         print("Choose [3] to add non-patient time (including holidays)")
         print("Choose [4] to view your timetable")
