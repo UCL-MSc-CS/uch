@@ -25,7 +25,10 @@ class TimeNotValidError(Error):
 
 
 class YearNotValidError(Error):
-    """ Raised when year entered by patient is not valid. """
+    """
+    Raised when year entered by patient is not valid (within 2021 to 2037 inclusive).
+    2037 has been set according to the maximum date range for unix time.
+     """
     pass
 
 
@@ -249,8 +252,8 @@ def choose_year():
             # exception raised if year chosen in the past
             elif year < current_year:
                 raise YearPassedError
-            # exception raised if year chosen not within 2021-2100
-            elif not 2021 <= year <= 2100:
+            # exception raised if year chosen not within 2021-2037 inclusive
+            elif not 2021 <= year <= 2037:
                 raise YearNotValidError
             else:
                 # chosen year returned
