@@ -9,7 +9,7 @@ The following libraries were used in this project and will have to be installed 
 1.Pandas
 2.Pillow
 If an error is thrown, asking for installation of these libraries, run the following command in terminal - "pip install <name of library here>" 
-To run the program, type 'python .\root.py'
+To run the program, type 'python .\root.py'. You can then login with any of the accounts already created (details given below). 
 The sqlite3 database file, UCH.db, should be created automatically the first time the program is run. If it isn't, run database.py in the terminal.
 The GUI windows in this program are designed for 1080p resolution and 100% text scaling. Please check your display settings in case the windows are not displaying fully. 
 
@@ -35,19 +35,9 @@ Patients:
 **What does this application do and why?**
 
 * This e-Health patient management system makes appointment bookings easy for patients and GPs of University College Hospital (UCH).
-* Admins can add new GPs, deactivate/delete their profiles, confirm patients' registration, and manage patient records.
-* GPs can login, add availability, confirm patient appointments, and input prescriptions.
-* Patients can register their details, login, and book/cancel appointments.
-
-**How the application is organized**
-
-UCH is organized into the following files: 
-
-<!-- ![root folder](images/rootFolder.png) -->
-
-* *README* - this file contains all information about this e-Health patient management system.
-
-* *images folder* - stores all of the images for this README file.
+* Admins can add new GPs, deactivate/reactivate/delete their profiles, confirm/unconfirm patients' registrations, manage patient records and check in/check out patients to and from their appointments. 
+* GPs can login, add unavailability in the form of holiday and non-patient time, confirm patients' appointments, view their timetable, cancel appointments, and during the appointment can input appointment notes, prescriptions and download the patient summary.
+* Patients can register their details, login, book/cancel appointments, view their appointments, input their vaccination, cancer and pre-existing conditions histories for themselves or their children/family, input any medecine allergies for themselves or their children, view and change their personal details and take a lifestyle risk questionanaire to provide information about aspects of their lifestyle that affect their health such as their exercise routines and diet.
 
 **Technologies Used** 
 
