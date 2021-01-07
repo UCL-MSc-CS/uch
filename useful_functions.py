@@ -67,7 +67,8 @@ def regular_to_unix_time(dt):
             result = int(time.mktime(dt.timetuple()))
             return result
         except OverflowError:
-            # print("\n\t< Date out of range, please try again... >\n")
+            # occurs when trying to convert regular to unix time where the date is not in the possible ranges
+            # of unix time (before 1970, and after 19 January, 2038 03:14:08 GMT)
             break
 
 def date_range(start_date, end_date):
