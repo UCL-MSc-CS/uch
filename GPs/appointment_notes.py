@@ -41,7 +41,9 @@ def appointment_notes(appointmentid):
     global root
     root = Tk()
     root.title('Appointment ID: ' + str(appointmentid))
-    root.geometry("1280x800")
+    widthValue = root.winfo_screenwidth()
+    heightValue = root.winfo_screenheight()
+    root.geometry("%dx%d+0+0" % (widthValue, heightValue))
     root.configure(background='SlateGray1')
     root.after(1000, root.focus_force)
 

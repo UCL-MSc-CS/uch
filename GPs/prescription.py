@@ -18,7 +18,9 @@ def prescription(doctoremail,appointmentID,nhsNumber):
     # ------------------------- Creates a tkinter window and lays out frame structure -------------------------
     root = Tk()
     root.title('Appointment ID: ' + str(appointmentID) + ', with Dr. ' + doctoremail)
-    root.geometry("1920x950")
+    widthValue = root.winfo_screenwidth()
+    heightValue = root.winfo_screenheight()
+    root.geometry("%dx%d+0+0" % (widthValue, heightValue))
 
     # Creates mainframe that encompasses all subframes
     mainFrame = Frame(root)
