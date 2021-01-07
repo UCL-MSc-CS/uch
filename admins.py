@@ -784,7 +784,7 @@ class AdminFunctions():
                 while pat_back == 0:
                     # Creating menu to allow easier user navigation
                     print("********************************************")
-                    print("Press [0] to re-enter NHS number: ")
+                    print("Press [0] to re-enter NHS number ")
                     print("Press [1] to go back to update patient details menu")
                     try:
                         while question_num == 1:
@@ -1056,7 +1056,7 @@ class AdminFunctions():
                 while c_again == 0:
                     # Menu of options that the user selects from in the below code
                     print("********************************************")
-                    print("Choose [1] to go back to update patient details menu")
+                    print("Choose [1] to go back to the update patient details menu")
                     print("Choose [2] to update email")
                     print("Choose [3] to update first name")
                     print("Choose [4] to update last name")
@@ -1068,7 +1068,7 @@ class AdminFunctions():
                     print("Choose [10] to update telephone number")
                     print("********************************************")
                     try:
-                        print("Press [0] to re-enter NHS number")
+                        print("Press [0] to go back to the NHS number entry")
                         det_inp = input("Choose which detail to change: ")
                         if det_inp == '0':
                             c_again = 1
