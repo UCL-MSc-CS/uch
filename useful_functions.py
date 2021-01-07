@@ -62,8 +62,13 @@ def regular_to_unix_time(dt):
     Because of this all date-of-birth fields in our database do not use unix time.
     However it is helpful when checking for conflicts in appointments during timetabling to use unix time.
     """
-    result = int(time.mktime(dt.timetuple()))
-    return result
+    while True:
+        try:
+            result = int(time.mktime(dt.timetuple()))
+            return result
+        except OverflowError:
+            # print("\n\t< Date out of range, please try again... >\n")
+            break
 
 def date_range(start_date, end_date):
     """
