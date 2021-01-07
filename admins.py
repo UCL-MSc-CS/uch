@@ -575,7 +575,7 @@ class AdminFunctions():
 
     def c_in(self):
         """Entering patient NHS number allows admin to check-in patient from existing
-        appointments
+        appointments, as would happen in a real NHS practice. 
 
         The appointments that are available to a specific NHS number are only those that
         have been confirmed.  Invalid NHS numbers and no confirmed appointments will prompt errors.
