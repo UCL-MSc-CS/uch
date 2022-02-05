@@ -1,8 +1,7 @@
-## UCH
+# UCH
+An e-Health patient management system that simplifies appointment bookings for patients and GPs of University College Hospital (UCH).
 
-<!-- ![](images/UCH.gif) -->
-
-**Step-by-Step on how to run the application**
+## Getting Started
 This is a CLI (command line interface) application, and it can be run by cloning the source code to your local computer. Some aspects of this application have a graphical user interface.
 
 The following libraries were used in this project and will have to be installed in order to run the code.
@@ -32,15 +31,12 @@ Patients:
     email - a.bourke@gmail.com
     p/w   - 1234
 
-**What does this application do and why?**
-
-* This e-Health patient management system makes appointment bookings easy for patients and GPs of University College Hospital (UCH).
+## Application features
 * Admins can add new GPs, deactivate/reactivate/delete their profiles, confirm/unconfirm patients' registrations, manage patient records and check in/check out patients to and from their appointments. 
 * GPs can login, add unavailability in the form of holiday and non-patient time, confirm patients' appointments, view their timetable, cancel appointments, and during the appointment can input appointment notes, prescriptions and download the patient summary.
 * Patients can register their details, login, book/cancel appointments, view their appointments, input their vaccination, cancer and pre-existing conditions histories for themselves or their children/family, input any medecine allergies for themselves or their children, view and change their personal details and take a lifestyle risk questionanaire to provide information about aspects of their lifestyle that affect their health such as their exercise routines and diet.
 
-**Technologies Used** 
-
+## Built With
 * Python
 
 **Libraries Used**
